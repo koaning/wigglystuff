@@ -1,8 +1,9 @@
+<img src="imgs/stuff.png" width=125 height=125 align="right" style="z-index: 9999;">
+
 # wigglystuff 
 
 > "A collection of expressive Jupyter widgets."
  
-<img src="imgs/logo.png" width=125 height=125 align="right" style="z-index: 9999;">
 
 This small Python library contains Jupyter widgets that allow you to draw a dataset in a Jupyter
 notebook. This should be very useful when teaching machine learning algorithms.
