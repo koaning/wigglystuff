@@ -36,3 +36,4 @@ widget = Slider2D()
 widget
 ```
 
+![](imgs/slider2d.gif)
