@@ -37,3 +37,31 @@ widget
 ```
 
 ![](imgs/slider2d.gif)
+
+This widget allows you to grab the `widget.x` and `widget.y` properties to get the current position of the slider. But you can also use the `widget.observe` method to listen to changes in the widget. 
+
+<details>
+<summary>Example of <code>widget.observe</code></summary>
+
+```python
+import ipywidgets
+from wigglystuff import Slider2D
+import matplotlib.pylab as plt
+
+widget = Slider2D()
+output = ipywidgets.Output()
+state = [[0.0, 0.0]]
+
+@output.capture(clear_output=True)
+def on_change(change):
+    if abs(widget.x - state[-1][0]) > 0.01:
+        if abs(widget.y - state[-1][1]) > 0.01:
+            state.append([widget.x, widget.y])
+    for elem in state[-5:]:
+        print(elem)
+
+widget.observe(on_change)
+on_change(None)
+ipywidgets.HBox([widget, output])
+```
+</details>
