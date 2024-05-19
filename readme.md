@@ -16,8 +16,6 @@ python -m pip install wigglystuff
 
 ## Usage
 
-There are a bunch of widgets that this library provides that could be useful. The sections below will highlight each of them.
-
 ### `Slider2D`
 
 ```python
