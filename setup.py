@@ -12,7 +12,7 @@ def read(fname):
 
 setup(
     name="wigglystuff",
-    version="0.1.0",
+    version="0.1.1",
     description="Collection of Jupyter Widgets",
     author="Vincent D. Warmerdam",
     packages=find_packages(exclude=["notebooks"]),
