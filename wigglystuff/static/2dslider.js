@@ -33,7 +33,7 @@ function render({ model, el }) {
       ctx.stroke();
 
       const normalizedX = currentX / radius;
-      const normalizedY = currentY / radius;
+      const normalizedY = - currentY / radius;
       sliderValuesDiv.textContent = `X: ${normalizedX.toFixed(2)}, Y: ${normalizedY.toFixed(2)}`;
       model.set('x', normalizedX);
       model.set('y', normalizedY);
