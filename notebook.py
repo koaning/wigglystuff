@@ -21,6 +21,15 @@ def __(alt, df, df_base, mo, slider_2d):
 
 @app.cell
 def __(mo):
+    from wigglystuff import Matrix
+
+    matrix = mo.ui.anywidget(Matrix())
+    matrix
+    return Matrix, matrix
+
+
+@app.cell
+def __(mo):
     mo.md(r"""## Appendix with all supporting code""")
     return
 

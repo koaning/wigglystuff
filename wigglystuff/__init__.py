@@ -32,8 +32,9 @@ class Matrix(anywidget.AnyWidget):
     """
     _esm = Path(__file__).parent / 'static' / 'matrix.js'
     _css = Path(__file__).parent / 'static' / 'matrix.css'
-    rows = traitlets.Int(3),
-    cols = traitlets.Int(3),
-    min_value = traitlets.Float(-100),
-    max_value = traitlets.Float(100),
+    rows = traitlets.Int(3).tag(sync=True)
+    cols = traitlets.Int(3).tag(sync=True)
+    min_value = traitlets.Float(-100).tag(sync=True)
+    max_value = traitlets.Float(100).tag(sync=True)
     triangular = traitlets.Bool(False).tag(sync=True)
+    values = traitlets.List([]).tag(sync=True)

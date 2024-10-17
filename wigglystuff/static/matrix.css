@@ -22,6 +22,12 @@
     display: flex;
     justify-content: center;
 }
+.matrix-element:first-child{
+    border-left: black 3px solid;
+}
+.matrix-element:last-child{
+    border-right: black 3px solid;
+}
 .matrix-element {
     width: 3em;
     height: 1.5em;
@@ -29,7 +35,6 @@
     margin: 0.2em;
     cursor: ew-resize;
     color: #0066cc;
-    border-bottom: 1px solid #0066cc;
     display: flex;
     align-items: center;
     justify-content: center;

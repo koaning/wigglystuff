@@ -6,10 +6,13 @@ function render({model, el}){
         maxValue: model.get("max_value"),
         isTriangular: model.get("triangular")
     };
+    console.log(config);
     
     let matrix = Array(config.rows).fill().map(() => Array(config.cols).fill(0));
     
     const container = document.createElement('div');
+    container.classList.add("matrixElem")
+    el.appendChild(container)
     
     function renderMatrix() {
         container.innerHTML = '';
