@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 base_packages = [
-    "jupyterlab>=4.0.0", "anywidget>=0.9.2", "ipython>=7.16.1"
+    "anywidget>=0.9.2"
 ]
 
 def read(fname):
