@@ -55,10 +55,10 @@ def __(np, pd, slider_2d):
 
 
 @app.cell
-def __(np, pd, slider_2d):
+def __(np, pd):
     df_base = pd.DataFrame({
-        "x": np.random.normal(slider_2d.x, 1, 2000), 
-        "y": np.random.normal(slider_2d.x, 1, 2000)
+        "x": np.random.normal(0, 1, 2000), 
+        "y": np.random.normal(0, 1, 2000)
     })
     return (df_base,)
 
