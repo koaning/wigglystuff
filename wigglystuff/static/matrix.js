@@ -9,12 +9,11 @@ function render({model, el}){
         pixelsPerStep: 2
     };
 
-    let matrix = model.get("matrix");
+    let matrix = JSON.parse(JSON.stringify(model.get("matrix"))); // Deep copy
 
     const container = document.createElement('div');
-    container.classList.add("matrixElem");
+    container.classList.add("matrix-container");
     el.appendChild(container);
-
 
     function renderMatrix() {
         container.innerHTML = '';
@@ -30,10 +29,22 @@ function render({model, el}){
                 element.dataset.col = colIndex;
                 element.addEventListener('mousedown', startDragging);
                 rowElement.appendChild(element);
-                matrix[rowIndex][colIndex] = parseFloat(value.toFixed(1));
             });
             container.appendChild(rowElement);
         });
+
+        updateModel();
+    }
+
+    function updateModel() {
+        model.set("matrix", JSON.parse(JSON.stringify(matrix))); // Deep copy
+        model.save_changes();
+    }
+
+    let updateTimeout;
+    function debouncedUpdateModel() {
+        clearTimeout(updateTimeout);
+        updateTimeout = setTimeout(updateModel, 100); // Debounce for 100ms
     }
 
     function startDragging(e) {
@@ -50,11 +61,13 @@ function render({model, el}){
             const newValue = Math.max(config.minValue, Math.min(config.maxValue, startValue + steps * config.stepSize));
             updateMatrixValue(row, col, newValue);
             renderMatrix();
+            debouncedUpdateModel();
         }
 
         function onMouseUp() {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
+            updateModel(); // Ensure final state is updated
         }
 
         document.addEventListener('mousemove', onMouseMove);
@@ -63,11 +76,9 @@ function render({model, el}){
 
     function updateMatrixValue(row, col, value) {
         matrix[row][col] = parseFloat(value.toFixed(1));
-        if (config.isTriangular && col < config.rows && row < config.cols) {
+        if (config.isTriangular && (col < config.rows) && (row < config.cols)) {
             matrix[col][row] = parseFloat(value.toFixed(1));
         }
-        model.set("matrix", matrix);
-        model.save_changes();
     }
 
     renderMatrix();

@@ -20,12 +20,22 @@ def __(alt, df, df_base, mo, slider_2d):
 
 
 @app.cell
-def __(mo):
-    from wigglystuff import Matrix
+def __(alt, df_orig, mat, mo, np, pd):
+    cov = np.array(mat.matrix)
+    x_sim = np.random.multivariate_normal(np.array([0, 0]), cov, 2500)
+    df_sim = pd.DataFrame({"x": x_sim[:, 0], "y": x_sim[:, 1]})
 
-    matrix = mo.ui.anywidget(Matrix())
-    matrix
-    return Matrix, matrix
+    chart_sim = (
+        alt.Chart(df_sim).mark_point().encode(x="x", y="y") + 
+        alt.Chart(df_orig).mark_point(color="gray").encode(x="x", y="y")
+    )
+
+    mo.vstack([
+        mo.md("## `Matrix` demo"),
+        mo.md("This demo contains a representation of a matrix that you can edit live. This can be *amazing* for educational purposes."),
+        mo.hstack([mat, chart_sim])
+    ])
+    return chart_sim, cov, df_sim, x_sim
 
 
 @app.cell
@@ -44,6 +54,21 @@ def __():
 
     # await micropip.install("wigglystuff==0.1.1")
     return alt, micropip, mo, np, pd
+
+
+@app.cell
+def __(mo, np):
+    from wigglystuff import Matrix
+
+    mat = mo.ui.anywidget(Matrix(matrix=np.eye(2), triangular=True, step=0.1))
+    return Matrix, mat
+
+
+@app.cell
+def __(Matrix, mo, np):
+    x1 = mo.ui.anywidget(Matrix(matrix=np.eye(2), step=0.1))
+    x2 = mo.ui.anywidget(Matrix(matrix=np.random.random((2, 2)), step=0.1))
+    return x1, x2
 
 
 @app.cell
@@ -70,6 +95,13 @@ def __(np, pd):
         "y": np.random.normal(0, 1, 2000)
     })
     return (df_base,)
+
+
+@app.cell
+def __(np, pd):
+    x_orig = np.random.multivariate_normal(np.array([0, 0]), np.array([[1, 0], [0, 1]]), 2500)
+    df_orig = pd.DataFrame({"x": x_orig[:, 0], "y": x_orig[:, 1]})
+    return df_orig, x_orig
 
 
 @app.cell
