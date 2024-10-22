@@ -12,17 +12,34 @@ def __(alt, df, df_base, mo, slider_2d):
     ).properties(width=300, height=300)
 
     mo.vstack([
-        mo.md("## `Slider2D` demo"),
-        mo.md("This demo contains a two dimensional slider. The thinking is that sometimes you want to be able to make changes to two variables at the same time. The output is always standardized to the range of -1 to 1, but you can always use custom code to adapt this."),
+        mo.md("""
+    ## `Slider2D` demo
+
+    ```python
+    from wigglystuff import Slider2D
+
+    slider_2d = Slider2D(width=300, height=300)
+    ```
+
+    This demo contains a two dimensional slider. The thinking is that sometimes you want to be able to make changes to two variables at the same time. The output is always standardized to the range of -1 to 1, but you can always use custom code to adapt this."""),
         mo.hstack([slider_2d, chart])
     ])
     return (chart,)
 
 
 @app.cell
-def __(alt, df_orig, mat, mo, np, pd):
-    cov = np.array(mat.matrix)
-    x_sim = np.random.multivariate_normal(np.array([0, 0]), cov, 2500)
+def __(arr, np):
+    np.array(arr.matrix).reshape(-1)
+    return
+
+
+@app.cell
+def __(alt, arr, df_orig, mat, mo, np, pd):
+    x_sim = np.random.multivariate_normal(
+        np.array(arr.matrix).reshape(-1), 
+        np.array(mat.matrix), 
+        2500
+    )
     df_sim = pd.DataFrame({"x": x_sim[:, 0], "y": x_sim[:, 1]})
 
     chart_sim = (
@@ -31,11 +48,20 @@ def __(alt, df_orig, mat, mo, np, pd):
     )
 
     mo.vstack([
-        mo.md("## `Matrix` demo"),
-        mo.md("This demo contains a representation of a matrix that you can edit live. This can be *amazing* for educational purposes."),
-        mo.hstack([mat, chart_sim])
+        mo.md("""
+    ## `Matrix` demo
+
+    ```python
+    from wigglystuff import Matrix
+
+    arr = Matrix(rows=1, cols=2, triangular=True, step=0.1)
+    mat = Matrix(matrix=np.eye(2), triangular=True, step=0.1)
+    ```
+
+    This demo contains a representation of a two dimensional gaussian distribution. You can adapt the center by changing the first array that represents the mean and the variance can be updated by alterering the second one that represents the covariance matrix. Notice how the latter matrix has a triangular constraint."""),
+        mo.hstack([arr, mat, chart_sim])
     ])
-    return chart_sim, cov, df_sim, x_sim
+    return chart_sim, df_sim, x_sim
 
 
 @app.cell
@@ -61,7 +87,8 @@ def __(mo, np):
     from wigglystuff import Matrix
 
     mat = mo.ui.anywidget(Matrix(matrix=np.eye(2), triangular=True, step=0.1))
-    return Matrix, mat
+    arr = mo.ui.anywidget(Matrix(rows=1, cols=2, triangular=True, step=0.1))
+    return Matrix, arr, mat
 
 
 @app.cell
