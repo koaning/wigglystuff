@@ -4,7 +4,7 @@
 
 > "A collection of expressive Jupyter widgets."
 
-The project uses [anywidget](https://anywidget.dev/) under the hood so our tools should work in Jupyter, VSCode and Colab. That also means that you get a proper widget that can interact with [ipywidgets](https://ipywidgets.readthedocs.io/en/stable/) natively. 
+The project uses [anywidget](https://anywidget.dev/) under the hood so our tools should work in Jupyter, VSCode, Colab *and* Marimo. That also means that you get a proper widget that can interact with [ipywidgets](https://ipywidgets.readthedocs.io/en/stable/) natively. 
 
 ## Installation 
 
