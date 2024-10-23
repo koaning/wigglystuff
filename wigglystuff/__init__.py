@@ -19,8 +19,8 @@ class Matrix(anywidget.AnyWidget):
     """
     A very small excel experience for some quick number entry
     """
-    _esm = Path("wigglystuff") / 'static' / 'matrix.js'
-    _css = Path("wigglystuff") / 'static' / 'matrix.css'
+    _esm = Path(__file__).parent / 'static' / 'matrix.js'
+    _css = Path(__file__).parent / 'static' / 'matrix.css'
     rows = traitlets.Int(3).tag(sync=True)
     cols = traitlets.Int(3).tag(sync=True)
     min_value = traitlets.Float(-100.0).tag(sync=True)
