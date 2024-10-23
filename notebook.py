@@ -28,12 +28,6 @@ def __(alt, df, df_base, mo, slider_2d):
 
 
 @app.cell
-def __(arr, np):
-    np.array(arr.matrix).reshape(-1)
-    return
-
-
-@app.cell
 def __(alt, arr, df_orig, mat, mo, np, pd):
     x_sim = np.random.multivariate_normal(
         np.array(arr.matrix).reshape(-1), 
@@ -62,6 +56,35 @@ def __(alt, arr, df_orig, mat, mo, np, pd):
         mo.hstack([arr, mat, chart_sim])
     ])
     return chart_sim, df_sim, x_sim
+
+
+@app.cell
+def __(Matrix, mo, np, pd):
+    pca_mat = mo.ui.anywidget(Matrix(np.random.normal(0, 1, size=(3, 2)), step=0.1))
+    rgb_mat = np.random.randint(0, 255, size=(1000, 3))
+    color = ["#{0:02x}{1:02x}{2:02x}".format(r, g, b) for r,g,b in rgb_mat]
+
+    rgb_df = pd.DataFrame({
+        "r": rgb_mat[:, 0], "g": rgb_mat[:, 1], "b": rgb_mat[:, 2], 'color': color
+    })
+    return color, pca_mat, rgb_df, rgb_mat
+
+
+@app.cell
+def __(alt, color, mo, pca_mat, pd, rgb_mat):
+    X_tfm = rgb_mat @ pca_mat.matrix
+    df_pca = pd.DataFrame({"x": X_tfm[:, 0], "y": X_tfm[:, 1], "c": color})
+    pca_chart = alt.Chart(df_pca).mark_point().encode(x="x", y="y", color=alt.Color('c:N', scale = None))
+
+    mo.vstack([
+        mo.md("""
+    ### PCA demo with `Matrix` 
+
+    Ever want to do your own PCA? Try to figure out a mapping from a 3d color map to a 2d representation with the transformation matrix below."""),
+        mo.hstack([pca_mat, pca_chart])
+    ])
+
+    return X_tfm, df_pca, pca_chart
 
 
 @app.cell
