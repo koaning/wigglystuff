@@ -21,6 +21,14 @@ function render({ model, el }) {
   let currentX = 0;
   let currentY = 0;
 
+  // Add min/max attributes for x and y
+  const minX = model.get('min_x');
+  const maxX = model.get('max_x');
+  const minY = model.get('min_y');
+  const maxY = model.get('max_y');
+
+  console.log(minX, maxX, minY, maxY);
+
   function drawSlider() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -32,8 +40,9 @@ function render({ model, el }) {
       ctx.fill();
       ctx.stroke();
 
-      const normalizedX = currentX / radius;
-      const normalizedY = - currentY / radius;
+      // Update normalization to use min/max values
+      const normalizedX = minX + (currentX / radius + 1) * (maxX - minX) / 2;
+      const normalizedY = maxY - (currentY / radius + 1) * (maxY - minY) / 2;
       sliderValuesDiv.textContent = `X: ${normalizedX.toFixed(2)}, Y: ${normalizedY.toFixed(2)}`;
       model.set('x', normalizedX);
       model.set('y', normalizedY);
@@ -42,19 +51,21 @@ function render({ model, el }) {
 
   function handleMouseDown(event) {
       isDragging = true;
-      currentX = event.offsetX - centerX;
-      currentY = event.offsetY - centerY;
-      drawSlider();
+      updateSliderPosition(event);
   }
 
   function handleMouseMove(event) {
       if (isDragging) {
+          updateSliderPosition(event);
+      }
+  }
+
+  function updateSliderPosition(event) {
       currentX = event.offsetX - centerX;
       currentY = event.offsetY - centerY;
       currentX = Math.max(-radius, Math.min(radius, currentX));
       currentY = Math.max(-radius, Math.min(radius, currentY));
       drawSlider();
-      }
   }
 
   function handleMouseUp() {
