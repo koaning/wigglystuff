@@ -1,0 +1,67 @@
+.matrix {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 18px;
+    line-height: 1;
+    white-space: nowrap;
+    padding: 10px;
+    position: relative;
+    user-select: none;
+}
+.matrix:before, .matrix:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: black;
+}
+.matrix:before { left: 0; }
+.matrix:after { right: 0; }
+.matrix-row {
+    display: flex;
+    justify-content: center;
+}
+.matrix-element {
+    width: 3em;
+    height: 1.5em;
+    text-align: center;
+    margin: 0.2em;
+    cursor: ew-resize;
+    color: #0066cc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.matrix-element::selection {
+    background-color: transparent;
+}
+
+.matrix-container {
+    display: inline-block;
+    position: relative;
+    padding: 15px 25px;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.matrix-container::before,
+.matrix-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    border: 2px solid black;
+}
+
+.matrix-container::before {
+    left: 0;
+    border-right: none;
+}
+
+.matrix-container::after {
+    right: 0;
+    border-left: none;
+}
