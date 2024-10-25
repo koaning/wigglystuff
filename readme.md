@@ -53,3 +53,14 @@ on_change(None)
 ipywidgets.HBox([widget, output])
 ```
 </details>
+
+### `Matrix`
+
+```python
+from wigglystuff import Matrix
+
+arr = Matrix(rows=1, cols=2, triangular=True, step=0.1)
+mat = Matrix(matrix=np.eye(2), triangular=True, step=0.1)
+```
+
+![](imgs/matrix.gif)
