@@ -63,4 +63,4 @@ arr = Matrix(rows=1, cols=2, triangular=True, step=0.1)
 mat = Matrix(matrix=np.eye(2), triangular=True, step=0.1)
 ```
 
-![](imgs/matrix.gif)
+![](imgs/matix.gif)
