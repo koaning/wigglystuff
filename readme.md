@@ -63,4 +63,6 @@ arr = Matrix(rows=1, cols=2, triangular=True, step=0.1)
 mat = Matrix(matrix=np.eye(2), triangular=True, step=0.1)
 ```
 
+This widget allows you to grab the `mat.matrix` property after editing the matrix. This returns a list of lists which can easily be cast into a numpy array via `np.array(mat.matrix)`. 
+
 ![](imgs/matrix.gif)
