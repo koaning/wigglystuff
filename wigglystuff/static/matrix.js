@@ -4,11 +4,11 @@ function render({model, el}){
         cols: model.get("cols"),
         minValue: model.get("min_value"),
         maxValue: model.get("max_value"),
-        isTriangular: model.get("triangular"),
+        isMirrored: model.get("mirror"),
         stepSize: model.get("step"),
         pixelsPerStep: 2
     };
-
+    
     let matrix = JSON.parse(JSON.stringify(model.get("matrix"))); // Deep copy
 
     const container = document.createElement('div');
@@ -76,7 +76,7 @@ function render({model, el}){
 
     function updateMatrixValue(row, col, value) {
         matrix[row][col] = parseFloat(value.toFixed(1));
-        if (config.isTriangular && (col < config.rows) && (row < config.cols)) {
+        if (config.isMirrored && (col < config.rows) && (row < config.cols)) {
             matrix[col][row] = parseFloat(value.toFixed(1));
         }
     }
