@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.9.10"
+__generated_with = "0.9.14"
 app = marimo.App()
 
 
@@ -83,8 +83,46 @@ def __(alt, color, mo, pca_mat, pd, rgb_mat):
     Ever want to do your own PCA? Try to figure out a mapping from a 3d color map to a 2d representation with the transformation matrix below."""),
         mo.hstack([pca_mat, pca_chart])
     ])
-
     return X_tfm, df_pca, pca_chart
+
+
+@app.cell
+def __(mo):
+    from wigglystuff import TangleSlider
+
+    apples = mo.ui.anywidget(TangleSlider(min_value=0, step=1, suffix=" apples", digits=0))
+    price = mo.ui.anywidget(TangleSlider(min_value=0.01, max_value=5, step=0.01, prefix="$", digits=2))
+    return TangleSlider, apples, price
+
+
+@app.cell
+def __(apples, price):
+    total = apples.amount * price.amount
+    return (total,)
+
+
+@app.cell
+def __(total):
+    total
+    return
+
+
+@app.cell
+def __(mo):
+    a = mo.ui.slider(0, 10, 20)
+    return (a,)
+
+
+@app.cell
+def __(a, apples, mo, price, total):
+    mo.md(f"Suppose that you have {apples} and they each cost {price} then in total you would need to spend ${total:.2f}. {a}")
+    return
+
+
+@app.cell
+def __(apples):
+    apples.amount
+    return
 
 
 @app.cell

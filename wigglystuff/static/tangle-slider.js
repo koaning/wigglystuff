@@ -9,27 +9,26 @@ function render({model, el}) {
         pixelsPerStep: 2
     };
 
-    let value = model.get("value");
+    let amount = model.get("amount");
     
     const container = document.createElement('div');
     container.classList.add("tangle-container");
     el.appendChild(container);
 
     function renderValue() {
-        console.log(config.prefix + value.toFixed(1) + config.suffix);
         container.innerHTML = '';
         const element = document.createElement('span');
         element.className = 'tangle-value';
         element.style.color = '#0066cc';
         element.style.textDecoration = 'underline';
         element.style.cursor = 'ew-resize';
-        element.textContent = config.prefix + value.toFixed(config.digits) + config.suffix;
+        element.textContent = config.prefix + amount.toFixed(config.digits) + config.suffix;
         element.addEventListener('mousedown', startDragging);
         container.appendChild(element);
     }
 
     function updateModel() {
-        model.set("value", value);
+        model.set("amount", amount);
         model.save_changes();
     }
 
@@ -49,9 +48,9 @@ function render({model, el}) {
         function onMouseMove(e) {
             const deltaX = e.clientX - startX;
             const steps = Math.floor(deltaX / config.pixelsPerStep);
-            value = Math.max(config.minValue, 
+            amount = Math.max(config.minValue, 
                            Math.min(config.maxValue, 
-                                  startValue + steps * config.stepSize));
+                                    startValue + steps * config.stepSize));
             renderValue();
             debouncedUpdateModel();
         }
