@@ -54,7 +54,6 @@ class Matrix(anywidget.AnyWidget):
                  max_value: float = 100, 
                  triangular: bool = False, 
                  **kwargs) -> None:
-    def __init__(self, matrix=None, rows=3, cols=3, min_value=-100, max_value=100, mirror=False, step=1.0):
         if matrix is not None:
             import numpy as np
             matrix = np.array(matrix)
