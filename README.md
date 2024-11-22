@@ -4,7 +4,7 @@
 
 > "A collection of expressive Jupyter widgets."
 
-The project uses [anywidget](https://anywidget.dev/) under the hood so our tools should work in Jupyter, VSCode, Colab *and* Marimo. That also means that you get a proper widget that can interact with [ipywidgets](https://ipywidgets.readthedocs.io/en/stable/) natively. 
+The project uses [anywidget](https://anywidget.dev/) under the hood so our tools should work in Jupyter, VSCode, Colab *and* [Marimo](https://marimo.io/). That also means that you get a proper widget that can interact with [ipywidgets](https://ipywidgets.readthedocs.io/en/stable/) natively. 
 
 ## Installation 
 
@@ -59,10 +59,8 @@ ipywidgets.HBox([widget, output])
 ```python
 from wigglystuff import Matrix
 
-arr = Matrix(rows=1, cols=2, triangular=True, step=0.1)
+arr = Matrix(rows=1, cols=2, step=0.1)
 mat = Matrix(matrix=np.eye(2), triangular=True, step=0.1)
 ```
 
-This widget allows you to grab the `mat.matrix` property after editing the matrix. This returns a list of lists which can easily be cast into a numpy array via `np.array(mat.matrix)`. 
-
-![](imgs/matrix.gif)
+![](imgs/matix.gif)

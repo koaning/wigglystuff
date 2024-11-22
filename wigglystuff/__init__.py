@@ -39,13 +39,13 @@ class Matrix(anywidget.AnyWidget):
     """
     _esm = Path(__file__).parent / 'static' / 'matrix.js'
     _css = Path(__file__).parent / 'static' / 'matrix.css'
+    matrix = traitlets.List([]).tag(sync=True)
     rows = traitlets.Int(3).tag(sync=True)
     cols = traitlets.Int(3).tag(sync=True)
     min_value = traitlets.Float(-100.0).tag(sync=True)
     max_value = traitlets.Float(100.0).tag(sync=True)
+    mirror = traitlets.Bool(False).tag(sync=True)
     step = traitlets.Float(1.0).tag(sync=True)
-    triangular = traitlets.Bool(False).tag(sync=True)
-    matrix = traitlets.List([]).tag(sync=True)
 
     def __init__(self, matrix: List[List[float]] | None = None, 
                  rows: int = 3, 
@@ -54,9 +54,14 @@ class Matrix(anywidget.AnyWidget):
                  max_value: float = 100, 
                  triangular: bool = False, 
                  **kwargs) -> None:
+    def __init__(self, matrix=None, rows=3, cols=3, min_value=-100, max_value=100, mirror=False, step=1.0):
         if matrix is not None:
             import numpy as np
             matrix = np.array(matrix)
+            if matrix.min() < min_value:
+                raise ValueError(f"The min value of input matrix is less than min_value={min_value}.")
+            if matrix.max() > max_value:
+                raise ValueError(f"The max value of input matrix is less than max_value={max_value}.")
             rows, cols = matrix.shape
             matrix = matrix.tolist()
         else:

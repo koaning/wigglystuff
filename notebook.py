@@ -1,6 +1,7 @@
 import marimo
 
-__generated_with = "0.9.14"
+
+__generated_with = "0.9.20"
 app = marimo.App()
 
 
@@ -48,8 +49,8 @@ def __(alt, arr, df_orig, mat, mo, np, pd):
     ```python
     from wigglystuff import Matrix
 
-    arr = Matrix(rows=1, cols=2, triangular=True, step=0.1)
-    mat = Matrix(matrix=np.eye(2), triangular=True, step=0.1)
+    arr = Matrix(rows=1, cols=2, step=0.1)
+    mat = Matrix(matrix=np.eye(2), mirror=True, step=0.1)
     ```
 
     This demo contains a representation of a two dimensional gaussian distribution. You can adapt the center by changing the first array that represents the mean and the variance can be updated by alterering the second one that represents the covariance matrix. Notice how the latter matrix has a triangular constraint."""),
@@ -132,6 +133,12 @@ def __(mo):
 
 
 @app.cell
+def __(Matrix, mo, np):
+    mo.ui.anywidget(Matrix(np.eye(3), min_value=0, max_value=10, mirror=True))
+    return
+
+
+@app.cell
 def __():
     import altair as alt
     import marimo as mo
@@ -147,8 +154,8 @@ def __():
 def __(mo, np):
     from wigglystuff import Matrix
 
-    mat = mo.ui.anywidget(Matrix(matrix=np.eye(2), triangular=True, step=0.1))
-    arr = mo.ui.anywidget(Matrix(rows=1, cols=2, triangular=True, step=0.1))
+    mat = mo.ui.anywidget(Matrix(matrix=np.eye(2), mirror=True, step=0.1))
+    arr = mo.ui.anywidget(Matrix(rows=1, cols=2, step=0.1))
     return Matrix, arr, mat
 
 
