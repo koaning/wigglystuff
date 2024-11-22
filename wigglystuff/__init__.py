@@ -1,3 +1,4 @@
+from typing import List
 from pathlib import Path
 import anywidget
 import traitlets
@@ -40,3 +41,37 @@ class Matrix(anywidget.AnyWidget):
         else:
             matrix = [[(min_value + max_value) / 2 for i in range(cols)] for j in range(rows)]
         super().__init__(matrix=matrix, rows=rows, cols=cols, triangular=triangular, **kwargs)
+
+
+class TangleSlider(anywidget.AnyWidget):
+    """
+    A very small excel experience for some quick number entry
+    """
+    _esm = Path(__file__).parent / 'static' / 'tangle-slider.js'
+    value = traitlets.Float(0.0).tag(sync=True)
+    min_value = traitlets.Float(-100.0).tag(sync=True)
+    max_value = traitlets.Float(100.0).tag(sync=True)
+    step = traitlets.Float(1.0).tag(sync=True)
+    pixels_per_step = traitlets.Int(2).tag(sync=True)
+    prefix = traitlets.Unicode("").tag(sync=True)
+    suffix = traitlets.Unicode("").tag(sync=True)
+    digits = traitlets.Int(1).tag(sync=True)
+
+    def __init__(self, value=None, min_value=-100, max_value=100, step=1.0, pixels_per_step=2, prefix="", suffix="", digits=1, **kwargs):
+        if not value:
+            value = (max_value + min_value)/2
+        super().__init__(value=value, min_value=min_value, max_value=max_value, step=step, pixels_per_step=pixels_per_step, prefix=prefix, suffix=suffix, digits=digits, **kwargs)
+
+
+class TangleChoice(anywidget.AnyWidget):
+    """
+    A UI element like tangle.js but for Python to make choices. 
+    """
+    _esm = Path(__file__).parent / 'static' / 'tangle-choice.js'
+    value = traitlets.Unicode("").tag(sync=True)
+    choices = traitlets.List([]).tag(sync=True)
+
+    def __init__(self, choices: List[str], **kwargs):
+        if len(choices) < 2:
+            raise ValueError("Must pass at least two choices.")
+        super().__init__(value=choices[1], choices=choices, **kwargs)
