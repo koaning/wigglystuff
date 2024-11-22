@@ -5,9 +5,14 @@ import traitlets
 
 
 class Slider2D(anywidget.AnyWidget):
-    """
-    A scatter drawing widget that automatically can update a pandas/polars dataframe
-    as your draw data.
+    """Initialize a Slider2D widget.
+
+    Args:
+        x: Initial x coordinate value. Defaults to 0.
+        y: Initial y coordinate value. Defaults to 0.
+        width: Width of the slider widget in pixels. Defaults to 400.
+        height: Height of the slider widget in pixels. Defaults to 400.
+        **kwargs: Additional keyword arguments passed to parent class.
     """
     _esm = Path(__file__).parent / 'static' / '2dslider.js'
     x = traitlets.Float(0.0).tag(sync=True)
@@ -15,10 +20,22 @@ class Slider2D(anywidget.AnyWidget):
     width = traitlets.Int(400).tag(sync=True)
     height = traitlets.Int(400).tag(sync=True)
 
+    def __init__(self, x: float = 0, y: float = 0, width: int = 400, height: int = 400, **kwargs) -> None:
+        super().__init__(x=x, y=y, width=width, height=height, **kwargs)
+
 
 class Matrix(anywidget.AnyWidget):
-    """
-    A very small excel experience for some quick number entry
+    """Initialize a Matrix widget.
+
+    Args:
+        matrix: Optional 2D list of values to initialize the matrix with.
+                If None, matrix will be initialized with mean of min/max values.
+        rows: Number of rows in the matrix.
+        cols: Number of columns in the matrix.
+        min_value: Minimum allowed value in the matrix.
+        max_value: Maximum allowed value in the matrix.
+        triangular: If True, only allow editing upper triangle of matrix.
+        **kwargs: Additional keyword arguments passed to parent class.
     """
     _esm = Path(__file__).parent / 'static' / 'matrix.js'
     _css = Path(__file__).parent / 'static' / 'matrix.css'
@@ -30,9 +47,13 @@ class Matrix(anywidget.AnyWidget):
     triangular = traitlets.Bool(False).tag(sync=True)
     matrix = traitlets.List([]).tag(sync=True)
 
-    def __init__(self, matrix=None, rows=3, cols=3, min_value=-100, max_value=100, triangular=False, **kwargs):
-        # if triangular and (rows != cols):
-        #     raise ValueError("triangular setting is only meant for square matrices")
+    def __init__(self, matrix: List[List[float]] | None = None, 
+                 rows: int = 3, 
+                 cols: int = 3, 
+                 min_value: float = -100, 
+                 max_value: float = 100, 
+                 triangular: bool = False, 
+                 **kwargs) -> None:
         if matrix is not None:
             import numpy as np
             matrix = np.array(matrix)
@@ -44,8 +65,18 @@ class Matrix(anywidget.AnyWidget):
 
 
 class TangleSlider(anywidget.AnyWidget):
-    """
-    A very small excel experience for some quick number entry
+    """Initialize a TangleSlider widget.
+
+    Args:
+        amount: Initial value of the slider. If None, uses mean of min/max.
+        min_value: Minimum allowed value.
+        max_value: Maximum allowed value.
+        step: Step size for value changes.
+        pixels_per_step: Number of pixels per step when dragging.
+        prefix: Text to display before the value.
+        suffix: Text to display after the value.
+        digits: Number of decimal places to display.
+        **kwargs: Additional keyword arguments passed to parent class.
     """
     _esm = Path(__file__).parent / 'static' / 'tangle-slider.js'
     amount = traitlets.Float(0.0).tag(sync=True)
@@ -57,21 +88,36 @@ class TangleSlider(anywidget.AnyWidget):
     suffix = traitlets.Unicode("").tag(sync=True)
     digits = traitlets.Int(1).tag(sync=True)
 
-    def __init__(self, amount=None, min_value=-100, max_value=100, step=1.0, pixels_per_step=2, prefix="", suffix="", digits=1, **kwargs):
+    def __init__(self, 
+                 amount: float | None = None,
+                 min_value: float = -100,
+                 max_value: float = 100,
+                 step: float = 1.0,
+                 pixels_per_step: int = 2,
+                 prefix: str = "",
+                 suffix: str = "",
+                 digits: int = 1,
+                 **kwargs) -> None:
         if not amount:
             amount = (max_value + min_value)/2
         super().__init__(amount=amount, min_value=min_value, max_value=max_value, step=step, pixels_per_step=pixels_per_step, prefix=prefix, suffix=suffix, digits=digits, **kwargs)
 
 
 class TangleChoice(anywidget.AnyWidget):
-    """
-    A UI element like tangle.js but for Python to make choices. 
+    """Initialize a TangleChoice widget.
+
+    Args:
+        choices: List of at least two string choices to select from.
+        **kwargs: Additional keyword arguments passed to parent class.
+
+    Raises:
+        ValueError: If fewer than two choices are provided.
     """
     _esm = Path(__file__).parent / 'static' / 'tangle-choice.js'
     choice = traitlets.Unicode("").tag(sync=True)
     choices = traitlets.List([]).tag(sync=True)
 
-    def __init__(self, choices: List[str], **kwargs):
+    def __init__(self, choices: List[str], **kwargs) -> None:
         if len(choices) < 2:
             raise ValueError("Must pass at least two choices.")
         super().__init__(value=choices[1], choices=choices, **kwargs)
