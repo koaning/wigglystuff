@@ -56,6 +56,8 @@ ipywidgets.HBox([widget, output])
 
 ### `Matrix`
 
+If you want to get an intuition of linear algebra, the `Matrix` object might really help. It can generate a matrix for you that allows you to update all the values in it. 
+
 ```python
 from wigglystuff import Matrix
 
@@ -67,6 +69,8 @@ mat = Matrix(matrix=np.eye(2), triangular=True, step=0.1)
 
 ### `TangleSlider` 
 
+Sliders are neat, but maybe you'd prefer to have something more inline. For that use-case the `TangleSlider` can be just what you need. 
+
 ```python
 from wigglystuff import TangleSlider
 ```
@@ -74,6 +78,8 @@ from wigglystuff import TangleSlider
 ![](imgs/tangleslider.gif)
 
 ### `TangleChoice` 
+
+This is similar to the `TangleSlider` but for discrete choices. 
 
 ```python
 from wigglystuff import TangleChoice

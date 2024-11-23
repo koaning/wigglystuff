@@ -1,7 +1,6 @@
 import marimo
 
-
-__generated_with = "0.9.20"
+__generated_with = "0.9.21"
 app = marimo.App()
 
 
@@ -88,41 +87,48 @@ def __(alt, color, mo, pca_mat, pd, rgb_mat):
 
 
 @app.cell
-def __(mo):
-    from wigglystuff import TangleSlider
+def __(c, coffees, mo, price, prob1, prob2, saying, times, total):
+    mo.vstack([
+        mo.md(f"""
+        ## Tangle objects 
 
-    apples = mo.ui.anywidget(TangleSlider(min_value=0, step=1, suffix=" apples", digits=0))
-    price = mo.ui.anywidget(TangleSlider(min_value=0.01, max_value=5, step=0.01, prefix="$", digits=2))
-    return TangleSlider, apples, price
+        Very much inspired by [tangle.js](), this library also offers some sliders/choice elements that can natively be combined in markdown. 
 
+        ```python
+        from wigglystuff import TangleSlider
+        ```
 
-@app.cell
-def __(apples, price):
-    total = apples.amount * price.amount
-    return (total,)
+        There are some examples below. 
+        ### Apples example 
 
+        Suppose that you have {coffees} and they each cost {price} then in total you would need to spend ${total:.2f}. 
 
-@app.cell
-def __(total):
-    total
-    return
+        ### Amdhals law
 
+        You cannot always get a speedup by throwing more compute at a problem. Let's compare two scenarios. 
 
-@app.cell
-def __(mo):
-    a = mo.ui.slider(0, 10, 20)
-    return (a,)
+        - You might have a parallel program that needs to sync up {prob1}.
+        - Another parallel program needs to sync up {prob2}.
 
+        The consequences of these choices are shown below. You might be suprised at the result, but you need to remember that if you throw more cores at the problem then you will also have more cores that will idle when the program needs to sync. 
 
-@app.cell
-def __(a, apples, mo, price, total):
-    mo.md(f"Suppose that you have {apples} and they each cost {price} then in total you would need to spend ${total:.2f}. {a}")
-    return
+        """),
+        c,
+        mo.md(f"""
+        ### Also a choice widget 
 
+        The slider widget can do numeric values for you, but sometimes you also want to make a choice between discrete choices. For that, you can use the `TangleChoice` widget. 
 
-@app.cell
-def __(apples):
-    apples.amount
+        ```python
+        from wigglystuff import TangleChoice
+        ```
+
+        As a quick demo, let's repeat {saying} {times}. 
+
+        {" ".join([saying.choice] * int(times.amount))}
+        """
+        )
+    ])
     return
 
 
@@ -133,9 +139,64 @@ def __(mo):
 
 
 @app.cell
+def __(coffees, price):
+    # You need to define derivates in other cells. 
+    total = coffees.amount * price.amount
+    return (total,)
+
+
+@app.cell
+def __(alt, np, pd, prob1, prob2):
+    cores = np.arange(1, 64 + 1)
+    p1, p2 = prob1.amount/100, prob2.amount/100
+    eff1 = 1/(p1 + (1-p1)/cores)
+    eff2 = 1/(p2 + (1-p2)/cores)
+
+    df_amdahl = pd.DataFrame({
+        'cores': cores, 
+        f'{prob1.amount:.2f}% sync rate': eff1, 
+        f'{prob2.amount:.2f}% sync rate': eff2
+    }).melt("cores")
+
+    c = (
+        alt.Chart(df_amdahl)
+            .mark_line()
+            .encode(
+                x='cores', 
+                y=alt.Y('value').title("effective cores"), 
+                color="variable"
+            )
+            .properties(width=500, title="Comparison between cores and actual speedup.")
+    )
+    return c, cores, df_amdahl, eff1, eff2, p1, p2
+
+
+@app.cell
 def __(Matrix, mo, np):
     mo.ui.anywidget(Matrix(np.eye(3), min_value=0, max_value=10, mirror=True))
     return
+
+
+@app.cell
+def __(mo):
+    from wigglystuff import TangleSlider, TangleChoice
+
+    coffees = mo.ui.anywidget(TangleSlider(amount=10, min_value=0, step=1, suffix=" coffees", digits=0))
+    price = mo.ui.anywidget(TangleSlider(amount=3.50, min_value=0.01, max_value=10, step=0.01, prefix="$", digits=2))
+    prob1 = mo.ui.anywidget(TangleSlider(min_value=0, max_value=20, step=0.1, suffix="% of the time", amount=5))
+    prob2 = mo.ui.anywidget(TangleSlider(min_value=0, max_value=20, step=0.1, suffix="% of the time", amount=0))
+    saying = mo.ui.anywidget(TangleChoice(["🙂", "🎉", "💥"]))
+    times = mo.ui.anywidget(TangleSlider(min_value=1, max_value=20, step=1, suffix=" times", amount=3))
+    return (
+        TangleChoice,
+        TangleSlider,
+        coffees,
+        price,
+        prob1,
+        prob2,
+        saying,
+        times,
+    )
 
 
 @app.cell
