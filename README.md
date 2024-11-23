@@ -64,3 +64,19 @@ mat = Matrix(matrix=np.eye(2), triangular=True, step=0.1)
 ```
 
 ![](imgs/matix.gif)
+
+### `TangleSlider` 
+
+```python
+from wigglystuff import TangleSlider
+```
+
+![](imgs/tangleslider.gif)
+
+### `TangleChoice` 
+
+```python
+from wigglystuff import TangleChoice
+```
+
+![](imgs/tanglechoice.gif)

@@ -5,7 +5,8 @@ function render({model, el}) {
 
     const container = document.createElement('div');
     container.classList.add("tangle-container");
-    container.style.display = 'inline';
+    el.style.display = "inline-flex";
+
     el.appendChild(container);
 
     function renderValue() {

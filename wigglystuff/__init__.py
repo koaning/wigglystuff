@@ -102,7 +102,7 @@ class TangleSlider(anywidget.AnyWidget):
                  suffix: str = "",
                  digits: int = 1,
                  **kwargs) -> None:
-        if not amount:
+        if amount is None:
             amount = (max_value + min_value)/2
         super().__init__(amount=amount, min_value=min_value, max_value=max_value, step=step, pixels_per_step=pixels_per_step, prefix=prefix, suffix=suffix, digits=digits, **kwargs)
 

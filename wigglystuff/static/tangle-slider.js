@@ -10,9 +10,11 @@ function render({model, el}) {
     };
 
     let amount = model.get("amount");
+    console.log(amount);
     
     const container = document.createElement('div');
     container.classList.add("tangle-container");
+    el.style.display = "inline-flex";
     el.appendChild(container);
 
     function renderValue() {
@@ -35,7 +37,7 @@ function render({model, el}) {
     let updateTimeout;
     function debouncedUpdateModel() {
         clearTimeout(updateTimeout);
-        updateTimeout = setTimeout(updateModel, 100); // Debounce for 100ms
+        updateTimeout = setTimeout(updateModel, 50); // Debounce for 100ms
     }
 
     function startDragging(e) {
