@@ -62,7 +62,7 @@ If you want to get an intuition of linear algebra, the `Matrix` object might rea
 from wigglystuff import Matrix
 
 arr = Matrix(rows=1, cols=2, step=0.1)
-mat = Matrix(matrix=np.eye(2), triangular=True, step=0.1)
+mat = Matrix(matrix=np.eye(2), mirror=True, step=0.1)
 ```
 
 ![](imgs/matix.gif)
