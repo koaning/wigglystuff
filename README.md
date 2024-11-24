@@ -8,10 +8,11 @@ The project uses [anywidget](https://anywidget.dev/) under the hood so our tools
 
 ## Installation 
 
-Installation occurs via pip. 
+Installation occurs via `pip` or `uv`. 
 
 ```
 python -m pip install wigglystuff
+uv pip install wigglystuff
 ```
 
 ## Usage
