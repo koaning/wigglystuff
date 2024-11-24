@@ -13,12 +13,16 @@ We've made some demos of the widgets and shared them on the Marimo gallery for e
 <table>
 <tr>
 <td align="center">
-<b>Matrix demo with PCA</b>
-<img src="https://marimo.io/_next/image?url=%2Fimages%2Fgallery%2Finteractive-matrices.gif&w=1080&q=75" width="290"><br>
+    <a href="https://marimo.io/p/@marimo/interactive-matrices">
+        <b>Matrix demo with PCA</b>
+        <img src="https://marimo.io/_next/image?url=%2Fimages%2Fgallery%2Finteractive-matrices.gif&w=1080&q=75" width="290"><br>
+    </a>
 </td>
 <td align="center">
-<b>Tangle Widgets for exploration</b>
-<img src="https://marimo.io/_next/image?url=%2Fimages%2Fgallery%2Ftangle.gif&w=1080&q=75" width="290"><br>
+    <a href="https://marimo.io/p/@vincent-d-warmerdam-/tangle-demo">
+        <b>Tangle Widgets for exploration</b>
+        <img src="https://marimo.io/_next/image?url=%2Fimages%2Fgallery%2Ftangle.gif&w=1080&q=75" width="290"><br>
+    </a>
 </td>
 </tr>
 </table>
