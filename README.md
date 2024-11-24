@@ -10,10 +10,18 @@ The project uses [anywidget](https://anywidget.dev/) under the hood so our tools
 
 We've made some demos of the widgets and shared them on the Marimo gallery for easy exploration. 
 
-Matrix demo with PCA             |  Tangle Widgets for exploration
-:-------------------------:|:-------------------------:
-![](https://marimo.io/_next/image?url=%2Fimages%2Fgallery%2Finteractive-matrices.gif&w=1080&q=75)  |  ![](https://marimo.io/_next/image?url=%2Fimages%2Fgallery%2Ftangle.gif&w=1080&q=75)
-
+<table>
+<tr>
+<td align="center">
+<b>Matrix demo with PCA</b>
+<img src="https://marimo.io/_next/image?url=%2Fimages%2Fgallery%2Finteractive-matrices.gif&w=1080&q=75" width="290"><br>
+</td>
+<td align="center">
+<b>Tangle Widgets for exploration</b>
+<img src="https://marimo.io/_next/image?url=%2Fimages%2Fgallery%2Ftangle.gif&w=1080&q=75" width="290"><br>
+</td>
+</tr>
+</table>
 
 ## Installation 
 
