@@ -34,18 +34,18 @@ function render({model, el}){
         });
 
         updateModel();
-    }
+    };
 
     function updateModel() {
         model.set("matrix", JSON.parse(JSON.stringify(matrix))); // Deep copy
         model.save_changes();
-    }
+    };
 
     let updateTimeout;
     function debouncedUpdateModel() {
         clearTimeout(updateTimeout);
         updateTimeout = setTimeout(updateModel, 100); // Debounce for 100ms
-    }
+    };
 
     function startDragging(e) {
         e.preventDefault();
@@ -72,14 +72,14 @@ function render({model, el}){
 
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
-    }
+    };
 
     function updateMatrixValue(row, col, value) {
         matrix[row][col] = parseFloat(value.toFixed(1));
         if (config.isMirrored && (col < config.rows) && (row < config.cols)) {
             matrix[col][row] = parseFloat(value.toFixed(1));
         }
-    }
+    };
 
     renderMatrix();
 }
