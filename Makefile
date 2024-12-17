@@ -1,4 +1,4 @@
-.PHONY: js
+.PHONY: js docs
 
 install: 
 	# install the build tool for JS written in Golang
@@ -12,8 +12,11 @@ pypi:
 	twine upload dist/*
 
 js:
-	# build the JS file, not needed for current widgets
-	# ./esbuild --watch=forever --bundle --format=esm --outfile=drawdata/static/scatter_widget.js js/scatter_widget.js
+	# build the JS file, only needed for the edge widget
+	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/edgedraw.js js/edgedraw.js
 
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
+
+docs: 
+	marimo export html-wasm notebook.py --output docs/index.html --mode run

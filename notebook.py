@@ -1,11 +1,11 @@
 import marimo
 
-__generated_with = "0.9.21"
+__generated_with = "0.10.4"
 app = marimo.App()
 
 
 @app.cell
-def __(alt, df, df_base, mo, slider_2d):
+def _(alt, df, df_base, mo, slider_2d):
     chart = (
         alt.Chart(df_base).mark_point(color="gray").encode(x="x", y="y") + 
         alt.Chart(df).mark_point().encode(x="x", y="y")
@@ -28,7 +28,7 @@ def __(alt, df, df_base, mo, slider_2d):
 
 
 @app.cell
-def __(alt, arr, df_orig, mat, mo, np, pd):
+def _(alt, arr, df_orig, mat, mo, np, pd):
     x_sim = np.random.multivariate_normal(
         np.array(arr.matrix).reshape(-1), 
         np.array(mat.matrix), 
@@ -59,7 +59,7 @@ def __(alt, arr, df_orig, mat, mo, np, pd):
 
 
 @app.cell
-def __(Matrix, mo, np, pd):
+def _(Matrix, mo, np, pd):
     pca_mat = mo.ui.anywidget(Matrix(np.random.normal(0, 1, size=(3, 2)), step=0.1))
     rgb_mat = np.random.randint(0, 255, size=(1000, 3))
     color = ["#{0:02x}{1:02x}{2:02x}".format(r, g, b) for r,g,b in rgb_mat]
@@ -71,7 +71,7 @@ def __(Matrix, mo, np, pd):
 
 
 @app.cell
-def __(alt, color, mo, pca_mat, pd, rgb_mat):
+def _(alt, color, mo, pca_mat, pd, rgb_mat):
     X_tfm = rgb_mat @ pca_mat.matrix
     df_pca = pd.DataFrame({"x": X_tfm[:, 0], "y": X_tfm[:, 1], "c": color})
     pca_chart = alt.Chart(df_pca).mark_point().encode(x="x", y="y", color=alt.Color('c:N', scale = None))
@@ -87,7 +87,7 @@ def __(alt, color, mo, pca_mat, pd, rgb_mat):
 
 
 @app.cell
-def __(c, coffees, mo, price, prob1, prob2, saying, times, total):
+def _(c, coffees, mo, price, prob1, prob2, saying, times, total):
     mo.vstack([
         mo.md(f"""
         ## Tangle objects 
@@ -133,20 +133,53 @@ def __(c, coffees, mo, price, prob1, prob2, saying, times, total):
 
 
 @app.cell
-def __(mo):
+def _(edge_widget, mo):
+    mo.vstack([
+        mo.md(f"""
+        ## Drawing Edges
+
+        We even have a tool that allows you to connect nodes by drawing edges!
+
+        ```python
+        from wigglystuff import EdgeDraw
+        EdgeDraw(["a", "b", "c", "d"])
+        ```
+
+        Try it yourself by drawing below. 
+        """),
+        edge_widget,
+        mo.md(f"""
+        As you draw more nodes, you will also update the `widget.links` property. 
+        """), 
+        edge_widget.links
+
+    ])
+    return
+
+
+@app.cell
+def _(mo):
     mo.md(r"""## Appendix with all supporting code""")
     return
 
 
 @app.cell
-def __(coffees, price):
+def _(mo):
+    from wigglystuff import EdgeDraw
+
+    edge_widget = mo.ui.anywidget(EdgeDraw(["a", "b", "c", "d"]))
+    return EdgeDraw, edge_widget
+
+
+@app.cell
+def _(coffees, price):
     # You need to define derivates in other cells. 
     total = coffees.amount * price.amount
     return (total,)
 
 
 @app.cell
-def __(alt, np, pd, prob1, prob2):
+def _(alt, np, pd, prob1, prob2):
     cores = np.arange(1, 64 + 1)
     p1, p2 = prob1.amount/100, prob2.amount/100
     eff1 = 1/(p1 + (1-p1)/cores)
@@ -172,13 +205,7 @@ def __(alt, np, pd, prob1, prob2):
 
 
 @app.cell
-def __(Matrix, mo, np):
-    mo.ui.anywidget(Matrix(np.eye(3), min_value=0, max_value=10, mirror=True))
-    return
-
-
-@app.cell
-def __(mo):
+def _(mo):
     from wigglystuff import TangleSlider, TangleChoice
 
     coffees = mo.ui.anywidget(TangleSlider(amount=10, min_value=0, step=1, suffix=" coffees", digits=0))
@@ -200,7 +227,7 @@ def __(mo):
 
 
 @app.cell
-def __():
+def _():
     import altair as alt
     import marimo as mo
     import micropip
@@ -212,7 +239,7 @@ def __():
 
 
 @app.cell
-def __(mo, np):
+def _(mo, np):
     from wigglystuff import Matrix
 
     mat = mo.ui.anywidget(Matrix(matrix=np.eye(2), mirror=True, step=0.1))
@@ -221,14 +248,14 @@ def __(mo, np):
 
 
 @app.cell
-def __(Matrix, mo, np):
+def _(Matrix, mo, np):
     x1 = mo.ui.anywidget(Matrix(matrix=np.eye(2), step=0.1))
     x2 = mo.ui.anywidget(Matrix(matrix=np.random.random((2, 2)), step=0.1))
     return x1, x2
 
 
 @app.cell
-def __(mo):
+def _(mo):
     from wigglystuff import Slider2D
 
     slider_2d = mo.ui.anywidget(Slider2D(width=300, height=300))
@@ -236,7 +263,7 @@ def __(mo):
 
 
 @app.cell
-def __(np, pd, slider_2d):
+def _(np, pd, slider_2d):
     df = pd.DataFrame({
         "x": np.random.normal(slider_2d.x * 10, 1, 2000), 
         "y": np.random.normal(slider_2d.y * 10, 1, 2000)
@@ -245,7 +272,7 @@ def __(np, pd, slider_2d):
 
 
 @app.cell
-def __(np, pd):
+def _(np, pd):
     df_base = pd.DataFrame({
         "x": np.random.normal(0, 1, 2000), 
         "y": np.random.normal(0, 1, 2000)
@@ -254,14 +281,14 @@ def __(np, pd):
 
 
 @app.cell
-def __(np, pd):
+def _(np, pd):
     x_orig = np.random.multivariate_normal(np.array([0, 0]), np.array([[1, 0], [0, 1]]), 2500)
     df_orig = pd.DataFrame({"x": x_orig[:, 0], "y": x_orig[:, 1]})
     return df_orig, x_orig
 
 
 @app.cell
-def __():
+def _():
     return
 
 
