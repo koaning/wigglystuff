@@ -1,0 +1,30 @@
+.node {
+    cursor: pointer;
+}
+
+.link {
+    stroke: #999;
+    stroke-opacity: 0.8;
+    stroke-width: 3px;
+    cursor: pointer;
+}
+
+.arrow {
+    fill: #999;
+}
+
+.label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    dominant-baseline: middle;
+}
+
+.label-background {
+    fill: white;
+    fill-opacity: 0.8;
+}
+
+.selected {
+    stroke: #ff0000;
+    stroke-width: 2px;
+}

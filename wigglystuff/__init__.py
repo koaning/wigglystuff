@@ -125,3 +125,18 @@ class TangleChoice(anywidget.AnyWidget):
         if len(choices) < 2:
             raise ValueError("Must pass at least two choices.")
         super().__init__(value=choices[1], choices=choices, **kwargs)
+
+
+class EdgeDraw(anywidget.AnyWidget):
+    """Initialize a EdgeDraw widget.
+
+    Args:
+        names: List of names for the nodes.
+    """
+    _esm = Path(__file__).parent / 'static' / 'edgedraw.js'
+    _css = Path(__file__).parent / 'static' / 'edgedraw.css'
+    names = traitlets.List([]).tag(sync=True)
+    links = traitlets.List([]).tag(sync=True)
+    
+    def __init__(self, names: List[str]) -> None:
+        super().__init__(names=names)
