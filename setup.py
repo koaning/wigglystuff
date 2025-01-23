@@ -12,8 +12,8 @@ def read(fname):
 
 setup(
     name="wigglystuff",
-    version="0.1.7",
-    description="Collection of Jupyter Widgets",
+    version="0.1.8",
+    description="Collection of Anywidget Widgets",
     author="Vincent D. Warmerdam",
     packages=find_packages(exclude=["notebooks"]),
     package_data={"wigglystuff": ["static/*.js", "static/*.css"]},
