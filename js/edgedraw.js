@@ -140,6 +140,9 @@ function render({model, el}){
                 links = links.filter(l => l !== d);
                 simulation.force("link").links(links);
                 updateLinks();
+                model.set("links", links.map(l => ({source: l.source.id, target: l.target.id})));
+                console.log(links.map(l => ({source: l.source.id, target: l.target.id})));
+                model.save_changes();
             });
     }
 
