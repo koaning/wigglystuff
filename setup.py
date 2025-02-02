@@ -12,7 +12,7 @@ def read(fname):
 
 setup(
     name="wigglystuff",
-    version="0.1.8",
+    version="0.1.9",
     description="Collection of Anywidget Widgets",
     author="Vincent D. Warmerdam",
     packages=find_packages(exclude=["notebooks"]),

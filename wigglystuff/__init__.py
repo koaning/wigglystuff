@@ -140,3 +140,40 @@ class EdgeDraw(anywidget.AnyWidget):
     
     def __init__(self, names: List[str]) -> None:
         super().__init__(names=names)
+
+
+class CopyToClipboard(anywidget.AnyWidget):
+    """Initialize a CopyToClipboard widget.
+
+    Args:
+        text_to_copy: String to copy to the clipboard when button is pressed.
+    """
+    text_to_copy = traitlets.Unicode("").tag(sync=True)
+    
+    _esm = """
+    function render({ model, el }) {
+        // Create a button element
+        const button = document.createElement("button");
+        button.textContent = "Copy to Clipboard";
+        
+        // Add a click event listener to the button
+        button.addEventListener("click", async () => {
+            try {
+                // Copy the text to the clipboard
+                await navigator.clipboard.writeText(model.get("text_to_copy"));
+                console.log("Text copied to clipboard:", model.get("text_to_copy"));
+            } catch (err) {
+                console.error("Failed to copy text:", err);
+            }
+        });
+        
+        // Append the button to the widget's element
+        el.appendChild(button);
+    };
+    
+    export default {render};
+    """
+    
+    def __init__(self, text_to_copy="", **kwargs):
+        super().__init__(**kwargs)
+        self.text_to_copy = text_to_copy
