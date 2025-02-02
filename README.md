@@ -117,3 +117,15 @@ from wigglystuff import TangleChoice
 ```
 
 ![](imgs/tanglechoice.gif)
+
+### `CopyToClipboard` 
+
+This is a simple button, but one that allows you to copy anything of interest
+to the clipboard. This can be very helpful for some interactive Marimo apps where
+the output needs to be copied into another app. 
+
+```python
+from wigglystuff import CopyToClipboard
+
+CopyToClipboard("this can be copied")
+```
