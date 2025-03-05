@@ -142,6 +142,26 @@ class EdgeDraw(anywidget.AnyWidget):
         super().__init__(names=names)
 
 
+class TangleSelect(anywidget.AnyWidget):
+    """Initialize a TangleSelect widget.
+
+    Args:
+        choices: List of at least two string choices to select from in a dropdown.
+        **kwargs: Additional keyword arguments passed to parent class.
+
+    Raises:
+        ValueError: If fewer than two choices are provided.
+    """
+    _esm = Path(__file__).parent / 'static' / 'tangle-select.js'
+    choice = traitlets.Unicode("").tag(sync=True)
+    choices = traitlets.List([]).tag(sync=True)
+
+    def __init__(self, choices: List[str], **kwargs) -> None:
+        if len(choices) < 2:
+            raise ValueError("Must pass at least two choices.")
+        super().__init__(choice=choices[0], choices=choices, **kwargs)
+
+
 class CopyToClipboard(anywidget.AnyWidget):
     """Initialize a CopyToClipboard widget.
 

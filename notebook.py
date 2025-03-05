@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.10.4"
+__generated_with = "0.11.14"
 app = marimo.App()
 
 
@@ -87,7 +87,13 @@ def _(alt, color, mo, pca_mat, pd, rgb_mat):
 
 
 @app.cell
-def _(c, coffees, mo, price, prob1, prob2, saying, times, total):
+def _(TangleSelect):
+    TangleSelect(["a", "b"])
+    return
+
+
+@app.cell
+def _(c, coffees, mo, price, prob1, prob2, saying, shouting, times, total):
     mo.vstack([
         mo.md(f"""
         ## Tangle objects 
@@ -126,6 +132,20 @@ def _(c, coffees, mo, price, prob1, prob2, saying, times, total):
         As a quick demo, let's repeat {saying} {times}. 
 
         {" ".join([saying.choice] * int(times.amount))}
+        """
+        ),
+        mo.md(f"""
+        ### Also a select widget 
+
+        Like `TangleChoice` but as a drop-down
+
+        ```python
+        from wigglystuff import TangleSelect
+        ```
+
+        As a quick demo, let's repeat {shouting} {times}. 
+
+        {" ".join([shouting.choice] * int(times.amount))}
         """
         )
     ])
@@ -206,22 +226,25 @@ def _(alt, np, pd, prob1, prob2):
 
 @app.cell
 def _(mo):
-    from wigglystuff import TangleSlider, TangleChoice
+    from wigglystuff import TangleSlider, TangleChoice, TangleSelect
 
     coffees = mo.ui.anywidget(TangleSlider(amount=10, min_value=0, step=1, suffix=" coffees", digits=0))
     price = mo.ui.anywidget(TangleSlider(amount=3.50, min_value=0.01, max_value=10, step=0.01, prefix="$", digits=2))
     prob1 = mo.ui.anywidget(TangleSlider(min_value=0, max_value=20, step=0.1, suffix="% of the time", amount=5))
     prob2 = mo.ui.anywidget(TangleSlider(min_value=0, max_value=20, step=0.1, suffix="% of the time", amount=0))
     saying = mo.ui.anywidget(TangleChoice(["🙂", "🎉", "💥"]))
+    shouting = mo.ui.anywidget(TangleSelect(["🥔", "🥕", "🍎"]))
     times = mo.ui.anywidget(TangleSlider(min_value=1, max_value=20, step=1, suffix=" times", amount=3))
     return (
         TangleChoice,
+        TangleSelect,
         TangleSlider,
         coffees,
         price,
         prob1,
         prob2,
         saying,
+        shouting,
         times,
     )
 
