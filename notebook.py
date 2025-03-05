@@ -85,13 +85,6 @@ def _(alt, color, mo, pca_mat, pd, rgb_mat):
     ])
     return X_tfm, df_pca, pca_chart
 
-
-@app.cell
-def _(TangleSelect):
-    TangleSelect(["a", "b"])
-    return
-
-
 @app.cell
 def _(c, coffees, mo, price, prob1, prob2, saying, shouting, times, total):
     mo.vstack([
