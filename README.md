@@ -108,7 +108,7 @@ from wigglystuff import TangleSlider
 
 ![](imgs/tangleslider.gif)
 
-### `TangleChoice` 
+### `TangleChoice` & `TangleSelect`
 
 This is similar to the `TangleSlider` but for discrete choices. 
 
@@ -117,6 +117,12 @@ from wigglystuff import TangleChoice
 ```
 
 ![](imgs/tanglechoice.gif)
+
+`TangleSelect` is just like `TangleChoice` but with a dropdown.
+
+```python
+from wigglystuff import TangleSelect
+```
 
 ### `CopyToClipboard` 
 
