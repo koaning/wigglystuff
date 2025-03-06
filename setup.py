@@ -17,7 +17,7 @@ setup(
     author="Vincent D. Warmerdam",
     packages=find_packages(exclude=["notebooks"]),
     package_data={"wigglystuff": ["static/*.js", "static/*.css"]},
-    long_description=read("readme.md"),
+    long_description=read("README.md"),
     long_description_content_type="text/markdown",
     install_requires=base_packages,
     classifiers=[
