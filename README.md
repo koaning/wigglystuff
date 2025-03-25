@@ -135,3 +135,14 @@ from wigglystuff import CopyToClipboard
 
 CopyToClipboard("this can be copied")
 ```
+
+
+## Development
+
+I am currently exploring how we might move some of these components to react, mainly in an attempt to keep things flexible in the future. There's no need to port everything just yet but I have ported the clipboard button. You should be able to develop it via: 
+
+```
+npm run dev-copy-btn
+```
+
+This assumes that you ran `npm install` beforehand. 
