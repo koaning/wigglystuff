@@ -7,9 +7,8 @@ install:
 	python -m pip install twine wheel
 
 pypi:
-	python setup.py sdist
-	python setup.py bdist_wheel --universal
-	twine upload dist/*
+	uv build
+	uv publish
 
 js:
 	# build the JS file, only needed for the edge widget
