@@ -1,5 +1,10 @@
 {
+  "scripts": {
+    "dev-copy-btn": "./node_modules/.bin/esbuild js/copybutton/widget.tsx --bundle --outfile=wigglystuff/static/js/copybutton.js --format=esm --watch --minify"
+  },
   "dependencies": {
-    "@anywidget/react": "^0.1.0"
+    "@anywidget/react": "^0.1.0",
+    "esbuild": "^0.25.1",
+    "react": "^19.0.0"
   }
 }

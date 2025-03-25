@@ -1,22 +1,17 @@
 import * as React from "react";
 import { createRender, useModelState } from "@anywidget/react";
 
-import { Tldraw, TLUiComponents } from 'tldraw'
-import 'tldraw/tldraw.css'
+function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text);
+}
 
-function Counter() {
-	let [value, setValue] = useModelState<number>("value");
+function CopyToClipboardButton() {
+    let [text_to_copy, setTextToCopy] = useModelState<string>("text_to_copy");
 	return <>
-      <button onClick={() => setValue(value + 1)}>count is {value}</button>
-      <div className="tldraw__editor" style={ { height: 500, width: 500 } } >
-        <Tldraw
-          persistenceKey="my-unique-persistence-key"
-          store={undefined}
-        />
-		</div>
+      <button onClick={() => copyToClipboard(text_to_copy)}>Copy to Clipboard</button>
   </>
 }
 
-const render = createRender(Counter);
+const render = createRender(CopyToClipboardButton);
 
 export default { render };
