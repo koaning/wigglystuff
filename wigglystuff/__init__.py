@@ -175,3 +175,19 @@ class CopyToClipboard(anywidget.AnyWidget):
     def __init__(self, text_to_copy="", **kwargs):
         super().__init__(**kwargs)
         self.text_to_copy = text_to_copy
+
+
+class Draw(anywidget.AnyWidget):
+    """Initialize a CopyToClipboard widget.
+
+    Args:
+        text_to_copy: String to copy to the clipboard when button is pressed.
+    """
+    _esm = Path(__file__).parent / 'static' / 'draw.js'
+    _css = Path(__file__).parent / 'static' / 'draw.css'
+    width = traitlets.Int(400).tag(sync=True)
+    height = traitlets.Int(400).tag(sync=True)
+    base64 = traitlets.Unicode("").tag(sync=True)
+
+    def __init__(self, width: int = 400, height: int = 400, **kwargs) -> None:
+        super().__init__(width=width, height=height, **kwargs)
