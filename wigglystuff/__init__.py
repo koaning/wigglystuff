@@ -169,8 +169,9 @@ class CopyToClipboard(anywidget.AnyWidget):
         text_to_copy: String to copy to the clipboard when button is pressed.
     """
     text_to_copy = traitlets.Unicode("").tag(sync=True)
-    _esm = Path(__file__).parent / 'static' / 'js' / 'copybutton.js'
-    
+    _esm = Path(__file__).parent / 'static' / 'copybutton.js'
+    _css = Path(__file__).parent / 'static' / 'copybutton.css'
+
     def __init__(self, text_to_copy="", **kwargs):
         super().__init__(**kwargs)
         self.text_to_copy = text_to_copy
