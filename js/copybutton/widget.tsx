@@ -2,7 +2,7 @@ import * as React from "react";
 import { createRender, useModelState } from "@anywidget/react";
 import { CopyIcon } from "@radix-ui/react-icons";
 import "@radix-ui/themes/styles.css";
-import { Theme, Button } from "@radix-ui/themes";
+import { Theme, Button, ThemePanel } from "@radix-ui/themes";
 
 
 function copyToClipboard(text: string) {
@@ -12,7 +12,7 @@ function copyToClipboard(text: string) {
 function CopyToClipboardButton() {
     let [text_to_copy, setTextToCopy] = useModelState<string>("text_to_copy");
 	return <>
-      <Theme accentColor="gray" grayColor="sand" radius="large">
+      <Theme accentColor="gray" grayColor="sand" radius="large" scaling="95%" style={{ height: 'auto', minHeight: 'auto' }}>
         <Button onClick={() => copyToClipboard(text_to_copy)}>
             <CopyIcon /> Copy to Clipboard
         </Button>
