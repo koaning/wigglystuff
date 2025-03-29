@@ -6,7 +6,7 @@ function render({model, el}) {
         prefix: model.get("prefix"),
         suffix: model.get("suffix"),
         digits: model.get("digits"),
-        pixelsPerStep: 2
+        pixelsPerStep: model.get("pixels_per_step")
     };
 
     let amount = model.get("amount");
