@@ -38,10 +38,9 @@ We've made some demos of the widgets and shared them on the Marimo gallery for e
 
 ## Installation 
 
-Installation occurs via `pip` or `uv`. 
+Installation occurs via `pip` or `uv`. We prefer `uv`. 
 
 ```
-python -m pip install wigglystuff
 uv pip install wigglystuff
 ```
 
