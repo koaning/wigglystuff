@@ -6,7 +6,7 @@ install:
 	python -m pip install -e .
 	python -m pip install twine wheel
 
-pypi:
+pypi: clean
 	uv build
 	uv publish
 
