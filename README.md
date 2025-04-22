@@ -135,6 +135,16 @@ from wigglystuff import CopyToClipboard
 CopyToClipboard("this can be copied")
 ```
 
+### `ColorPicker`
+
+This is a base HTML color picker, ready for use in a notebook. 
+
+```python
+from wigglystuff import ColorPicker
+
+ColorPicker()
+```
+
 
 ## Development
 
