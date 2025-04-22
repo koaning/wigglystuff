@@ -190,3 +190,7 @@ class ColorPicker(anywidget.AnyWidget):
         if color is not None:
             kwargs["color"] = color
         super().__init__(**kwargs)
+    
+    @property
+    def rgb(self):
+        return tuple(int(self.color[i:i+2], 16) for i in (1, 3, 5))
