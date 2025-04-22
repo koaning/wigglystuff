@@ -146,6 +146,29 @@ def _(c, coffees, mo, price, prob1, prob2, saying, shouting, times, total):
 
 
 @app.cell
+def _(color_picker, mo):
+    mo.vstack(
+        [
+            mo.md(f"""
+        ## Pick colors
+
+        Pick colors using a standard browser color input.
+
+        ```python
+        from wigglystuff import ColorPicker
+        ColorPicker(color="#444444")
+        ```
+
+        You can use a color picker with marimo's `Html` to affect how things are rendered. 
+        """),
+            mo.Html(f'<p style="color: {color_picker.color}">Change my color!</p>'),
+            color_picker,
+        ]
+    )
+    return
+
+
+@app.cell
 def _(edge_widget, mo):
     mo.vstack([
         mo.md(f"""
@@ -304,8 +327,10 @@ def _(np, pd):
 
 
 @app.cell
-def _():
-    return
+def _(mo):
+    from wigglystuff import ColorPicker
+    color_picker = mo.ui.anywidget(ColorPicker(color="#444444"))
+    return (color_picker,)
 
 
 if __name__ == "__main__":
