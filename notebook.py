@@ -1,7 +1,7 @@
 import marimo
 
-__generated_with = "0.11.14"
-app = marimo.App()
+__generated_with = "0.11.26"
+app = marimo.App(width="medium", css_file="custom.css")
 
 
 @app.cell
@@ -84,6 +84,7 @@ def _(alt, color, mo, pca_mat, pd, rgb_mat):
         mo.hstack([pca_mat, pca_chart])
     ])
     return X_tfm, df_pca, pca_chart
+
 
 @app.cell
 def _(c, coffees, mo, price, prob1, prob2, saying, shouting, times, total):
