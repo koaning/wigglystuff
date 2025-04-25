@@ -65,7 +65,7 @@ class Matrix(anywidget.AnyWidget):
             matrix = matrix.tolist()
         else:
             matrix = [[(min_value + max_value) / 2 for i in range(cols)] for j in range(rows)]
-        super().__init__(matrix=matrix, rows=rows, cols=cols, triangular=triangular, **kwargs)
+        super().__init__(matrix=matrix, rows=rows, cols=cols,min_value=min_value, max_value=max_value, triangular=triangular, **kwargs)
 
 
 class TangleSlider(anywidget.AnyWidget):
