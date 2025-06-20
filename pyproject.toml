@@ -3,7 +3,7 @@ name = "wigglystuff"
 version = "0.1.14"
 description = "Collection of Anywidget Widgets"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 license = { file = "LICENSE" }
 authors = [{ name = "Vincent D. Warmerdam" }]
 classifiers = [
