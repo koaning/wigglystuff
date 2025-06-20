@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Sequence
 from pathlib import Path
 import anywidget
 import traitlets
@@ -194,3 +194,34 @@ class ColorPicker(anywidget.AnyWidget):
     @property
     def rgb(self):
         return tuple(int(self.color[i:i+2], 16) for i in (1, 3, 5))
+
+
+class SortableList(anywidget.AnyWidget):
+    """Interactive sortable list with optional add, remove, and edit functionality.
+
+    Args:
+        value: List of string items to display
+        addable: Enable adding new items via input field (default: False)
+        removable: Enable removing items with [x] buttons (default: False)
+        editable: Enable inline editing by clicking items (default: False)
+    """
+
+    _esm = Path(__file__).parent / "static" / "sortable-list.js"
+    _css = Path(__file__).parent / "static" / "sortable-list.css"
+    value = traitlets.List(traitlets.Unicode()).tag(sync=True)
+    addable = traitlets.Bool(default_value=False).tag(sync=True)
+    removable = traitlets.Bool(default_value=False).tag(sync=True)
+    editable = traitlets.Bool(default_value=False).tag(sync=True)
+
+    def __init__(
+        self,
+        value: Sequence[str],
+        *,
+        addable: bool = False,
+        removable: bool = False,
+        editable: bool = False,
+    ) -> None:
+        super().__init__(
+            value=list(value), addable=addable, removable=removable, editable=editable
+        )
+
