@@ -200,6 +200,25 @@ def _(edge_widget, mo):
 
 
 @app.cell
+def _(mo, sortable_list):
+    mo.vstack([
+        mo.md("""
+        ## Sortable Lists
+
+        ```python
+        from wigglystuff import SortableList
+        SortableList(["Action", "Comedy", "Drama"], addable=True, removable=True, editable=True)
+        ```
+
+        Try dragging items to reorder, adding new items, clicking to edit, or removing with the [x] buttons.
+        """),
+        sortable_list,
+        mo.md(f"Current value: `{sortable_list.value}`")
+    ])
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(r"""## Appendix with all supporting code""")
     return
@@ -337,6 +356,21 @@ def _(mo):
     from wigglystuff import ColorPicker
     color_picker = mo.ui.anywidget(ColorPicker(color="#444444"))
     return ColorPicker, color_picker
+
+
+@app.cell
+def _(mo):
+    from wigglystuff import SortableList
+
+    sortable_list = mo.ui.anywidget(
+        SortableList(
+            ["Action", "Comedy", "Drama", "Thriller", "Sci-Fi"],
+            addable=True,
+            removable=True,
+            editable=True,
+        )
+    )
+    return SortableList, sortable_list
 
 
 if __name__ == "__main__":

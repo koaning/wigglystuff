@@ -145,6 +145,22 @@ from wigglystuff import ColorPicker
 ColorPicker()
 ```
 
+### `SortableList`
+
+An interactive drag-and-drop sortable list widget. By default, it's just sortable, but you can enable additional features as needed.
+
+```python
+from wigglystuff import SortableList
+
+# Just sortable (default)
+SortableList(["Action", "Comedy", "Drama", "Thriller"])
+
+# Full-featured todo list
+SortableList(["Task 1", "Task 2"], addable=True, removable=True, editable=True)
+
+# Edit-only mode
+SortableList(["Click to edit me"], editable=True)
+```
 
 ## Development
 
