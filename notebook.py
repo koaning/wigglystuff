@@ -1,8 +1,6 @@
-
-
 import marimo
 
-__generated_with = "0.11.26"
+__generated_with = "0.13.11"
 app = marimo.App()
 
 
@@ -26,7 +24,7 @@ def _(alt, df, df_base, mo, slider_2d):
     This demo contains a two dimensional slider. The thinking is that sometimes you want to be able to make changes to two variables at the same time. The output is always standardized to the range of -1 to 1, but you can always use custom code to adapt this."""),
         mo.hstack([slider_2d, chart])
     ])
-    return (chart,)
+    return
 
 
 @app.cell
@@ -57,7 +55,7 @@ def _(alt, arr, df_orig, mat, mo, np, pd):
     This demo contains a representation of a two dimensional gaussian distribution. You can adapt the center by changing the first array that represents the mean and the variance can be updated by alterering the second one that represents the covariance matrix. Notice how the latter matrix has a triangular constraint."""),
         mo.hstack([arr, mat, chart_sim])
     ])
-    return chart_sim, df_sim, x_sim
+    return
 
 
 @app.cell
@@ -69,7 +67,7 @@ def _(Matrix, mo, np, pd):
     rgb_df = pd.DataFrame({
         "r": rgb_mat[:, 0], "g": rgb_mat[:, 1], "b": rgb_mat[:, 2], 'color': color
     })
-    return color, pca_mat, rgb_df, rgb_mat
+    return color, pca_mat, rgb_mat
 
 
 @app.cell
@@ -85,7 +83,7 @@ def _(alt, color, mo, pca_mat, pd, rgb_mat):
     Ever want to do your own PCA? Try to figure out a mapping from a 3d color map to a 2d representation with the transformation matrix below."""),
         mo.hstack([pca_mat, pca_chart])
     ])
-    return X_tfm, df_pca, pca_chart
+    return
 
 
 @app.cell
@@ -207,7 +205,10 @@ def _(mo, sortable_list):
 
         ```python
         from wigglystuff import SortableList
-        SortableList(["Action", "Comedy", "Drama"], addable=True, removable=True, editable=True)
+        SortableList(
+            ["Action", "Comedy", "Drama"], 
+            addable=True, removable=True, editable=True
+        )
         ```
 
         Try dragging items to reorder, adding new items, clicking to edit, or removing with the [x] buttons.
@@ -229,7 +230,7 @@ def _(mo):
     from wigglystuff import EdgeDraw
 
     edge_widget = mo.ui.anywidget(EdgeDraw(["a", "b", "c", "d"]))
-    return EdgeDraw, edge_widget
+    return (edge_widget,)
 
 
 @app.cell
@@ -262,7 +263,7 @@ def _(alt, np, pd, prob1, prob2):
             )
             .properties(width=500, title="Comparison between cores and actual speedup.")
     )
-    return c, cores, df_amdahl, eff1, eff2, p1, p2
+    return (c,)
 
 
 @app.cell
@@ -276,18 +277,7 @@ def _(mo):
     saying = mo.ui.anywidget(TangleChoice(["🙂", "🎉", "💥"]))
     shouting = mo.ui.anywidget(TangleSelect(["🥔", "🥕", "🍎"]))
     times = mo.ui.anywidget(TangleSlider(min_value=1, max_value=20, step=1, suffix=" times", amount=3))
-    return (
-        TangleChoice,
-        TangleSelect,
-        TangleSlider,
-        coffees,
-        price,
-        prob1,
-        prob2,
-        saying,
-        shouting,
-        times,
-    )
+    return coffees, price, prob1, prob2, saying, shouting, times
 
 
 @app.cell
@@ -299,7 +289,7 @@ def _():
     import pandas as pd
 
     # await micropip.install("wigglystuff==0.1.1")
-    return alt, micropip, mo, np, pd
+    return alt, mo, np, pd
 
 
 @app.cell
@@ -315,7 +305,7 @@ def _(mo, np):
 def _(Matrix, mo, np):
     x1 = mo.ui.anywidget(Matrix(matrix=np.eye(2), step=0.1))
     x2 = mo.ui.anywidget(Matrix(matrix=np.random.random((2, 2)), step=0.1))
-    return x1, x2
+    return
 
 
 @app.cell
@@ -323,7 +313,7 @@ def _(mo):
     from wigglystuff import Slider2D
 
     slider_2d = mo.ui.anywidget(Slider2D(width=300, height=300))
-    return Slider2D, slider_2d
+    return (slider_2d,)
 
 
 @app.cell
@@ -348,14 +338,14 @@ def _(np, pd):
 def _(np, pd):
     x_orig = np.random.multivariate_normal(np.array([0, 0]), np.array([[1, 0], [0, 1]]), 2500)
     df_orig = pd.DataFrame({"x": x_orig[:, 0], "y": x_orig[:, 1]})
-    return df_orig, x_orig
+    return (df_orig,)
 
 
 @app.cell
 def _(mo):
     from wigglystuff import ColorPicker
     color_picker = mo.ui.anywidget(ColorPicker(color="#444444"))
-    return ColorPicker, color_picker
+    return (color_picker,)
 
 
 @app.cell
@@ -370,7 +360,7 @@ def _(mo):
             editable=True,
         )
     )
-    return SortableList, sortable_list
+    return (sortable_list,)
 
 
 if __name__ == "__main__":

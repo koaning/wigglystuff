@@ -116,7 +116,16 @@ function render({model, el}){
         function onMouseMove(e) {
             const deltaX = e.clientX - startX;
             const steps = Math.floor(deltaX / config.pixelsPerStep);
-            const newValue = Math.max(config.minValue, Math.min(config.maxValue, startValue + steps * config.stepSize));
+            let newValue = startValue + steps * config.stepSize;
+            
+            // Apply limits only if they exist
+            if (config.minValue !== null) {
+                newValue = Math.max(config.minValue, newValue);
+            }
+            if (config.maxValue !== null) {
+                newValue = Math.min(config.maxValue, newValue);
+            }
+            
             updateMatrixValue(row, col, newValue);
             renderMatrix();
             debouncedUpdateModel();

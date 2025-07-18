@@ -46,8 +46,8 @@ class Matrix(anywidget.AnyWidget):
     matrix = traitlets.List([]).tag(sync=True)
     rows = traitlets.Int(3).tag(sync=True)
     cols = traitlets.Int(3).tag(sync=True)
-    min_value = traitlets.Float(-100.0).tag(sync=True)
-    max_value = traitlets.Float(100.0).tag(sync=True)
+    min_value = traitlets.Union([traitlets.Float(), traitlets.Instance(type(None))], allow_none=True).tag(sync=True)
+    max_value = traitlets.Union([traitlets.Float(), traitlets.Instance(type(None))], allow_none=True).tag(sync=True)
     mirror = traitlets.Bool(False).tag(sync=True)
     step = traitlets.Float(1.0).tag(sync=True)
     row_names = traitlets.List([]).tag(sync=True)
@@ -58,8 +58,8 @@ class Matrix(anywidget.AnyWidget):
     def __init__(self, matrix: List[List[float]] | None = None, 
                  rows: int = 3, 
                  cols: int = 3, 
-                 min_value: float = -100, 
-                 max_value: float = 100, 
+                 min_value: float | None = None, 
+                 max_value: float | None = None, 
                  triangular: bool = False,
                  row_names: List[str] | None = None,
                  col_names: List[str] | None = None,
@@ -69,14 +69,24 @@ class Matrix(anywidget.AnyWidget):
         if matrix is not None:
             import numpy as np
             matrix = np.array(matrix)
-            if matrix.min() < min_value:
-                raise ValueError(f"The min value of input matrix is less than min_value={min_value}.")
-            if matrix.max() > max_value:
-                raise ValueError(f"The max value of input matrix is less than max_value={max_value}.")
+            # Only validate if both matrix and limits are provided
+            if min_value is not None and matrix.min() < min_value:
+                raise ValueError(f"Matrix contains values below min_value={min_value}.")
+            if max_value is not None and matrix.max() > max_value:
+                raise ValueError(f"Matrix contains values above max_value={max_value}.")
             rows, cols = matrix.shape
             matrix = matrix.tolist()
         else:
-            matrix = [[(min_value + max_value) / 2 for i in range(cols)] for j in range(rows)]
+            # Generate default matrix based on limits
+            if min_value is not None and max_value is not None:
+                default_value = (min_value + max_value) / 2
+            elif min_value is not None:
+                default_value = min_value
+            elif max_value is not None:
+                default_value = max_value
+            else:
+                default_value = 0.0
+            matrix = [[default_value for i in range(cols)] for j in range(rows)]
         
         # Validate row_names and col_names dimensions
         if row_names is not None and len(row_names) != rows:
