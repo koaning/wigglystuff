@@ -1,4 +1,4 @@
-from typing import List, Sequence
+from typing import Any, List, Sequence
 from pathlib import Path
 import anywidget
 import traitlets
@@ -10,6 +10,8 @@ class Slider2D(anywidget.AnyWidget):
     Args:
         x: Initial x coordinate value. Defaults to 0.
         y: Initial y coordinate value. Defaults to 0.
+        x_bounds: Tuple of min/max value for the x-axis. Defaults to (-1.0, 1.0).
+        y_bounds: Tuple of min/max value for the y-axis. Defaults to (-1.0, 1.0).
         width: Width of the slider widget in pixels. Defaults to 400.
         height: Height of the slider widget in pixels. Defaults to 400.
         **kwargs: Additional keyword arguments passed to parent class.
@@ -17,12 +19,32 @@ class Slider2D(anywidget.AnyWidget):
     _esm = Path(__file__).parent / 'static' / '2dslider.js'
     x = traitlets.Float(0.0).tag(sync=True)
     y = traitlets.Float(0.0).tag(sync=True)
+    x_bounds = traitlets.Tuple(traitlets.Float(), traitlets.Float(), default_value=(-1.0, 1.0)).tag(sync=True)
+    y_bounds = traitlets.Tuple(traitlets.Float(), traitlets.Float(), default_value=(-1.0, 1.0)).tag(sync=True)
     width = traitlets.Int(400).tag(sync=True)
     height = traitlets.Int(400).tag(sync=True)
 
-    def __init__(self, x: float = 0, y: float = 0, width: int = 400, height: int = 400, **kwargs) -> None:
-        super().__init__(x=x, y=y, width=width, height=height, **kwargs)
+    def __init__(
+            self,
+            x: float = 0.0,
+            y: float = 0.0,
+            width: int = 400,
+            height: int = 400,
+            x_bounds: tuple[float, float] = (-1.0, 1.0),
+            y_bounds: tuple[float, float] = (-1.0, 1.0),
+            **kwargs
+        ) -> None:
+        super().__init__(x=x, y=y, width=width, height=height, x_bounds=x_bounds, y_bounds=y_bounds, **kwargs)
 
+    @traitlets.validate("x_bounds", "y_bounds")
+    def _valid_bounds(self, proposal: dict[str, Any]) -> tuple[float, float]:
+        """Ensure min < max for bounds."""
+        min_val, max_val = proposal["value"]
+        if not (isinstance(min_val, float) and isinstance(max_val, float)):
+                raise traitlets.TraitError("Bounds must be a tuple of two floats.")
+        if min_val >= max_val:
+            raise traitlets.TraitError("Min must be less than max in bounds.")
+        return proposal["value"]
 
 class Matrix(anywidget.AnyWidget):
     """Initialize a Matrix widget.
