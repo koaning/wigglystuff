@@ -132,6 +132,23 @@
     white-space: nowrap;
 }
 
+/* Flexible columns mode */
+.matrix-grid.flexible-columns .matrix-element {
+    width: auto;
+    min-width: 3em;
+    padding: 0 0.5em;
+}
+
+.matrix-grid.flexible-columns .matrix-col-label {
+    width: auto;
+    min-width: 3.6em;
+    padding: 0 0.5em;
+}
+
+.matrix-grid.flexible-columns .matrix-data-column {
+    flex-shrink: 0;
+}
+
 .matrix-corner-cell {
     visibility: hidden;
     height: 2em;

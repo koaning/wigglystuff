@@ -38,6 +38,7 @@ class Matrix(anywidget.AnyWidget):
         row_names: Optional list of names for each row.
         col_names: Optional list of names for each column.
         static: If True, matrix is read-only and cannot be edited.
+        flexible_cols: If True, columns expand to fit their content.
         **kwargs: Additional keyword arguments passed to parent class.
     """
     _esm = Path(__file__).parent / 'static' / 'matrix.js'
@@ -52,6 +53,7 @@ class Matrix(anywidget.AnyWidget):
     row_names = traitlets.List([]).tag(sync=True)
     col_names = traitlets.List([]).tag(sync=True)
     static = traitlets.Bool(False).tag(sync=True)
+    flexible_cols = traitlets.Bool(False).tag(sync=True)
 
     def __init__(self, matrix: List[List[float]] | None = None, 
                  rows: int = 3, 
@@ -62,6 +64,7 @@ class Matrix(anywidget.AnyWidget):
                  row_names: List[str] | None = None,
                  col_names: List[str] | None = None,
                  static: bool = False,
+                 flexible_cols: bool = False,
                  **kwargs) -> None:
         if matrix is not None:
             import numpy as np
@@ -89,7 +92,7 @@ class Matrix(anywidget.AnyWidget):
             
         super().__init__(matrix=matrix, rows=rows, cols=cols, min_value=min_value, 
                          max_value=max_value, triangular=triangular, row_names=row_names, 
-                         col_names=col_names, static=static, **kwargs)
+                         col_names=col_names, static=static, flexible_cols=flexible_cols, **kwargs)
 
 
 class TangleSlider(anywidget.AnyWidget):

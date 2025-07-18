@@ -9,7 +9,8 @@ function render({model, el}){
         pixelsPerStep: 2,
         rowNames: model.get("row_names"),
         colNames: model.get("col_names"),
-        isStatic: model.get("static")
+        isStatic: model.get("static"),
+        flexibleColumns: model.get("flexible_cols")
     };
     
     let matrix = JSON.parse(JSON.stringify(model.get("matrix"))); // Deep copy
@@ -24,6 +25,9 @@ function render({model, el}){
         // Create main grid container
         const gridContainer = document.createElement('div');
         gridContainer.className = 'matrix-grid';
+        if (config.flexibleColumns) {
+            gridContainer.classList.add('flexible-columns');
+        }
         
         // First column for row labels (if they exist)
         if (config.rowNames.length > 0) {
