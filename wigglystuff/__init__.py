@@ -35,6 +35,9 @@ class Matrix(anywidget.AnyWidget):
         min_value: Minimum allowed value in the matrix.
         max_value: Maximum allowed value in the matrix.
         triangular: If True, only allow editing upper triangle of matrix.
+        row_names: Optional list of names for each row.
+        col_names: Optional list of names for each column.
+        static: If True, matrix is read-only and cannot be edited.
         **kwargs: Additional keyword arguments passed to parent class.
     """
     _esm = Path(__file__).parent / 'static' / 'matrix.js'
@@ -46,13 +49,19 @@ class Matrix(anywidget.AnyWidget):
     max_value = traitlets.Float(100.0).tag(sync=True)
     mirror = traitlets.Bool(False).tag(sync=True)
     step = traitlets.Float(1.0).tag(sync=True)
+    row_names = traitlets.List([]).tag(sync=True)
+    col_names = traitlets.List([]).tag(sync=True)
+    static = traitlets.Bool(False).tag(sync=True)
 
     def __init__(self, matrix: List[List[float]] | None = None, 
                  rows: int = 3, 
                  cols: int = 3, 
                  min_value: float = -100, 
                  max_value: float = 100, 
-                 triangular: bool = False, 
+                 triangular: bool = False,
+                 row_names: List[str] | None = None,
+                 col_names: List[str] | None = None,
+                 static: bool = False,
                  **kwargs) -> None:
         if matrix is not None:
             import numpy as np
@@ -65,7 +74,22 @@ class Matrix(anywidget.AnyWidget):
             matrix = matrix.tolist()
         else:
             matrix = [[(min_value + max_value) / 2 for i in range(cols)] for j in range(rows)]
-        super().__init__(matrix=matrix, rows=rows, cols=cols,min_value=min_value, max_value=max_value, triangular=triangular, **kwargs)
+        
+        # Validate row_names and col_names dimensions
+        if row_names is not None and len(row_names) != rows:
+            raise ValueError(f"Length of row_names ({len(row_names)}) must match number of rows ({rows}).")
+        if col_names is not None and len(col_names) != cols:
+            raise ValueError(f"Length of col_names ({len(col_names)}) must match number of columns ({cols}).")
+        
+        # Set default empty lists if not provided
+        if row_names is None:
+            row_names = []
+        if col_names is None:
+            col_names = []
+            
+        super().__init__(matrix=matrix, rows=rows, cols=cols, min_value=min_value, 
+                         max_value=max_value, triangular=triangular, row_names=row_names, 
+                         col_names=col_names, static=static, **kwargs)
 
 
 class TangleSlider(anywidget.AnyWidget):

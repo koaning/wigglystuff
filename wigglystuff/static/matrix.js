@@ -6,32 +6,86 @@ function render({model, el}){
         maxValue: model.get("max_value"),
         isMirrored: model.get("mirror"),
         stepSize: model.get("step"),
-        pixelsPerStep: 2
+        pixelsPerStep: 2,
+        rowNames: model.get("row_names"),
+        colNames: model.get("col_names"),
+        isStatic: model.get("static")
     };
     
     let matrix = JSON.parse(JSON.stringify(model.get("matrix"))); // Deep copy
 
-    const container = document.createElement('div');
-    container.classList.add("matrix-container");
-    el.appendChild(container);
+    const wrapper = document.createElement('div');
+    wrapper.classList.add("matrix-wrapper");
+    el.appendChild(wrapper);
 
     function renderMatrix() {
-        container.innerHTML = '';
+        wrapper.innerHTML = '';
         
-        matrix.forEach((row, rowIndex) => {
-            const rowElement = document.createElement('div');
-            rowElement.className = 'matrix-row';
-            row.forEach((value, colIndex) => {
-                const element = document.createElement('span');
-                element.className = 'matrix-element';
-                element.textContent = value.toFixed(1);
-                element.dataset.row = rowIndex;
-                element.dataset.col = colIndex;
-                element.addEventListener('mousedown', startDragging);
-                rowElement.appendChild(element);
+        // Create main grid container
+        const gridContainer = document.createElement('div');
+        gridContainer.className = 'matrix-grid';
+        
+        // First column for row labels (if they exist)
+        if (config.rowNames.length > 0) {
+            const rowLabelColumn = document.createElement('div');
+            rowLabelColumn.className = 'matrix-column matrix-label-column';
+            
+            // Empty corner cell if we have column names
+            if (config.colNames.length > 0) {
+                const corner = document.createElement('div');
+                corner.className = 'matrix-cell matrix-corner-cell';
+                rowLabelColumn.appendChild(corner);
+            }
+            
+            // Row labels
+            config.rowNames.forEach(name => {
+                const cell = document.createElement('div');
+                cell.className = 'matrix-cell matrix-row-label';
+                cell.textContent = name;
+                rowLabelColumn.appendChild(cell);
             });
-            container.appendChild(rowElement);
-        });
+            
+            gridContainer.appendChild(rowLabelColumn);
+        }
+        
+        // Create matrix container that will hold all data columns
+        const matrixWrapper = document.createElement('div');
+        matrixWrapper.className = 'matrix-data-wrapper';
+        
+        // Create columns for each matrix column
+        for (let colIndex = 0; colIndex < config.cols; colIndex++) {
+            const column = document.createElement('div');
+            column.className = 'matrix-column matrix-data-column';
+            
+            // Column header if exists
+            if (config.colNames.length > 0) {
+                const header = document.createElement('div');
+                header.className = 'matrix-cell matrix-col-label';
+                header.textContent = config.colNames[colIndex] || '';
+                column.appendChild(header);
+            }
+            
+            // Matrix values
+            matrix.forEach((row, rowIndex) => {
+                const cell = document.createElement('div');
+                cell.className = 'matrix-cell matrix-element';
+                if (config.isStatic) {
+                    cell.classList.add('matrix-element-static');
+                }
+                cell.textContent = row[colIndex].toFixed(1);
+                cell.dataset.row = rowIndex;
+                cell.dataset.col = colIndex;
+                if (!config.isStatic) {
+                    cell.addEventListener('mousedown', startDragging);
+                }
+                column.appendChild(cell);
+            });
+            
+            matrixWrapper.appendChild(column);
+        }
+        
+        gridContainer.appendChild(matrixWrapper);
+        wrapper.appendChild(gridContainer);
 
         updateModel();
     };
