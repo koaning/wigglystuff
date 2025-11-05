@@ -2,6 +2,7 @@ from typing import Any, List, Sequence
 from pathlib import Path
 import anywidget
 import traitlets
+import numpy as np
 
 
 class Slider2D(anywidget.AnyWidget):
@@ -189,6 +190,41 @@ class EdgeDraw(anywidget.AnyWidget):
     
     def __init__(self, names: List[str]) -> None:
         super().__init__(names=names)
+
+    def get_adjacency_matrix(self, digraph=False):
+        """Create an adjacency matrix from links and node names.
+
+        Args:
+            digraph (bool): To follow directed graph or not
+        Returns:
+            matrix (numpy.ndarray): Adjacency matrix representing the graph.
+        """
+        num_nodes = len(self.names)
+        matrix = np.zeros((num_nodes, num_nodes))
+        for nodes in self.links:
+            src = self.names.index(nodes["source"])
+            dst = self.names.index(nodes["target"])
+            matrix[src][dst] = 1
+            if not digraph:
+                matrix[dst][src] = 1
+        return matrix
+
+    def get_neighbors(self, node_name, digraph=False):
+        """Get neighbores of a node.
+
+        Args:
+            digraph (bool): To follow directed graph or not
+        Returns:
+            neighbors (list): List of connected nodes.
+        """
+        neighbors=[]
+        for nodes in self.links:
+            if nodes['source']==node_name:
+                neighbors.append(nodes['target'])
+            if not digraph:
+                if nodes['target']==node_name:
+                    neighbors.append(nodes['source'])
+        return neighbors
 
 
 class TangleSelect(anywidget.AnyWidget):
