@@ -20,10 +20,10 @@ def _(alt, df, df_base, mo, slider_2d):
     ```python
     from wigglystuff import Slider2D
 
-    slider_2d = Slider2D(width=300, height=300)
+    slider_2d = Slider2D(width=300, height=300, x_bounds=(0.0, 1.0), y_bounds=(0.0, 1.0))
     ```
 
-    This demo contains a two dimensional slider. The thinking is that sometimes you want to be able to make changes to two variables at the same time. The output is always standardized to the range of -1 to 1, but you can always use custom code to adapt this."""),
+    This demo contains a two dimensional slider. The thinking is that sometimes you want to be able to make changes to two variables at the same time."""),
         mo.hstack([slider_2d, chart])
     ])
     return (chart,)
@@ -322,7 +322,7 @@ def _(Matrix, mo, np):
 def _(mo):
     from wigglystuff import Slider2D
 
-    slider_2d = mo.ui.anywidget(Slider2D(width=300, height=300))
+    slider_2d = mo.ui.anywidget(Slider2D(width=300, height=300, x_bounds=(0.0, 1.0), y_bounds=(0.0, 1.0)))
     return Slider2D, slider_2d
 
 

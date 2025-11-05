@@ -32,28 +32,45 @@ function render({ model, el }) {
       ctx.fill();
       ctx.stroke();
 
-      const normalizedX = currentX / radius;
-      const normalizedY = - currentY / radius;
-      sliderValuesDiv.textContent = `X: ${normalizedX.toFixed(2)}, Y: ${normalizedY.toFixed(2)}`;
-      model.set('x', normalizedX);
-      model.set('y', normalizedY);
+      const [x_min, x_max] = model.get("x_bounds");
+      const [y_min, y_max] = model.get("y_bounds");
+
+      const mappedX = x_min + ((currentX / radius) + 1) / 2 * (x_max - x_min);
+      const mappedY = y_min + ((-currentY / radius) + 1) / 2 * (y_max - y_min); // Y is inverted
+
+      sliderValuesDiv.textContent = `X: ${mappedX.toFixed(2)}, Y: ${mappedY.toFixed(2)}`;
+      model.set('x', mappedX);
+      model.set('y', mappedY);
       model.save_changes();
+  }
+
+  function syncFromModel() {
+      const [x_min, x_max] = model.get("x_bounds");
+      const [y_min, y_max] = model.get("y_bounds");
+      const modelX = model.get('x');
+      const modelY = model.get('y');
+
+      // Inverse mapping from user coordinates to pixel coordinates
+      currentX = radius * (2 * (modelX - x_min) / (x_max - x_min) - 1);
+      currentY = -radius * (2 * (modelY - y_min) / (y_max - y_min) - 1); // Y is inverted
+      
+      if (!isDragging) {
+        drawSlider();
+      }
   }
 
   function handleMouseDown(event) {
       isDragging = true;
-      currentX = event.offsetX - centerX;
-      currentY = event.offsetY - centerY;
-      drawSlider();
+      handleMouseMove(event);
   }
 
   function handleMouseMove(event) {
       if (isDragging) {
-      currentX = event.offsetX - centerX;
-      currentY = event.offsetY - centerY;
-      currentX = Math.max(-radius, Math.min(radius, currentX));
-      currentY = Math.max(-radius, Math.min(radius, currentY));
-      drawSlider();
+          currentX = event.offsetX - centerX;
+          currentY = event.offsetY - centerY;
+          currentX = Math.max(-radius, Math.min(radius, currentX));
+          currentY = Math.max(-radius, Math.min(radius, currentY));
+          drawSlider();
       }
   }
 
@@ -63,9 +80,14 @@ function render({ model, el }) {
 
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mousemove', handleMouseMove);
-  canvas.addEventListener('mouseup', handleMouseUp);
+  document.addEventListener('mouseup', handleMouseUp);
 
-  drawSlider();
+  model.on("change:x", syncFromModel);
+  model.on("change:y", syncFromModel);
+  model.on("change:x_bounds", syncFromModel);
+  model.on("change:y_bounds", syncFromModel);
+  
+  syncFromModel();
 }
 
 export default { render };
