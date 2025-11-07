@@ -193,11 +193,11 @@ class EdgeDraw(anywidget.AnyWidget):
     def __init__(self, names: List[str], height: int = 400, width: int = 600) -> None:
         super().__init__(names=names, height=height, width=width)
 
-    def get_adjacency_matrix(self, digraph=False):
+    def get_adjacency_matrix(self, directed: bool = False) -> np.ndarray:
         """Create an adjacency matrix from links and node names.
 
         Args:
-            digraph (bool): To follow directed graph or not
+            directed (bool): To follow directed graph or not
         Returns:
             matrix (numpy.ndarray): Adjacency matrix representing the graph.
         """
@@ -207,15 +207,16 @@ class EdgeDraw(anywidget.AnyWidget):
             src = self.names.index(nodes["source"])
             dst = self.names.index(nodes["target"])
             matrix[src][dst] = 1
-            if not digraph:
+            if not directed:
                 matrix[dst][src] = 1
         return matrix
 
-    def get_neighbors(self, node_name, digraph=False):
+    def get_neighbors(self, node_name: str, directed: bool = False) -> List[str]:
         """Get neighbores of a node.
 
         Args:
-            digraph (bool): To follow directed graph or not
+            node_name (str): Name of the node to get neighbors for.
+            directed (bool): To follow directed graph or not
         Returns:
             neighbors (list): List of connected nodes.
         """
@@ -223,7 +224,7 @@ class EdgeDraw(anywidget.AnyWidget):
         for nodes in self.links:
             if nodes['source']==node_name:
                 neighbors.append(nodes['target'])
-            if not digraph:
+            if not directed:
                 if nodes['target']==node_name:
                     neighbors.append(nodes['source'])
         return neighbors

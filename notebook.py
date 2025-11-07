@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.17.7"
+__generated_with = "0.14.0"
 app = marimo.App()
 
 
@@ -196,7 +196,9 @@ def _(edge_widget, mo):
         mo.md(f"""
         As you draw more nodes, you will also update the `widget.links` property. 
         """), 
-        edge_widget.links
+        edge_widget.links,
+        edge_widget.get_adjacency_matrix(),
+        edge_widget.get_neighbors("c", digraph=True)
 
     ])
     return
@@ -223,9 +225,7 @@ def _(mo, sortable_list):
 
 @app.cell
 def _(mo):
-    mo.md(r"""
-    ## Appendix with all supporting code
-    """)
+    mo.md(r"""## Appendix with all supporting code""")
     return
 
 
@@ -233,7 +233,7 @@ def _(mo):
 def _(mo):
     from wigglystuff import EdgeDraw
 
-    edge_widget = mo.ui.anywidget(EdgeDraw(["a", "b", "c", "d"]))
+    edge_widget = mo.ui.anywidget(EdgeDraw(["a", "b", "c", "d"], width=400, height=400))
     return (edge_widget,)
 
 
