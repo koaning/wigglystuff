@@ -187,9 +187,11 @@ class EdgeDraw(anywidget.AnyWidget):
     _css = Path(__file__).parent / 'static' / 'edgedraw.css'
     names = traitlets.List([]).tag(sync=True)
     links = traitlets.List([]).tag(sync=True)
-    
-    def __init__(self, names: List[str]) -> None:
-        super().__init__(names=names)
+    height = traitlets.Int(400).tag(sync=True)
+    width = traitlets.Int(600).tag(sync=True)
+
+    def __init__(self, names: List[str], height: int = 400, width: int = 600) -> None:
+        super().__init__(names=names, height=height, width=width)
 
     def get_adjacency_matrix(self, digraph=False):
         """Create an adjacency matrix from links and node names.

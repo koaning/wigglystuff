@@ -9540,8 +9540,8 @@ function render({ model, el }) {
   const nodes = model.get("names").map((name) => ({ id: name, x: 100, y: 100 }));
   let links = [];
   let selectedNode = null;
-  const width = 600;
-  const height = 400;
+  const width = model.get("width");
+  const height = model.get("height");
   const svg = d3.select(container).append("svg").attr("width", width).attr("height", height);
   svg.append("defs").append("marker").attr("id", "arrowhead").attr("viewBox", "-0 -5 10 10").attr("refX", 13).attr("refY", 0).attr("orient", "auto").attr("markerWidth", 6).attr("markerHeight", 6).append("path").attr("d", "M0,-5L10,0L0,5").attr("class", "arrow");
   const simulation = d3.forceSimulation(nodes).force("link", d3.forceLink(links).id((d) => d.id).distance(100)).force("charge", d3.forceManyBody().strength(-50)).force("center", d3.forceCenter(width / 2, height / 2)).force("collide", d3.forceCollide().radius(30)).on("tick", ticked);
