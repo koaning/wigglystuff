@@ -6,6 +6,7 @@ function render({model, el}){
         maxValue: model.get("max_value"),
         isMirrored: model.get("mirror"),
         stepSize: model.get("step"),
+        digits: model.get("digits"),
         pixelsPerStep: 2,
         rowNames: model.get("row_names"),
         colNames: model.get("col_names"),
@@ -76,7 +77,7 @@ function render({model, el}){
                 if (config.isStatic) {
                     cell.classList.add('matrix-element-static');
                 }
-                cell.textContent = row[colIndex].toFixed(1);
+                cell.textContent = row[colIndex].toFixed(config.digits);
                 cell.dataset.row = rowIndex;
                 cell.dataset.col = colIndex;
                 if (!config.isStatic) {
@@ -133,9 +134,9 @@ function render({model, el}){
     };
 
     function updateMatrixValue(row, col, value) {
-        matrix[row][col] = parseFloat(value.toFixed(1));
+        matrix[row][col] = parseFloat(value.toFixed(config.digits));
         if (config.isMirrored && (col < config.rows) && (row < config.cols)) {
-            matrix[col][row] = parseFloat(value.toFixed(1));
+            matrix[col][row] = parseFloat(value.toFixed(config.digits));
         }
     };
 
