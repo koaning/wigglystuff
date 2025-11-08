@@ -71,7 +71,7 @@ class Matrix(anywidget.AnyWidget):
     cols = traitlets.Int(3).tag(sync=True)
     min_value = traitlets.Float(-100.0).tag(sync=True)
     max_value = traitlets.Float(100.0).tag(sync=True)
-    mirror = traitlets.Bool(False).tag(sync=True)
+    triangular = traitlets.Bool(False).tag(sync=True)
     step = traitlets.Float(1.0).tag(sync=True)
     row_names = traitlets.List([]).tag(sync=True)
     col_names = traitlets.List([]).tag(sync=True)
