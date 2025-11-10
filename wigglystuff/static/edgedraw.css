@@ -28,3 +28,15 @@
     stroke: #ff0000;
     stroke-width: 2px;
 }
+
+.input {
+    width: 120px;
+}
+
+.button,
+.input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 2px;
+    padding: 0px 4px 0px 4px;
+}
