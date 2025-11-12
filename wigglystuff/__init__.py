@@ -73,6 +73,7 @@ class Matrix(anywidget.AnyWidget):
     max_value = traitlets.Float(100.0).tag(sync=True)
     mirror = traitlets.Bool(False).tag(sync=True)
     step = traitlets.Float(1.0).tag(sync=True)
+    digits = traitlets.Int(1).tag(sync=True)
     row_names = traitlets.List([]).tag(sync=True)
     col_names = traitlets.List([]).tag(sync=True)
     static = traitlets.Bool(False).tag(sync=True)
