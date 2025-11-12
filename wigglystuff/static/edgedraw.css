@@ -17,11 +17,8 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-weight: 500;
     dominant-baseline: middle;
-}
-
-.label-background {
-    fill: white;
-    fill-opacity: 0.8;
+    fill: #e20000;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .selected {

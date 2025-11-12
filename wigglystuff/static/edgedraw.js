@@ -9548,13 +9548,9 @@ function render({ model, el }) {
   const linkGroup = svg.append("g");
   const nodeGroup = svg.append("g");
   const node = nodeGroup.selectAll(".node").data(nodes).join("circle").attr("class", "node").attr("r", 10).attr("fill", "#69b3a2").on("click", handleNodeClick);
-  const labelBackgrounds = nodeGroup.selectAll(".label-background").data(nodes).join("rect").attr("class", "label-background").attr("rx", 3).attr("ry", 3);
+
   const labels = nodeGroup.selectAll(".label").data(nodes).join("text").attr("class", "label").attr("dx", 15).attr("dy", 4).text((d) => d.id);
-  labels.each(function(d) {
-    const bbox = this.getBBox();
-    const rect = labelBackgrounds.filter((r) => r === d);
-    rect.attr("x", bbox.x - 2).attr("y", bbox.y - 1).attr("width", bbox.width + 4).attr("height", bbox.height + 2);
-  });
+
   function handleNodeClick(event, d) {
     if (!selectedNode) {
       selectedNode = d;
