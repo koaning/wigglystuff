@@ -4,7 +4,7 @@ function render({model, el}){
         cols: model.get("cols"),
         minValue: model.get("min_value"),
         maxValue: model.get("max_value"),
-        isMirrored: model.get("mirror"),
+        isMirrored: model.get("triangular"),
         stepSize: model.get("step"),
         digits: model.get("digits"),
         pixelsPerStep: 2,
