@@ -5,6 +5,7 @@ from .copy_to_clipboard import CopyToClipboard
 from .edge_draw import EdgeDraw
 from .gamepad import GamepadWidget
 from .matrix import Matrix
+from .paint import Paint
 from .slider2d import Slider2D
 from .sortable_list import SortableList
 from .tangle import TangleChoice, TangleSelect, TangleSlider
@@ -16,6 +17,7 @@ __all__ = [
     "EdgeDraw",
     "GamepadWidget",
     "Matrix",
+    "Paint",
     "Slider2D",
     "SortableList",
     "TangleChoice",
