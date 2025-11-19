@@ -22,6 +22,10 @@ js-edgedraw:
 js-gamepad:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/gamepad-widget.js js/gamepad/widget.js
 
+js-keystroke:
+	# build the keyboard shortcut widget bundle
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/keystroke-widget.js js/keystroke/widget.js
+
 js-copybutton:
 	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
 

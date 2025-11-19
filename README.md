@@ -145,6 +145,18 @@ from wigglystuff import ColorPicker
 ColorPicker()
 ```
 
+### `KeystrokeWidget`
+
+Capture the latest keyboard shortcut pressed inside a notebook cell. The widget stores the last key event (including modifier state) in the `last_key` trait so you can respond to shortcuts in Python.
+
+```python
+from wigglystuff import KeystrokeWidget
+
+keyboard = KeystrokeWidget()
+keyboard
+keyboard.last_key  # => {"key": "K", "ctrlKey": True, ...}
+```
+
 ### `SortableList`
 
 An interactive drag-and-drop sortable list widget. By default, it's just sortable, but you can enable additional features as needed.

@@ -4,6 +4,7 @@ from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
 from .edge_draw import EdgeDraw
 from .gamepad import GamepadWidget
+from .keystroke import KeystrokeWidget
 from .matrix import Matrix
 from .paint import Paint
 from .slider2d import Slider2D
@@ -16,6 +17,7 @@ __all__ = [
     "CopyToClipboard",
     "EdgeDraw",
     "GamepadWidget",
+    "KeystrokeWidget",
     "Matrix",
     "Paint",
     "Slider2D",
