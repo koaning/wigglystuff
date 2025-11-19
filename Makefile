@@ -20,7 +20,6 @@ js-edgedraw:
 
 
 js-gamepad:
-	# build the gamepad widget bundle
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/gamepad-widget.js js/gamepad/widget.js
 
 js-keystroke:
@@ -29,6 +28,13 @@ js-keystroke:
 
 js-copybutton:
 	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
+
+js-talk:
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/talk-widget.js js/talk/widget.js
+ 
+js-paint:
+	./node_modules/.bin/tailwindcss -i ./js/paint/styles.css -o ./wigglystuff/static/paint.css
+	./node_modules/.bin/esbuild js/paint/widget.tsx --bundle --format=esm --outfile=wigglystuff/static/paint.js --minify
 
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
