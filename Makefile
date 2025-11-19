@@ -1,4 +1,4 @@
-.PHONY: js docs
+.PHONY: js docs gamepad
 
 install: 
 	# install the build tool for JS written in Golang
@@ -12,6 +12,10 @@ pypi: clean
 js:
 	# build the JS file, only needed for the edge widget
 	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/edgedraw.js js/edgedraw.js
+
+gamepad:
+	# build the gamepad widget bundle
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/gamepad-widget.js js/gamepad/widget.js
 
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
