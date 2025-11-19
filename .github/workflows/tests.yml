@@ -20,5 +20,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade uv
+          uv venv
           uv pip install -e ".[test]"
           uv run pytest
