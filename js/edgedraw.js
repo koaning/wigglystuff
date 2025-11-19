@@ -3,7 +3,7 @@ import * as d3 from "./d3.min.js";
 function render({model, el}){
 
     const container = document.createElement('div');
-    container.classList.add("matrix-container");
+    container.classList.add("matrix-container", "edgedraw");
     el.appendChild(container);
 
     // Sample nodes
@@ -51,16 +51,7 @@ function render({model, el}){
         .join("circle")
         .attr("class", "node")
         .attr("r", 10)
-        .attr("fill", "#69b3a2")
         .on("click", handleNodeClick);
-
-    // Add label backgrounds
-    const labelBackgrounds = nodeGroup.selectAll(".label-background")
-        .data(nodes)
-        .join("rect")
-        .attr("class", "label-background")
-        .attr("rx", 3)
-        .attr("ry", 3);
 
     // Add labels
     const labels = nodeGroup.selectAll(".label")
@@ -70,17 +61,6 @@ function render({model, el}){
         .attr("dx", 15)
         .attr("dy", 4)
         .text(d => d.id);
-        
-    // Size the background rectangles to fit the text
-    labels.each(function(d) {
-        const bbox = this.getBBox();
-        const rect = labelBackgrounds.filter(r => r === d);
-        rect
-            .attr("x", bbox.x - 2)
-            .attr("y", bbox.y - 1)
-            .attr("width", bbox.width + 4)
-            .attr("height", bbox.height + 2);
-    });
 
     function handleNodeClick(event, d) {
         if (!selectedNode) {

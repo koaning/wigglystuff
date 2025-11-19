@@ -162,6 +162,7 @@ cython_debug/
 #.idea/
 
 node_modules/
+esbuild
 Untitled.ipynb
 .DS_Store
 .specstory/
