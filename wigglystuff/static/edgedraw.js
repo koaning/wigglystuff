@@ -9535,26 +9535,20 @@ var require_d3_min = __commonJS({
 var d3 = __toESM(require_d3_min());
 function render({ model, el }) {
   const container = document.createElement("div");
-  container.classList.add("matrix-container");
+  container.classList.add("matrix-container", "edgedraw");
   el.appendChild(container);
   const nodes = model.get("names").map((name) => ({ id: name, x: 100, y: 100 }));
   let links = [];
   let selectedNode = null;
-  const width = model.get("width");
-  const height = model.get("height");
+  const width = 600;
+  const height = 400;
   const svg = d3.select(container).append("svg").attr("width", width).attr("height", height);
   svg.append("defs").append("marker").attr("id", "arrowhead").attr("viewBox", "-0 -5 10 10").attr("refX", 13).attr("refY", 0).attr("orient", "auto").attr("markerWidth", 6).attr("markerHeight", 6).append("path").attr("d", "M0,-5L10,0L0,5").attr("class", "arrow");
   const simulation = d3.forceSimulation(nodes).force("link", d3.forceLink(links).id((d) => d.id).distance(100)).force("charge", d3.forceManyBody().strength(-50)).force("center", d3.forceCenter(width / 2, height / 2)).force("collide", d3.forceCollide().radius(30)).on("tick", ticked);
   const linkGroup = svg.append("g");
   const nodeGroup = svg.append("g");
-  const node = nodeGroup.selectAll(".node").data(nodes).join("circle").attr("class", "node").attr("r", 10).attr("fill", "#69b3a2").on("click", handleNodeClick);
-  const labelBackgrounds = nodeGroup.selectAll(".label-background").data(nodes).join("rect").attr("class", "label-background").attr("rx", 3).attr("ry", 3);
+  const node = nodeGroup.selectAll(".node").data(nodes).join("circle").attr("class", "node").attr("r", 10).on("click", handleNodeClick);
   const labels = nodeGroup.selectAll(".label").data(nodes).join("text").attr("class", "label").attr("dx", 15).attr("dy", 4).text((d) => d.id);
-  labels.each(function(d) {
-    const bbox = this.getBBox();
-    const rect = labelBackgrounds.filter((r) => r === d);
-    rect.attr("x", bbox.x - 2).attr("y", bbox.y - 1).attr("width", bbox.width + 4).attr("height", bbox.height + 2);
-  });
   function handleNodeClick(event, d) {
     if (!selectedNode) {
       selectedNode = d;

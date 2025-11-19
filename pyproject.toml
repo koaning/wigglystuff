@@ -13,7 +13,11 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Topic :: Scientific/Engineering",
 ]
-dependencies = ["anywidget>=0.9.2"]
+dependencies = [
+    "anywidget>=0.9.2",
+    "mohtml>=0.1.11",
+    "numpy>=2.2.6",
+]
 
 [build-system]
 requires = ["hatchling"]
