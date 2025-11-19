@@ -162,6 +162,18 @@ SortableList(["Task 1", "Task 2"], addable=True, removable=True, editable=True)
 SortableList(["Click to edit me"], editable=True)
 ```
 
+### `WebkitSpeechToTextWidget`
+
+This widget wraps the browser's Webkit Speech API so you can dictate text directly into Python notebooks without dealing with API keys. It exposes two traits: `transcript` for the current text and `listening` so you can start or stop recording from Python if you prefer.
+
+```python
+from wigglystuff import WebkitSpeechToTextWidget
+
+widget = WebkitSpeechToTextWidget()
+widget
+
+# Access the transcript at any time
+widget.transcript
 ### `Paint`
 
 A port of the [mopaint](https://github.com/koaning/mopaint) widget that offers simple MS Paint style sketching straight from a notebook. You can start with an empty canvas or load an existing image and later export the result as a PIL image or base64 string.
