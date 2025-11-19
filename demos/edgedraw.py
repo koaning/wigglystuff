@@ -75,6 +75,22 @@ def _(widget):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Cycle Detection
+
+    The widget can detect cycles in the graph. You can specify whether to treat the graph as directed or undirected.
+    """)
+    return
+
+
+@app.cell
+def _(widget):
+    widget.has_cycle(directed=False), widget.has_cycle(directed=True)
+    return
+
+
 @app.cell
 def _():
     return

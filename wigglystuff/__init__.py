@@ -230,6 +230,67 @@ class EdgeDraw(anywidget.AnyWidget):
                     neighbors.append(nodes['source'])
         return neighbors
 
+    def has_cycle(self, directed: bool = False) -> bool:
+        """Check if the graph contains cycles.
+
+        Args:
+            directed (bool): If True, considers the graph as directed.
+                           If False, considers it as undirected.
+        Returns:
+            bool: True if the graph contains a cycle, False otherwise.
+        """
+        if directed:
+            return self._has_cycle_directed()
+        else:
+            return self._has_cycle_undirected()
+
+    def _has_cycle_directed(self) -> bool:
+        """Detect cycle in a directed graph using DFS with recursion stack."""
+        visited = set()
+        rec_stack = set()
+
+        def dfs(node: str) -> bool:
+            visited.add(node)
+            rec_stack.add(node)
+
+            for neighbor in self.get_neighbors(node, directed=True):
+                if neighbor not in visited:
+                    if dfs(neighbor):
+                        return True
+                elif neighbor in rec_stack:
+                    return True
+
+            rec_stack.remove(node)
+            return False
+
+        for node in self.names:
+            if node not in visited:
+                if dfs(node):
+                    return True
+        return False
+
+    def _has_cycle_undirected(self) -> bool:
+        """Detect cycle in an undirected graph using DFS."""
+        visited = set()
+
+        def dfs(node: str, parent: str | None) -> bool:
+            visited.add(node)
+
+            for neighbor in self.get_neighbors(node, directed=False):
+                if neighbor not in visited:
+                    if dfs(neighbor, node):
+                        return True
+                elif neighbor != parent:
+                    return True
+
+            return False
+
+        for node in self.names:
+            if node not in visited:
+                if dfs(node, None):
+                    return True
+        return False
+
 
 class TangleSelect(anywidget.AnyWidget):
     """Initialize a TangleSelect widget.
