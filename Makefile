@@ -1,11 +1,15 @@
-.PHONY: js docs
+.PHONY: js docs test
 
 install: 
 	# install the build tool for JS written in Golang
 	curl -fsSL https://esbuild.github.io/dl/v0.19.11 | sh
 	uv venv --allow-existing
-	uv pip install -e . marimo
+	uv pip install -e '.[test]' marimo
 	npm i
+
+test:
+	uv pip install -e '.[test]'
+	uv run pytest
 
 pypi: clean
 	uv build
