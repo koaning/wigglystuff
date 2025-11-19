@@ -26,6 +26,9 @@ js-gamepad:
 js-copybutton:
 	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
 
+js-talk:
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/talk-widget.js js/talk/widget.js
+
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 

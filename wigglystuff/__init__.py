@@ -8,6 +8,7 @@ from .matrix import Matrix
 from .slider2d import Slider2D
 from .sortable_list import SortableList
 from .tangle import TangleChoice, TangleSelect, TangleSlider
+from .talk import WebkitSpeechToTextWidget
 
 __all__ = [
     "ColorPicker",
@@ -20,4 +21,5 @@ __all__ = [
     "TangleChoice",
     "TangleSelect",
     "TangleSlider",
+    "WebkitSpeechToTextWidget",
 ]
