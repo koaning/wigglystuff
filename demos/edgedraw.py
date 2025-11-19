@@ -87,13 +87,7 @@ def _(mo):
 
 @app.cell
 def _(widget):
-    widget.has_cycle(directed=False)
-    return
-
-
-@app.cell
-def _(widget):
-    widget.has_cycle(directed=True)
+    widget.has_cycle(directed=False), widget.has_cycle(directed=True)
     return
 
 
