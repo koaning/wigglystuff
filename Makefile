@@ -3,8 +3,7 @@
 install: 
 	# install the build tool for JS written in Golang
 	curl -fsSL https://esbuild.github.io/dl/v0.19.11 | sh
-	python -m pip install -e .
-	python -m pip install twine wheel
+	uv pip install -e . marimo
 
 pypi: clean
 	uv build
@@ -18,4 +17,5 @@ clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
 docs: 
-	marimo export html-wasm notebook.py --output docs/index.html --mode run
+	uv run marimo -y export html-wasm notebook.py --output docs/index.html --mode run
+	uv run python -m http.server 8000 --directory docs
