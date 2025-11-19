@@ -26,6 +26,10 @@ js-gamepad:
 js-copybutton:
 	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
 
+js-paint:
+	./node_modules/.bin/tailwindcss -i ./js/paint/styles.css -o ./wigglystuff/static/paint.css
+	./node_modules/.bin/esbuild js/paint/widget.tsx --bundle --format=esm --outfile=wigglystuff/static/paint.js --minify
+
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
