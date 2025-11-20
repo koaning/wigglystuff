@@ -15,12 +15,6 @@ def _():
     from mohtml import div, tailwind_css
 
     tailwind_css()
-    return (div,)
-
-
-@app.cell
-def _(div):
-    div("hello there", klass="dark:bg-blue-500 bg-red-600")
     return
 
 

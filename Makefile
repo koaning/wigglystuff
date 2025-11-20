@@ -39,6 +39,8 @@ js-paint:
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
-docs: 
-	uv run marimo -y export html-wasm notebook.py --output docs/index.html --mode run
-	uv run python -m http.server 8000 --directory docs
+docs-serve: 
+	uv run zensical serve
+
+docs-build: 
+	uv run marimo -y export html-wasm demos/edgedraw.py --output docs/demos/edgedraw/ --mode edit
