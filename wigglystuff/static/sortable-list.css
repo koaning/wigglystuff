@@ -1,13 +1,27 @@
 .draggable-list-widget {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   max-width: 100%;
+  color-scheme: light dark;
+
+  /* CSS Variables for theming */
+  --sortable-bg-container: #ffffff;
+  --sortable-bg-item: #ffffff;
+  --sortable-bg-hover: #f8f9fa;
+  --sortable-bg-focus: #f8f9fa;
+  --sortable-bg-button-hover: #e4e6ea;
+  --sortable-border-color: #e1e5e9;
+  --sortable-text-primary: #172b4d;
+  --sortable-text-secondary: #6b778c;
+  --sortable-text-button-hover: #42526e;
+  --sortable-accent: #0052cc;
+  --sortable-shadow: rgba(0, 0, 0, 0.1);
 
   .list-container {
-    background: white;
-    border: 1px solid #e1e5e9;
+    background: var(--sortable-bg-container);
+    border: 1px solid var(--sortable-border-color);
     border-radius: 6px;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px var(--sortable-shadow);
   }
   .list-item {
     position: relative;
@@ -15,8 +29,8 @@
     align-items: center;
     gap: 6px;
     padding: 6px 10px;
-    background: white;
-    border-bottom: 1px solid #e1e5e9;
+    background: var(--sortable-bg-item);
+    border-bottom: 1px solid var(--sortable-border-color);
     transition: background-color 0.15s ease, opacity 0.15s ease;
     cursor: grab;
   }
@@ -24,7 +38,7 @@
     border-bottom: none;
   }
   .list-item:hover {
-    background-color: #f8f9fa;
+    background-color: var(--sortable-bg-hover);
   }
   .list-item:hover .remove-button {
     opacity: 1;
@@ -42,7 +56,7 @@
     border: none;
     background: transparent;
     cursor: grab;
-    color: #6b778c;
+    color: var(--sortable-text-secondary);
     flex-shrink: 0;
   }
   .drag-handle:active {
@@ -53,7 +67,7 @@
   }
   .item-label {
     flex: 1;
-    color: #172b4d;
+    color: var(--sortable-text-primary);
     font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
@@ -66,10 +80,10 @@
     margin: -1px -4px;
   }
   .item-label.editable:hover {
-    background-color: #f4f5f7;
+    background-color: var(--sortable-bg-focus);
   }
   .item-label.editable:focus {
-    outline: 2px solid #0052cc;
+    outline: 2px solid var(--sortable-accent);
     outline-offset: 1px;
   }
   .remove-button {
@@ -82,14 +96,14 @@
     background: transparent;
     cursor: pointer;
     border-radius: 3px;
-    color: #6b778c;
+    color: var(--sortable-text-secondary);
     flex-shrink: 0;
     opacity: 0;
     transition: opacity 0.15s ease, background-color 0.15s ease;
   }
   .remove-button:hover {
-    background-color: #e4e6ea;
-    color: #42526e;
+    background-color: var(--sortable-bg-button-hover);
+    color: var(--sortable-text-button-hover);
   }
   .add-input {
     width: 100%;
@@ -99,27 +113,43 @@
     font-size: 14px;
     outline: none;
     background: transparent;
-    color: #6b778c;
+    color: var(--sortable-text-secondary);
   }
   .add-input:focus {
-    background: #f8f9fa;
-    color: #172b4d;
+    background: var(--sortable-bg-focus);
+    color: var(--sortable-text-primary);
     border-radius: 3px;
   }
   .edit-input {
     flex: 1;
     padding: 1px 4px;
     margin: -1px -4px;
-    border: 1px solid #0052cc;
+    border: 1px solid var(--sortable-accent);
     border-radius: 3px;
     font-size: 14px;
     font-family: inherit;
-    background: white;
-    color: #172b4d;
+    background: var(--sortable-bg-item);
+    color: var(--sortable-text-primary);
     outline: none;
   }
   .drop-indicator {
-    background-color: #0052cc !important;
+    background-color: var(--sortable-accent) !important;
     border-radius: 1px;
   }
+}
+
+/* Dark mode styles */
+.dark .draggable-list-widget,
+.dark-theme .draggable-list-widget {
+  --sortable-bg-container: #1e1e1e;
+  --sortable-bg-item: #2a2a2a;
+  --sortable-bg-hover: #333333;
+  --sortable-bg-focus: #333333;
+  --sortable-bg-button-hover: #3a3a3a;
+  --sortable-border-color: #3a3a3a;
+  --sortable-text-primary: #e0e0e0;
+  --sortable-text-secondary: #a0a0a0;
+  --sortable-text-button-hover: #f0f0f0;
+  --sortable-accent: #4d9fff;
+  --sortable-shadow: rgba(0, 0, 0, 0.3);
 }
