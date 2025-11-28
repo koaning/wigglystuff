@@ -31,6 +31,7 @@ def _(SortableList, mo):
             removable=True,
             label="My Sortable List"
         )
+
     )
     widget
     return (widget,)
