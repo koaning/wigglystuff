@@ -14,6 +14,7 @@ class SortableList(anywidget.AnyWidget):
     addable = traitlets.Bool(default_value=False).tag(sync=True)
     removable = traitlets.Bool(default_value=False).tag(sync=True)
     editable = traitlets.Bool(default_value=False).tag(sync=True)
+    label = traitlets.Unicode("").tag(sync=True)
 
     def __init__(
         self,
@@ -22,6 +23,7 @@ class SortableList(anywidget.AnyWidget):
         addable: bool = False,
         removable: bool = False,
         editable: bool = False,
+        label: str = "",
         **kwargs,
     ) -> None:
         super().__init__(
@@ -29,5 +31,6 @@ class SortableList(anywidget.AnyWidget):
             addable=addable,
             removable=removable,
             editable=editable,
+            label=label,
             **kwargs,
         )

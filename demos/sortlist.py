@@ -24,7 +24,14 @@ def _(mo):
 @app.cell
 def _(SortableList, mo):
     widget = mo.ui.anywidget(
-        SortableList(["a", "b", "c"], editable=True, addable=True, removable=True)
+        SortableList(
+            ["a", "b", "c"],
+            editable=True,
+            addable=True,
+            removable=True,
+            label="My Sortable List"
+        )
+
     )
     widget
     return (widget,)
