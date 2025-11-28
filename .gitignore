@@ -167,3 +167,4 @@ Untitled.ipynb
 .DS_Store
 .specstory/
 .cursorindexingignore
+**/__marimo__/**
