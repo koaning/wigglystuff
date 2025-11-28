@@ -16,6 +16,14 @@
   --sortable-accent: #0052cc;
   --sortable-shadow: rgba(0, 0, 0, 0.1);
 
+  .list-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--sortable-text-primary);
+  }
+
   .list-container {
     background: var(--sortable-bg-container);
     border: 1px solid var(--sortable-border-color);

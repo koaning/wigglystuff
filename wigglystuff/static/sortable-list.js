@@ -9,6 +9,15 @@ function render({ model, el }) {
   function renderList() {
     el.replaceChildren();
 
+    // Render label if provided
+    let labelText = model.get("label");
+    if (labelText) {
+      let labelElement = document.createElement("label");
+      labelElement.className = "list-label";
+      labelElement.textContent = labelText;
+      el.appendChild(labelElement);
+    }
+
     let container = document.createElement("div");
     container.className = "list-container";
 
@@ -241,6 +250,7 @@ function render({ model, el }) {
 
   renderList();
   model.on("change:value", renderList);
+  model.on("change:label", renderList);
 }
 
 export default { render };
