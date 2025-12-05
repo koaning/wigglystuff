@@ -45,6 +45,17 @@ class Slider2D(anywidget.AnyWidget):
         y_bounds: tuple[float, float] = (-1.0, 1.0),
         **kwargs: Any,
     ) -> None:
+        """Create a Slider2D widget.
+
+        Args:
+            x: Initial x coordinate.
+            y: Initial y coordinate.
+            width: Canvas width in pixels.
+            height: Canvas height in pixels.
+            x_bounds: Min/max tuple for x.
+            y_bounds: Min/max tuple for y.
+            **kwargs: Forwarded to ``anywidget.AnyWidget``.
+        """
         super().__init__(
             x=x,
             y=y,

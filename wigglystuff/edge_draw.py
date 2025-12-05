@@ -25,6 +25,13 @@ class EdgeDraw(anywidget.AnyWidget):
     width = traitlets.Int(600).tag(sync=True)
 
     def __init__(self, names: List[str], height: int = 400, width: int = 600) -> None:
+        """Create an EdgeDraw widget.
+
+        Args:
+            names: Ordered list of node labels.
+            height: Canvas height in pixels.
+            width: Canvas width in pixels.
+        """
         super().__init__(names=names, height=height, width=width)
 
     def get_adjacency_matrix(self, directed: bool = False) -> np.ndarray:

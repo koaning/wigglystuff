@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import Any, List
 
 import anywidget
 import traitlets
@@ -45,8 +45,21 @@ class TangleSlider(anywidget.AnyWidget):
         prefix: str = "",
         suffix: str = "",
         digits: int = 1,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
+        """Create a slider suitable for inline Tangle interactions.
+
+        Args:
+            amount: Starting value; defaults to midpoint of bounds.
+            min_value: Lower bound.
+            max_value: Upper bound.
+            step: Increment size.
+            pixels_per_step: Drag distance per step.
+            prefix: Text shown before the value.
+            suffix: Text shown after the value.
+            digits: Number formatting precision.
+            **kwargs: Forwarded to ``anywidget.AnyWidget``.
+        """
         if amount is None:
             amount = (max_value + min_value) / 2
         super().__init__(
@@ -75,7 +88,13 @@ class TangleChoice(anywidget.AnyWidget):
     choice = traitlets.Unicode("").tag(sync=True)
     choices = traitlets.List([]).tag(sync=True)
 
-    def __init__(self, choices: List[str], **kwargs) -> None:
+    def __init__(self, choices: List[str], **kwargs: Any) -> None:
+        """Create a TangleChoice widget.
+
+        Args:
+            choices: Ordered sequence of options (min two).
+            **kwargs: Forwarded to ``anywidget.AnyWidget``.
+        """
         if len(choices) < 2:
             raise ValueError("Must pass at least two choices.")
         super().__init__(value=choices[1], choices=choices, **kwargs)
@@ -94,7 +113,13 @@ class TangleSelect(anywidget.AnyWidget):
     choice = traitlets.Unicode("").tag(sync=True)
     choices = traitlets.List([]).tag(sync=True)
 
-    def __init__(self, choices: List[str], **kwargs) -> None:
+    def __init__(self, choices: List[str], **kwargs: Any) -> None:
+        """Create a TangleSelect dropdown.
+
+        Args:
+            choices: Ordered sequence of options (min two).
+            **kwargs: Forwarded to ``anywidget.AnyWidget``.
+        """
         if len(choices) < 2:
             raise ValueError("Must pass at least two choices.")
         super().__init__(choice=choices[0], choices=choices, **kwargs)

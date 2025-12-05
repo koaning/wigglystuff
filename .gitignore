@@ -168,3 +168,5 @@ Untitled.ipynb
 .specstory/
 .cursorindexingignore
 **/__marimo__/**
+mkdocs/examples/
+!mkdocs/examples/.gitkeep

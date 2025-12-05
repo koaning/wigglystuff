@@ -44,6 +44,23 @@ Installation occurs via `pip` or `uv`. We prefer `uv`.
 uv pip install wigglystuff
 ```
 
+To install all development requirements (tests, docs, JavaScript tooling), run:
+
+```
+make install
+```
+
+## Documentation
+
+Install the optional extras and launch MkDocs Material to preview the new site with embedded Marimo demos:
+
+```
+uv pip install -e '.[docs]'
+make docs
+```
+
+Run `make docs-demos` whenever you need to refresh the html-wasm exports from `demos/*.py`, then `make docs-serve` if you want the live-reload server. `make docs-build` chains the export + build steps for deploys.
+
 ## Usage
 
 ### `Slider2D`
