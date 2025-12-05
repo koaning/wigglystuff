@@ -7,51 +7,85 @@
     padding: 10px;
     position: relative;
     user-select: none;
+    color: var(--matrix-text, #111827);
 }
-.matrix:before, .matrix:after {
+
+.matrix:before,
+.matrix:after {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
     width: 2px;
-    background-color: black;
+    background-color: var(--matrix-bracket, #000000);
 }
-.matrix:before { left: 0; }
-.matrix:after { right: 0; }
+
+.matrix:before {
+    left: 0;
+}
+
+.matrix:after {
+    right: 0;
+}
+
 .matrix-row {
     display: flex;
     justify-content: flex-start;
-}
-.matrix-element {
-    width: 3em;
-    height: 1.5em;
-    text-align: center;
-    margin: 0.2em;
-    cursor: ew-resize;
-    color: #0066cc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.matrix-element::selection {
-    background-color: transparent;
 }
 
 .matrix-wrapper {
     display: inline-block;
     font-family: monospace;
     font-size: 14px;
+    color-scheme: light dark;
+    --matrix-bg: #ffffff;
+    --matrix-text: #111827;
+    --matrix-muted: #4b5563;
+    --matrix-border: rgba(17, 24, 39, 0.15);
+    --matrix-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    --matrix-accent: #0b74ff;
+    --matrix-static: #6b7280;
+    --matrix-cell-bg: rgba(11, 116, 255, 0.08);
+    --matrix-cell-hover-bg: rgba(11, 116, 255, 0.18);
+    --matrix-cell-static-bg: rgba(15, 23, 42, 0.08);
+    --matrix-bracket: rgba(15, 23, 42, 0.6);
+    --matrix-grid-bg: rgba(243, 244, 246, 0.7);
+    border: 1px solid var(--matrix-border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    background-color: var(--matrix-bg);
+    color: var(--matrix-text);
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--matrix-shadow);
+}
+
+@media (prefers-color-scheme: dark) {
+    .matrix-wrapper {
+        --matrix-bg: #0f172a;
+        --matrix-text: #f3f4f6;
+        --matrix-muted: #c7d2fe;
+        --matrix-border: rgba(148, 163, 184, 0.4);
+        --matrix-shadow: 0 12px 32px rgba(2, 6, 23, 0.65);
+        --matrix-accent: #7dd3fc;
+        --matrix-static: #e2e8f0;
+        --matrix-cell-bg: rgba(148, 163, 184, 0.16);
+        --matrix-cell-hover-bg: rgba(125, 211, 252, 0.35);
+        --matrix-cell-static-bg: rgba(148, 163, 184, 0.12);
+        --matrix-bracket: rgba(148, 163, 184, 0.75);
+        --matrix-grid-bg: rgba(15, 23, 42, 0.75);
+    }
 }
 
 .matrix-grid {
     display: flex;
     align-items: flex-start;
+    color: inherit;
 }
 
 .matrix-column {
     display: flex;
     flex-direction: column;
+    color: inherit;
 }
 
 .matrix-label-column {
@@ -62,9 +96,10 @@
     display: flex;
     position: relative;
     padding: 0 15px;
+    background: var(--matrix-grid-bg, transparent);
+    border-radius: 10px;
 }
 
-/* Matrix brackets */
 .matrix-data-wrapper::before,
 .matrix-data-wrapper::after {
     content: '';
@@ -76,16 +111,16 @@
 
 .matrix-data-wrapper::before {
     left: 3px;
-    border-left: 2px solid black;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
+    border-left: 2px solid var(--matrix-bracket, black);
+    border-top: 2px solid var(--matrix-bracket, black);
+    border-bottom: 2px solid var(--matrix-bracket, black);
 }
 
 .matrix-data-wrapper::after {
     right: 3px;
-    border-right: 2px solid black;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
+    border-right: 2px solid var(--matrix-bracket, black);
+    border-top: 2px solid var(--matrix-bracket, black);
+    border-bottom: 2px solid var(--matrix-bracket, black);
 }
 
 .matrix-data-column {
@@ -98,18 +133,47 @@
     justify-content: center;
     height: 2em;
     box-sizing: border-box;
+    color: inherit;
 }
 
 .matrix-element {
     width: 3em;
-    margin: 0 0.3em;
+    height: 1.6em;
+    text-align: center;
+    margin: 0.2em;
     cursor: ew-resize;
-    color: #0066cc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--matrix-accent, #0066cc);
+    background-color: var(--matrix-cell-bg, rgba(0, 0, 0, 0.05));
+    border-radius: 0.4em;
+    transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    min-width: 3em;
+    box-shadow: inset 0 0 0 1px transparent;
+}
+
+.matrix-element:hover,
+.matrix-element:focus-visible {
+    background-color: var(--matrix-cell-hover-bg, rgba(0, 102, 204, 0.2));
+    color: var(--matrix-text, #111827);
+}
+
+.matrix-element:focus-visible {
+    outline: 2px solid var(--matrix-accent, #0066cc);
+    outline-offset: 2px;
+}
+
+.matrix-element::selection {
+    background-color: transparent;
 }
 
 .matrix-element-static {
     cursor: default;
-    color: #666;
+    color: var(--matrix-static, #666666);
+    background-color: var(--matrix-cell-static-bg, rgba(0, 0, 0, 0.05));
 }
 
 .matrix-row-label {
@@ -117,22 +181,21 @@
     min-width: 5em;
     justify-content: flex-end;
     padding-right: 0.5em;
-    font-weight: bold;
-    color: #333;
+    font-weight: 600;
+    color: var(--matrix-muted, #333333);
     white-space: nowrap;
 }
 
 .matrix-col-label {
-    font-weight: bold;
-    color: #333;
+    font-weight: 600;
+    color: var(--matrix-muted, #333333);
     margin-bottom: 5px;
-    width: 3.6em; /* Slightly wider than matrix elements to account for margins */
+    width: 3.6em;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-/* Flexible columns mode */
 .matrix-grid.flexible-columns .matrix-element {
     width: auto;
     min-width: 3em;
@@ -155,14 +218,12 @@
     margin-bottom: 5px;
 }
 
-/* Adjust bracket positioning to exclude headers */
 .matrix-grid:has(.matrix-col-label) .matrix-data-wrapper::before,
 .matrix-grid:has(.matrix-col-label) .matrix-data-wrapper::after {
-    top: calc(2em + 5px); /* Height of header cell + margin */
-    height: calc(100% - 2em - 5px); /* Full height minus header */
+    top: calc(2em + 5px);
+    height: calc(100% - 2em - 5px);
 }
 
-/* If there are no column names, brackets should span full height */
 .matrix-grid:not(:has(.matrix-col-label)) .matrix-data-wrapper::before,
 .matrix-grid:not(:has(.matrix-col-label)) .matrix-data-wrapper::after {
     top: 0;
