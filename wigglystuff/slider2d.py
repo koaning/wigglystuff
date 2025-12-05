@@ -6,7 +6,18 @@ import traitlets
 
 
 class Slider2D(anywidget.AnyWidget):
-    """Two dimensional slider for simultaneous adjustments."""
+    """Two dimensional slider for simultaneous adjustments.
+
+    Parameters
+    ----------
+    x, y:
+        Initial slider coordinates.
+    width, height:
+        Canvas size in pixels. Defaults to 400x400.
+    x_bounds, y_bounds:
+        Tuples of floats defining the minimum and maximum allowed values for
+        each axis.
+    """
 
     _esm = Path(__file__).parent / "static" / "2dslider.js"
     x = traitlets.Float(0.0).tag(sync=True)

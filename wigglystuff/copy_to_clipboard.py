@@ -5,7 +5,14 @@ import traitlets
 
 
 class CopyToClipboard(anywidget.AnyWidget):
-    """Button that copies provided text to the clipboard."""
+    """Button that copies provided text to the clipboard.
+
+    Parameters
+    ----------
+    text_to_copy:
+        Initial text payload placed behind the button. Defaults to an empty
+        string.
+    """
 
     text_to_copy = traitlets.Unicode("").tag(sync=True)
     _esm = Path(__file__).parent / "static" / "copybutton.js"

@@ -5,7 +5,11 @@ import traitlets
 
 
 class GamepadWidget(anywidget.AnyWidget):
-    """Listen to browser gamepad events and sync state back to Python."""
+    """Listen to browser gamepad events and sync state back to Python.
+
+    This widget does not require any initialization arguments; all state is
+    mirrored through traitlets such as ``axes`` and ``current_button_press``.
+    """
 
     _esm = Path(__file__).parent / "static" / "gamepad-widget.js"
     current_button_press = traitlets.Int(-1).tag(sync=True)

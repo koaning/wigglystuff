@@ -79,7 +79,19 @@ def input_to_pil(input_data: Union[str, Path, "Image.Image", bytes, None]):
 
 
 class Paint(anywidget.AnyWidget):
-    """Notebook-friendly paint widget with MS Paint style tools."""
+    """Notebook-friendly paint widget with MS Paint style tools.
+
+    Parameters
+    ----------
+    height, width:
+        Canvas dimensions in pixels. Defaults to ``DEFAULT_HEIGHT``/``DEFAULT_WIDTH``.
+    store_background:
+        If ``True`` the widget keeps the background layer when erasing.
+    init_image:
+        Optional image-like object (path, URL, bytes, PIL image, or base64 data)
+        used to seed the canvas. When provided the widget infers width from the
+        image unless ``height`` is explicitly set.
+    """
 
     _esm = Path(__file__).parent / "static" / "paint.js"
     _css = Path(__file__).parent / "static" / "paint.css"
