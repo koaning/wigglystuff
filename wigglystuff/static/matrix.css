@@ -7,7 +7,6 @@
     padding: 10px;
     position: relative;
     user-select: none;
-    color: var(--matrix-text, #111827);
 }
 
 .matrix:before,
@@ -38,42 +37,21 @@
     font-family: monospace;
     font-size: 14px;
     color-scheme: light dark;
-    --matrix-bg: #ffffff;
     --matrix-text: #111827;
-    --matrix-muted: #4b5563;
-    --matrix-border: rgba(17, 24, 39, 0.15);
-    --matrix-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-    --matrix-accent: #0b74ff;
-    --matrix-static: #6b7280;
-    --matrix-cell-bg: rgba(11, 116, 255, 0.08);
-    --matrix-cell-hover-bg: rgba(11, 116, 255, 0.18);
-    --matrix-cell-static-bg: rgba(15, 23, 42, 0.08);
-    --matrix-bracket: rgba(15, 23, 42, 0.6);
-    --matrix-grid-bg: rgba(243, 244, 246, 0.7);
-    border: 1px solid var(--matrix-border);
-    border-radius: 12px;
-    padding: 10px 12px;
-    background-color: var(--matrix-bg);
-    color: var(--matrix-text);
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: var(--matrix-shadow);
+    --matrix-muted: #333333;
+    --matrix-accent: #0066cc;
+    --matrix-static: #666666;
+    --matrix-bracket: rgba(0, 0, 0, 0.85);
 }
 
 .dark .matrix-wrapper,
 .dark-theme .matrix-wrapper,
 [data-theme="dark"] .matrix-wrapper {
-    --matrix-bg: #0f172a;
     --matrix-text: #f3f4f6;
     --matrix-muted: #c7d2fe;
-    --matrix-border: rgba(148, 163, 184, 0.4);
-    --matrix-shadow: 0 12px 32px rgba(2, 6, 23, 0.65);
     --matrix-accent: #7dd3fc;
     --matrix-static: #e2e8f0;
-    --matrix-cell-bg: rgba(148, 163, 184, 0.16);
-    --matrix-cell-hover-bg: rgba(125, 211, 252, 0.35);
-    --matrix-cell-static-bg: rgba(148, 163, 184, 0.12);
-    --matrix-bracket: rgba(148, 163, 184, 0.75);
-    --matrix-grid-bg: rgba(15, 23, 42, 0.75);
+    --matrix-bracket: rgba(148, 163, 184, 0.85);
 }
 
 .matrix-grid {
@@ -96,8 +74,6 @@
     display: flex;
     position: relative;
     padding: 0 15px;
-    background: var(--matrix-grid-bg, transparent);
-    border-radius: 10px;
 }
 
 .matrix-data-wrapper::before,
@@ -138,32 +114,14 @@
 
 .matrix-element {
     width: 3em;
-    height: 1.6em;
+    height: 1.5em;
     text-align: center;
     margin: 0.2em;
     cursor: ew-resize;
+    color: var(--matrix-accent, #0066cc);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--matrix-accent, #0066cc);
-    background-color: var(--matrix-cell-bg, rgba(0, 0, 0, 0.05));
-    border-radius: 0.4em;
-    transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: 'tnum' 1;
-    min-width: 3em;
-    box-shadow: inset 0 0 0 1px transparent;
-}
-
-.matrix-element:hover,
-.matrix-element:focus-visible {
-    background-color: var(--matrix-cell-hover-bg, rgba(0, 102, 204, 0.2));
-    color: var(--matrix-text, #111827);
-}
-
-.matrix-element:focus-visible {
-    outline: 2px solid var(--matrix-accent, #0066cc);
-    outline-offset: 2px;
 }
 
 .matrix-element::selection {
@@ -173,7 +131,6 @@
 .matrix-element-static {
     cursor: default;
     color: var(--matrix-static, #666666);
-    background-color: var(--matrix-cell-static-bg, rgba(0, 0, 0, 0.05));
 }
 
 .matrix-row-label {
@@ -181,13 +138,13 @@
     min-width: 5em;
     justify-content: flex-end;
     padding-right: 0.5em;
-    font-weight: 600;
+    font-weight: bold;
     color: var(--matrix-muted, #333333);
     white-space: nowrap;
 }
 
 .matrix-col-label {
-    font-weight: 600;
+    font-weight: bold;
     color: var(--matrix-muted, #333333);
     margin-bottom: 5px;
     width: 3.6em;
