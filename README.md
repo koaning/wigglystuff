@@ -186,6 +186,8 @@ widget
 
 # Access the transcript at any time
 widget.transcript
+```
+
 ### `Paint`
 
 A port of the [mopaint](https://github.com/koaning/mopaint) widget that offers simple MS Paint style sketching straight from a notebook. You can start with an empty canvas or load an existing image and later export the result as a PIL image or base64 string.
