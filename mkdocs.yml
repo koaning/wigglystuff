@@ -1,0 +1,107 @@
+site_name: wigglystuff
+site_description: Creative AnyWidgets for notebooks
+site_url: https://wigglystuff.dev
+repo_url: https://github.com/vdamario/wigglystuff
+repo_name: koaning/wigglystuff
+strict: true
+docs_dir: mkdocs
+site_dir: site
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - toc.follow
+    - content.tabs.link
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+    - navigation.instant
+  palette:
+    - scheme: default
+      primary: grey
+      accent: blue grey
+    - scheme: slate
+      primary: grey
+      accent: blue grey
+  font:
+    text: "PT Sans"
+    code: "Fira Mono"
+nav:
+  - Overview: index.md
+  - Reference:
+      - Overview: reference/index.md
+      - Slider2D: reference/slider2d.md
+      - Matrix: reference/matrix.md
+      - SortableList: reference/sortable-list.md
+      - Paint: reference/paint.md
+      - EdgeDraw: reference/edge-draw.md
+      - KeystrokeWidget: reference/keystroke.md
+      - WebkitSpeechToText: reference/talk.md
+      - ColorPicker: reference/color-picker.md
+      - CopyToClipboard: reference/copy-to-clipboard.md
+      - Tangle Widgets: reference/tangle.md
+      - GamepadWidget: reference/gamepad.md
+plugins:
+  - search
+  - section-index
+  - mkdocs-jupyter:
+      execute: false
+      include_source: true
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: ["."]
+          options:
+            docstring_style: google
+            merge_init_into_class: true
+            show_source: true
+            show_root_heading: false
+            show_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            separate_signature: true
+            heading_level: 2
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: "#"
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+extra_css:
+  - assets/stylesheets/extra.css
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vdamario/wigglystuff
+      name: GitHub
+    - icon: material/notebook
+      link: https://marimo.io/gallery
+      name: Marimo gallery
+watch:
+  - mkdocs.yml
+  - mkdocs
+  - demos
+exclude_docs: examples/**/CLAUDE.md

@@ -1,10 +1,10 @@
-.PHONY: js docs test
+.PHONY: js docs test docs-demos docs-serve docs-build marimo-notebook
 
 install: 
 	# install the build tool for JS written in Golang
 	curl -fsSL https://esbuild.github.io/dl/v0.19.11 | sh
 	uv venv --allow-existing
-	uv pip install -e '.[test]' marimo
+	uv pip install -e '.[test,docs]'
 	npm i
 
 test:
@@ -39,6 +39,18 @@ js-paint:
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
-docs: 
-	uv run marimo -y export html-wasm notebook.py --output docs/index.html --mode run
+docs:
+	uv run mkdocs build -f mkdocs.yml
+
+docs-demos:
+	uv run python scripts/export_marimo_demos.py
+
+docs-serve:
+	uv run mkdocs serve -f mkdocs.yml
+
+docs-build: docs-demos
+	uv run mkdocs build -f mkdocs.yml
+
+marimo-notebook:
+	uv run marimo -y export html-wasm notebook.py --output docs/index.html --mode edit
 	uv run python -m http.server 8000 --directory docs

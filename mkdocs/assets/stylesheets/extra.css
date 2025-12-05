@@ -1,0 +1,64 @@
+:root {
+  --wiggly-demo-border: color-mix(in srgb, var(--md-sys-color-outline) 70%, transparent);
+  --wiggly-button-border: color-mix(in srgb, var(--md-sys-color-outline) 85%, transparent);
+}
+
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #111111;
+  --md-accent-fg-color: #5f6368;
+  --md-default-bg-color: #f8f9fa;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #f4f4f4;
+  --md-accent-fg-color: #aeb0b5;
+  --md-default-bg-color: #121212;
+}
+
+.demo-frame {
+  width: 100%;
+  min-height: 520px;
+  border: 1px solid var(--wiggly-demo-border);
+  border-radius: 0.75rem;
+  margin-block: 1rem;
+  background: var(--md-sys-color-surface);
+}
+
+.demo-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.demo-links a {
+  text-decoration: none;
+}
+
+.md-typeset .md-button {
+  border-radius: 999px;
+  border: 1px solid var(--wiggly-button-border);
+  background-color: color-mix(in srgb, var(--md-default-bg-color) 70%, transparent);
+  color: var(--md-primary-fg-color);
+  padding-inline: 1.25rem;
+  font-weight: 600;
+  text-transform: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.md-typeset .md-button:hover {
+  border-color: color-mix(in srgb, var(--md-accent-fg-color) 70%, transparent);
+  background-color: color-mix(in srgb, var(--md-accent-fg-color) 15%, var(--md-default-bg-color));
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-button {
+  color: var(--md-accent-fg-color);
+  background-color: color-mix(in srgb, #1e1f20 85%, transparent);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-button:hover {
+  border-color: color-mix(in srgb, var(--md-accent-fg-color) 60%, transparent);
+  background-color: color-mix(in srgb, var(--md-accent-fg-color) 10%, #1e1f20);
+}
+[data-md-component="header"] .md-header__button.md-logo img {
+  filter: brightness(0) invert(1);
+}

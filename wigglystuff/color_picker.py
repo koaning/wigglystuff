@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 import anywidget
 import traitlets
@@ -10,7 +11,13 @@ class ColorPicker(anywidget.AnyWidget):
     _esm = Path(__file__).parent / "static" / "colorpicker.js"
     color = traitlets.Unicode("#000000").tag(sync=True)
 
-    def __init__(self, *, color: str | None = None, **kwargs):
+    def __init__(self, *, color: str | None = None, **kwargs: Any):
+        """Create a ColorPicker widget.
+
+        Args:
+            color: Optional starting hex color (e.g. ``"#ff00aa"``).
+            **kwargs: Forwarded to ``anywidget.AnyWidget``.
+        """
         if color is not None:
             kwargs["color"] = color
         super().__init__(**kwargs)

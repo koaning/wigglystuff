@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Sequence
 
 import anywidget
 import traitlets
@@ -24,8 +24,18 @@ class SortableList(anywidget.AnyWidget):
         removable: bool = False,
         editable: bool = False,
         label: str = "",
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
+        """Create a sortable list widget.
+
+        Args:
+            value: Initial sequence of string items.
+            addable: Allow inserting new entries.
+            removable: Allow deleting entries.
+            editable: Enable inline text editing.
+            label: Optional heading shown above the list.
+            **kwargs: Forwarded to ``anywidget.AnyWidget``.
+        """
         super().__init__(
             value=list(value),
             addable=addable,

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import Any, List
 
 import anywidget
 import numpy as np
@@ -36,8 +36,23 @@ class Matrix(anywidget.AnyWidget):
         col_names: List[str] | None = None,
         static: bool = False,
         flexible_cols: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
+        """Create a Matrix editor.
+
+        Args:
+            matrix: Optional 2D list of initial values.
+            rows: Number of rows when ``matrix`` is omitted.
+            cols: Number of columns when ``matrix`` is omitted.
+            min_value: Lower bound for cell values.
+            max_value: Upper bound for cell values.
+            triangular: If ``True``, enforce triangular editing constraints.
+            row_names: Custom labels for rows.
+            col_names: Custom labels for columns.
+            static: Disable editing when ``True``.
+            flexible_cols: Allow column count changes interactively.
+            **kwargs: Forwarded to ``anywidget.AnyWidget``.
+        """
         if matrix is not None:
             matrix_array = np.array(matrix)
             if matrix_array.min() < min_value:
