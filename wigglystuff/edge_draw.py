@@ -7,7 +7,15 @@ import traitlets
 
 
 class EdgeDraw(anywidget.AnyWidget):
-    """Widget for drawing edges between named nodes."""
+    """Widget for drawing edges between named nodes.
+
+    Parameters
+    ----------
+    names:
+        Ordered list of node labels to display.
+    height, width:
+        Canvas dimensions in CSS pixels. Defaults are 400x600.
+    """
 
     _esm = Path(__file__).parent / "static" / "edgedraw.js"
     _css = Path(__file__).parent / "static" / "edgedraw.css"

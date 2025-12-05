@@ -5,7 +5,11 @@ import traitlets
 
 
 class WebkitSpeechToTextWidget(anywidget.AnyWidget):
-    """Speech-to-text widget backed by the browser's Webkit Speech API."""
+    """Speech-to-text widget backed by the browser's Webkit Speech API.
+
+    The widget exposes the ``transcript`` text along with the ``listening`` and
+    ``trigger_listen`` booleans; it does not require initialization arguments.
+    """
 
     transcript = traitlets.Unicode("").tag(sync=True)
     listening = traitlets.Bool(False).tag(sync=True)
