@@ -59,21 +59,21 @@
     box-shadow: var(--matrix-shadow);
 }
 
-@media (prefers-color-scheme: dark) {
-    .matrix-wrapper {
-        --matrix-bg: #0f172a;
-        --matrix-text: #f3f4f6;
-        --matrix-muted: #c7d2fe;
-        --matrix-border: rgba(148, 163, 184, 0.4);
-        --matrix-shadow: 0 12px 32px rgba(2, 6, 23, 0.65);
-        --matrix-accent: #7dd3fc;
-        --matrix-static: #e2e8f0;
-        --matrix-cell-bg: rgba(148, 163, 184, 0.16);
-        --matrix-cell-hover-bg: rgba(125, 211, 252, 0.35);
-        --matrix-cell-static-bg: rgba(148, 163, 184, 0.12);
-        --matrix-bracket: rgba(148, 163, 184, 0.75);
-        --matrix-grid-bg: rgba(15, 23, 42, 0.75);
-    }
+.dark .matrix-wrapper,
+.dark-theme .matrix-wrapper,
+[data-theme="dark"] .matrix-wrapper {
+    --matrix-bg: #0f172a;
+    --matrix-text: #f3f4f6;
+    --matrix-muted: #c7d2fe;
+    --matrix-border: rgba(148, 163, 184, 0.4);
+    --matrix-shadow: 0 12px 32px rgba(2, 6, 23, 0.65);
+    --matrix-accent: #7dd3fc;
+    --matrix-static: #e2e8f0;
+    --matrix-cell-bg: rgba(148, 163, 184, 0.16);
+    --matrix-cell-hover-bg: rgba(125, 211, 252, 0.35);
+    --matrix-cell-static-bg: rgba(148, 163, 184, 0.12);
+    --matrix-bracket: rgba(148, 163, 184, 0.75);
+    --matrix-grid-bg: rgba(15, 23, 42, 0.75);
 }
 
 .matrix-grid {
