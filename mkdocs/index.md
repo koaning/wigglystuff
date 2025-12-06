@@ -34,6 +34,6 @@ hide:
 - [KeystrokeWidget](reference/keystroke.md) [(demo)](examples/keystroke/index.html) captures shortcuts with modifier metadata so you can wire notebook hotkeys.
 - [GamepadWidget](reference/gamepad.md) [(demo)](examples/gamepad/index.html) streams controller axes, d-pad directions, and button presses for playful control schemes.
 - [ColorPicker](reference/color-picker.md) [(demo)](examples/colorpicker/index.html) streams both hex and RGB values for live theming or palette capture.
-- [CopyToClipboard](reference/copy-to-clipboard.md) [(demo)](examples/copytoclipboard/index.html) offers a one-click button that copies any string payload to the OS clipboard.
+- [CopyToClipboard](examples/copytoclipboard/index.html) [(API)](reference/copy-to-clipboard.md) offers a one-click button that copies any string payload to the OS clipboard.
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
