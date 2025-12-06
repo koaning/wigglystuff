@@ -2630,7 +2630,6 @@ dependencies = [
     { name = "mohtml" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "pandas" },
     { name = "pillow" },
 ]
 
@@ -2645,6 +2644,7 @@ docs = [
     { name = "mkdocs-material" },
     { name = "mkdocs-section-index" },
     { name = "mkdocstrings", extra = ["python"] },
+    { name = "pandas" },
 ]
 test = [
     { name = "pytest" },
@@ -2664,7 +2664,7 @@ requires-dist = [
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.25.1" },
     { name = "mohtml", specifier = ">=0.1.11" },
     { name = "numpy" },
-    { name = "pandas", specifier = ">=2.3.3" },
+    { name = "pandas", marker = "extra == 'docs'", specifier = ">=2.3.3" },
     { name = "pillow", specifier = ">=12.0.0" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.3.3" },
 ]
