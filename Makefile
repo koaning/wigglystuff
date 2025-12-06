@@ -45,7 +45,7 @@ docs:
 docs-demos:
 	uv run python scripts/export_marimo_demos.py
 
-docs-serve:
+docs-serve: docs-demos
 	uv run mkdocs serve -f mkdocs.yml
 
 docs-build: docs-demos
