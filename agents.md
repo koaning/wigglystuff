@@ -38,3 +38,8 @@ syncs back to Python.
   workflows (`uv pip install -e .` etc.) and the standard library's `pathlib`
   for filesystem paths—mirror those choices in new agents to keep the codebase
   consistent.
+- When styling widgets, support both light and dark themes by defining
+  component-specific CSS variables (see Matrix/SortableList). Scope your
+  defaults to the widget root, mark `color-scheme: light dark`, and provide
+  overrides that respond to `.dark`, `.dark-theme`, or `[data-theme="dark"]`
+  ancestors so notebook-level theme toggles work instantly.

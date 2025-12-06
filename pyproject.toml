@@ -34,6 +34,7 @@ docs = [
     "mkdocs-include-markdown-plugin>=6.2.1",
     "mike>=2.1.0",
     "black>=24.8.0",
+    "pandas>=2.3.3",
 ]
 
 [build-system]
