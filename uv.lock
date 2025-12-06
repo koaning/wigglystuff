@@ -2623,7 +2623,7 @@ wheels = [
 
 [[package]]
 name = "wigglystuff"
-version = "0.2.1"
+version = "0.2.3"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
@@ -2665,7 +2665,7 @@ requires-dist = [
     { name = "mohtml", specifier = ">=0.1.11" },
     { name = "numpy" },
     { name = "pandas", marker = "extra == 'docs'", specifier = ">=2.3.3" },
-    { name = "pillow", specifier = ">=12.0.0" },
+    { name = "pillow" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.3.3" },
 ]
 provides-extras = ["test", "docs"]
