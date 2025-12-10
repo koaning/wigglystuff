@@ -1,6 +1,6 @@
 [project]
 name = "wigglystuff"
-version = "0.1.17"
+version = "0.2.3"
 description = "Collection of Anywidget Widgets"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -13,7 +13,29 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Topic :: Scientific/Engineering",
 ]
-dependencies = ["anywidget>=0.9.2"]
+dependencies = [
+    "anywidget>=0.9.2",
+    "mohtml>=0.1.11",
+    "numpy",
+    "pillow",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.3.3",
+]
+docs = [
+    "marimo>=0.18.0",
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.25.1",
+    "mkdocs-jupyter>=0.25.0",
+    "mkdocs-section-index>=0.3.6",
+    "mkdocs-git-revision-date-localized-plugin>=1.2.6",
+    "mkdocs-include-markdown-plugin>=6.2.1",
+    "mike>=2.1.0",
+    "black>=24.8.0",
+    "pandas>=2.3.3",
+]
 
 [build-system]
 requires = ["hatchling"]

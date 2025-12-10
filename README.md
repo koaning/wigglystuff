@@ -44,6 +44,23 @@ Installation occurs via `pip` or `uv`. We prefer `uv`.
 uv pip install wigglystuff
 ```
 
+To install all development requirements (tests, docs, JavaScript tooling), run:
+
+```
+make install
+```
+
+## Documentation
+
+Install the optional extras and launch MkDocs Material to preview the new site with embedded Marimo demos:
+
+```
+uv pip install -e '.[docs]'
+make docs
+```
+
+Run `make docs-demos` whenever you need to refresh the html-wasm exports from `demos/*.py`, then `make docs-serve` if you want the live-reload server. `make docs-build` chains the export + build steps for deploys.
+
 ## Usage
 
 ### `Slider2D`
@@ -145,6 +162,18 @@ from wigglystuff import ColorPicker
 ColorPicker()
 ```
 
+### `KeystrokeWidget`
+
+Capture the latest keyboard shortcut pressed inside a notebook cell. The widget stores the last key event (including modifier state) in the `last_key` trait so you can respond to shortcuts in Python.
+
+```python
+from wigglystuff import KeystrokeWidget
+
+keyboard = KeystrokeWidget()
+keyboard
+keyboard.last_key  # => {"key": "K", "ctrlKey": True, ...}
+```
+
 ### `SortableList`
 
 An interactive drag-and-drop sortable list widget. By default, it's just sortable, but you can enable additional features as needed.
@@ -160,6 +189,31 @@ SortableList(["Task 1", "Task 2"], addable=True, removable=True, editable=True)
 
 # Edit-only mode
 SortableList(["Click to edit me"], editable=True)
+```
+
+### `WebkitSpeechToTextWidget`
+
+This widget wraps the browser's Webkit Speech API so you can dictate text directly into Python notebooks without dealing with API keys. It exposes two traits: `transcript` for the current text and `listening` so you can start or stop recording from Python if you prefer.
+
+```python
+from wigglystuff import WebkitSpeechToTextWidget
+
+widget = WebkitSpeechToTextWidget()
+widget
+
+# Access the transcript at any time
+widget.transcript
+```
+
+### `Paint`
+
+A port of the [mopaint](https://github.com/koaning/mopaint) widget that offers simple MS Paint style sketching straight from a notebook. You can start with an empty canvas or load an existing image and later export the result as a PIL image or base64 string.
+
+```python
+from wigglystuff import Paint
+
+canvas = Paint(height=400)
+canvas
 ```
 
 ## Development

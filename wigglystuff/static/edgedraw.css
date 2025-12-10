@@ -1,28 +1,45 @@
+.matrix-container.edgedraw {
+    --edgedraw-node-fill: #69b3a2;
+    --edgedraw-link-color: #4a4a4a;
+    --edgedraw-label-color: #1d1d1d;
+    color: #1d1d1d;
+    color-scheme: light dark;
+}
+
+:where(.dark, .dark-theme, [data-theme="dark"], body.dark, body[data-theme="dark"]) .matrix-container.edgedraw {
+    --edgedraw-node-fill: #6dddb9;
+    --edgedraw-link-color: #e0e0e0;
+    --edgedraw-label-color: #fefefe;
+    color: #fefefe;
+}
+
 .node {
     cursor: pointer;
+    fill: var(--edgedraw-node-fill);
 }
 
 .link {
-    stroke: #999;
+    stroke: var(--edgedraw-link-color);
     stroke-opacity: 0.8;
     stroke-width: 3px;
     cursor: pointer;
 }
 
 .arrow {
-    fill: #999;
+    fill: var(--edgedraw-link-color);
 }
 
 .label {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-weight: 500;
     dominant-baseline: middle;
+    fill: var(--edgedraw-label-color, currentColor);
     fill: #e20000;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .selected {
-    stroke: #ff0000;
+    stroke: #ff6b6b;
     stroke-width: 2px;
 }
 

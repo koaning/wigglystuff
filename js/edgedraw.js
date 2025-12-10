@@ -3,6 +3,7 @@ import * as d3 from "./d3.min.js";
 function render({ model, el }) {
 
     const container = document.createElement('div');
+    container.classList.add("matrix-container", "edgedraw");
     container.classList.add("matrix-container");
     const input = document.createElement("input");
     input.placeholder = "Enter node name";
@@ -64,7 +65,6 @@ function render({ model, el }) {
         .join("circle")
         .attr("class", "node")
         .attr("r", 10)
-        .attr("fill", "#69b3a2")
         .on("click", handleNodeClick);
 
     // Add labels
