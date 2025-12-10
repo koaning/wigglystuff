@@ -34,9 +34,23 @@
     font-weight: 500;
     dominant-baseline: middle;
     fill: var(--edgedraw-label-color, currentColor);
+    fill: #e20000;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .selected {
     stroke: #ff6b6b;
     stroke-width: 2px;
+}
+
+.input {
+    width: 120px;
+}
+
+.button,
+.input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 2px;
+    padding: 0px 4px 0px 4px;
 }
