@@ -34,8 +34,6 @@
     font-weight: 500;
     dominant-baseline: middle;
     fill: var(--edgedraw-label-color, currentColor);
-    fill: #e20000;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .selected {

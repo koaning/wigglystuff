@@ -4,7 +4,6 @@ function render({ model, el }) {
 
     const container = document.createElement('div');
     container.classList.add("matrix-container", "edgedraw");
-    container.classList.add("matrix-container");
     const input = document.createElement("input");
     input.placeholder = "Enter node name";
     input.classList.add("input");
@@ -93,24 +92,27 @@ function render({ model, el }) {
     });
     // --- Delete Node Button ---
     removeButton.addEventListener("click", () => {
-        const name = input.value.trim();
+        let name = input.value.trim();
+        if (selectedNode) {
+            console.log("what selecetd", selectedNode);
+            name = selectedNode.id;
+        }
         if (!name) return;
         if (nodes.some(n => n.id === name)) {
             nodes = nodes.filter(n => n.id !== name);
-            updateNodes()
             links = links.filter(l => {
                 const s = getEndpointId(l.source);
                 const t = getEndpointId(l.target);
                 return s !== name && t !== name;
             });
+            selectedNode = null;
             simulation.force("link").links(links);
+            simulation.nodes(nodes).on("tick", ticked);
             updateNodes();
             updateLinks();
             model.set("links", links.map(l => ({ source: l.source.id, target: l.target.id })));
             model.save_changes();
         }
-        simulation.nodes(nodes).on("tick", ticked);
-        simulation.force("link").links(links);
         simulation.alpha(1).restart();
         input.value = "";
     });
