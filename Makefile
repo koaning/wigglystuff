@@ -31,7 +31,10 @@ js-copybutton:
 
 js-talk:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/talk-widget.js js/talk/widget.js
- 
+
+js-driver-tour:
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/driver-tour.js js/driver-tour/widget.js
+
 js-paint:
 	./node_modules/.bin/tailwindcss -i ./js/paint/styles.css -o ./wigglystuff/static/paint.css
 	./node_modules/.bin/esbuild js/paint/widget.tsx --bundle --format=esm --outfile=wigglystuff/static/paint.js --minify
