@@ -59,9 +59,7 @@ function render({ model, el }) {
         let element = step.element || null;
         if (element && step.index !== undefined) {
           const elements = document.querySelectorAll(element);
-          console.log(`Selector: ${element}, Found: ${elements.length}, Index: ${step.index}`);
           element = elements[step.index] || null;
-          console.log('Selected element:', element);
         }
 
         return {

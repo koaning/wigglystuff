@@ -1,5 +1,6 @@
 """Public widget exports for the wigglystuff package."""
 
+from .cell_tour import CellTour
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
 from .driver_tour import DriverTour
@@ -14,6 +15,7 @@ from .tangle import TangleChoice, TangleSelect, TangleSlider
 from .talk import WebkitSpeechToTextWidget
 
 __all__ = [
+    "CellTour",
     "ColorPicker",
     "CopyToClipboard",
     "DriverTour",

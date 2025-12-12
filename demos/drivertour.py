@@ -15,11 +15,22 @@ app = marimo.App(width="columns", sql_output="polars")
 @app.cell
 def _():
     import marimo as mo
-    from wigglystuff import DriverTour
-    return DriverTour, mo
+    return (mo,)
 
 
 @app.cell
+def _():
+    from wigglystuff import DriverTour
+    return (DriverTour,)
+
+
+@app.cell
+def _(tour):
+    tour.steps
+    return
+
+
+@app.cell(hide_code=True)
 def _(DriverTour, mo):
     tour = mo.ui.anywidget(
         DriverTour(steps=[
@@ -55,17 +66,6 @@ def _(DriverTour, mo):
     )
     tour
     return (tour,)
-
-
-@app.cell
-def _(tour):
-    tour.steps
-    return
-
-
-@app.cell
-def _():
-    return
 
 
 if __name__ == "__main__":

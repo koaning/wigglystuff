@@ -23,6 +23,7 @@ syncs back to Python.
 | KeystrokeWidget | `wigglystuff.keystroke.KeystrokeWidget` | `last_key` | Captures the latest keypress w/ modifiers |
 | WebkitSpeechToTextWidget | `wigglystuff.talk.WebkitSpeechToTextWidget` | `transcript`, `listening`, `trigger_listen` | WebKit speech recognition bridge |
 | DriverTour | `wigglystuff.driver_tour.DriverTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Guided product tours via Driver.js |
+| CellTour | `wigglystuff.cell_tour.CellTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Simplified cell-based tours for marimo |
 
 ## Patterns to remember
 
