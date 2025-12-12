@@ -1,17 +1,4 @@
-// Import Driver.js from CDN using ESM
-async function loadDriverJS() {
-  // Load CSS
-  if (!document.querySelector('link[href*="driver.js"]')) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css';
-    document.head.appendChild(link);
-  }
-
-  // Use dynamic import for ESM version
-  const module = await import('https://cdn.jsdelivr.net/npm/driver.js@1.3.1/+esm');
-  return module.driver;
-}
+import { driver } from 'driver.js';
 
 function render({ model, el }) {
   let driverObj = null;
@@ -20,8 +7,7 @@ function render({ model, el }) {
   // Add wrapper class for CSS variable scoping
   el.classList.add('driver-tour-wrapper');
 
-  async function initializeDriver() {
-    const driverConstructor = await loadDriverJS();
+  function initializeDriver() {
     const steps = model.get('steps');
     const showProgress = model.get('show_progress');
 
@@ -31,7 +17,7 @@ function render({ model, el }) {
     }
 
     // Create driver instance with configuration
-    driverObj = driverConstructor({
+    driverObj = driver({
       showProgress: showProgress,
       allowClose: true,
       showButtons: ['next', 'previous', 'close'],
@@ -82,9 +68,9 @@ function render({ model, el }) {
     startButton = document.createElement('button');
     startButton.className = 'driver-tour-start-button';
     startButton.textContent = 'Start Tour';
-    startButton.onclick = async () => {
+    startButton.onclick = () => {
       if (!driverObj) {
-        await initializeDriver();
+        initializeDriver();
       }
       if (driverObj) {
         driverObj.drive();
@@ -96,8 +82,8 @@ function render({ model, el }) {
     el.appendChild(startButton);
   }
 
-  async function initialize() {
-    await initializeDriver();
+  function initialize() {
+    initializeDriver();
 
     if (model.get('auto_start')) {
       if (driverObj) {
@@ -111,12 +97,12 @@ function render({ model, el }) {
   }
 
   // Handle step changes from Python
-  model.on('change:steps', async () => {
+  model.on('change:steps', () => {
     if (driverObj) {
       driverObj.destroy();
       driverObj = null;
     }
-    await initialize();
+    initialize();
   });
 
   // Handle auto_start changes

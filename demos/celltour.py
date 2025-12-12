@@ -13,7 +13,7 @@ app = marimo.App(width="medium", sql_output="polars")
 
 
 @app.cell
-def _():
+def foobar():
     import marimo as mo
     from wigglystuff import CellTour
     return CellTour, mo
@@ -43,7 +43,7 @@ def _(CellTour, mo):
         ])
     )
     tour
-    return (tour,)
+    return
 
 
 @app.cell
@@ -52,7 +52,7 @@ def _():
     x = 1
     y = 2
     z = x + y
-    return x, y, z
+    return
 
 
 if __name__ == "__main__":

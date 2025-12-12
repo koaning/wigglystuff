@@ -1,0 +1,68 @@
+.driver-tour-wrapper {
+  color-scheme: light dark;
+  --dt-btn-bg: #e0e0e0;
+  --dt-btn-bg-hover: #d0d0d0;
+  --dt-btn-text: #1a1a1a;
+  --dt-btn-shadow: rgba(0, 0, 0, 0.1);
+  --dt-btn-shadow-hover: rgba(0, 0, 0, 0.15);
+  --dt-btn-focus: rgba(0, 0, 0, 0.15);
+  --dt-empty-bg: #f5f5f5;
+  --dt-empty-text: #666;
+  --dt-empty-border: #ddd;
+}
+
+.dark .driver-tour-wrapper,
+.dark-theme .driver-tour-wrapper,
+[data-theme="dark"] .driver-tour-wrapper {
+  --dt-btn-bg: #333;
+  --dt-btn-bg-hover: #444;
+  --dt-btn-text: white;
+  --dt-btn-shadow: rgba(255, 255, 255, 0.1);
+  --dt-btn-shadow-hover: rgba(255, 255, 255, 0.15);
+  --dt-btn-focus: rgba(255, 255, 255, 0.2);
+  --dt-empty-bg: #2a2a2a;
+  --dt-empty-text: #aaa;
+  --dt-empty-border: #444;
+}
+
+.driver-tour-start-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dt-btn-text);
+  background: var(--dt-btn-bg);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px var(--dt-btn-shadow);
+}
+
+.driver-tour-start-button:hover {
+  transform: translateY(-2px);
+  background: var(--dt-btn-bg-hover);
+  box-shadow: 0 4px 12px var(--dt-btn-shadow-hover);
+}
+
+.driver-tour-start-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px var(--dt-btn-shadow);
+}
+
+.driver-tour-start-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--dt-btn-focus);
+}
+
+.driver-tour-empty {
+  padding: 12px 16px;
+  color: var(--dt-empty-text);
+  font-size: 14px;
+  font-style: italic;
+  background-color: var(--dt-empty-bg);
+  border-radius: 6px;
+  border-left: 4px solid var(--dt-empty-border);
+}
