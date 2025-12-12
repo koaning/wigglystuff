@@ -22,11 +22,12 @@ def foobar():
 @app.cell
 def _(CellTour, mo):
     # CellTour provides a simpler API than DriverTour
-    # Just specify cell index, title, and description
+    # You can use cell indices OR cell names (data-cell-name attribute)
     tour = mo.ui.anywidget(
         CellTour(steps=[
             {
-                "cell": 0,
+                # Use cell_name to target cells by their function name
+                "cell_name": "foobar",
                 "title": "Imports",
                 "description": "First we import marimo and CellTour.",
             },
@@ -36,7 +37,8 @@ def _(CellTour, mo):
                 "description": "This cell defines the tour using the simplified API.",
             },
             {
-                "cell": 2,
+                # Use cell_name for the example cell
+                "cell_name": "example",
                 "title": "Example Code",
                 "description": "This cell shows some example code.",
             },
@@ -48,7 +50,7 @@ def _(CellTour, mo):
 
 @app.cell
 def _():
-    # Example code cell
+    # Example code cell (named "example" so CellTour can target it by name)
     x = 1
     y = 2
     z = x + y

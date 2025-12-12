@@ -6,13 +6,15 @@ from .driver_tour import DriverTour
 class CellTour(DriverTour):
     """Simplified tour widget for marimo notebooks.
 
-    A friendlier API for creating guided tours that targets cells by index.
+    A friendlier API for creating guided tours that targets cells by index or name.
 
     Parameters
     ----------
     steps:
-        Sequence of step dictionaries. Each step should have:
-        - cell: int, 0-indexed cell number to highlight
+        Sequence of step dictionaries. Each step should have either:
+        - cell: int, 0-indexed cell number to highlight, OR
+        - cell_name: str, the data-cell-name attribute of the cell
+        Plus:
         - title: str, popover title
         - description: str, popover description
         - position: str, optional popover position (default "bottom")
@@ -24,9 +26,16 @@ class CellTour(DriverTour):
 
     Examples
     --------
+    >>> # Using cell indices
     >>> tour = CellTour(steps=[
     ...     {"cell": 0, "title": "Imports", "description": "Load libraries"},
     ...     {"cell": 2, "title": "Processing", "description": "Data transformation"},
+    ... ])
+
+    >>> # Using cell names (requires naming cells in marimo)
+    >>> tour = CellTour(steps=[
+    ...     {"cell_name": "imports", "title": "Imports", "description": "Load libraries"},
+    ...     {"cell_name": "process", "title": "Processing", "description": "Transform data"},
     ... ])
     >>> tour
     """
@@ -59,15 +68,29 @@ class CellTour(DriverTour):
     def _transform_step(step: dict) -> dict:
         """Transform a simplified step to DriverTour format."""
         cell_index = step.get("cell")
-        if cell_index is None:
-            raise ValueError("Each step must have a 'cell' key with a cell index")
+        cell_name = step.get("cell_name")
 
-        return {
-            "element": ".marimo-cell",
-            "index": cell_index,
-            "popover": {
-                "title": step.get("title", ""),
-                "description": step.get("description", ""),
-                "position": step.get("position", "bottom"),
-            },
+        if cell_index is None and cell_name is None:
+            raise ValueError(
+                "Each step must have either a 'cell' key with a cell index "
+                "or a 'cell_name' key with a cell name"
+            )
+
+        popover = {
+            "title": step.get("title", ""),
+            "description": step.get("description", ""),
+            "position": step.get("position", "bottom"),
         }
+
+        # Use cell_name selector if provided, otherwise use index
+        if cell_name is not None:
+            return {
+                "element": f'[data-cell-name="{cell_name}"]',
+                "popover": popover,
+            }
+        else:
+            return {
+                "element": ".marimo-cell",
+                "index": cell_index,
+                "popover": popover,
+            }
