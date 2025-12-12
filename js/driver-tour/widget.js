@@ -1,6 +1,19 @@
 import { driver } from 'driver.js';
+import driverCSS from 'driver.js/dist/driver.css';
+
+// Inject driver.js CSS into document head (needed for popover which is appended to body)
+function injectDriverCSS() {
+  if (!document.querySelector('style[data-driver-css]')) {
+    const style = document.createElement('style');
+    style.setAttribute('data-driver-css', 'true');
+    style.textContent = driverCSS;
+    document.head.appendChild(style);
+  }
+}
 
 function render({ model, el }) {
+  // Ensure driver.js CSS is in document head
+  injectDriverCSS();
   let driverObj = null;
   let startButton = null;
 
