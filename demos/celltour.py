@@ -38,7 +38,7 @@ def _(CellTour, mo):
             },
             {
                 # Use cell_name for the example cell
-                "cell_name": "example",
+                "cell": 2,
                 "title": "Example Code",
                 "description": "This cell shows some example code.",
             },
