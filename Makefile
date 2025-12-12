@@ -33,7 +33,7 @@ js-talk:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/talk-widget.js js/talk/widget.js
 
 js-driver-tour:
-	cat node_modules/driver.js/dist/driver.css js/driver-tour/styles.css > wigglystuff/static/driver-tour.css
+	{ cat node_modules/driver.js/dist/driver.css; echo; cat js/driver-tour/styles.css; } > wigglystuff/static/driver-tour.css
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/driver-tour.js js/driver-tour/widget.js
 
 js-paint:
