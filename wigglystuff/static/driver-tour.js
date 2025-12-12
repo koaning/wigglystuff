@@ -17,6 +17,9 @@ function render({ model, el }) {
   let driverObj = null;
   let startButton = null;
 
+  // Add wrapper class for CSS variable scoping
+  el.classList.add('driver-tour-wrapper');
+
   async function initializeDriver() {
     const driverConstructor = await loadDriverJS();
     const steps = model.get('steps');

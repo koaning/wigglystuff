@@ -50,7 +50,7 @@ def _(DriverTour, mo):
                     "position": "center"
                 }
             }, 
-        
+
         ])
     )
     tour
@@ -60,6 +60,11 @@ def _(DriverTour, mo):
 @app.cell
 def _(tour):
     tour.steps
+    return
+
+
+@app.cell
+def _():
     return
 
 

@@ -13,3 +13,4 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [CopyToClipboard](copy-to-clipboard.md)
 - [Tangle widgets](tangle.md)
 - [GamepadWidget](gamepad.md)
+- [DriverTour](driver-tour.md)
