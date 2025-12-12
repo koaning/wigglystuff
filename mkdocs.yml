@@ -48,6 +48,8 @@ nav:
       - CopyToClipboard: reference/copy-to-clipboard.md
       - Tangle Widgets: reference/tangle.md
       - GamepadWidget: reference/gamepad.md
+      - DriverTour: reference/driver-tour.md
+      - CellTour: reference/cell-tour.md
 plugins:
   - search
   - section-index
