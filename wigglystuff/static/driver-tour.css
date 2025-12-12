@@ -1,0 +1,49 @@
+.driver-tour-start-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.driver-tour-start-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.driver-tour-start-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+}
+
+.driver-tour-start-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.driver-tour-empty {
+  padding: 12px 16px;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  border-left: 4px solid #ddd;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .driver-tour-empty {
+    background-color: #2a2a2a;
+    color: #aaa;
+    border-left-color: #444;
+  }
+}

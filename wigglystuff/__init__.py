@@ -2,6 +2,7 @@
 
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
+from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .gamepad import GamepadWidget
 from .keystroke import KeystrokeWidget
@@ -15,6 +16,7 @@ from .talk import WebkitSpeechToTextWidget
 __all__ = [
     "ColorPicker",
     "CopyToClipboard",
+    "DriverTour",
     "EdgeDraw",
     "GamepadWidget",
     "KeystrokeWidget",
