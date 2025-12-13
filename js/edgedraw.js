@@ -1,24 +1,37 @@
 import * as d3 from "./d3.min.js";
 
-function render({model, el}){
+function render({ model, el }) {
 
     const container = document.createElement('div');
     container.classList.add("matrix-container", "edgedraw");
+    const input = document.createElement("input");
+    input.placeholder = "Enter node name";
+    input.classList.add("input");
+    const addButton = document.createElement("button");
+    addButton.textContent = "Add Node";
+    addButton.classList.add("button");
+    const removeButton = document.createElement("button");
+    removeButton.textContent = "Remove Node";
+    removeButton.classList.add("button");
+    container.appendChild(input);
+    container.appendChild(addButton);
+    container.appendChild(removeButton);
     el.appendChild(container);
 
     // Sample nodes
-    const nodes = model.get("names").map((name) => ({ id: name, x: 100, y: 100 }));
+    let nodes = model.get("names").map(name => ({ id: name, x: 100, y: 100 }));
+    let links = model.get("links");
 
-    let links = [];
     let selectedNode = null;
 
     // Set up the SVG
-    const width = 600;
-    const height = 400;
+    const width = model.get("width");
+    const height = model.get("height");
     const svg = d3.select(container)
         .append("svg")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .style("border", "1px solid #ccc");
 
     // Define arrow marker
     svg.append("defs").append("marker")
@@ -38,15 +51,15 @@ function render({model, el}){
         .force("link", d3.forceLink(links).id(d => d.id).distance(100))
         .force("charge", d3.forceManyBody().strength(-50))
         .force("center", d3.forceCenter(width / 2, height / 2))
-        .force("collide", d3.forceCollide().radius(30))
+        .force("collide", d3.forceCollide().radius(50))
         .on("tick", ticked);
 
     // Create the link group and node group
-    const linkGroup = svg.append("g");
-    const nodeGroup = svg.append("g");
+    let linkGroup = svg.append("g");
+    let nodeGroup = svg.append("g");
 
     // Draw nodes
-    const node = nodeGroup.selectAll(".node")
+    let node = nodeGroup.selectAll(".node")
         .data(nodes)
         .join("circle")
         .attr("class", "node")
@@ -54,13 +67,59 @@ function render({model, el}){
         .on("click", handleNodeClick);
 
     // Add labels
-    const labels = nodeGroup.selectAll(".label")
+    let labels = nodeGroup.selectAll(".label")
         .data(nodes)
         .join("text")
         .attr("class", "label")
         .attr("dx", 15)
         .attr("dy", 4)
         .text(d => d.id);
+
+    // --- Add Node Button ---
+    addButton.addEventListener("click", () => {
+        const name = input.value.trim();
+        if (!name) return;
+        if (nodes.some(n => n.id === name)) {
+            alert("Node already exists!");
+            return;
+        }
+        const newNode = { id: name, x: 100, y: 100 };
+        nodes.push(newNode);
+        simulation.nodes(nodes);
+        updateNodes();
+        updateLinks();
+        input.value = "";
+    });
+    // --- Delete Node Button ---
+    removeButton.addEventListener("click", () => {
+        let name = input.value.trim();
+        if (selectedNode) {
+            console.log("what selecetd", selectedNode);
+            name = selectedNode.id;
+        }
+        if (!name) return;
+        if (nodes.some(n => n.id === name)) {
+            nodes = nodes.filter(n => n.id !== name);
+            links = links.filter(l => {
+                const s = getEndpointId(l.source);
+                const t = getEndpointId(l.target);
+                return s !== name && t !== name;
+            });
+            selectedNode = null;
+            simulation.force("link").links(links);
+            simulation.nodes(nodes).on("tick", ticked);
+            updateNodes();
+            updateLinks();
+            model.set("links", links.map(l => ({ source: l.source.id, target: l.target.id })));
+            model.save_changes();
+        }
+        simulation.alpha(1).restart();
+        input.value = "";
+    });
+
+    function getEndpointId(ep) {
+        return (typeof ep === "object" && ep !== null) ? ep.id : ep;
+    }
 
     function handleNodeClick(event, d) {
         if (!selectedNode) {
@@ -74,32 +133,56 @@ function render({model, el}){
         } else {
             // Second click - create link
             // Check if a link already exists in either direction
-            const existingForwardLink = links.find(l => 
+            const existingForwardLink = links.find(l =>
                 (l.source === selectedNode && l.target === d) ||
                 (l.source.id === selectedNode.id && l.target.id === d.id)
             );
-            const existingReverseLink = links.find(l => 
+            const existingReverseLink = links.find(l =>
                 (l.source === d && l.target === selectedNode) ||
                 (l.source.id === d.id && l.target.id === selectedNode.id)
             );
-            
+
             // Remove existing reverse link if present
             if (existingReverseLink) {
                 links = links.filter(l => l !== existingReverseLink);
             }
-            
+
             // Add new link if no forward link exists
             if (!existingForwardLink) {
-                links.push({source: selectedNode, target: d});
+                links.push({ source: selectedNode, target: d });
             }
-            
+
             simulation.force("link").links(links);
             selectedNode = null;
             node.classed("selected", false);
             updateLinks();
         }
-        model.set("links", links.map(l => ({source: l.source.id, target: l.target.id})));
-        console.log(links.map(l => ({source: l.source.id, target: l.target.id})));
+        model.set("links", links.map(l => ({ source: l.source.id, target: l.target.id })));
+        console.log(links.map(l => ({ source: l.source.id, target: l.target.id })));
+
+        model.save_changes();
+    }
+
+    function updateNodes() {
+        node = nodeGroup.selectAll(".node")
+            .data(nodes)
+            .join("circle")
+            .attr("class", "node")
+            .attr("r", 10)
+            .attr("fill", "#69b3a2")
+            .on("click", handleNodeClick);
+
+        labels = nodeGroup.selectAll(".label")
+            .data(nodes)
+            .join("text")
+            .attr("class", "label")
+            .attr("dx", 15)
+            .attr("dy", 4)
+            .text(d => d.id);
+
+        simulation.alpha(0.1).restart();
+        node.call(drag);
+        model.set("names", nodes.map(n => n.id));
         model.save_changes();
     }
 
@@ -114,14 +197,14 @@ function render({model, el}){
                 const dy = d.target.y - d.source.y;
                 return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`;
             })
-            .on("click", function(event, d) {
+            .on("click", function (event, d) {
                 event.stopPropagation();
                 // Remove link on click
                 links = links.filter(l => l !== d);
                 simulation.force("link").links(links);
                 updateLinks();
-                model.set("links", links.map(l => ({source: l.source.id, target: l.target.id})));
-                console.log(links.map(l => ({source: l.source.id, target: l.target.id})));
+                model.set("links", links.map(l => ({ source: l.source.id, target: l.target.id })));
+                console.log(links.map(l => ({ source: l.source.id, target: l.target.id })));
                 model.save_changes();
             });
     }
@@ -142,7 +225,7 @@ function render({model, el}){
 
     // Add drag behavior just for repositioning
     const drag = d3.drag()
-        .on("drag", function(event, d) {
+        .on("drag", function (event, d) {
             d.x = event.x;
             d.y = event.y;
             simulation.alpha(0.1).restart();

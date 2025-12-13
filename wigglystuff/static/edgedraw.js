@@ -9536,19 +9536,75 @@ var d3 = __toESM(require_d3_min());
 function render({ model, el }) {
   const container = document.createElement("div");
   container.classList.add("matrix-container", "edgedraw");
+  const input = document.createElement("input");
+  input.placeholder = "Enter node name";
+  input.classList.add("input");
+  const addButton = document.createElement("button");
+  addButton.textContent = "Add Node";
+  addButton.classList.add("button");
+  const removeButton = document.createElement("button");
+  removeButton.textContent = "Remove Node";
+  removeButton.classList.add("button");
+  container.appendChild(input);
+  container.appendChild(addButton);
+  container.appendChild(removeButton);
   el.appendChild(container);
-  const nodes = model.get("names").map((name) => ({ id: name, x: 100, y: 100 }));
-  let links = [];
+  let nodes = model.get("names").map((name) => ({ id: name, x: 100, y: 100 }));
+  let links = model.get("links");
   let selectedNode = null;
-  const width = 600;
-  const height = 400;
-  const svg = d3.select(container).append("svg").attr("width", width).attr("height", height);
+  const width = model.get("width");
+  const height = model.get("height");
+  const svg = d3.select(container).append("svg").attr("width", width).attr("height", height).style("border", "1px solid #ccc");
   svg.append("defs").append("marker").attr("id", "arrowhead").attr("viewBox", "-0 -5 10 10").attr("refX", 13).attr("refY", 0).attr("orient", "auto").attr("markerWidth", 6).attr("markerHeight", 6).append("path").attr("d", "M0,-5L10,0L0,5").attr("class", "arrow");
-  const simulation = d3.forceSimulation(nodes).force("link", d3.forceLink(links).id((d) => d.id).distance(100)).force("charge", d3.forceManyBody().strength(-50)).force("center", d3.forceCenter(width / 2, height / 2)).force("collide", d3.forceCollide().radius(30)).on("tick", ticked);
-  const linkGroup = svg.append("g");
-  const nodeGroup = svg.append("g");
-  const node = nodeGroup.selectAll(".node").data(nodes).join("circle").attr("class", "node").attr("r", 10).on("click", handleNodeClick);
-  const labels = nodeGroup.selectAll(".label").data(nodes).join("text").attr("class", "label").attr("dx", 15).attr("dy", 4).text((d) => d.id);
+  const simulation = d3.forceSimulation(nodes).force("link", d3.forceLink(links).id((d) => d.id).distance(100)).force("charge", d3.forceManyBody().strength(-50)).force("center", d3.forceCenter(width / 2, height / 2)).force("collide", d3.forceCollide().radius(50)).on("tick", ticked);
+  let linkGroup = svg.append("g");
+  let nodeGroup = svg.append("g");
+  let node = nodeGroup.selectAll(".node").data(nodes).join("circle").attr("class", "node").attr("r", 10).on("click", handleNodeClick);
+  let labels = nodeGroup.selectAll(".label").data(nodes).join("text").attr("class", "label").attr("dx", 15).attr("dy", 4).text((d) => d.id);
+  addButton.addEventListener("click", () => {
+    const name = input.value.trim();
+    if (!name)
+      return;
+    if (nodes.some((n) => n.id === name)) {
+      alert("Node already exists!");
+      return;
+    }
+    const newNode = { id: name, x: 100, y: 100 };
+    nodes.push(newNode);
+    simulation.nodes(nodes);
+    updateNodes();
+    updateLinks();
+    input.value = "";
+  });
+  removeButton.addEventListener("click", () => {
+    let name = input.value.trim();
+    if (selectedNode) {
+      console.log("what selecetd", selectedNode);
+      name = selectedNode.id;
+    }
+    if (!name)
+      return;
+    if (nodes.some((n) => n.id === name)) {
+      nodes = nodes.filter((n) => n.id !== name);
+      links = links.filter((l) => {
+        const s = getEndpointId(l.source);
+        const t = getEndpointId(l.target);
+        return s !== name && t !== name;
+      });
+      selectedNode = null;
+      simulation.force("link").links(links);
+      simulation.nodes(nodes).on("tick", ticked);
+      updateNodes();
+      updateLinks();
+      model.set("links", links.map((l) => ({ source: l.source.id, target: l.target.id })));
+      model.save_changes();
+    }
+    simulation.alpha(1).restart();
+    input.value = "";
+  });
+  function getEndpointId(ep) {
+    return typeof ep === "object" && ep !== null ? ep.id : ep;
+  }
   function handleNodeClick(event, d) {
     if (!selectedNode) {
       selectedNode = d;
@@ -9576,6 +9632,14 @@ function render({ model, el }) {
     }
     model.set("links", links.map((l) => ({ source: l.source.id, target: l.target.id })));
     console.log(links.map((l) => ({ source: l.source.id, target: l.target.id })));
+    model.save_changes();
+  }
+  function updateNodes() {
+    node = nodeGroup.selectAll(".node").data(nodes).join("circle").attr("class", "node").attr("r", 10).attr("fill", "#69b3a2").on("click", handleNodeClick);
+    labels = nodeGroup.selectAll(".label").data(nodes).join("text").attr("class", "label").attr("dx", 15).attr("dy", 4).text((d) => d.id);
+    simulation.alpha(0.1).restart();
+    node.call(drag2);
+    model.set("names", nodes.map((n) => n.id));
     model.save_changes();
   }
   function updateLinks() {
