@@ -33,7 +33,7 @@ hide:
 </div>
 <div class="gallery-item">
 <div class="gallery-title">Matrix</div>
-<a href="examples/matrix/index.html" class="gallery-img"><img src="https://placehold.co/400x300/f8f9fa/5f6368?text=Matrix" alt="Matrix widget"></a>
+<a href="examples/matrix/index.html" class="gallery-img"><img src="assets/gallery/matrix.png" alt="Matrix widget"></a>
 <div class="gallery-links"><a href="examples/matrix/index.html">Demo</a><a href="reference/matrix.md">API</a></div>
 </div>
 <div class="gallery-item">
@@ -63,18 +63,23 @@ hide:
 </div>
 <div class="gallery-item">
 <div class="gallery-title">KeystrokeWidget</div>
-<a href="examples/keystroke/index.html" class="gallery-img"><img src="https://placehold.co/400x300/f8f9fa/5f6368?text=Keystroke" alt="KeystrokeWidget"></a>
+<a href="examples/keystroke/index.html" class="gallery-img"><img src="assets/gallery/keystroke.png" alt="KeystrokeWidget"></a>
 <div class="gallery-links"><a href="examples/keystroke/index.html">Demo</a><a href="reference/keystroke.md">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">SpeechToText</div>
-<a href="examples/talk/index.html" class="gallery-img"><img src="https://placehold.co/400x300/f8f9fa/5f6368?text=SpeechToText" alt="WebkitSpeechToText widget"></a>
+<a href="examples/talk/index.html" class="gallery-img"><img src="assets/gallery/speechtotext.png" alt="WebkitSpeechToText widget"></a>
 <div class="gallery-links"><a href="examples/talk/index.html">Demo</a><a href="reference/talk.md">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">CopyToClipboard</div>
-<a href="examples/copytoclipboard/index.html" class="gallery-img"><img src="https://placehold.co/400x300/f8f9fa/5f6368?text=Clipboard" alt="CopyToClipboard widget"></a>
+<a href="examples/copytoclipboard/index.html" class="gallery-img"><img src="assets/gallery/copytoclipboard.png" alt="CopyToClipboard widget"></a>
 <div class="gallery-links"><a href="examples/copytoclipboard/index.html">Demo</a><a href="reference/copy-to-clipboard.md">API</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title">CellTour</div>
+<a href="examples/celltour/index.html" class="gallery-img"><img src="assets/gallery/celltour.png" alt="CellTour widget"></a>
+<div class="gallery-links"><a href="examples/celltour/index.html">Demo</a><a href="reference/cell-tour.md">API</a></div>
 </div>
 </div>
 
