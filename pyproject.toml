@@ -19,6 +19,7 @@ dependencies = [
     "mohtml>=0.1.11",
     "numpy",
     "pillow",
+    "polars>=1.36.1",
 ]
 
 [project.optional-dependencies]

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Optional
 
 import anywidget
 import numpy as np
@@ -45,14 +45,14 @@ class Matrix(anywidget.AnyWidget):
 
     def __init__(
         self,
-        matrix: List[List[float]] | None = None,
+        matrix: Optional[List[List[float]]] = None,
         rows: int = 3,
         cols: int = 3,
         min_value: float = -100,
         max_value: float = 100,
         triangular: bool = False,
-        row_names: List[str] | None = None,
-        col_names: List[str] | None = None,
+        row_names: Optional[List[str]] = None,
+        col_names: Optional[List[str]] = None,
         static: bool = False,
         flexible_cols: bool = False,
         **kwargs: Any,
