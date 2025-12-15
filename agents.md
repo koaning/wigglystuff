@@ -45,3 +45,7 @@ syncs back to Python.
   defaults to the widget root, mark `color-scheme: light dark`, and provide
   overrides that respond to `.dark`, `.dark-theme`, or `[data-theme="dark"]`
   ancestors so notebook-level theme toggles work instantly.
+- When adding a new widget, remember to update **both** the docs gallery
+  (`mkdocs/index.md`) and the README gallery (`readme.md`). Add a screenshot
+  to `mkdocs/assets/gallery/` and reference it from both locations to keep
+  them in sync.
