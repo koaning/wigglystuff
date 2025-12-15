@@ -27,7 +27,7 @@ js-keystroke:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/keystroke-widget.js js/keystroke/widget.js
 
 js-copybutton:
-	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
 
 js-talk:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/talk-widget.js js/talk/widget.js
@@ -43,8 +43,8 @@ js-paint:
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
-docs:
-	uv run mkdocs build -f mkdocs.yml
+docs: docs-demos
+	mkdocs build -f mkdocs.yml
 
 docs-demos:
 	uv run python scripts/export_marimo_demos.py

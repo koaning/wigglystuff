@@ -1,9 +1,6 @@
 import * as React from "react";
 import { createRender, useModelState } from "@anywidget/react";
 import { CopyIcon } from "@radix-ui/react-icons";
-import "@radix-ui/themes/styles.css";
-import { Theme, Button, ThemePanel } from "@radix-ui/themes";
-
 
 function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text);
@@ -11,13 +8,17 @@ function copyToClipboard(text: string) {
 
 function CopyToClipboardButton() {
     let [text_to_copy, setTextToCopy] = useModelState<string>("text_to_copy");
-	return <>
-      <Theme accentColor="gray" grayColor="sand" radius="large" scaling="95%" style={{ height: 'auto', minHeight: 'auto' }}>
-        <Button onClick={() => copyToClipboard(text_to_copy)}>
-            <CopyIcon /> Copy to Clipboard
-        </Button>
-      </Theme>
-  </>
+    
+	return <div className="copy-button-wrapper">
+        <button 
+            className="copy-button"
+            onClick={() => copyToClipboard(text_to_copy)}
+            type="button"
+        >
+            <CopyIcon className="copy-button-icon" />
+            Copy to Clipboard
+        </button>
+    </div>
 }
 
 const render = createRender(CopyToClipboardButton);
