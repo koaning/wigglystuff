@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.1"
+__generated_with = "0.18.2"
 app = marimo.App(width="medium")
 
 
@@ -28,18 +28,14 @@ def _(widget):
 
 @app.cell
 def _(mo, widget):
-    mo.callout.info(
+    mo.callout(
         f"x = {widget.x:.3f}, y = {widget.y:.3f}; bounds {widget.x_bounds} / {widget.y_bounds}"
     )
     return
 
 
 @app.cell
-def _(mo, widget):
-    def log_changes(change):
-        mo.log.info("slider moved to (%s, %s)", widget.x, widget.y)
-
-    widget.observe(log_changes)
+def _():
     return
 
 

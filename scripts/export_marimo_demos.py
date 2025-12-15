@@ -45,6 +45,7 @@ def export_notebook(path: Path, *, force: bool = False) -> None:
     cmd = [
         "marimo",
         "-y",
+        "-q", 
         "export",
         "html-wasm",
         str(path),
