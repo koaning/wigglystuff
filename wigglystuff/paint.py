@@ -5,7 +5,7 @@ from __future__ import annotations
 import base64
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Union
+from typing import Any, Optional, Union
 import urllib.request
 
 import anywidget
@@ -101,7 +101,7 @@ class Paint(anywidget.AnyWidget):
     width = traitlets.Int(DEFAULT_WIDTH).tag(sync=True)  # rough 16:9 ratio
     store_background = traitlets.Bool(True).tag(sync=True)
 
-    def __init__(self, height: int = DEFAULT_HEIGHT, width: int = DEFAULT_WIDTH, store_background: bool = True, init_image: Any | None = None):
+    def __init__(self, height: int = DEFAULT_HEIGHT, width: int = DEFAULT_WIDTH, store_background: bool = True, init_image: Optional[Any] = None):
         """Create a Paint widget.
 
         Args:

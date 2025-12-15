@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Optional
 
 import anywidget
 import traitlets
@@ -37,7 +37,7 @@ class TangleSlider(anywidget.AnyWidget):
 
     def __init__(
         self,
-        amount: float | None = None,
+        amount: Optional[float] = None,
         min_value: float = -100,
         max_value: float = 100,
         step: float = 1.0,

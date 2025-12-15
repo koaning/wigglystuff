@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import anywidget
 import numpy as np
@@ -90,7 +90,7 @@ class EdgeDraw(anywidget.AnyWidget):
         """Detect cycles in an undirected graph using DFS."""
         visited = set()
 
-        def dfs(node: str, parent: str | None) -> bool:
+        def dfs(node: str, parent: Optional[str]) -> bool:
             visited.add(node)
             for neighbor in self.get_neighbors(node, directed=False):
                 if neighbor not in visited:
