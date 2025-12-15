@@ -6,9 +6,34 @@
 
 The project uses [anywidget](https://anywidget.dev/) under the hood so our tools should work in [marimo](https://marimo.io/), [Jupyter](https://jupyter.org/), [Shiny for Python](https://shiny.posit.co/py/docs/jupyter-widgets.html), [VSCode](https://code.visualstudio.com/docs/datascience/jupyter-notebooks), [Colab](https://colab.google/), [Solara](https://solara.dev/), etc. Because of the anywidget integration you should also be able interact with [ipywidgets](https://ipywidgets.readthedocs.io/en/stable/) natively. 
 
-## Online demos 
+## Widget Gallery
 
-We've made some demos of the widgets and shared them on the Marimo gallery for easy exploration. 
+<table>
+<tr>
+<td align="center"><b>Slider2D</b><br><img src="mkdocs/assets/gallery/slider2d.png" width="200"></td>
+<td align="center"><b>Matrix</b><br><img src="mkdocs/assets/gallery/matrix.png" width="200"></td>
+<td align="center"><b>Paint</b><br><img src="mkdocs/assets/gallery/paint.png" width="200"></td>
+</tr>
+<tr>
+<td align="center"><b>EdgeDraw</b><br><img src="mkdocs/assets/gallery/edgedraw.png" width="200"></td>
+<td align="center"><b>SortableList</b><br><img src="mkdocs/assets/gallery/sortablelist.png" width="200"></td>
+<td align="center"><b>ColorPicker</b><br><img src="mkdocs/assets/gallery/colorpicker.png" width="200"></td>
+</tr>
+<tr>
+<td align="center"><b>GamepadWidget</b><br><img src="mkdocs/assets/gallery/gamepad.png" width="200"></td>
+<td align="center"><b>KeystrokeWidget</b><br><img src="mkdocs/assets/gallery/keystroke.png" width="200"></td>
+<td align="center"><b>SpeechToText</b><br><img src="mkdocs/assets/gallery/speechtotext.png" width="200"></td>
+</tr>
+<tr>
+<td align="center"><b>CopyToClipboard</b><br><img src="mkdocs/assets/gallery/copytoclipboard.png" width="200"></td>
+<td align="center"><b>CellTour</b><br><img src="mkdocs/assets/gallery/celltour.png" width="200"></td>
+<td align="center"></td>
+</tr>
+</table>
+
+## Online demos
+
+We've made some demos of the widgets and shared them on the Marimo gallery for easy exploration.
 
 <table>
 <tr>
