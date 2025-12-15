@@ -27,7 +27,7 @@ js-keystroke:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/keystroke-widget.js js/keystroke/widget.js
 
 js-copybutton:
-	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
 
 js-talk:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/talk-widget.js js/talk/widget.js

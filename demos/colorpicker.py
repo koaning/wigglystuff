@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.1"
+__generated_with = "0.18.2"
 app = marimo.App(width="medium")
 
 
@@ -25,9 +25,7 @@ def _(mo, picker):
 
     mo.vstack(
         [
-            mo.md(
-                f"You picked **{picker.color}** which is **RGB {r}, {g}, {b}**."
-            ),
+            mo.md(f"You picked **{picker.color}** which is **RGB {r}, {g}, {b}**."),
             mo.md(
                 f"<div style='width:96px;height:96px;border-radius:0.75rem;"
                 f"border:1px solid #d4d4d8;background:{picker.color};'></div>"
@@ -41,20 +39,17 @@ def _(mo, picker):
 def _(mo, picker):
     import random
 
+
     def randomize(_):
         picker.color = f"#{random.randint(0, 0xFFFFFF):06x}"
 
-    mo.callout.info("Click to jump to a random color:")
-    mo.ui.button(label="Surprise me", kind="primary", on_click=randomize)
+
+    mo.ui.button(label="Surprise me", on_click=randomize)
     return
 
 
 @app.cell
-def _(mo, picker):
-    def log_change(change):
-        mo.log.info("color changed to %s", change["new"])
-
-    picker.observe(log_change, names="color")
+def _():
     return
 
 
