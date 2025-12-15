@@ -10,23 +10,23 @@ The project uses [anywidget](https://anywidget.dev/) under the hood so our tools
 
 <table>
 <tr>
-<td align="center"><b>Slider2D</b><br><img src="./mkdocs/assets/gallery/slider2d.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/slider2d/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/slider2d/">API</a></td>
-<td align="center"><b>Matrix</b><br><img src="./mkdocs/assets/gallery/matrix.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/matrix/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/matrix/">API</a></td>
-<td align="center"><b>Paint</b><br><img src="./mkdocs/assets/gallery/paint.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/paint/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/paint/">API</a></td>
+<td align="center"><b>Slider2D</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/slider2d.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/slider2d/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/slider2d/">API</a></td>
+<td align="center"><b>Matrix</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/matrix.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/matrix/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/matrix/">API</a></td>
+<td align="center"><b>Paint</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/paint.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/paint/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/paint/">API</a></td>
 </tr>
 <tr>
-<td align="center"><b>EdgeDraw</b><br><img src="./mkdocs/assets/gallery/edgedraw.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/edgedraw/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/edge-draw/">API</a></td>
-<td align="center"><b>SortableList</b><br><img src="./mkdocs/assets/gallery/sortablelist.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/sortlist/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/sortable-list/">API</a></td>
-<td align="center"><b>ColorPicker</b><br><img src="./mkdocs/assets/gallery/colorpicker.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/colorpicker/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/color-picker/">API</a></td>
+<td align="center"><b>EdgeDraw</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/edgedraw.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/edgedraw/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/edge-draw/">API</a></td>
+<td align="center"><b>SortableList</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/sortablelist.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/sortlist/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/sortable-list/">API</a></td>
+<td align="center"><b>ColorPicker</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/colorpicker.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/colorpicker/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/color-picker/">API</a></td>
 </tr>
 <tr>
-<td align="center"><b>GamepadWidget</b><br><img src="./mkdocs/assets/gallery/gamepad.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/gamepad/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/gamepad/">API</a></td>
-<td align="center"><b>KeystrokeWidget</b><br><img src="./mkdocs/assets/gallery/keystroke.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/keystroke/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/keystroke/">API</a></td>
-<td align="center"><b>SpeechToText</b><br><img src="./mkdocs/assets/gallery/speechtotext.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/talk/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/talk/">API</a></td>
+<td align="center"><b>GamepadWidget</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/gamepad.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/gamepad/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/gamepad/">API</a></td>
+<td align="center"><b>KeystrokeWidget</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/keystroke.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/keystroke/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/keystroke/">API</a></td>
+<td align="center"><b>SpeechToText</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/speechtotext.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/talk/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/talk/">API</a></td>
 </tr>
 <tr>
-<td align="center"><b>CopyToClipboard</b><br><img src="./mkdocs/assets/gallery/copytoclipboard.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/copytoclipboard/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/copy-to-clipboard/">API</a></td>
-<td align="center"><b>CellTour</b><br><img src="./mkdocs/assets/gallery/celltour.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/celltour/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/cell-tour/">API</a></td>
+<td align="center"><b>CopyToClipboard</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/copytoclipboard.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/copytoclipboard/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/copy-to-clipboard/">API</a></td>
+<td align="center"><b>CellTour</b><br><img src="https://koaning.github.io/wigglystuff/assets/gallery/celltour.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/celltour/index.html">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/cell-tour/">API</a></td>
 <td align="center"></td>
 </tr>
 </table>
