@@ -8,27 +8,25 @@ The project uses [anywidget](https://anywidget.dev/) under the hood so our tools
 
 ## Widget Gallery
 
-For full documentation, visit [wigglystuff.dev](https://wigglystuff.dev).
-
 <table>
 <tr>
-<td align="center"><b>Slider2D</b><br><a href="https://wigglystuff.dev/reference/slider2d/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/slider2d.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/slider2d/">Demo</a> · <a href="https://wigglystuff.dev/reference/slider2d/">API</a></td>
-<td align="center"><b>Matrix</b><br><a href="https://wigglystuff.dev/reference/matrix/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/matrix.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/matrix/">Demo</a> · <a href="https://wigglystuff.dev/reference/matrix/">API</a></td>
-<td align="center"><b>Paint</b><br><a href="https://wigglystuff.dev/reference/paint/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/paint.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/paint/">Demo</a> · <a href="https://wigglystuff.dev/reference/paint/">API</a></td>
+<td align="center"><b>Slider2D</b><br><img src="mkdocs/assets/gallery/slider2d.png" width="200"></td>
+<td align="center"><b>Matrix</b><br><img src="mkdocs/assets/gallery/matrix.png" width="200"></td>
+<td align="center"><b>Paint</b><br><img src="mkdocs/assets/gallery/paint.png" width="200"></td>
 </tr>
 <tr>
-<td align="center"><b>EdgeDraw</b><br><a href="https://wigglystuff.dev/reference/edge-draw/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/edgedraw.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/edgedraw/">Demo</a> · <a href="https://wigglystuff.dev/reference/edge-draw/">API</a></td>
-<td align="center"><b>SortableList</b><br><a href="https://wigglystuff.dev/reference/sortable-list/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/sortablelist.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/sortlist/">Demo</a> · <a href="https://wigglystuff.dev/reference/sortable-list/">API</a></td>
-<td align="center"><b>ColorPicker</b><br><a href="https://wigglystuff.dev/reference/color-picker/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/colorpicker.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/colorpicker/">Demo</a> · <a href="https://wigglystuff.dev/reference/color-picker/">API</a></td>
+<td align="center"><b>EdgeDraw</b><br><img src="mkdocs/assets/gallery/edgedraw.png" width="200"></td>
+<td align="center"><b>SortableList</b><br><img src="mkdocs/assets/gallery/sortablelist.png" width="200"></td>
+<td align="center"><b>ColorPicker</b><br><img src="mkdocs/assets/gallery/colorpicker.png" width="200"></td>
 </tr>
 <tr>
-<td align="center"><b>GamepadWidget</b><br><a href="https://wigglystuff.dev/reference/gamepad/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/gamepad.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/gamepad/">Demo</a> · <a href="https://wigglystuff.dev/reference/gamepad/">API</a></td>
-<td align="center"><b>KeystrokeWidget</b><br><a href="https://wigglystuff.dev/reference/keystroke/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/keystroke.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/keystroke/">Demo</a> · <a href="https://wigglystuff.dev/reference/keystroke/">API</a></td>
-<td align="center"><b>SpeechToText</b><br><a href="https://wigglystuff.dev/reference/talk/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/speechtotext.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/talk/">Demo</a> · <a href="https://wigglystuff.dev/reference/talk/">API</a></td>
+<td align="center"><b>GamepadWidget</b><br><img src="mkdocs/assets/gallery/gamepad.png" width="200"></td>
+<td align="center"><b>KeystrokeWidget</b><br><img src="mkdocs/assets/gallery/keystroke.png" width="200"></td>
+<td align="center"><b>SpeechToText</b><br><img src="mkdocs/assets/gallery/speechtotext.png" width="200"></td>
 </tr>
 <tr>
-<td align="center"><b>CopyToClipboard</b><br><a href="https://wigglystuff.dev/reference/copy-to-clipboard/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/copytoclipboard.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/copytoclipboard/">Demo</a> · <a href="https://wigglystuff.dev/reference/copy-to-clipboard/">API</a></td>
-<td align="center"><b>CellTour</b><br><a href="https://wigglystuff.dev/reference/cell-tour/"><img src="https://raw.githubusercontent.com/koaning/wigglystuff/main/mkdocs/assets/gallery/celltour.png" width="200"></a><br><a href="https://wigglystuff.dev/examples/celltour/">Demo</a> · <a href="https://wigglystuff.dev/reference/cell-tour/">API</a></td>
+<td align="center"><b>CopyToClipboard</b><br><img src="mkdocs/assets/gallery/copytoclipboard.png" width="200"></td>
+<td align="center"><b>CellTour</b><br><img src="mkdocs/assets/gallery/celltour.png" width="200"></td>
 <td align="center"></td>
 </tr>
 </table>
