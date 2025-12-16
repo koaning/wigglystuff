@@ -9,6 +9,12 @@ class WebkitSpeechToTextWidget(anywidget.AnyWidget):
 
     The widget exposes the ``transcript`` text along with the ``listening`` and
     ``trigger_listen`` booleans; it does not require initialization arguments.
+
+    Examples:
+        ```python
+        speech = WebkitSpeechToTextWidget()
+        speech
+        ```
     """
 
     transcript = traitlets.Unicode("").tag(sync=True)

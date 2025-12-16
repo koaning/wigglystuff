@@ -9,20 +9,26 @@ class CellTour(DriverTour):
     Wraps ``DriverTour`` with cell-aware step helpers so you can reference
     marimo cells by index or `data-cell-name` attributes.
 
-    Examples
-    --------
-    >>> # Using cell indices
-    >>> tour = CellTour(steps=[
-    ...     {"cell": 0, "title": "Imports", "description": "Load libraries"},
-    ...     {"cell": 2, "title": "Processing", "description": "Data transformation"},
-    ... ])
+    Examples:
+        Using cell indices:
 
-    >>> # Using cell names (requires naming cells in marimo)
-    >>> tour = CellTour(steps=[
-    ...     {"cell_name": "imports", "title": "Imports", "description": "Load libraries"},
-    ...     {"cell_name": "process", "title": "Processing", "description": "Transform data"},
-    ... ])
-    >>> tour
+        ```python
+        tour = CellTour(steps=[
+            {"cell": 0, "title": "Imports", "description": "Load libraries"},
+            {"cell": 2, "title": "Processing", "description": "Data transformation"},
+        ])
+        tour
+        ```
+
+        Using cell names (requires naming cells in marimo):
+
+        ```python
+        tour = CellTour(steps=[
+            {"cell_name": "imports", "title": "Imports", "description": "Load libraries"},
+            {"cell_name": "process", "title": "Processing", "description": "Transform data"},
+        ])
+        tour
+        ```
     """
 
     def __init__(

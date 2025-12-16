@@ -6,7 +6,14 @@ import traitlets
 
 
 class ColorPicker(anywidget.AnyWidget):
-    """Simple color picker syncing a ``#RRGGBB`` hex value back to Python."""
+    """Simple color picker syncing a ``#RRGGBB`` hex value back to Python.
+
+    Examples:
+        ```python
+        picker = ColorPicker(color="#ff5733")
+        picker
+        ```
+    """
 
     _esm = Path(__file__).parent / "static" / "colorpicker.js"
     color = traitlets.Unicode("#000000").tag(sync=True)

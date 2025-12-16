@@ -6,7 +6,14 @@ import traitlets
 
 
 class CopyToClipboard(anywidget.AnyWidget):
-    """Button widget that copies the provided ``text_to_copy`` payload."""
+    """Button widget that copies the provided ``text_to_copy`` payload.
+
+    Examples:
+        ```python
+        button = CopyToClipboard(text_to_copy="Hello, world!")
+        button
+        ```
+    """
 
     text_to_copy = traitlets.Unicode("").tag(sync=True)
     _esm = Path(__file__).parent / "static" / "copybutton.js"

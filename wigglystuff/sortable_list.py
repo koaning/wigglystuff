@@ -6,7 +6,14 @@ import traitlets
 
 
 class SortableList(anywidget.AnyWidget):
-    """Drag-and-drop list widget with optional add/remove/edit affordances."""
+    """Drag-and-drop list widget with optional add/remove/edit affordances.
+
+    Examples:
+        ```python
+        sortable = SortableList(value=["apple", "banana", "cherry"], removable=True)
+        sortable
+        ```
+    """
 
     _esm = Path(__file__).parent / "static" / "sortable-list.js"
     _css = Path(__file__).parent / "static" / "sortable-list.css"

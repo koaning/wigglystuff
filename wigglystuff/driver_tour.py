@@ -10,27 +10,6 @@ class DriverTour(anywidget.AnyWidget):
 
     Define CSS selector-based steps with popovers to guide notebook readers,
     optionally auto-starting the experience and surfacing progress indicators.
-
-    Examples
-    --------
-    >>> tour = DriverTour(steps=[
-    ...     {
-    ...         "element": "#cell-1",
-    ...         "popover": {
-    ...             "title": "Load Data",
-    ...             "description": "This cell imports the dataset",
-    ...             "position": "bottom"
-    ...         }
-    ...     },
-    ...     {
-    ...         "element": "#cell-2",
-    ...         "popover": {
-    ...             "title": "Process Data",
-    ...             "description": "Here we clean and transform the data"
-    ...         }
-    ...     }
-    ... ])
-    >>> tour
     """
 
     _esm = Path(__file__).parent / "static" / "driver-tour.js"
