@@ -6,27 +6,10 @@ import traitlets
 
 
 class DriverTour(anywidget.AnyWidget):
-    """Interactive guided tour widget using Driver.js.
+    """Interactive guided tour widget powered by Driver.js overlays.
 
-    Creates product tours and guided highlights for notebook elements as an
-    alternative to markdown documentation. Define tour steps with CSS selectors
-    and popovers to guide users through your notebook.
-
-    Parameters
-    ----------
-    steps:
-        Sequence of tour step dictionaries. Each step should have:
-        - element: CSS selector string (optional, can be None for overlay-only)
-        - popover: dict with title, description, and optional position
-    auto_start:
-        If True, tour starts automatically when widget is rendered.
-        If False (default), shows a "Start Tour" button.
-    show_progress:
-        If True (default), displays progress indicator like "Step 2 of 5".
-    active:
-        Read-only flag indicating if tour is currently running.
-    current_step:
-        Read-only index of the current step in the tour.
+    Define CSS selector-based steps with popovers to guide notebook readers,
+    optionally auto-starting the experience and surfacing progress indicators.
 
     Examples
     --------

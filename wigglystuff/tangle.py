@@ -6,24 +6,7 @@ import traitlets
 
 
 class TangleSlider(anywidget.AnyWidget):
-    """Slider inspired by Bret Victor's Tangle UI.
-
-    Parameters
-    ----------
-    amount:
-        Initial value. Defaults to the midpoint between ``min_value`` and
-        ``max_value`` when omitted.
-    min_value, max_value:
-        Range boundaries for the slider.
-    step:
-        Value increment applied per interaction tick.
-    pixels_per_step:
-        How many drag pixels correspond to one ``step``.
-    prefix, suffix:
-        Optional strings rendered before/after the numeric display.
-    digits:
-        Number of decimal places to show.
-    """
+    """Inline slider inspired by Bret Victor's Tangle UI."""
 
     _esm = Path(__file__).parent / "static" / "tangle-slider.js"
     amount = traitlets.Float(0.0).tag(sync=True)
@@ -76,13 +59,7 @@ class TangleSlider(anywidget.AnyWidget):
 
 
 class TangleChoice(anywidget.AnyWidget):
-    """Choice widget inspired by Tangle.
-
-    Parameters
-    ----------
-    choices:
-        Sequence of at least two labels. The widget starts on ``choices[1]``.
-    """
+    """Inline choice widget that cycles through labeled options."""
 
     _esm = Path(__file__).parent / "static" / "tangle-choice.js"
     choice = traitlets.Unicode("").tag(sync=True)
@@ -101,13 +78,7 @@ class TangleChoice(anywidget.AnyWidget):
 
 
 class TangleSelect(anywidget.AnyWidget):
-    """Dropdown select widget inspired by Tangle.
-
-    Parameters
-    ----------
-    choices:
-        Sequence of at least two labels. The widget defaults to ``choices[0]``.
-    """
+    """Dropdown-based take on the Tangle choice pattern."""
 
     _esm = Path(__file__).parent / "static" / "tangle-select.js"
     choice = traitlets.Unicode("").tag(sync=True)

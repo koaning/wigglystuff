@@ -6,23 +6,8 @@ from .driver_tour import DriverTour
 class CellTour(DriverTour):
     """Simplified tour widget for marimo notebooks.
 
-    A friendlier API for creating guided tours that targets cells by index or name.
-
-    Parameters
-    ----------
-    steps:
-        Sequence of step dictionaries. Each step should have either:
-        - cell: int, 0-indexed cell number to highlight, OR
-        - cell_name: str, the data-cell-name attribute of the cell
-        Plus:
-        - title: str, popover title
-        - description: str, popover description
-        - position: str, optional popover position (default "bottom")
-    auto_start:
-        If True, tour starts automatically when widget is rendered.
-        If False (default), shows a "Start Tour" button.
-    show_progress:
-        If True (default), displays progress indicator like "Step 2 of 5".
+    Wraps ``DriverTour`` with cell-aware step helpers so you can reference
+    marimo cells by index or `data-cell-name` attributes.
 
     Examples
     --------
