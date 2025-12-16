@@ -6,6 +6,12 @@
 
 The project uses [anywidget](https://anywidget.dev/) under the hood so our tools should work in [marimo](https://marimo.io/), [Jupyter](https://jupyter.org/), [Shiny for Python](https://shiny.posit.co/py/docs/jupyter-widgets.html), [VSCode](https://code.visualstudio.com/docs/datascience/jupyter-notebooks), [Colab](https://colab.google/), [Solara](https://solara.dev/), etc. Because of the anywidget integration you should also be able interact with [ipywidgets](https://ipywidgets.readthedocs.io/en/stable/) natively. 
 
+## Install 
+
+```
+uv pip install wigglystuff
+```
+
 ## Widget Gallery
 
 <table>
@@ -31,8 +37,3 @@ The project uses [anywidget](https://anywidget.dev/) under the hood so our tools
 </tr>
 </table>
 
-## Install 
-
-```
-uv pip install wigglystuff
-```
