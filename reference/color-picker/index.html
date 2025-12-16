@@ -682,23 +682,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ColorPicker">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#wigglystuff.color_picker.ColorPicker--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -892,23 +875,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ColorPicker">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#wigglystuff.color_picker.ColorPicker--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -993,11 +959,7 @@
 
 
 
-        <p>Simple color picker that exposes RGB values.</p>
-<h3 id="wigglystuff.color_picker.ColorPicker--parameters">Parameters<a class="headerlink" href="#wigglystuff.color_picker.ColorPicker--parameters" title="Permanent link">#</a></h3>
-<p>color:
-    Optional <code>#RRGGBB</code> hex string used for the initial value. Defaults to
-    black (<code>#000000</code>) when not provided.</p>
+        <p>Simple color picker syncing a <code>#RRGGBB</code> hex value back to Python.</p>
 
         <p>Create a ColorPicker widget.</p>
 
@@ -1018,7 +980,7 @@
                 <code>color</code>
             </td>
             <td>
-                  <code><span title="str">str</span> | None</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1057,25 +1019,25 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/color_picker.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-21">21</a></span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
 <span class="normal"><a href="#__codelineno-0-22">22</a></span>
-<span class="normal"><a href="#__codelineno-0-23">23</a></span>
-<span class="normal"><a href="#__codelineno-0-24">24</a></span>
-<span class="normal"><a href="#__codelineno-0-25">25</a></span>
-<span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#__codelineno-0-28">28</a></span>
-<span class="normal"><a href="#__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#__codelineno-0-30">30</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a ColorPicker widget.</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="sd">        color: Optional starting hex color (e.g. ``&quot;#ff00aa&quot;``).</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a ColorPicker widget.</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="sd">        color: Optional starting hex color (e.g. ``&quot;#ff00aa&quot;``).</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a>    <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 

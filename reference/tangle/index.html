@@ -738,23 +738,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="TangleSlider">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#wigglystuff.tangle.TangleSlider--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -766,23 +749,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="TangleChoice">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#wigglystuff.tangle.TangleChoice--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -793,23 +759,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="TangleSelect">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#wigglystuff.tangle.TangleSelect--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -948,23 +897,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="TangleSlider">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#wigglystuff.tangle.TangleSlider--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -976,23 +908,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="TangleChoice">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#wigglystuff.tangle.TangleChoice--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1003,23 +918,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="TangleSelect">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#wigglystuff.tangle.TangleSelect--parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1105,21 +1003,7 @@
 
 
 
-        <p>Slider inspired by Bret Victor's Tangle UI.</p>
-<h3 id="wigglystuff.tangle.TangleSlider--parameters">Parameters<a class="headerlink" href="#wigglystuff.tangle.TangleSlider--parameters" title="Permanent link">#</a></h3>
-<p>amount:
-    Initial value. Defaults to the midpoint between <code>min_value</code> and
-    <code>max_value</code> when omitted.
-min_value, max_value:
-    Range boundaries for the slider.
-step:
-    Value increment applied per interaction tick.
-pixels_per_step:
-    How many drag pixels correspond to one <code>step</code>.
-prefix, suffix:
-    Optional strings rendered before/after the numeric display.
-digits:
-    Number of decimal places to show.</p>
+        <p>Inline slider inspired by Bret Victor's Tangle UI.</p>
 
         <p>Create a slider suitable for inline Tangle interactions.</p>
 
@@ -1140,7 +1024,7 @@ digits:
                 <code>amount</code>
             </td>
             <td>
-                  <code><span title="float">float</span> | None</code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="float">float</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1291,7 +1175,24 @@ digits:
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/tangle.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-38">38</a></span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
 <span class="normal"><a href="#__codelineno-0-39">39</a></span>
 <span class="normal"><a href="#__codelineno-0-40">40</a></span>
 <span class="normal"><a href="#__codelineno-0-41">41</a></span>
@@ -1311,61 +1212,44 @@ digits:
 <span class="normal"><a href="#__codelineno-0-55">55</a></span>
 <span class="normal"><a href="#__codelineno-0-56">56</a></span>
 <span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
-<span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span>
-<span class="normal"><a href="#__codelineno-0-64">64</a></span>
-<span class="normal"><a href="#__codelineno-0-65">65</a></span>
-<span class="normal"><a href="#__codelineno-0-66">66</a></span>
-<span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span>
-<span class="normal"><a href="#__codelineno-0-70">70</a></span>
-<span class="normal"><a href="#__codelineno-0-71">71</a></span>
-<span class="normal"><a href="#__codelineno-0-72">72</a></span>
-<span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span>
-<span class="normal"><a href="#__codelineno-0-75">75</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a>    <span class="n">amount</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="n">min_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42"></a>    <span class="n">max_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a>    <span class="n">step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="n">pixels_per_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-<a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="n">digits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a slider suitable for inline Tangle interactions.</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="sd">        amount: Starting value; defaults to midpoint of bounds.</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">        min_value: Lower bound.</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        max_value: Upper bound.</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">        step: Increment size.</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">        pixels_per_step: Drag distance per step.</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">        prefix: Text shown before the value.</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="sd">        suffix: Text shown after the value.</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">        digits: Number formatting precision.</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="k">if</span> <span class="n">amount</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="n">amount</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_value</span> <span class="o">+</span> <span class="n">min_value</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="n">max_value</span><span class="o">=</span><span class="n">max_value</span><span class="p">,</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="n">pixels_per_step</span><span class="o">=</span><span class="n">pixels_per_step</span><span class="p">,</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="n">digits</span><span class="o">=</span><span class="n">digits</span><span class="p">,</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="n">amount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a>    <span class="n">min_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="n">max_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a>    <span class="n">step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="n">pixels_per_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a>    <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a>    <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="n">digits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a slider suitable for inline Tangle interactions.</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">        amount: Starting value; defaults to midpoint of bounds.</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="sd">        min_value: Lower bound.</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">        max_value: Upper bound.</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">        step: Increment size.</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">        pixels_per_step: Drag distance per step.</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="sd">        prefix: Text shown before the value.</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">        suffix: Text shown after the value.</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        digits: Number formatting precision.</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="k">if</span> <span class="n">amount</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a>        <span class="n">amount</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_value</span> <span class="o">+</span> <span class="n">min_value</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>        <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="n">max_value</span><span class="o">=</span><span class="n">max_value</span><span class="p">,</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>        <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="n">pixels_per_step</span><span class="o">=</span><span class="n">pixels_per_step</span><span class="p">,</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">,</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="n">digits</span><span class="o">=</span><span class="n">digits</span><span class="p">,</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -1401,10 +1285,7 @@ digits:
 
 
 
-        <p>Choice widget inspired by Tangle.</p>
-<h3 id="wigglystuff.tangle.TangleChoice--parameters">Parameters<a class="headerlink" href="#wigglystuff.tangle.TangleChoice--parameters" title="Permanent link">#</a></h3>
-<p>choices:
-    Sequence of at least two labels. The widget starts on <code>choices[1]</code>.</p>
+        <p>Inline choice widget that cycles through labeled options.</p>
 
         <p>Create a TangleChoice widget.</p>
 
@@ -1464,25 +1345,25 @@ digits:
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/tangle.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
-<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
-<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
-<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
-<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
-<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
-<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
-<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
-<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
-<span class="normal"><a href="#__codelineno-0-100">100</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a TangleChoice widget.</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a><span class="sd">        choices: Ordered sequence of options (min two).</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must pass at least two choices.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">choices</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">choices</span><span class="o">=</span><span class="n">choices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a TangleChoice widget.</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">        choices: Ordered sequence of options (min two).</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must pass at least two choices.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">choices</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">choices</span><span class="o">=</span><span class="n">choices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -1518,10 +1399,7 @@ digits:
 
 
 
-        <p>Dropdown select widget inspired by Tangle.</p>
-<h3 id="wigglystuff.tangle.TangleSelect--parameters">Parameters<a class="headerlink" href="#wigglystuff.tangle.TangleSelect--parameters" title="Permanent link">#</a></h3>
-<p>choices:
-    Sequence of at least two labels. The widget defaults to <code>choices[0]</code>.</p>
+        <p>Dropdown-based take on the Tangle choice pattern.</p>
 
         <p>Create a TangleSelect dropdown.</p>
 
@@ -1581,25 +1459,25 @@ digits:
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/tangle.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-116">116</a></span>
-<span class="normal"><a href="#__codelineno-0-117">117</a></span>
-<span class="normal"><a href="#__codelineno-0-118">118</a></span>
-<span class="normal"><a href="#__codelineno-0-119">119</a></span>
-<span class="normal"><a href="#__codelineno-0-120">120</a></span>
-<span class="normal"><a href="#__codelineno-0-121">121</a></span>
-<span class="normal"><a href="#__codelineno-0-122">122</a></span>
-<span class="normal"><a href="#__codelineno-0-123">123</a></span>
-<span class="normal"><a href="#__codelineno-0-124">124</a></span>
-<span class="normal"><a href="#__codelineno-0-125">125</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-116" name="__codelineno-0-116"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-117" name="__codelineno-0-117"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a TangleSelect dropdown.</span>
-<a id="__codelineno-0-118" name="__codelineno-0-118"></a>
-<a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">        choices: Ordered sequence of options (min two).</span>
-<a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
-<a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-123" name="__codelineno-0-123"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-<a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must pass at least two choices.&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">choice</span><span class="o">=</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">choices</span><span class="o">=</span><span class="n">choices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-87">87</a></span>
+<span class="normal"><a href="#__codelineno-0-88">88</a></span>
+<span class="normal"><a href="#__codelineno-0-89">89</a></span>
+<span class="normal"><a href="#__codelineno-0-90">90</a></span>
+<span class="normal"><a href="#__codelineno-0-91">91</a></span>
+<span class="normal"><a href="#__codelineno-0-92">92</a></span>
+<span class="normal"><a href="#__codelineno-0-93">93</a></span>
+<span class="normal"><a href="#__codelineno-0-94">94</a></span>
+<span class="normal"><a href="#__codelineno-0-95">95</a></span>
+<span class="normal"><a href="#__codelineno-0-96">96</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a TangleSelect dropdown.</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="sd">        choices: Ordered sequence of options (min two).</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must pass at least two choices.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">choice</span><span class="o">=</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">choices</span><span class="o">=</span><span class="n">choices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
