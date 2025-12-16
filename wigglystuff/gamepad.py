@@ -9,6 +9,12 @@ class GamepadWidget(anywidget.AnyWidget):
 
     This widget does not require any initialization arguments; all state is
     mirrored through traitlets such as ``axes`` and ``current_button_press``.
+
+    Examples:
+        ```python
+        gamepad = GamepadWidget()
+        gamepad
+        ```
     """
 
     _esm = Path(__file__).parent / "static" / "gamepad-widget.js"

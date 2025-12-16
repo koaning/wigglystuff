@@ -7,7 +7,14 @@ import traitlets
 
 
 class Matrix(anywidget.AnyWidget):
-    """Spreadsheet-like numeric editor with bounds, naming, and symmetry helpers."""
+    """Spreadsheet-like numeric editor with bounds, naming, and symmetry helpers.
+
+    Examples:
+        ```python
+        matrix = Matrix(rows=3, cols=3, min_value=0, max_value=10)
+        matrix
+        ```
+    """
 
     _esm = Path(__file__).parent / "static" / "matrix.js"
     _css = Path(__file__).parent / "static" / "matrix.css"

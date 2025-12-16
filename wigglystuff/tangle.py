@@ -6,7 +6,14 @@ import traitlets
 
 
 class TangleSlider(anywidget.AnyWidget):
-    """Inline slider inspired by Bret Victor's Tangle UI."""
+    """Inline slider inspired by Bret Victor's Tangle UI.
+
+    Examples:
+        ```python
+        slider = TangleSlider(amount=50, min_value=0, max_value=100)
+        slider
+        ```
+    """
 
     _esm = Path(__file__).parent / "static" / "tangle-slider.js"
     amount = traitlets.Float(0.0).tag(sync=True)
@@ -59,7 +66,14 @@ class TangleSlider(anywidget.AnyWidget):
 
 
 class TangleChoice(anywidget.AnyWidget):
-    """Inline choice widget that cycles through labeled options."""
+    """Inline choice widget that cycles through labeled options.
+
+    Examples:
+        ```python
+        choice = TangleChoice(choices=["small", "medium", "large"])
+        choice
+        ```
+    """
 
     _esm = Path(__file__).parent / "static" / "tangle-choice.js"
     choice = traitlets.Unicode("").tag(sync=True)
@@ -78,7 +92,14 @@ class TangleChoice(anywidget.AnyWidget):
 
 
 class TangleSelect(anywidget.AnyWidget):
-    """Dropdown-based take on the Tangle choice pattern."""
+    """Dropdown-based take on the Tangle choice pattern.
+
+    Examples:
+        ```python
+        select = TangleSelect(choices=["red", "green", "blue"])
+        select
+        ```
+    """
 
     _esm = Path(__file__).parent / "static" / "tangle-select.js"
     choice = traitlets.Unicode("").tag(sync=True)

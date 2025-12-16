@@ -2668,17 +2668,15 @@ name = "wigglystuff"
 version = "0.2.4"
 source = { editable = "." }
 dependencies = [
-    { name = "altair" },
     { name = "anywidget" },
-    { name = "mohtml" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pillow" },
-    { name = "polars" },
 ]
 
 [package.optional-dependencies]
 docs = [
+    { name = "altair" },
     { name = "black" },
     { name = "marimo" },
     { name = "mike" },
@@ -2688,7 +2686,9 @@ docs = [
     { name = "mkdocs-material" },
     { name = "mkdocs-section-index" },
     { name = "mkdocstrings", extra = ["python"] },
+    { name = "mohtml" },
     { name = "pandas" },
+    { name = "polars" },
 ]
 test = [
     { name = "pytest" },
@@ -2696,7 +2696,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "altair", specifier = ">=6.0.0" },
+    { name = "altair", marker = "extra == 'docs'", specifier = ">=6.0.0" },
     { name = "anywidget", specifier = ">=0.9.2" },
     { name = "black", marker = "extra == 'docs'", specifier = ">=24.8.0" },
     { name = "marimo", marker = "extra == 'docs'", specifier = ">=0.18.0" },
@@ -2707,11 +2707,11 @@ requires-dist = [
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = ">=9.5.0" },
     { name = "mkdocs-section-index", marker = "extra == 'docs'", specifier = ">=0.3.6" },
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.25.1" },
-    { name = "mohtml", specifier = ">=0.1.11" },
+    { name = "mohtml", marker = "extra == 'docs'", specifier = ">=0.1.11" },
     { name = "numpy" },
     { name = "pandas", marker = "extra == 'docs'", specifier = ">=2.3.3" },
     { name = "pillow" },
-    { name = "polars", specifier = ">=1.36.1" },
+    { name = "polars", marker = "extra == 'docs'", specifier = ">=1.36.1" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.3.3" },
 ]
 provides-extras = ["test", "docs"]

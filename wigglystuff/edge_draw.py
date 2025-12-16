@@ -7,7 +7,14 @@ import traitlets
 
 
 class EdgeDraw(anywidget.AnyWidget):
-    """Sketch node/link diagrams and sync edges as adjacency-friendly data."""
+    """Sketch node/link diagrams and sync edges as adjacency-friendly data.
+
+    Examples:
+        ```python
+        graph = EdgeDraw(names=["A", "B", "C", "D"])
+        graph
+        ```
+    """
 
     _esm = Path(__file__).parent / "static" / "edgedraw.js"
     _css = Path(__file__).parent / "static" / "edgedraw.css"

@@ -79,7 +79,14 @@ def input_to_pil(input_data: Union[str, Path, "Image.Image", bytes, None]):
 
 
 class Paint(anywidget.AnyWidget):
-    """Notebook-friendly paint widget with MS Paint style tools and PIL helpers."""
+    """Notebook-friendly paint widget with MS Paint style tools and PIL helpers.
+
+    Examples:
+        ```python
+        paint = Paint(width=400, height=300)
+        paint
+        ```
+    """
 
     _esm = Path(__file__).parent / "static" / "paint.js"
     _css = Path(__file__).parent / "static" / "paint.css"

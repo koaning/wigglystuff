@@ -9,6 +9,12 @@ class KeystrokeWidget(anywidget.AnyWidget):
 
     No initialization arguments are required; the widget simply records
     keystrokes into the ``last_key`` trait.
+
+    Examples:
+        ```python
+        keystroke = KeystrokeWidget()
+        keystroke
+        ```
     """
 
     _esm = Path(__file__).parent / "static" / "keystroke-widget.js"
