@@ -8,15 +8,8 @@ import traitlets
 class Slider2D(anywidget.AnyWidget):
     """Two dimensional slider for simultaneous adjustments.
 
-    Parameters
-    ----------
-    x, y:
-        Initial slider coordinates.
-    width, height:
-        Canvas size in pixels. Defaults to 400x400.
-    x_bounds, y_bounds:
-        Tuples of floats defining the minimum and maximum allowed values for
-        each axis.
+    Emits synchronized ``x``/``y`` floats that stay within configurable bounds
+    while rendering to a pixel canvas sized via ``width``/``height``.
     """
 
     _esm = Path(__file__).parent / "static" / "2dslider.js"

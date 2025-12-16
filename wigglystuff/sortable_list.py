@@ -6,18 +6,7 @@ import traitlets
 
 
 class SortableList(anywidget.AnyWidget):
-    """Interactive sortable list with optional editing capabilities.
-
-    Parameters
-    ----------
-    value:
-        Initial sequence of strings displayed in the list.
-    addable, removable, editable:
-        Feature flags that enable UI controls for inserting, removing, or
-        editing items respectively. Disabled by default.
-    label:
-        Optional caption displayed above the list.
-    """
+    """Drag-and-drop list widget with optional add/remove/edit affordances."""
 
     _esm = Path(__file__).parent / "static" / "sortable-list.js"
     _css = Path(__file__).parent / "static" / "sortable-list.css"

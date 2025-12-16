@@ -7,26 +7,7 @@ import traitlets
 
 
 class Matrix(anywidget.AnyWidget):
-    """Matrix editor widget with validation helpers.
-
-    Parameters
-    ----------
-    matrix:
-        Optional 2D list used to seed the widget. When omitted, a matrix filled
-        with the midpoint of ``min_value``/``max_value`` is created.
-    rows, cols:
-        Declared matrix shape when ``matrix`` is not provided. Defaults to 3x3.
-    min_value, max_value:
-        Bounds enforced on all editable cells.
-    triangular:
-        When ``True`` only the upper triangle is editable.
-    row_names, col_names:
-        Optional labels for rows/columns. Length must match ``rows``/``cols``.
-    static:
-        If ``True`` the grid is read-only.
-    flexible_cols:
-        If ``True`` the front-end allows column insertion/removal.
-    """
+    """Spreadsheet-like numeric editor with bounds, naming, and symmetry helpers."""
 
     _esm = Path(__file__).parent / "static" / "matrix.js"
     _css = Path(__file__).parent / "static" / "matrix.css"

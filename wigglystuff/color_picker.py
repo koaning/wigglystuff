@@ -6,14 +6,7 @@ import traitlets
 
 
 class ColorPicker(anywidget.AnyWidget):
-    """Simple color picker that exposes RGB values.
-
-    Parameters
-    ----------
-    color:
-        Optional ``#RRGGBB`` hex string used for the initial value. Defaults to
-        black (``#000000``) when not provided.
-    """
+    """Simple color picker syncing a ``#RRGGBB`` hex value back to Python."""
 
     _esm = Path(__file__).parent / "static" / "colorpicker.js"
     color = traitlets.Unicode("#000000").tag(sync=True)
