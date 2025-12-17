@@ -27,7 +27,7 @@ The project uses [anywidget](https://anywidget.dev/) under the hood so our tools
 <tr>
 <td align="center"><b>CopyToClipboard</b><br><img src="./mkdocs/assets/gallery/copytoclipboard.png" width="200"><br><a href="./demos/copytoclipboard.py">Demo</a> · <a href="./wigglystuff/copy_to_clipboard.py">Source</a></td>
 <td align="center"><b>CellTour</b><br><img src="./mkdocs/assets/gallery/celltour.png" width="200"><br><a href="./demos/celltour.py">Demo</a> · <a href="./wigglystuff/cell_tour.py">Source</a></td>
-<td align="center"></td>
+<td align="center"><b>MapPicker</b><br><img src="./mkdocs/assets/gallery/mappicker.png" width="200"><br><a href="./demos/map_picker.py">Demo</a> · <a href="./wigglystuff/map_picker.py">Source</a></td>
 </tr>
 </table>
 

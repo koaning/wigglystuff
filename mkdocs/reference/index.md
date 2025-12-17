@@ -15,3 +15,4 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [GamepadWidget](gamepad.md)
 - [DriverTour](driver-tour.md)
 - [CellTour](cell-tour.md)
+- [MapPicker](map-picker.md)

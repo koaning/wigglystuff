@@ -81,6 +81,11 @@ hide:
 <a href="examples/celltour/index.html" class="gallery-img"><img src="assets/gallery/celltour.png" alt="CellTour widget"></a>
 <div class="gallery-links"><a href="examples/celltour/index.html">Demo</a><a href="reference/cell-tour.md">API</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">MapPicker</div>
+<a href="examples/map_picker/index.html" class="gallery-img"><img src="assets/gallery/mappicker.png" alt="MapPicker widget"></a>
+<div class="gallery-links"><a href="examples/map_picker/index.html">Demo</a><a href="reference/map-picker.md">API</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.

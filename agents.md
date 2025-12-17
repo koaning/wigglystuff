@@ -24,6 +24,7 @@ syncs back to Python.
 | WebkitSpeechToTextWidget | `wigglystuff.talk.WebkitSpeechToTextWidget` | `transcript`, `listening`, `trigger_listen` | WebKit speech recognition bridge |
 | DriverTour | `wigglystuff.driver_tour.DriverTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Guided product tours via Driver.js |
 | CellTour | `wigglystuff.cell_tour.CellTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Simplified cell-based tours for marimo |
+| MapPicker | `wigglystuff.map_picker.MapPicker` | `lat`, `lon`, `zoom`, `bbox`, `show_marker`, `marker_color` | Interactive map for picking coordinates |
 
 ## Patterns to remember
 

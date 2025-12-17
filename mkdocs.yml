@@ -49,6 +49,7 @@ nav:
       - GamepadWidget: reference/gamepad.md
       - DriverTour: reference/driver-tour.md
       - CellTour: reference/cell-tour.md
+      - MapPicker: reference/map-picker.md
 plugins:
   - search
   - section-index
