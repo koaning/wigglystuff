@@ -1,7 +1,7 @@
 site_name: wigglystuff
 site_description: Creative AnyWidgets for notebooks
 site_url: https://wigglystuff.dev
-repo_url: https://github.com/vdamario/wigglystuff
+repo_url: https://github.com/koaning/wigglystuff
 repo_name: koaning/wigglystuff
 docs_dir: mkdocs
 site_dir: site

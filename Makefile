@@ -55,6 +55,9 @@ docs-serve:
 docs-build: docs-demos
 	uv run mkdocs build -f mkdocs.yml
 
+docs-gh: docs-demos
+	uv run mkdocs gh-deploy -f mkdocs.yml
+
 marimo-notebook:
 	uv run marimo -y export html-wasm notebook.py --output docs/index.html --mode edit
 	uv run python -m http.server 8000 --directory docs
