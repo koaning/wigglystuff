@@ -38,7 +38,7 @@ def _(mo, widget):
     preview = widget.text_to_copy
     truncated = preview if len(preview) < 80 else preview[:77] + "..."
 
-    mo.callout.info("Click the button to copy the payload below:")
+    mo.callout("Click the button to copy the payload below:")
     mo.md(f"```text\n{truncated}\n```")
     return
 

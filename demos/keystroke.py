@@ -7,6 +7,7 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
+
     from wigglystuff import KeystrokeWidget
 
     listener = mo.ui.anywidget(KeystrokeWidget())
@@ -52,32 +53,8 @@ def _(listener, mo):
         "Timestamp": info.get("timestamp", "—"),
     }
 
-    mo.callout.info("Latest keyboard event from the browser:")
+    mo.callout("Latest keyboard event from the browser:")
     mo.md("\n".join(f"- **{label}:** `{value}`" for label, value in rows.items()))
-    return
-
-
-@app.cell
-def _(listener, mo):
-    def log_shortcut(change):
-        payload = change.get("new") or {}
-        combo = " + ".join(
-            part
-            for part in [
-                *(label for key, label in [
-                    ("ctrlKey", "Ctrl"),
-                    ("shiftKey", "Shift"),
-                    ("altKey", "Alt"),
-                    ("metaKey", "Meta"),
-                ]
-                if payload.get(key)),
-                payload.get("key"),
-            ]
-            if part
-        )
-        mo.log.info("shortcut -> %s", combo or "(none)")
-
-    listener.observe(log_shortcut, names="last_key")
     return
 
 
