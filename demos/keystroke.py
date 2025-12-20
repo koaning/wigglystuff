@@ -52,7 +52,7 @@ def _(listener, mo):
         "Timestamp": info.get("timestamp", "—"),
     }
 
-    mo.callout.info("Latest keyboard event from the browser:")
+    mo.callout("Latest keyboard event from the browser:")
     mo.md("\n".join(f"- **{label}:** `{value}`" for label, value in rows.items()))
     return
 
@@ -75,7 +75,7 @@ def _(listener, mo):
             ]
             if part
         )
-        mo.log.info("shortcut -> %s", combo or "(none)")
+        mo.log(f"shortcut -> {combo or '(none)'}")
 
     listener.observe(log_shortcut, names="last_key")
     return

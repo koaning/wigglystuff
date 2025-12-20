@@ -75,7 +75,7 @@ def _(mo, pad):
     def log_button(change):
         new = change.get("new", -1)
         if new >= 0:
-            mo.log.info("button %s pressed", new)
+            mo.log(f"button {new} pressed")
 
     pad.observe(log_button, names="current_button_press")
     return
