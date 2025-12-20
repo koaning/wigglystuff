@@ -17,7 +17,7 @@ syncs back to Python.
 | SortableList | `wigglystuff.sortable_list.SortableList` | `value`, `addable`, `removable`, `editable`, `label` | Drag-and-drop ordering with optional CRUD |
 | CopyToClipboard | `wigglystuff.copy_to_clipboard.CopyToClipboard` | `text_to_copy` | Copies the payload into the OS clipboard |
 | ColorPicker | `wigglystuff.color_picker.ColorPicker` | `color` | Native color input with `rgb` helper |
-| EdgeDraw | `wigglystuff.edge_draw.EdgeDraw` | `names`, `links`, `width`, `height` | Sketch node/link diagrams and query adjacency |
+| EdgeDraw | `wigglystuff.edge_draw.EdgeDraw` | `names`, `links`, `directed`, `width`, `height` | Sketch node/link diagrams and query adjacency |
 | Paint | `wigglystuff.paint.Paint` | `base64`, `width`, `height`, `store_background` | MS-Paint-style canvas with PIL helpers |
 | GamepadWidget | `wigglystuff.gamepad.GamepadWidget` | `axes`, `current_button_press`, `dpad_*`, `current_timestamp` | Streams browser Gamepad API events |
 | KeystrokeWidget | `wigglystuff.keystroke.KeystrokeWidget` | `last_key` | Captures the latest keypress w/ modifiers |

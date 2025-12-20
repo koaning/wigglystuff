@@ -7,10 +7,25 @@ function render({model, el}){
     el.appendChild(container);
 
     // Sample nodes
-    const nodes = model.get("names").map((name) => ({ id: name, x: 100, y: 100 }));
+    const names = model.get("names");
+    const nodes = names.map((name) => ({ id: name, x: 100, y: 100 }));
+    const nodeOrder = new Map(names.map((name, index) => [name, index]));
+    const nodeById = new Map(nodes.map((node) => [node.id, node]));
 
     let links = [];
     let selectedNode = null;
+    let directed = model.get("directed");
+
+    function hydrateLinks(rawLinks) {
+        return (rawLinks || [])
+            .map((link) => {
+                if (!link || typeof link !== "object") {
+                    return null;
+                }
+                return { source: nodeById.get(link.source), target: nodeById.get(link.target) };
+            })
+            .filter((link) => link && link.source && link.target);
+    }
 
     // Set up the SVG
     const width = 600;
@@ -34,6 +49,8 @@ function render({model, el}){
         .attr("class", "arrow");
 
     // Force simulation with gentler forces
+    links = hydrateLinks(model.get("links"));
+
     const simulation = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id).distance(100))
         .force("charge", d3.forceManyBody().strength(-50))
@@ -62,6 +79,13 @@ function render({model, el}){
         .attr("dy", 4)
         .text(d => d.id);
 
+    function canonicalizeEdge(a, b) {
+        if (nodeOrder.get(a.id) <= nodeOrder.get(b.id)) {
+            return { source: a, target: b };
+        }
+        return { source: b, target: a };
+    }
+
     function handleNodeClick(event, d) {
         if (!selectedNode) {
             // First click - select node
@@ -82,15 +106,24 @@ function render({model, el}){
                 (l.source === d && l.target === selectedNode) ||
                 (l.source.id === d.id && l.target.id === selectedNode.id)
             );
-            
-            // Remove existing reverse link if present
-            if (existingReverseLink) {
-                links = links.filter(l => l !== existingReverseLink);
-            }
-            
-            // Add new link if no forward link exists
-            if (!existingForwardLink) {
-                links.push({source: selectedNode, target: d});
+            const existingUndirectedLink = existingForwardLink || existingReverseLink;
+
+            if (!directed) {
+                if (existingUndirectedLink) {
+                    links = links.filter(l => l !== existingUndirectedLink);
+                } else {
+                    links.push(canonicalizeEdge(selectedNode, d));
+                }
+            } else {
+                // Remove existing reverse link if present
+                if (existingReverseLink) {
+                    links = links.filter(l => l !== existingReverseLink);
+                }
+
+                // Add new link if no forward link exists
+                if (!existingForwardLink) {
+                    links.push({source: selectedNode, target: d});
+                }
             }
             
             simulation.force("link").links(links);
@@ -108,7 +141,7 @@ function render({model, el}){
             .data(links)
             .join("path")
             .attr("class", "link")
-            .attr("marker-end", "url(#arrowhead)")
+            .attr("marker-end", directed ? "url(#arrowhead)" : null)
             .attr("d", d => {
                 const dx = d.target.x - d.source.x;
                 const dy = d.target.y - d.source.y;
@@ -149,6 +182,17 @@ function render({model, el}){
         });
 
     node.call(drag);
+
+    model.on("change:directed", () => {
+        directed = model.get("directed");
+        updateLinks();
+    });
+
+    model.on("change:links", () => {
+        links = hydrateLinks(model.get("links"));
+        simulation.force("link").links(links);
+        updateLinks();
+    });
 };
 
 export default { render };
