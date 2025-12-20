@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional
+from typing import Iterable, List, Optional, Sequence, Tuple, Union
 
 import anywidget
 import numpy as np
@@ -20,26 +20,69 @@ class EdgeDraw(anywidget.AnyWidget):
     _css = Path(__file__).parent / "static" / "edgedraw.css"
     names = traitlets.List([]).tag(sync=True)
     links = traitlets.List([]).tag(sync=True)
+    directed = traitlets.Bool(True).tag(sync=True)
     height = traitlets.Int(400).tag(sync=True)
     width = traitlets.Int(600).tag(sync=True)
 
-    def __init__(self, names: List[str], height: int = 400, width: int = 600) -> None:
+    @staticmethod
+    def _coerce_links(
+        links: Optional[Iterable[Union[Sequence[str], dict]]],
+    ) -> List[dict]:
+        normalized: List[dict] = []
+        if not links:
+            return normalized
+        for link in links:
+            if isinstance(link, dict):
+                if "source" in link and "target" in link:
+                    normalized.append({"source": link["source"], "target": link["target"]})
+                continue
+            if isinstance(link, (tuple, list)) and len(link) >= 2:
+                normalized.append({"source": link[0], "target": link[1]})
+        return normalized
+
+    @traitlets.validate("links")
+    def _validate_links(self, proposal: traitlets.Bunch) -> List[dict]:
+        return self._coerce_links(proposal.value)
+
+    @staticmethod
+    def _iter_links(
+        links: Iterable[dict],
+    ) -> Iterable[Tuple[str, str]]:
+        for link in links:
+            yield link["source"], link["target"]
+
+    def __init__(
+        self,
+        names: List[str],
+        height: int = 400,
+        width: int = 600,
+        directed: bool = True,
+        links: Optional[Iterable[Union[Sequence[str], dict]]] = None,
+    ) -> None:
         """Create an EdgeDraw widget.
 
         Args:
             names: Ordered list of node labels.
             height: Canvas height in pixels.
             width: Canvas width in pixels.
+            directed: Whether to draw directed edges with arrowheads.
+            links: Optional list of (source, target) pairs to seed the widget.
         """
-        super().__init__(names=names, height=height, width=width)
+        super().__init__(
+            names=names,
+            height=height,
+            width=width,
+            directed=directed,
+            links=self._coerce_links(links),
+        )
 
     def get_adjacency_matrix(self, directed: bool = False) -> np.ndarray:
         """Create an adjacency matrix from links and node names."""
         num_nodes = len(self.names)
         matrix = np.zeros((num_nodes, num_nodes))
-        for nodes in self.links:
-            src = self.names.index(nodes["source"])
-            dst = self.names.index(nodes["target"])
+        for source, target in self._iter_links(self._coerce_links(self.links)):
+            src = self.names.index(source)
+            dst = self.names.index(target)
             matrix[src][dst] = 1
             if not directed:
                 matrix[dst][src] = 1
@@ -48,11 +91,11 @@ class EdgeDraw(anywidget.AnyWidget):
     def get_neighbors(self, node_name: str, directed: bool = False) -> List[str]:
         """Return neighbors of a node."""
         neighbors = []
-        for nodes in self.links:
-            if nodes["source"] == node_name:
-                neighbors.append(nodes["target"])
-            if not directed and nodes["target"] == node_name:
-                neighbors.append(nodes["source"])
+        for source, target in self._iter_links(self._coerce_links(self.links)):
+            if source == node_name:
+                neighbors.append(target)
+            if not directed and target == node_name:
+                neighbors.append(source)
         return neighbors
 
     def has_cycle(self, directed: bool = False) -> bool:

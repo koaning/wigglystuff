@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.17.8"
+__generated_with = "0.18.4"
 app = marimo.App()
 
 
@@ -24,7 +24,7 @@ def _(mo):
 def _(mo):
     from wigglystuff import EdgeDraw
 
-    widget = mo.ui.anywidget(EdgeDraw(["a", "b", "c", "d"]))
+    widget = mo.ui.anywidget(EdgeDraw(["a", "b", "c", "d"], directed=True))
     widget
     return (widget,)
 

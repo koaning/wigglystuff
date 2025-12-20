@@ -9537,18 +9537,37 @@ function render({ model, el }) {
   const container = document.createElement("div");
   container.classList.add("matrix-container", "edgedraw");
   el.appendChild(container);
-  const nodes = model.get("names").map((name) => ({ id: name, x: 100, y: 100 }));
+  const names = model.get("names");
+  const nodes = names.map((name) => ({ id: name, x: 100, y: 100 }));
+  const nodeOrder = new Map(names.map((name, index) => [name, index]));
+  const nodeById = new Map(nodes.map((node2) => [node2.id, node2]));
   let links = [];
   let selectedNode = null;
+  let directed = model.get("directed");
+  function hydrateLinks(rawLinks) {
+    return (rawLinks || []).map((link) => {
+      if (!link || typeof link !== "object") {
+        return null;
+      }
+      return { source: nodeById.get(link.source), target: nodeById.get(link.target) };
+    }).filter((link) => link && link.source && link.target);
+  }
   const width = 600;
   const height = 400;
   const svg = d3.select(container).append("svg").attr("width", width).attr("height", height);
   svg.append("defs").append("marker").attr("id", "arrowhead").attr("viewBox", "-0 -5 10 10").attr("refX", 13).attr("refY", 0).attr("orient", "auto").attr("markerWidth", 6).attr("markerHeight", 6).append("path").attr("d", "M0,-5L10,0L0,5").attr("class", "arrow");
+  links = hydrateLinks(model.get("links"));
   const simulation = d3.forceSimulation(nodes).force("link", d3.forceLink(links).id((d) => d.id).distance(100)).force("charge", d3.forceManyBody().strength(-50)).force("center", d3.forceCenter(width / 2, height / 2)).force("collide", d3.forceCollide().radius(30)).on("tick", ticked);
   const linkGroup = svg.append("g");
   const nodeGroup = svg.append("g");
   const node = nodeGroup.selectAll(".node").data(nodes).join("circle").attr("class", "node").attr("r", 10).on("click", handleNodeClick);
   const labels = nodeGroup.selectAll(".label").data(nodes).join("text").attr("class", "label").attr("dx", 15).attr("dy", 4).text((d) => d.id);
+  function canonicalizeEdge(a, b) {
+    if (nodeOrder.get(a.id) <= nodeOrder.get(b.id)) {
+      return { source: a, target: b };
+    }
+    return { source: b, target: a };
+  }
   function handleNodeClick(event, d) {
     if (!selectedNode) {
       selectedNode = d;
@@ -9563,11 +9582,20 @@ function render({ model, el }) {
       const existingReverseLink = links.find(
         (l) => l.source === d && l.target === selectedNode || l.source.id === d.id && l.target.id === selectedNode.id
       );
-      if (existingReverseLink) {
-        links = links.filter((l) => l !== existingReverseLink);
-      }
-      if (!existingForwardLink) {
-        links.push({ source: selectedNode, target: d });
+      const existingUndirectedLink = existingForwardLink || existingReverseLink;
+      if (!directed) {
+        if (existingUndirectedLink) {
+          links = links.filter((l) => l !== existingUndirectedLink);
+        } else {
+          links.push(canonicalizeEdge(selectedNode, d));
+        }
+      } else {
+        if (existingReverseLink) {
+          links = links.filter((l) => l !== existingReverseLink);
+        }
+        if (!existingForwardLink) {
+          links.push({ source: selectedNode, target: d });
+        }
       }
       simulation.force("link").links(links);
       selectedNode = null;
@@ -9579,7 +9607,7 @@ function render({ model, el }) {
     model.save_changes();
   }
   function updateLinks() {
-    const link = linkGroup.selectAll(".link").data(links).join("path").attr("class", "link").attr("marker-end", "url(#arrowhead)").attr("d", (d) => {
+    const link = linkGroup.selectAll(".link").data(links).join("path").attr("class", "link").attr("marker-end", directed ? "url(#arrowhead)" : null).attr("d", (d) => {
       const dx = d.target.x - d.source.x;
       const dy = d.target.y - d.source.y;
       return `M${d.source.x},${d.source.y}L${d.target.x},${d.target.y}`;
@@ -9604,6 +9632,15 @@ function render({ model, el }) {
     simulation.alpha(0.1).restart();
   });
   node.call(drag2);
+  model.on("change:directed", () => {
+    directed = model.get("directed");
+    updateLinks();
+  });
+  model.on("change:links", () => {
+    links = hydrateLinks(model.get("links"));
+    simulation.force("link").links(links);
+    updateLinks();
+  });
 }
 var edgedraw_default = { render };
 export {
