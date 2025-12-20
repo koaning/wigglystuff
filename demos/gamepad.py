@@ -75,16 +75,5 @@ def _(mo, pad):
     return
 
 
-@app.cell
-def _(mo, pad):
-    def log_button(change):
-        new = change.get("new", -1)
-        if new >= 0:
-            print(f"button {new} pressed")
-
-    pad.observe(log_button, names="current_button_press")
-    return
-
-
 if __name__ == "__main__":
     app.run()

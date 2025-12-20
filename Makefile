@@ -1,6 +1,6 @@
 .PHONY: js docs test docs-demos docs-serve docs-build marimo-notebook
 
-install: 
+install:
 	# install the build tool for JS written in Golang
 	curl -fsSL https://esbuild.github.io/dl/v0.19.11 | sh
 	uv venv --allow-existing
@@ -47,7 +47,7 @@ docs: docs-demos
 	mkdocs build -f mkdocs.yml
 
 docs-demos:
-	uv run python scripts/export_marimo_demos.py
+	uv run python scripts/export_marimo_demos.py --force
 
 docs-serve:
 	uv run mkdocs serve -f mkdocs.yml

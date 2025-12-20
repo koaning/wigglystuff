@@ -79,7 +79,6 @@ def _(listener, mo):
             ]
             if part
         )
-        print(f"shortcut -> {combo or '(none)'}")
 
     listener.observe(log_shortcut, names="last_key")
     return
