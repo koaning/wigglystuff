@@ -7,6 +7,7 @@ app = marimo.App(width="columns")
 @app.cell
 def _():
     import marimo as mo
+
     from wigglystuff import GamepadWidget
 
     pad = mo.ui.anywidget(GamepadWidget())
@@ -63,21 +64,14 @@ def _(mo, pad):
             ),
             mo.md(
                 "**D-pad:** "
-                + (" ".join(dpad_directions) if dpad_directions else "`—` (tap the arrows)")
+                + (
+                    " ".join(dpad_directions)
+                    if dpad_directions
+                    else "`—` (tap the arrows)"
+                )
             ),
         ]
     )
-    return
-
-
-@app.cell
-def _(mo, pad):
-    def log_button(change):
-        new = change.get("new", -1)
-        if new >= 0:
-            mo.log.info("button %s pressed", new)
-
-    pad.observe(log_button, names="current_button_press")
     return
 
 
