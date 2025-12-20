@@ -7,6 +7,7 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
+
     from wigglystuff import KeystrokeWidget
 
     listener = mo.ui.anywidget(KeystrokeWidget())
@@ -64,18 +65,21 @@ def _(listener, mo):
         combo = " + ".join(
             part
             for part in [
-                *(label for key, label in [
-                    ("ctrlKey", "Ctrl"),
-                    ("shiftKey", "Shift"),
-                    ("altKey", "Alt"),
-                    ("metaKey", "Meta"),
-                ]
-                if payload.get(key)),
+                *(
+                    label
+                    for key, label in [
+                        ("ctrlKey", "Ctrl"),
+                        ("shiftKey", "Shift"),
+                        ("altKey", "Alt"),
+                        ("metaKey", "Meta"),
+                    ]
+                    if payload.get(key)
+                ),
                 payload.get("key"),
             ]
             if part
         )
-        mo.log(f"shortcut -> {combo or '(none)'}")
+        print(f"shortcut -> {combo or '(none)'}")
 
     listener.observe(log_shortcut, names="last_key")
     return
