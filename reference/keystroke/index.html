@@ -598,10 +598,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#synced-traitlets" class="md-nav__link">
+  <a href="#wigglystuff.keystroke.KeystrokeWidget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synced traitlets
+        KeystrokeWidget
       
     </span>
   </a>
@@ -609,10 +609,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#wigglystuff.keystroke.KeystrokeWidget" class="md-nav__link">
+  <a href="#synced-traitlets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KeystrokeWidget
+        Synced traitlets
       
     </span>
   </a>
@@ -858,10 +858,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#synced-traitlets" class="md-nav__link">
+  <a href="#wigglystuff.keystroke.KeystrokeWidget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synced traitlets
+        KeystrokeWidget
       
     </span>
   </a>
@@ -869,10 +869,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#wigglystuff.keystroke.KeystrokeWidget" class="md-nav__link">
+  <a href="#synced-traitlets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KeystrokeWidget
+        Synced traitlets
       
     </span>
   </a>
@@ -948,55 +948,6 @@
 
 
 <h1 id="keystrokewidget-api">KeystrokeWidget API<a class="headerlink" href="#keystrokewidget-api" title="Permanent link">#</a></h1>
-<h2 id="synced-traitlets">Synced traitlets<a class="headerlink" href="#synced-traitlets" title="Permanent link">#</a></h2>
-<p><code>last_key</code> is a dictionary synced from the browser after each keypress. When no
-keypress has been captured yet, it is an empty dict.</p>
-<table>
-<thead>
-<tr>
-<th>Key</th>
-<th>Type</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>key</code></td>
-<td><code>str</code></td>
-<td>Display value for the key (e.g., <code>a</code>, <code>Enter</code>).</td>
-</tr>
-<tr>
-<td><code>code</code></td>
-<td><code>str</code></td>
-<td>Physical key code (e.g., <code>KeyA</code>, <code>Enter</code>).</td>
-</tr>
-<tr>
-<td><code>ctrlKey</code></td>
-<td><code>bool</code></td>
-<td><code>True</code> when Control is held.</td>
-</tr>
-<tr>
-<td><code>shiftKey</code></td>
-<td><code>bool</code></td>
-<td><code>True</code> when Shift is held.</td>
-</tr>
-<tr>
-<td><code>altKey</code></td>
-<td><code>bool</code></td>
-<td><code>True</code> when Alt/Option is held.</td>
-</tr>
-<tr>
-<td><code>metaKey</code></td>
-<td><code>bool</code></td>
-<td><code>True</code> when Command/Meta is held.</td>
-</tr>
-<tr>
-<td><code>timestamp</code></td>
-<td><code>int</code></td>
-<td>Milliseconds since epoch at capture time.</td>
-</tr>
-</tbody>
-</table>
 
 
 <div class="doc doc-object doc-class">
@@ -1050,7 +1001,55 @@ keystrokes into the <code>last_key</code> trait.</p>
 
     </div>
 
-</div>
+</div><h2 id="synced-traitlets">Synced traitlets<a class="headerlink" href="#synced-traitlets" title="Permanent link">#</a></h2>
+<p><code>last_key</code> is a dictionary synced from the browser after each keypress. When no
+keypress has been captured yet, it is an empty dict.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>key</code></td>
+<td><code>str</code></td>
+<td>Display value for the key (e.g., <code>a</code>, <code>Enter</code>).</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td><code>str</code></td>
+<td>Physical key code (e.g., <code>KeyA</code>, <code>Enter</code>).</td>
+</tr>
+<tr>
+<td><code>ctrlKey</code></td>
+<td><code>bool</code></td>
+<td><code>True</code> when Control is held.</td>
+</tr>
+<tr>
+<td><code>shiftKey</code></td>
+<td><code>bool</code></td>
+<td><code>True</code> when Shift is held.</td>
+</tr>
+<tr>
+<td><code>altKey</code></td>
+<td><code>bool</code></td>
+<td><code>True</code> when Alt/Option is held.</td>
+</tr>
+<tr>
+<td><code>metaKey</code></td>
+<td><code>bool</code></td>
+<td><code>True</code> when Command/Meta is held.</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td><code>int</code></td>
+<td>Milliseconds since epoch at capture time.</td>
+</tr>
+</tbody>
+</table>
 
 
 

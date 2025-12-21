@@ -1,6 +1,26 @@
 # GamepadWidget API
 
+
+ Bases: `AnyWidget`
+
+
+Listen to browser gamepad events and sync state back to Python.
+
+
+This widget does not require any initialization arguments; all state is mirrored through traitlets such as `axes` and `current_button_press`.
+
+
+Examples:
+
+
+```
+gamepad = GamepadWidget()
+gamepad
+```
+
+
 ## Synced traitlets
+
 
 | Traitlet | Type | Notes |
 | --- | --- | --- |
@@ -13,5 +33,3 @@
 | `dpad_left` | `bool` | D-pad left state. |
 | `dpad_right` | `bool` | D-pad right state. |
 | `button_id` | `int` | Reserved for custom mappings (not set by the default UI). |
-
-::: wigglystuff.gamepad.GamepadWidget
