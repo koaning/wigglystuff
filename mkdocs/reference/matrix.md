@@ -1,5 +1,7 @@
 # Matrix API
 
+::: wigglystuff.matrix.Matrix
+
 ## Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -17,4 +19,3 @@
 | `static` | `bool` | Disable editing when true. |
 | `flexible_cols` | `bool` | Allow column count changes interactively. |
 
-::: wigglystuff.matrix.Matrix

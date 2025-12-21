@@ -1,5 +1,7 @@
 # WebkitSpeechToTextWidget API
 
+::: wigglystuff.talk.WebkitSpeechToTextWidget
+
 ## Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -8,4 +10,3 @@
 | `listening` | `bool` | Whether speech recognition is active. |
 | `trigger_listen` | `bool` | Toggle listening when set to true (auto-resets). |
 
-::: wigglystuff.talk.WebkitSpeechToTextWidget

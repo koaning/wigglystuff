@@ -1,5 +1,7 @@
 # CellTour API
 
+::: wigglystuff.cell_tour.CellTour
+
 ## Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -10,4 +12,3 @@
 | `active` | `bool` | Whether the tour is currently running. |
 | `current_step` | `int` | Index of the active step. |
 
-::: wigglystuff.cell_tour.CellTour

@@ -51,7 +51,7 @@ docs-demos:
 	uv run python scripts/export_marimo_demos.py --force
 
 docs-serve:
-	uv run mkdocs serve -f mkdocs.yml
+	uv run python -m http.server --directory site
 
 docs-build: docs-demos
 	uv run mkdocs build -f mkdocs.yml
@@ -60,9 +60,7 @@ docs-build: docs-demos
 docs-llm:
 	uv run python scripts/copy_docs_md.py
 
-docs-gh: docs-demos
-	uv run mkdocs build -f mkdocs.yml
-	uv run python scripts/copy_docs_md.py
+docs-gh: docs-build
 	uv run mkdocs gh-deploy -f mkdocs.yml --dirty
 
 marimo-notebook:

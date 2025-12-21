@@ -1,5 +1,7 @@
 # EdgeDraw API
 
+::: wigglystuff.edge_draw.EdgeDraw
+
 ## Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -10,4 +12,3 @@
 | `width` | `int` | Canvas width in pixels. |
 | `height` | `int` | Canvas height in pixels. |
 
-::: wigglystuff.edge_draw.EdgeDraw
