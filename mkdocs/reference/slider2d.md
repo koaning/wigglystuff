@@ -1,5 +1,7 @@
 # Slider2D API
 
+::: wigglystuff.slider2d.Slider2D
+
 ## Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -11,4 +13,3 @@
 | `width` | `int` | Canvas width in pixels. |
 | `height` | `int` | Canvas height in pixels. |
 
-::: wigglystuff.slider2d.Slider2D

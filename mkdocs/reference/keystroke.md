@@ -1,5 +1,7 @@
 # KeystrokeWidget API
 
+::: wigglystuff.keystroke.KeystrokeWidget
+
 ## Synced traitlets
 
 `last_key` is a dictionary synced from the browser after each keypress. When no
@@ -15,4 +17,3 @@ keypress has been captured yet, it is an empty dict.
 | `metaKey` | `bool` | `True` when Command/Meta is held. |
 | `timestamp` | `int` | Milliseconds since epoch at capture time. |
 
-::: wigglystuff.keystroke.KeystrokeWidget

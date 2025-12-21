@@ -1,5 +1,7 @@
 # WebcamCapture API
 
+::: wigglystuff.webcam_capture.WebcamCapture
+
 ## Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -11,4 +13,3 @@
 | `ready` | `bool` | True when the preview stream is ready. |
 | `error` | `str` | Error message when webcam access fails. |
 
-::: wigglystuff.webcam_capture.WebcamCapture

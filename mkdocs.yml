@@ -44,6 +44,7 @@ nav:
       - CopyToClipboard: reference/copy-to-clipboard.md
       - Tangle Widgets: reference/tangle.md
       - GamepadWidget: reference/gamepad.md
+      - WebcamCapture: reference/webcam-capture.md
       - CellTour: reference/cell-tour.md
 plugins:
   - search

@@ -1,5 +1,7 @@
 # SortableList API
 
+::: wigglystuff.sortable_list.SortableList
+
 ## Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -10,4 +12,3 @@
 | `editable` | `bool` | Allow inline edits. |
 | `label` | `str` | Optional heading above the list. |
 
-::: wigglystuff.sortable_list.SortableList

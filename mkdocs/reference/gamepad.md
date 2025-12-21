@@ -1,5 +1,7 @@
 # GamepadWidget API
 
+::: wigglystuff.gamepad.GamepadWidget
+
 ## Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -14,4 +16,3 @@
 | `dpad_right` | `bool` | D-pad right state. |
 | `button_id` | `int` | Reserved for custom mappings (not set by the default UI). |
 
-::: wigglystuff.gamepad.GamepadWidget

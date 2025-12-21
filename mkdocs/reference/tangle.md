@@ -2,6 +2,8 @@
 
 ## TangleSlider
 
+::: wigglystuff.tangle.TangleSlider
+
 ### Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -15,10 +17,11 @@
 | `suffix` | `str` | Text after the value. |
 | `digits` | `int` | Decimal precision for display. |
 
-::: wigglystuff.tangle.TangleSlider
 
 ## TangleChoice
 
+::: wigglystuff.tangle.TangleChoice
+
 ### Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -26,10 +29,11 @@
 | `choice` | `str` | Current selection. |
 | `choices` | `list[str]` | Available options. |
 
-::: wigglystuff.tangle.TangleChoice
 
 ## TangleSelect
 
+::: wigglystuff.tangle.TangleSelect
+
 ### Synced traitlets
 
 | Traitlet | Type | Notes |
@@ -37,4 +41,3 @@
 | `choice` | `str` | Current selection. |
 | `choices` | `list[str]` | Available options. |
 
-::: wigglystuff.tangle.TangleSelect
