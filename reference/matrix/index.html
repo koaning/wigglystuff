@@ -496,6 +496,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#synced-traitlets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synced traitlets
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -764,6 +775,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../webcam-capture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WebcamCapture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../cell-tour/" class="md-nav__link">
         
   
@@ -823,6 +862,17 @@
     <span class="md-ellipsis">
       
         Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synced-traitlets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synced traitlets
       
     </span>
   </a>
@@ -1290,7 +1340,78 @@
 
     </div>
 
-</div>
+</div><h2 id="synced-traitlets">Synced traitlets<a class="headerlink" href="#synced-traitlets" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traitlet</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>matrix</code></td>
+<td><code>list[list[float]]</code></td>
+<td>Cell values.</td>
+</tr>
+<tr>
+<td><code>rows</code></td>
+<td><code>int</code></td>
+<td>Row count.</td>
+</tr>
+<tr>
+<td><code>cols</code></td>
+<td><code>int</code></td>
+<td>Column count.</td>
+</tr>
+<tr>
+<td><code>min_value</code></td>
+<td><code>float</code></td>
+<td>Minimum allowed value.</td>
+</tr>
+<tr>
+<td><code>max_value</code></td>
+<td><code>float</code></td>
+<td>Maximum allowed value.</td>
+</tr>
+<tr>
+<td><code>mirror</code></td>
+<td><code>bool</code></td>
+<td>Mirror edits across the diagonal when enabled.</td>
+</tr>
+<tr>
+<td><code>step</code></td>
+<td><code>float</code></td>
+<td>Step size for edits.</td>
+</tr>
+<tr>
+<td><code>digits</code></td>
+<td><code>int</code></td>
+<td>Decimal precision for display.</td>
+</tr>
+<tr>
+<td><code>row_names</code></td>
+<td><code>list[str]</code></td>
+<td>Optional row labels.</td>
+</tr>
+<tr>
+<td><code>col_names</code></td>
+<td><code>list[str]</code></td>
+<td>Optional column labels.</td>
+</tr>
+<tr>
+<td><code>static</code></td>
+<td><code>bool</code></td>
+<td>Disable editing when true.</td>
+</tr>
+<tr>
+<td><code>flexible_cols</code></td>
+<td><code>bool</code></td>
+<td>Allow column count changes interactively.</td>
+</tr>
+</tbody>
+</table>
 
 
 

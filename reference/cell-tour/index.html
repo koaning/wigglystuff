@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://wigglystuff.dev/reference/cell-tour/">
       
       
-        <link rel="prev" href="../gamepad/">
+        <link rel="prev" href="../webcam-capture/">
       
       
       
@@ -701,6 +701,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../webcam-capture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WebcamCapture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -774,6 +802,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#synced-traitlets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synced traitlets
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -821,6 +860,17 @@
     <span class="md-ellipsis">
       
         CellTour
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synced-traitlets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synced traitlets
       
     </span>
   </a>
@@ -1087,7 +1137,43 @@ marimo cells by index or <code>data-cell-name</code> attributes.</p>
 
     </div>
 
-</div>
+</div><h2 id="synced-traitlets">Synced traitlets<a class="headerlink" href="#synced-traitlets" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traitlet</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>steps</code></td>
+<td><code>list[dict]</code></td>
+<td>DriverTour-style steps (CellTour inputs are normalized).</td>
+</tr>
+<tr>
+<td><code>auto_start</code></td>
+<td><code>bool</code></td>
+<td>Start tour automatically on render.</td>
+</tr>
+<tr>
+<td><code>show_progress</code></td>
+<td><code>bool</code></td>
+<td>Show progress indicator when true.</td>
+</tr>
+<tr>
+<td><code>active</code></td>
+<td><code>bool</code></td>
+<td>Whether the tour is currently running.</td>
+</tr>
+<tr>
+<td><code>current_step</code></td>
+<td><code>int</code></td>
+<td>Index of the active step.</td>
+</tr>
+</tbody>
+</table>
 
 
 
