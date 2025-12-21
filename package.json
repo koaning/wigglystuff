@@ -1,4 +1,5 @@
 {
+  "name": "wigglystuff",
   "scripts": {
     "dev-copy-btn": "./node_modules/.bin/esbuild js/copybutton/widget.tsx --bundle --outfile=wigglystuff/static/copybutton.js --format=esm --watch --minify"
   },

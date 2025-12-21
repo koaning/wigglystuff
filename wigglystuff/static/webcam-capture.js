@@ -54,6 +54,7 @@ function render({ model, el }) {
 
   let stream = null;
   let intervalId = null;
+  let streamRequestId = 0;
 
   const setStatus = (text, tone) => {
     status.textContent = text;
@@ -113,7 +114,13 @@ function render({ model, el }) {
     }
   };
 
+  const invalidateStreamRequest = () => {
+    streamRequestId += 1;
+    return streamRequestId;
+  };
+
   const startStream = async () => {
+    const requestId = invalidateStreamRequest();
     stopStream();
     setStatus("Requesting access...", "pending");
     try {
@@ -125,7 +132,12 @@ function render({ model, el }) {
         video: { facingMode: { ideal: facingMode } },
         audio: false,
       };
-      stream = await navigator.mediaDevices.getUserMedia(constraints);
+      const nextStream = await navigator.mediaDevices.getUserMedia(constraints);
+      if (requestId !== streamRequestId) {
+        nextStream.getTracks().forEach((track) => track.stop());
+        return;
+      }
+      stream = nextStream;
       video.srcObject = stream;
       model.set("ready", true);
       model.set("error", "");
@@ -133,6 +145,9 @@ function render({ model, el }) {
       setStatus("Preview ready", "ready");
       applyCapturingState();
     } catch (err) {
+      if (requestId !== streamRequestId) {
+        return;
+      }
       const message = err && err.message ? err.message : "Unable to access webcam.";
       model.set("ready", false);
       model.set("error", message);
@@ -174,6 +189,7 @@ function render({ model, el }) {
 
   return () => {
     stopInterval();
+    invalidateStreamRequest();
     stopStream();
     model.off("change:capturing", onCapturingChange);
     model.off("change:interval_ms", onIntervalChange);
