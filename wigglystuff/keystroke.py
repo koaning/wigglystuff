@@ -10,6 +10,10 @@ class KeystrokeWidget(anywidget.AnyWidget):
     No initialization arguments are required; the widget simply records
     keystrokes into the ``last_key`` trait.
 
+    The ``last_key`` payload mirrors browser ``KeyboardEvent`` data with:
+    ``key``, ``code``, modifier booleans (``ctrlKey``, ``shiftKey``,
+    ``altKey``, ``metaKey``), and a ``timestamp`` in milliseconds since epoch.
+
     Examples:
         ```python
         keystroke = KeystrokeWidget()
