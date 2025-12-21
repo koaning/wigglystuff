@@ -18,4 +18,5 @@ class KeystrokeWidget(anywidget.AnyWidget):
     """
 
     _esm = Path(__file__).parent / "static" / "keystroke-widget.js"
+    _css = Path(__file__).parent / "static" / "keystroke.css"
     last_key = traitlets.Dict(default_value={}).tag(sync=True)
