@@ -28,63 +28,63 @@ hide:
 <div class="widget-gallery">
 <div class="gallery-item">
 <div class="gallery-title">Slider2D</div>
-<a href="examples/slider2d/index.html" class="gallery-img"><img src="assets/gallery/slider2d.png" alt="Slider2D widget"></a>
-<div class="gallery-links"><a href="examples/slider2d/index.html">Demo</a><a href="reference/slider2d/index.html">API</a></div>
+<a href="examples/slider2d/" class="gallery-img"><img src="assets/gallery/slider2d.png" alt="Slider2D widget"></a>
+<div class="gallery-links"><a href="examples/slider2d/">Demo</a><a href="reference/slider2d/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">Matrix</div>
-<a href="examples/matrix/index.html" class="gallery-img"><img src="assets/gallery/matrix.png" alt="Matrix widget"></a>
-<div class="gallery-links"><a href="examples/matrix/index.html">Demo</a><a href="reference/matrix/index.html">API</a></div>
+<a href="examples/matrix/" class="gallery-img"><img src="assets/gallery/matrix.png" alt="Matrix widget"></a>
+<div class="gallery-links"><a href="examples/matrix/">Demo</a><a href="reference/matrix/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">Paint</div>
-<a href="examples/paint/index.html" class="gallery-img"><img src="assets/gallery/paint.png" alt="Paint widget"></a>
-<div class="gallery-links"><a href="examples/paint/index.html">Demo</a><a href="reference/paint/index.html">API</a></div>
+<a href="examples/paint/" class="gallery-img"><img src="assets/gallery/paint.png" alt="Paint widget"></a>
+<div class="gallery-links"><a href="examples/paint/">Demo</a><a href="reference/paint/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">EdgeDraw</div>
-<a href="examples/edgedraw/index.html" class="gallery-img"><img src="assets/gallery/edgedraw.png" alt="EdgeDraw widget"></a>
-<div class="gallery-links"><a href="examples/edgedraw/index.html">Demo</a><a href="reference/edge-draw/index.html">API</a></div>
+<a href="examples/edgedraw/" class="gallery-img"><img src="assets/gallery/edgedraw.png" alt="EdgeDraw widget"></a>
+<div class="gallery-links"><a href="examples/edgedraw/">Demo</a><a href="reference/edge-draw/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">SortableList</div>
-<a href="examples/sortlist/index.html" class="gallery-img"><img src="assets/gallery/sortablelist.png" alt="SortableList widget"></a>
-<div class="gallery-links"><a href="examples/sortlist/index.html">Demo</a><a href="reference/sortable-list/index.html">API</a></div>
+<a href="examples/sortlist/" class="gallery-img"><img src="assets/gallery/sortablelist.png" alt="SortableList widget"></a>
+<div class="gallery-links"><a href="examples/sortlist/">Demo</a><a href="reference/sortable-list/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">ColorPicker</div>
-<a href="examples/colorpicker/index.html" class="gallery-img"><img src="assets/gallery/colorpicker.png" alt="ColorPicker widget"></a>
-<div class="gallery-links"><a href="examples/colorpicker/index.html">Demo</a><a href="reference/color-picker/index.html">API</a></div>
+<a href="examples/colorpicker/" class="gallery-img"><img src="assets/gallery/colorpicker.png" alt="ColorPicker widget"></a>
+<div class="gallery-links"><a href="examples/colorpicker/">Demo</a><a href="reference/color-picker/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">GamepadWidget</div>
-<a href="examples/gamepad/index.html" class="gallery-img"><img src="assets/gallery/gamepad.png" alt="GamepadWidget"></a>
-<div class="gallery-links"><a href="examples/gamepad/index.html">Demo</a><a href="reference/gamepad/index.html">API</a></div>
+<a href="examples/gamepad/" class="gallery-img"><img src="assets/gallery/gamepad.png" alt="GamepadWidget"></a>
+<div class="gallery-links"><a href="examples/gamepad/">Demo</a><a href="reference/gamepad/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">KeystrokeWidget</div>
-<a href="examples/keystroke/index.html" class="gallery-img"><img src="assets/gallery/keystroke.png" alt="KeystrokeWidget"></a>
-<div class="gallery-links"><a href="examples/keystroke/index.html">Demo</a><a href="reference/keystroke/index.html">API</a></div>
+<a href="examples/keystroke/" class="gallery-img"><img src="assets/gallery/keystroke.png" alt="KeystrokeWidget"></a>
+<div class="gallery-links"><a href="examples/keystroke/">Demo</a><a href="reference/keystroke/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">SpeechToText</div>
-<a href="examples/talk/index.html" class="gallery-img"><img src="assets/gallery/speechtotext.png" alt="WebkitSpeechToText widget"></a>
-<div class="gallery-links"><a href="examples/talk/index.html">Demo</a><a href="reference/talk/index.html">API</a></div>
+<a href="examples/talk/" class="gallery-img"><img src="assets/gallery/speechtotext.png" alt="WebkitSpeechToText widget"></a>
+<div class="gallery-links"><a href="examples/talk/">Demo</a><a href="reference/talk/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">CopyToClipboard</div>
-<a href="examples/copytoclipboard/index.html" class="gallery-img"><img src="assets/gallery/copytoclipboard.png" alt="CopyToClipboard widget"></a>
-<div class="gallery-links"><a href="examples/copytoclipboard/index.html">Demo</a><a href="reference/copy-to-clipboard/index.html">API</a></div>
+<a href="examples/copytoclipboard/" class="gallery-img"><img src="assets/gallery/copytoclipboard.png" alt="CopyToClipboard widget"></a>
+<div class="gallery-links"><a href="examples/copytoclipboard/">Demo</a><a href="reference/copy-to-clipboard/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">CellTour</div>
-<a href="examples/celltour/index.html" class="gallery-img"><img src="assets/gallery/celltour.png" alt="CellTour widget"></a>
-<div class="gallery-links"><a href="examples/celltour/index.html">Demo</a><a href="reference/cell-tour/index.html">API</a></div>
+<a href="examples/celltour/" class="gallery-img"><img src="assets/gallery/celltour.png" alt="CellTour widget"></a>
+<div class="gallery-links"><a href="examples/celltour/">Demo</a><a href="reference/cell-tour/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">WebcamCapture</div>
-<a href="examples/webcam-capture/index.html" class="gallery-img"><img src="assets/gallery/webcam-capture.png" alt="WebcamCapture widget"></a>
-<div class="gallery-links"><a href="examples/webcam-capture/index.html">Demo</a><a href="reference/webcam-capture/index.html">API</a></div>
+<a href="examples/webcam-capture/" class="gallery-img"><img src="assets/gallery/webcam-capture.png" alt="WebcamCapture widget"></a>
+<div class="gallery-links"><a href="examples/webcam-capture/">Demo</a><a href="reference/webcam-capture/">API</a></div>
 </div>
 </div>
 
