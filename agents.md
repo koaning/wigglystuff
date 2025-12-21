@@ -19,6 +19,7 @@ syncs back to Python.
 | ColorPicker | `wigglystuff.color_picker.ColorPicker` | `color` | Native color input with `rgb` helper |
 | EdgeDraw | `wigglystuff.edge_draw.EdgeDraw` | `names`, `links`, `directed`, `width`, `height` | Sketch node/link diagrams and query adjacency |
 | Paint | `wigglystuff.paint.Paint` | `base64`, `width`, `height`, `store_background` | MS-Paint-style canvas with PIL helpers |
+| WebcamCapture | `wigglystuff.webcam_capture.WebcamCapture` | `image_base64`, `capturing`, `interval_ms`, `facing_mode` | Webcam preview with snapshot capture |
 | GamepadWidget | `wigglystuff.gamepad.GamepadWidget` | `axes`, `current_button_press`, `dpad_*`, `current_timestamp` | Streams browser Gamepad API events |
 | KeystrokeWidget | `wigglystuff.keystroke.KeystrokeWidget` | `last_key` | Captures the latest keypress w/ modifiers |
 | WebkitSpeechToTextWidget | `wigglystuff.talk.WebkitSpeechToTextWidget` | `transcript`, `listening`, `trigger_listen` | WebKit speech recognition bridge |

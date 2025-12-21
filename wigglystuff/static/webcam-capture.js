@@ -72,11 +72,13 @@ function render({ model, el }) {
     toggleInput.checked = Boolean(isCapturing);
     stopInterval();
     if (isCapturing) {
-      const intervalMs = Math.max(100, model.get("interval_ms") || 1000);
+      const intervalMs = Math.max(0, model.get("interval_ms") || 1000);
       intervalId = setInterval(() => {
         captureFrame(false);
       }, intervalMs);
       setStatus(`Auto-capture on`, "active");
+    } else if (model.get("error")) {
+      setStatus(model.get("error"), "error");
     } else if (model.get("ready")) {
       setStatus("Preview ready", "ready");
     }
@@ -112,7 +114,7 @@ function render({ model, el }) {
 
   const startStream = async () => {
     stopStream();
-    setStatus("Requesting access", "pending");
+    setStatus("Requesting access...", "pending");
     try {
       const facingMode = model.get("facing_mode") || "user";
       const constraints = {
@@ -152,11 +154,18 @@ function render({ model, el }) {
   const onFacingChange = () => {
     startStream();
   };
+  const onErrorChange = () => {
+    if (!model.get("capturing") && model.get("error")) {
+      setStatus(model.get("error"), "error");
+    }
+  };
 
   model.on("change:capturing", onCapturingChange);
   model.on("change:interval_ms", onIntervalChange);
   model.on("change:facing_mode", onFacingChange);
+  model.on("change:error", onErrorChange);
 
+  setStatus("Starting preview...", "pending");
   startStream();
 
   return () => {
@@ -165,6 +174,7 @@ function render({ model, el }) {
     model.off("change:capturing", onCapturingChange);
     model.off("change:interval_ms", onIntervalChange);
     model.off("change:facing_mode", onFacingChange);
+    model.off("change:error", onErrorChange);
   };
 }
 

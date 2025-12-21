@@ -13,6 +13,7 @@ from .slider2d import Slider2D
 from .sortable_list import SortableList
 from .tangle import TangleChoice, TangleSelect, TangleSlider
 from .talk import WebkitSpeechToTextWidget
+from .webcam_capture import WebcamCapture
 
 __all__ = [
     "CellTour",
@@ -30,4 +31,5 @@ __all__ = [
     "TangleSelect",
     "TangleSlider",
     "WebkitSpeechToTextWidget",
+    "WebcamCapture",
 ]

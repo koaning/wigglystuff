@@ -33,7 +33,6 @@ uv pip install wigglystuff
 <tr>
 <td align="center"><b>CopyToClipboard</b><br><img src="./mkdocs/assets/gallery/copytoclipboard.png" width="200"><br><a href="./demos/copytoclipboard.py">Demo</a> · <a href="./wigglystuff/copy_to_clipboard.py">Source</a></td>
 <td align="center"><b>CellTour</b><br><img src="./mkdocs/assets/gallery/celltour.png" width="200"><br><a href="./demos/celltour.py">Demo</a> · <a href="./wigglystuff/cell_tour.py">Source</a></td>
-<td align="center"></td>
+<td align="center"><b>WebcamCapture</b><br><img src="./mkdocs/assets/gallery/webcam-capture.png" width="200"><br><a href="./demos/webcam_capture.py">Demo</a> · <a href="./wigglystuff/webcam_capture.py">Source</a></td>
 </tr>
 </table>
-
