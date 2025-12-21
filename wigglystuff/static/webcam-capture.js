@@ -102,6 +102,7 @@ function render({ model, el }) {
     if (manual && model.get("capturing")) {
       model.set("capturing", false);
       model.save_changes();
+      stopInterval();
     }
   };
 
@@ -116,6 +117,9 @@ function render({ model, el }) {
     stopStream();
     setStatus("Requesting access...", "pending");
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Webcam access is not available in this environment.");
+      }
       const facingMode = model.get("facing_mode") || "user";
       const constraints = {
         video: { facingMode: { ideal: facingMode } },
