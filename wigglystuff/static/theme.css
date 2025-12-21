@@ -1,0 +1,54 @@
+/* 
+   Shared Theme Variables for WigglyStuff Widgets.
+   Designed to be compatible with Marimo and other embedding environments.
+   
+   Falls back to standard colors if Marimo variables are not present.
+*/
+
+:root {
+  /* 
+     Map Marimo variables to Wiggly variables.
+     We use 'wiggly-' prefix to avoid collisions and provide a consistent internal API.
+  */
+  
+  /* Backgrounds */
+  --wiggly-bg: var(--marimo-background, #ffffff);
+  --wiggly-bg-secondary: var(--marimo-surface, #f5f5f5);
+  --wiggly-bg-tertiary: var(--marimo-surface-2, #e0e0e0);
+  
+  /* Text */
+  --wiggly-text: var(--marimo-text, #172b4d);
+  --wiggly-text-secondary: var(--marimo-text-secondary, #6b778c);
+  --wiggly-text-inverted: var(--marimo-text-inverted, #ffffff);
+  
+  /* Accents */
+  --wiggly-accent: var(--marimo-primary, #0052cc);
+  --wiggly-accent-hover: var(--marimo-primary-hover, #0066cc); /* Approximate fallback */
+  
+  /* Borders */
+  --wiggly-border: var(--marimo-border, #e1e5e9);
+  
+  /* Shadows */
+  --wiggly-shadow: var(--marimo-shadow, rgba(0, 0, 0, 0.1));
+}
+
+/* Dark Mode Overrides */
+/* Note: We use .dark, .dark-theme, and data-theme="dark" to catch various conventions */
+.dark,
+.dark-theme,
+[data-theme="dark"] {
+  --wiggly-bg: var(--marimo-background, #1e1e1e);
+  --wiggly-bg-secondary: var(--marimo-surface, #2a2a2a);
+  --wiggly-bg-tertiary: var(--marimo-surface-2, #333333);
+  
+  --wiggly-text: var(--marimo-text, #e0e0e0);
+  --wiggly-text-secondary: var(--marimo-text-secondary, #a0a0a0);
+  --wiggly-text-inverted: var(--marimo-text-inverted, #1a1a1a);
+  
+  --wiggly-accent: var(--marimo-primary, #4d9fff);
+  --wiggly-accent-hover: var(--marimo-primary-hover, #7dd3fc);
+  
+  --wiggly-border: var(--marimo-border, #3a3a3a);
+  
+  --wiggly-shadow: var(--marimo-shadow, rgba(0, 0, 0, 0.3));
+}
