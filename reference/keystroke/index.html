@@ -608,17 +608,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#synced-traitlets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Synced traitlets
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -775,34 +764,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../webcam-capture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    WebcamCapture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../cell-tour/" class="md-nav__link">
         
   
@@ -862,17 +823,6 @@
     <span class="md-ellipsis">
       
         KeystrokeWidget
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#synced-traitlets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Synced traitlets
       
     </span>
   </a>
@@ -964,9 +914,6 @@
         <p>Capture the latest keyboard shortcut pressed inside the widget.</p>
 <p>No initialization arguments are required; the widget simply records
 keystrokes into the <code>last_key</code> trait.</p>
-<p>The <code>last_key</code> payload mirrors browser <code>KeyboardEvent</code> data with:
-<code>key</code>, <code>code</code>, modifier booleans (<code>ctrlKey</code>, <code>shiftKey</code>,
-<code>altKey</code>, <code>metaKey</code>), and a <code>timestamp</code> in milliseconds since epoch.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
@@ -1001,55 +948,7 @@ keystrokes into the <code>last_key</code> trait.</p>
 
     </div>
 
-</div><h2 id="synced-traitlets">Synced traitlets<a class="headerlink" href="#synced-traitlets" title="Permanent link">#</a></h2>
-<p><code>last_key</code> is a dictionary synced from the browser after each keypress. When no
-keypress has been captured yet, it is an empty dict.</p>
-<table>
-<thead>
-<tr>
-<th>Key</th>
-<th>Type</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>key</code></td>
-<td><code>str</code></td>
-<td>Display value for the key (e.g., <code>a</code>, <code>Enter</code>).</td>
-</tr>
-<tr>
-<td><code>code</code></td>
-<td><code>str</code></td>
-<td>Physical key code (e.g., <code>KeyA</code>, <code>Enter</code>).</td>
-</tr>
-<tr>
-<td><code>ctrlKey</code></td>
-<td><code>bool</code></td>
-<td><code>True</code> when Control is held.</td>
-</tr>
-<tr>
-<td><code>shiftKey</code></td>
-<td><code>bool</code></td>
-<td><code>True</code> when Shift is held.</td>
-</tr>
-<tr>
-<td><code>altKey</code></td>
-<td><code>bool</code></td>
-<td><code>True</code> when Alt/Option is held.</td>
-</tr>
-<tr>
-<td><code>metaKey</code></td>
-<td><code>bool</code></td>
-<td><code>True</code> when Command/Meta is held.</td>
-</tr>
-<tr>
-<td><code>timestamp</code></td>
-<td><code>int</code></td>
-<td>Milliseconds since epoch at capture time.</td>
-</tr>
-</tbody>
-</table>
+</div>
 
 
 
