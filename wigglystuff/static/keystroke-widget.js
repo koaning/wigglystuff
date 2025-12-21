@@ -1,30 +1,4 @@
 // js/keystroke/widget.js
-var containerStyles = `
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  padding: 16px;
-  max-width: 360px;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-`;
-var canvasStyles = `
-  border: 2px dashed #a7f3d0;
-  border-radius: 8px;
-  padding: 20px;
-  min-height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, SFMono, Consolas, "Liberation Mono";
-  cursor: pointer;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-  outline: none;
-`;
 function formatShortcut(keyInfo) {
   if (!keyInfo || !keyInfo.key) {
     return "Click here and press any key combination\u2026";
@@ -39,36 +13,30 @@ function formatShortcut(keyInfo) {
 }
 function render({ model, el }) {
   const container = document.createElement("div");
-  container.style.cssText = containerStyles;
+  container.className = "keystroke-widget";
   const title = document.createElement("div");
   title.textContent = "Keyboard shortcut listener";
-  title.style.fontWeight = "600";
-  title.style.color = "#065f46";
+  title.className = "keystroke-title";
   const instructions = document.createElement("div");
-  instructions.style.fontSize = "14px";
-  instructions.style.color = "#4b5563";
+  instructions.className = "keystroke-instructions";
   instructions.textContent = "Click the panel below and press any shortcut.";
   const keyCanvas = document.createElement("div");
   keyCanvas.setAttribute("role", "button");
   keyCanvas.setAttribute("aria-label", "Capture keyboard shortcut");
   keyCanvas.tabIndex = 0;
-  keyCanvas.style.cssText = canvasStyles;
+  keyCanvas.className = "keystroke-canvas";
   keyCanvas.textContent = "Click here and press any key combination\u2026";
   const metadata = document.createElement("div");
-  metadata.style.fontSize = "13px";
-  metadata.style.color = "#6b7280";
-  metadata.style.fontFamily = '"JetBrains Mono", ui-monospace, SFMono-Regular, SFMono, Consolas, "Liberation Mono"';
+  metadata.className = "keystroke-meta";
   container.appendChild(title);
   container.appendChild(instructions);
   container.appendChild(keyCanvas);
   container.appendChild(metadata);
   el.appendChild(container);
   const flash = () => {
-    keyCanvas.style.backgroundColor = "#ecfdf5";
-    keyCanvas.style.borderColor = "#34d399";
+    keyCanvas.classList.add("is-flash");
     setTimeout(() => {
-      keyCanvas.style.backgroundColor = "transparent";
-      keyCanvas.style.borderColor = "#a7f3d0";
+      keyCanvas.classList.remove("is-flash");
     }, 200);
   };
   const updateDisplay = (info) => {
@@ -84,12 +52,10 @@ function render({ model, el }) {
   };
   keyCanvas.addEventListener("click", () => keyCanvas.focus());
   keyCanvas.addEventListener("focus", () => {
-    keyCanvas.style.borderColor = "#34d399";
-    keyCanvas.style.backgroundColor = "#f0fdf4";
+    keyCanvas.classList.add("is-focused");
   });
   keyCanvas.addEventListener("blur", () => {
-    keyCanvas.style.borderColor = "#a7f3d0";
-    keyCanvas.style.backgroundColor = "transparent";
+    keyCanvas.classList.remove("is-focused");
   });
   keyCanvas.addEventListener("keydown", (event) => {
     event.preventDefault();

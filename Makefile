@@ -1,4 +1,4 @@
-.PHONY: js docs test docs-demos docs-serve docs-build marimo-notebook
+.PHONY: js docs test docs-demos docs-serve docs-build docs-llm docs-gh marimo-notebook
 
 install:
 	# install the build tool for JS written in Golang
@@ -17,7 +17,6 @@ pypi: clean
 
 js-edgedraw:
 	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/edgedraw.js js/edgedraw.js
-
 
 js-gamepad:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/gamepad-widget.js js/gamepad/widget.js
@@ -45,18 +44,23 @@ clean:
 
 docs: docs-demos
 	mkdocs build -f mkdocs.yml
+	uv run python scripts/copy_docs_md.py
 
 docs-demos:
 	uv run python scripts/export_marimo_demos.py --force
 
 docs-serve:
-	uv run mkdocs serve -f mkdocs.yml
+	uv run python -m http.server --directory site
 
 docs-build: docs-demos
 	uv run mkdocs build -f mkdocs.yml
+	uv run python scripts/copy_docs_md.py
 
-docs-gh: docs-demos
-	uv run mkdocs gh-deploy -f mkdocs.yml
+docs-llm:
+	uv run python scripts/copy_docs_md.py
+
+docs-gh: docs-build
+	uv run mkdocs gh-deploy -f mkdocs.yml --dirty
 
 marimo-notebook:
 	uv run marimo -y export html-wasm notebook.py --output docs/index.html --mode edit
