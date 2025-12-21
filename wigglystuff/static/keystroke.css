@@ -1,0 +1,82 @@
+.keystroke-widget {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border: 1px solid var(--keystroke-border, #d1d5db);
+  border-radius: 10px;
+  padding: 16px;
+  max-width: 360px;
+  background: var(--keystroke-bg, #ffffff);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 6px var(--keystroke-shadow, rgba(0, 0, 0, 0.05));
+  color-scheme: light dark;
+  --keystroke-title: #111827;
+  --keystroke-text: #4b5563;
+  --keystroke-muted: #6b7280;
+  --keystroke-canvas-border: #d1d5db;
+  --keystroke-canvas-border-active: #6b7280;
+  --keystroke-canvas-bg: transparent;
+  --keystroke-canvas-bg-active: #f3f4f6;
+  --keystroke-canvas-bg-flash: #e5e7eb;
+  --keystroke-canvas-text: #111827;
+}
+
+.dark .keystroke-widget,
+.dark-theme .keystroke-widget,
+[data-theme="dark"] .keystroke-widget {
+  --keystroke-bg: #0f172a;
+  --keystroke-border: #334155;
+  --keystroke-shadow: rgba(15, 23, 42, 0.45);
+  --keystroke-title: #e2e8f0;
+  --keystroke-text: #cbd5f5;
+  --keystroke-muted: #94a3b8;
+  --keystroke-canvas-border: #475569;
+  --keystroke-canvas-border-active: #94a3b8;
+  --keystroke-canvas-bg: rgba(15, 23, 42, 0.25);
+  --keystroke-canvas-bg-active: rgba(148, 163, 184, 0.2);
+  --keystroke-canvas-bg-flash: rgba(148, 163, 184, 0.28);
+  --keystroke-canvas-text: #e2e8f0;
+}
+
+.keystroke-title {
+  font-weight: 600;
+  color: var(--keystroke-title, #065f46);
+}
+
+.keystroke-instructions {
+  font-size: 14px;
+  color: var(--keystroke-text, #4b5563);
+}
+
+.keystroke-canvas {
+  border: 2px dashed var(--keystroke-canvas-border, #a7f3d0);
+  border-radius: 8px;
+  padding: 20px;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, SFMono, Consolas, "Liberation Mono";
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  outline: none;
+  background-color: var(--keystroke-canvas-bg, transparent);
+  color: var(--keystroke-canvas-text, #111827);
+}
+
+.keystroke-canvas.is-focused {
+  border-color: var(--keystroke-canvas-border-active, #34d399);
+  background-color: var(--keystroke-canvas-bg-active, #f0fdf4);
+}
+
+.keystroke-canvas.is-flash {
+  border-color: var(--keystroke-canvas-border-active, #34d399);
+  background-color: var(--keystroke-canvas-bg-flash, #ecfdf5);
+}
+
+.keystroke-meta {
+  font-size: 13px;
+  color: var(--keystroke-muted, #6b7280);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, SFMono, Consolas, "Liberation Mono";
+}
