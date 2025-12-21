@@ -1,4 +1,4 @@
-.PHONY: js docs test docs-demos docs-serve docs-build marimo-notebook
+.PHONY: js docs test docs-demos docs-serve docs-build docs-llm docs-gh marimo-notebook
 
 install:
 	# install the build tool for JS written in Golang
@@ -45,6 +45,7 @@ clean:
 
 docs: docs-demos
 	mkdocs build -f mkdocs.yml
+	uv run python scripts/copy_docs_md.py
 
 docs-demos:
 	uv run python scripts/export_marimo_demos.py --force
@@ -54,9 +55,15 @@ docs-serve:
 
 docs-build: docs-demos
 	uv run mkdocs build -f mkdocs.yml
+	uv run python scripts/copy_docs_md.py
+
+docs-llm:
+	uv run python scripts/copy_docs_md.py
 
 docs-gh: docs-demos
-	uv run mkdocs gh-deploy -f mkdocs.yml
+	uv run mkdocs build -f mkdocs.yml
+	uv run python scripts/copy_docs_md.py
+	uv run mkdocs gh-deploy -f mkdocs.yml --dirty
 
 marimo-notebook:
 	uv run marimo -y export html-wasm notebook.py --output docs/index.html --mode edit
