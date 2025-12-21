@@ -14,3 +14,4 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [Tangle widgets](tangle.md)
 - [GamepadWidget](gamepad.md)
 - [CellTour](cell-tour.md)
+- [WebcamCapture](webcam-capture.md)
