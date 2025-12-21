@@ -738,6 +738,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#synced-traitlets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synced traitlets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#wigglystuff.gamepad.GamepadWidget" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -819,6 +830,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#synced-traitlets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synced traitlets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#wigglystuff.gamepad.GamepadWidget" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -898,6 +920,63 @@
 
 
 <h1 id="gamepadwidget-api">GamepadWidget API<a class="headerlink" href="#gamepadwidget-api" title="Permanent link">#</a></h1>
+<h2 id="synced-traitlets">Synced traitlets<a class="headerlink" href="#synced-traitlets" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traitlet</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>current_button_press</code></td>
+<td><code>int</code></td>
+<td>Index of the most recently pressed button.</td>
+</tr>
+<tr>
+<td><code>current_timestamp</code></td>
+<td><code>float</code></td>
+<td>Timestamp (ms since epoch) of the latest press.</td>
+</tr>
+<tr>
+<td><code>previous_timestamp</code></td>
+<td><code>float</code></td>
+<td>Timestamp of the previous press.</td>
+</tr>
+<tr>
+<td><code>axes</code></td>
+<td><code>list[float]</code></td>
+<td>Analog stick positions (4 values).</td>
+</tr>
+<tr>
+<td><code>dpad_up</code></td>
+<td><code>bool</code></td>
+<td>D-pad up state.</td>
+</tr>
+<tr>
+<td><code>dpad_down</code></td>
+<td><code>bool</code></td>
+<td>D-pad down state.</td>
+</tr>
+<tr>
+<td><code>dpad_left</code></td>
+<td><code>bool</code></td>
+<td>D-pad left state.</td>
+</tr>
+<tr>
+<td><code>dpad_right</code></td>
+<td><code>bool</code></td>
+<td>D-pad right state.</td>
+</tr>
+<tr>
+<td><code>button_id</code></td>
+<td><code>int</code></td>
+<td>Reserved for custom mappings (not set by the default UI).</td>
+</tr>
+</tbody>
+</table>
 
 
 <div class="doc doc-object doc-class">

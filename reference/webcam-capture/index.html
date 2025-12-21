@@ -752,6 +752,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#synced-traitlets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synced traitlets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#wigglystuff.webcam_capture.WebcamCapture" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -813,6 +824,48 @@
 
 
 <h1 id="webcamcapture-api">WebcamCapture API<a class="headerlink" href="#webcamcapture-api" title="Permanent link">#</a></h1>
+<h2 id="synced-traitlets">Synced traitlets<a class="headerlink" href="#synced-traitlets" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traitlet</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>image_base64</code></td>
+<td><code>str</code></td>
+<td>PNG data URL for the latest frame.</td>
+</tr>
+<tr>
+<td><code>capturing</code></td>
+<td><code>bool</code></td>
+<td>Enable auto-capture mode.</td>
+</tr>
+<tr>
+<td><code>interval_ms</code></td>
+<td><code>int</code></td>
+<td>Auto-capture interval in milliseconds.</td>
+</tr>
+<tr>
+<td><code>facing_mode</code></td>
+<td><code>str</code></td>
+<td>Camera facing mode ("user" or "environment").</td>
+</tr>
+<tr>
+<td><code>ready</code></td>
+<td><code>bool</code></td>
+<td>True when the preview stream is ready.</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td><code>str</code></td>
+<td>Error message when webcam access fails.</td>
+</tr>
+</tbody>
+</table>
 
 
 <div class="doc doc-object doc-class">
