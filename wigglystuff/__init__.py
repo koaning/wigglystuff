@@ -5,6 +5,7 @@ from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
 from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
+from .formula import Formula
 from .gamepad import GamepadWidget
 from .keystroke import KeystrokeWidget
 from .matrix import Matrix
@@ -21,6 +22,7 @@ __all__ = [
     "CopyToClipboard",
     "DriverTour",
     "EdgeDraw",
+    "Formula",
     "GamepadWidget",
     "KeystrokeWidget",
     "Matrix",

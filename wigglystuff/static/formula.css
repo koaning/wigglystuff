@@ -1,0 +1,36 @@
+.formula-container {
+    display: inline-block;
+    font-size: 18px;
+    line-height: 1.5;
+    padding: 10px;
+    user-select: none;
+}
+
+.formula-display {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.formula-draggable {
+    cursor: ew-resize;
+    color: #0066cc;
+    text-decoration: underline;
+    user-select: none;
+    display: inline-block;
+    position: relative;
+}
+
+.formula-draggable:hover {
+    opacity: 0.8;
+}
+
+.formula-draggable:active {
+    cursor: grabbing;
+}
+
+/* Dark mode support */
+.dark .formula-draggable,
+.dark-theme .formula-draggable,
+[data-theme="dark"] .formula-draggable {
+    color: #7dd3fc;
+}
