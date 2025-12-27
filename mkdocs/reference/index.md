@@ -15,3 +15,4 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [GamepadWidget](gamepad.md)
 - [CellTour](cell-tour.md)
 - [WebcamCapture](webcam-capture.md)
+- [LatexFormula](latex-formula.md)

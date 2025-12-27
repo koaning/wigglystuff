@@ -7,6 +7,7 @@ from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .gamepad import GamepadWidget
 from .keystroke import KeystrokeWidget
+from .latex_formula import LatexFormula
 from .matrix import Matrix
 from .paint import Paint
 from .slider2d import Slider2D
@@ -23,6 +24,7 @@ __all__ = [
     "EdgeDraw",
     "GamepadWidget",
     "KeystrokeWidget",
+    "LatexFormula",
     "Matrix",
     "Paint",
     "Slider2D",
