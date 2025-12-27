@@ -1,0 +1,52 @@
+.latex-formula-wrapper {
+    display: inline-block;
+    font-family: 'KaTeX_Main', 'Times New Roman', serif;
+    line-height: 1.2;
+    color: inherit;
+}
+
+.latex-formula-display {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+    padding: 0.5em 0;
+}
+
+.latex-formula-container {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.2em;
+}
+
+.latex-formula-part {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.latex-formula-spacer {
+    display: inline-block;
+}
+
+.latex-formula-error {
+    color: #dc2626;
+    font-family: monospace;
+    font-size: 0.9em;
+    padding: 0.2em 0.4em;
+    background-color: rgba(220, 38, 38, 0.1);
+    border-radius: 3px;
+}
+
+/* Dark mode support */
+.dark .latex-formula-wrapper,
+.dark-theme .latex-formula-wrapper,
+[data-theme="dark"] .latex-formula-wrapper {
+    color: inherit;
+}
+
+.dark .latex-formula-error,
+.dark-theme .latex-formula-error,
+[data-theme="dark"] .latex-formula-error {
+    color: #f87171;
+    background-color: rgba(248, 113, 113, 0.15);
+}
