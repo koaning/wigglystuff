@@ -1,7 +1,20 @@
 function render({model, el}) {
-    // Note: This widget only supports simple formulas where placeholders
-    // are outside LaTeX structures. For complex cases like matrices/vectors
-    // with placeholders inside, a different approach would be needed.
+    // Check if KaTeX is available (it might be in marimo/Jupyter environments)
+    const katexAvailable = typeof window.katex !== 'undefined';
+    
+    if (!katexAvailable) {
+        // Try to use KaTeX from common locations
+        const katexFromWindow = window.katex || 
+                                (window.require && window.require('katex')) ||
+                                (window.define && window.define.amd);
+        
+        if (!katexFromWindow) {
+            console.warn('KaTeX not available. Formula widget requires KaTeX for LaTeX rendering.');
+            el.innerHTML = '<span style="color: red;">KaTeX not available. Please ensure KaTeX is loaded.</span>';
+            return;
+        }
+    }
+
     renderFormula();
 
     function renderFormula() {
@@ -17,80 +30,206 @@ function render({model, el}) {
         el.innerHTML = '';
         el.classList.add("formula-container");
 
-        // Parse formula into parts: LaTeX text and placeholders
-        const placeholderRegex = /\{(\w+)\}/g;
-        const parts = [];
-        let lastIndex = 0;
-        let match;
+        // Build LaTeX string with values substituted
+        let latexString = formula;
+        const placeholderMap = {}; // Maps formatted value -> placeholder name
         
-        while ((match = placeholderRegex.exec(formula)) !== null) {
-            // Add LaTeX text before placeholder
-            if (match.index > lastIndex) {
-                parts.push({
-                    type: 'latex',
-                    content: formula.substring(lastIndex, match.index)
-                });
-            }
-            // Add placeholder
-            parts.push({
-                type: 'placeholder',
-                name: match[1]
-            });
-            lastIndex = match.index + match[0].length;
-        }
-        // Add remaining LaTeX text
-        if (lastIndex < formula.length) {
-            parts.push({
-                type: 'latex',
-                content: formula.substring(lastIndex)
-            });
-        }
+        Object.keys(values).forEach(placeholderName => {
+            const value = values[placeholderName];
+            const decimalPlaces = digits[placeholderName] || 1;
+            const formattedValue = value.toFixed(decimalPlaces);
+            
+            // Replace placeholder with formatted value
+            const placeholderRegex = new RegExp(`\\{${placeholderName}\\}`, 'g');
+            latexString = latexString.replace(placeholderRegex, formattedValue);
+            
+            // Store mapping for finding in DOM later
+            placeholderMap[formattedValue] = placeholderName;
+        });
 
         // Create container for formula
         const formulaDiv = document.createElement('div');
         formulaDiv.className = 'formula-display';
         formulaDiv.style.display = 'inline-block';
 
-        // Render each part
-        parts.forEach(part => {
-            if (part.type === 'latex') {
-                if (part.content.trim()) {
-                    // For LaTeX parts, just display as text for now
-                    // In a real implementation, you'd need KaTeX available
-                    const latexSpan = document.createElement('span');
-                    latexSpan.style.display = 'inline-block';
-                    latexSpan.style.fontFamily = 'serif';
-                    latexSpan.style.fontStyle = 'italic';
-                    latexSpan.textContent = part.content;
-                    formulaDiv.appendChild(latexSpan);
-                }
-            } else if (part.type === 'placeholder') {
-                // Create draggable value element as plain HTML
-                const placeholderName = part.name;
-                const value = values[placeholderName];
-                const decimalPlaces = digits[placeholderName] || 1;
-                const formattedValue = value.toFixed(decimalPlaces);
-                
-                const valueSpan = document.createElement('span');
-                valueSpan.className = 'formula-draggable';
-                valueSpan.dataset.placeholder = placeholderName;
-                valueSpan.style.cursor = 'ew-resize';
-                valueSpan.style.color = '#0066cc';
-                valueSpan.style.textDecoration = 'underline';
-                valueSpan.style.userSelect = 'none';
-                valueSpan.style.display = 'inline-block';
-                valueSpan.style.fontFamily = 'serif';
-                valueSpan.style.fontStyle = 'italic';
-                valueSpan.textContent = formattedValue;
-                
-                valueSpan.addEventListener('mousedown', startDragging);
-                formulaDiv.appendChild(valueSpan);
-            }
-        });
+        // Render the entire formula as one LaTeX expression
+        try {
+            window.katex.render(latexString, formulaDiv, {
+                throwOnError: false,
+                displayMode: false,
+            });
+        } catch (e) {
+            console.error('KaTeX rendering error:', e);
+            formulaDiv.textContent = latexString;
+            el.appendChild(formulaDiv);
+            return;
+        }
+
+        // Now find and wrap the number nodes to make them draggable
+        // Use a small delay to ensure KaTeX has finished rendering
+        setTimeout(() => {
+            makeValuesDraggable(formulaDiv, placeholderMap, values, digits);
+        }, 0);
 
         el.appendChild(formulaDiv);
     }
 
+    function makeValuesDraggable(container, placeholderMap, values, digits) {
+        // Strategy: Find elements whose text content exactly matches our formatted values
+        // KaTeX renders numbers, and we need to find the right DOM nodes to make draggable
+        
+        Object.keys(placeholderMap).forEach(formattedValue => {
+            const placeholderName = placeholderMap[formattedValue];
+            const searchText = formattedValue.trim();
+            const normalizedSearch = searchText.replace(/\s+/g, '');
+            
+            // Get all elements and text nodes
+            const allNodes = [];
+            const walker = document.createTreeWalker(
+                container,
+                NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
+                null,
+                false
+            );
+            
+            let node;
+            while (node = walker.nextNode()) {
+                allNodes.push(node);
+            }
+            
+            // Find candidates: nodes that contain exactly our value
+            const candidates = [];
+            
+            for (const node of allNodes) {
+                if (node.classList && node.classList.contains('formula-draggable')) continue;
+                
+                let text;
+                if (node.nodeType === Node.TEXT_NODE) {
+                    text = node.textContent.trim();
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    text = node.textContent.trim();
+                } else {
+                    continue;
+                }
+                
+                const normalizedText = text.replace(/\s+/g, '');
+                
+                // Check for exact match
+                if (text === searchText || normalizedText === normalizedSearch) {
+                    // Check if already inside a draggable
+                    let parent = node.parentElement || node.parentNode;
+                    let isInsideDraggable = false;
+                    let depth = 0;
+                    
+                    while (parent && parent !== container) {
+                        depth++;
+                        if (parent.classList && parent.classList.contains('formula-draggable')) {
+                            isInsideDraggable = true;
+                            break;
+                        }
+                        parent = parent.parentElement || parent.parentNode;
+                    }
+                    
+                    if (!isInsideDraggable) {
+                        candidates.push({node, depth, text});
+                    }
+                }
+            }
+            
+            // Find the innermost candidate (deepest in DOM tree)
+            if (candidates.length > 0) {
+                // Sort by depth (deeper = more specific)
+                candidates.sort((a, b) => b.depth - a.depth);
+                
+                const bestCandidate = candidates[0];
+                const bestNode = bestCandidate.node;
+                
+                // Check if this node has a child that's also a candidate (prefer child)
+                let hasChildCandidate = false;
+                if (bestNode.nodeType === Node.ELEMENT_NODE) {
+                    const children = Array.from(bestNode.childNodes);
+                    hasChildCandidate = children.some(child => {
+                        if (child.nodeType === Node.TEXT_NODE) {
+                            const childText = child.textContent.trim().replace(/\s+/g, '');
+                            return childText === normalizedSearch;
+                        }
+                        return false;
+                    });
+                }
+                
+                if (!hasChildCandidate) {
+                    if (bestNode.nodeType === Node.TEXT_NODE) {
+                        wrapTextNode(bestNode, placeholderName, formattedValue);
+                    } else {
+                        wrapElement(bestNode, placeholderName);
+                    }
+                } else {
+                    // Use the child text node instead
+                    const children = Array.from(bestNode.childNodes);
+                    const childNode = children.find(child => {
+                        if (child.nodeType === Node.TEXT_NODE) {
+                            const childText = child.textContent.trim().replace(/\s+/g, '');
+                            return childText === normalizedSearch;
+                        }
+                        return false;
+                    });
+                    
+                    if (childNode) {
+                        wrapTextNode(childNode, placeholderName, formattedValue);
+                    }
+                }
+            }
+        });
+    }
+
+    function wrapTextNode(textNode, placeholderName, formattedValue) {
+        // Create wrapper span
+        const wrapper = document.createElement('span');
+        wrapper.className = 'formula-draggable';
+        wrapper.dataset.placeholder = placeholderName;
+        
+        // Copy computed styles from KaTeX-rendered elements to match appearance
+        const parent = textNode.parentElement;
+        if (parent) {
+            const computedStyle = window.getComputedStyle(parent);
+            wrapper.style.fontFamily = computedStyle.fontFamily;
+            wrapper.style.fontSize = computedStyle.fontSize;
+            wrapper.style.fontStyle = computedStyle.fontStyle;
+            wrapper.style.fontWeight = computedStyle.fontWeight;
+        }
+        
+        wrapper.style.cursor = 'ew-resize';
+        wrapper.style.color = '#0066cc';
+        wrapper.style.textDecoration = 'underline';
+        wrapper.style.userSelect = 'none';
+        wrapper.style.display = 'inline-block';
+        wrapper.style.position = 'relative';
+        
+        // Replace text node with wrapper
+        textNode.parentNode.replaceChild(wrapper, textNode);
+        wrapper.textContent = formattedValue;
+        wrapper.addEventListener('mousedown', startDragging);
+    }
+
+    function wrapElement(element, placeholderName) {
+        // Mark element as draggable, preserving KaTeX styling
+        element.classList.add('formula-draggable');
+        element.dataset.placeholder = placeholderName;
+        
+        const computedStyle = window.getComputedStyle(element);
+        element.style.cursor = 'ew-resize';
+        element.style.color = '#0066cc';
+        element.style.textDecoration = 'underline';
+        element.style.userSelect = 'none';
+        
+        // Disable pointer events on children so clicks bubble to this element
+        const children = element.querySelectorAll('*');
+        children.forEach(child => {
+            child.style.pointerEvents = 'none';
+        });
+        
+        element.addEventListener('mousedown', startDragging);
+    }
 
     function startDragging(e) {
         e.preventDefault();
