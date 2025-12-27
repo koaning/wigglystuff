@@ -76,14 +76,15 @@ function render({model, el}) {
 
     function makeValuesDraggable(container, placeholderMap, values, digits) {
         // Strategy: Find elements whose text content exactly matches our formatted values
-        // KaTeX renders numbers, and we need to find the right DOM nodes to make draggable
+        // This works for exponents, fractions, vectors, and matrices because KaTeX
+        // renders numbers as text nodes or simple elements that we can find
         
         Object.keys(placeholderMap).forEach(formattedValue => {
             const placeholderName = placeholderMap[formattedValue];
             const searchText = formattedValue.trim();
             const normalizedSearch = searchText.replace(/\s+/g, '');
             
-            // Get all elements and text nodes
+            // Get all elements and text nodes in the rendered formula
             const allNodes = [];
             const walker = document.createTreeWalker(
                 container,
@@ -98,6 +99,7 @@ function render({model, el}) {
             }
             
             // Find candidates: nodes that contain exactly our value
+            // This will find numbers in exponents (superscripts), fractions, vectors, etc.
             const candidates = [];
             
             for (const node of allNodes) {
@@ -107,6 +109,8 @@ function render({model, el}) {
                 if (node.nodeType === Node.TEXT_NODE) {
                     text = node.textContent.trim();
                 } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // For elements, get their text content
+                    // This works for numbers in superscripts, subscripts, fractions, etc.
                     text = node.textContent.trim();
                 } else {
                     continue;
@@ -114,7 +118,7 @@ function render({model, el}) {
                 
                 const normalizedText = text.replace(/\s+/g, '');
                 
-                // Check for exact match
+                // Check for exact match (handles numbers in any LaTeX structure)
                 if (text === searchText || normalizedText === normalizedSearch) {
                     // Check if already inside a draggable
                     let parent = node.parentElement || node.parentNode;
@@ -131,42 +135,28 @@ function render({model, el}) {
                     }
                     
                     if (!isInsideDraggable) {
-                        candidates.push({node, depth, text});
+                        candidates.push({node, depth, text, isTextNode: node.nodeType === Node.TEXT_NODE});
                     }
                 }
             }
             
-            // Find the innermost candidate (deepest in DOM tree)
+            // Find the best candidate (prefer text nodes, then innermost elements)
             if (candidates.length > 0) {
-                // Sort by depth (deeper = more specific)
-                candidates.sort((a, b) => b.depth - a.depth);
+                // Sort: text nodes first, then by depth (deeper = more specific)
+                candidates.sort((a, b) => {
+                    if (a.isTextNode !== b.isTextNode) {
+                        return a.isTextNode ? -1 : 1; // Text nodes first
+                    }
+                    return b.depth - a.depth; // Deeper first
+                });
                 
                 const bestCandidate = candidates[0];
                 const bestNode = bestCandidate.node;
                 
-                // Check if this node has a child that's also a candidate (prefer child)
-                let hasChildCandidate = false;
+                // For element nodes, check if a direct text child matches (prefer text node)
                 if (bestNode.nodeType === Node.ELEMENT_NODE) {
                     const children = Array.from(bestNode.childNodes);
-                    hasChildCandidate = children.some(child => {
-                        if (child.nodeType === Node.TEXT_NODE) {
-                            const childText = child.textContent.trim().replace(/\s+/g, '');
-                            return childText === normalizedSearch;
-                        }
-                        return false;
-                    });
-                }
-                
-                if (!hasChildCandidate) {
-                    if (bestNode.nodeType === Node.TEXT_NODE) {
-                        wrapTextNode(bestNode, placeholderName, formattedValue);
-                    } else {
-                        wrapElement(bestNode, placeholderName);
-                    }
-                } else {
-                    // Use the child text node instead
-                    const children = Array.from(bestNode.childNodes);
-                    const childNode = children.find(child => {
+                    const textChild = children.find(child => {
                         if (child.nodeType === Node.TEXT_NODE) {
                             const childText = child.textContent.trim().replace(/\s+/g, '');
                             return childText === normalizedSearch;
@@ -174,9 +164,17 @@ function render({model, el}) {
                         return false;
                     });
                     
-                    if (childNode) {
-                        wrapTextNode(childNode, placeholderName, formattedValue);
+                    if (textChild) {
+                        wrapTextNode(textChild, placeholderName, formattedValue);
+                        return; // Found and wrapped, move to next placeholder
                     }
+                }
+                
+                // Wrap the best candidate
+                if (bestNode.nodeType === Node.TEXT_NODE) {
+                    wrapTextNode(bestNode, placeholderName, formattedValue);
+                } else {
+                    wrapElement(bestNode, placeholderName);
                 }
             }
         });
@@ -188,14 +186,18 @@ function render({model, el}) {
         wrapper.className = 'formula-draggable';
         wrapper.dataset.placeholder = placeholderName;
         
-        // Copy computed styles from KaTeX-rendered elements to match appearance
+        // Copy computed styles from parent to preserve KaTeX styling
+        // This is important for superscripts, subscripts, fractions, etc.
         const parent = textNode.parentElement;
         if (parent) {
             const computedStyle = window.getComputedStyle(parent);
+            // Copy all relevant font properties to match KaTeX rendering
             wrapper.style.fontFamily = computedStyle.fontFamily;
             wrapper.style.fontSize = computedStyle.fontSize;
             wrapper.style.fontStyle = computedStyle.fontStyle;
             wrapper.style.fontWeight = computedStyle.fontWeight;
+            wrapper.style.verticalAlign = computedStyle.verticalAlign;
+            wrapper.style.lineHeight = computedStyle.lineHeight;
         }
         
         wrapper.style.cursor = 'ew-resize';
@@ -212,15 +214,18 @@ function render({model, el}) {
     }
 
     function wrapElement(element, placeholderName) {
-        // Mark element as draggable, preserving KaTeX styling
+        // Mark element as draggable, preserving all KaTeX styling
+        // This preserves styling for numbers in complex structures
         element.classList.add('formula-draggable');
         element.dataset.placeholder = placeholderName;
         
+        // Preserve existing styles (important for superscripts/subscripts)
         const computedStyle = window.getComputedStyle(element);
         element.style.cursor = 'ew-resize';
         element.style.color = '#0066cc';
         element.style.textDecoration = 'underline';
         element.style.userSelect = 'none';
+        // Don't override font-size, vertical-align, etc. - preserve KaTeX's styling
         
         // Disable pointer events on children so clicks bubble to this element
         const children = element.querySelectorAll('*');
