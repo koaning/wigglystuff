@@ -1,18 +1,8 @@
 function render({model, el}) {
-    // Load KaTeX if not already loaded
-    if (!window.katex) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
-        document.head.appendChild(link);
-        
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
-        script.onload = () => renderFormula();
-        document.head.appendChild(script);
-    } else {
-        renderFormula();
-    }
+    // Note: This widget only supports simple formulas where placeholders
+    // are outside LaTeX structures. For complex cases like matrices/vectors
+    // with placeholders inside, a different approach would be needed.
+    renderFormula();
 
     function renderFormula() {
         const formula = model.get("formula");
@@ -65,27 +55,22 @@ function render({model, el}) {
         parts.forEach(part => {
             if (part.type === 'latex') {
                 if (part.content.trim()) {
+                    // For LaTeX parts, just display as text for now
+                    // In a real implementation, you'd need KaTeX available
                     const latexSpan = document.createElement('span');
                     latexSpan.style.display = 'inline-block';
-                    try {
-                        katex.render(part.content, latexSpan, {
-                            throwOnError: false,
-                            displayMode: false,
-                        });
-                    } catch (e) {
-                        console.error('KaTeX rendering error:', e);
-                        latexSpan.textContent = part.content;
-                    }
+                    latexSpan.style.fontFamily = 'serif';
+                    latexSpan.style.fontStyle = 'italic';
+                    latexSpan.textContent = part.content;
                     formulaDiv.appendChild(latexSpan);
                 }
             } else if (part.type === 'placeholder') {
-                // Create draggable value element
+                // Create draggable value element as plain HTML
                 const placeholderName = part.name;
                 const value = values[placeholderName];
                 const decimalPlaces = digits[placeholderName] || 1;
                 const formattedValue = value.toFixed(decimalPlaces);
                 
-                // Render the number with KaTeX for consistent math font
                 const valueSpan = document.createElement('span');
                 valueSpan.className = 'formula-draggable';
                 valueSpan.dataset.placeholder = placeholderName;
@@ -94,21 +79,9 @@ function render({model, el}) {
                 valueSpan.style.textDecoration = 'underline';
                 valueSpan.style.userSelect = 'none';
                 valueSpan.style.display = 'inline-block';
-                
-                try {
-                    katex.render(formattedValue, valueSpan, {
-                        throwOnError: false,
-                        displayMode: false,
-                    });
-                } catch (e) {
-                    valueSpan.textContent = formattedValue;
-                }
-                
-                // Make children non-interactive so clicks bubble to parent
-                const children = valueSpan.querySelectorAll('*');
-                children.forEach(child => {
-                    child.style.pointerEvents = 'none';
-                });
+                valueSpan.style.fontFamily = 'serif';
+                valueSpan.style.fontStyle = 'italic';
+                valueSpan.textContent = formattedValue;
                 
                 valueSpan.addEventListener('mousedown', startDragging);
                 formulaDiv.appendChild(valueSpan);
@@ -186,29 +159,15 @@ function render({model, el}) {
     }
 
     // Listen for model changes
-    model.on('change:formula', () => {
-        if (window.katex) renderFormula();
-    });
-    model.on('change:values', () => {
-        if (window.katex) renderFormula();
-    });
-    model.on('change:min_values', () => {
-        if (window.katex) renderFormula();
-    });
-    model.on('change:max_values', () => {
-        if (window.katex) renderFormula();
-    });
-    model.on('change:step_sizes', () => {
-        if (window.katex) renderFormula();
-    });
-    model.on('change:digits', () => {
-        if (window.katex) renderFormula();
-    });
+    model.on('change:formula', renderFormula);
+    model.on('change:values', renderFormula);
+    model.on('change:min_values', renderFormula);
+    model.on('change:max_values', renderFormula);
+    model.on('change:step_sizes', renderFormula);
+    model.on('change:digits', renderFormula);
 
     // Initial render
-    if (window.katex) {
-        renderFormula();
-    }
+    renderFormula();
 }
 
 export default { render };
