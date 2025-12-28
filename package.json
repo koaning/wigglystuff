@@ -1,6 +1,12 @@
 {
   "name": "wigglystuff",
   "scripts": {
+    "build": "node scripts/build.js build",
+    "build:prod": "node scripts/build.js build --minify",
+    "build:widget": "node scripts/build.js build --widgets",
+    "watch": "node scripts/build.js watch",
+    "watch:widget": "node scripts/build.js watch",
+    "dev": "npm run watch",
     "dev-copy-btn": "./node_modules/.bin/esbuild js/copybutton/widget.tsx --bundle --outfile=wigglystuff/static/copybutton.js --format=esm --watch --minify"
   },
   "dependencies": {
