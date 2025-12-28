@@ -25,19 +25,30 @@ js-keystroke:
 	# build the keyboard shortcut widget bundle
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/keystroke-widget.js js/keystroke/widget.js
 
+# React/TypeScript widgets (support shared components via relative imports)
 js-copybutton:
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
+	./node_modules/.bin/esbuild js/copybutton/widget.tsx \
+		--bundle --format=esm \
+		--jsx=automatic \
+		--external:react --external:react-dom \
+		--outfile=wigglystuff/static/copybutton.js
 
+js-paint:
+	./node_modules/.bin/tailwindcss -i ./js/paint/styles.css -o ./wigglystuff/static/paint.css
+	./node_modules/.bin/esbuild js/paint/widget.tsx \
+		--bundle --format=esm \
+		--jsx=automatic \
+		--external:react --external:react-dom \
+		--outfile=wigglystuff/static/paint.js \
+		--minify
+
+# Vanilla JavaScript widgets
 js-talk:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/talk-widget.js js/talk/widget.js
 
 js-driver-tour:
 	cp js/driver-tour/styles.css wigglystuff/static/driver-tour.css
 	./esbuild --bundle --format=esm --loader:.css=text --outfile=wigglystuff/static/driver-tour.js js/driver-tour/widget.js
-
-js-paint:
-	./node_modules/.bin/tailwindcss -i ./js/paint/styles.css -o ./wigglystuff/static/paint.css
-	./node_modules/.bin/esbuild js/paint/widget.tsx --bundle --format=esm --outfile=wigglystuff/static/paint.js --minify
 
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
