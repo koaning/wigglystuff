@@ -1,0 +1,68 @@
+name: Build widgets
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install esbuild binary (for vanilla JS widgets)
+        run: |
+          curl -fsSL https://esbuild.github.io/dl/v0.19.11 | sh
+          chmod +x ./esbuild
+      
+      - name: Build React widgets
+        run: |
+          echo "Building React/TypeScript widgets..."
+          make js-copybutton
+          make js-paint
+      
+      - name: Build vanilla JS widgets
+        run: |
+          echo "Building vanilla JavaScript widgets..."
+          make js-talk
+          make js-keystroke
+          make js-gamepad
+          make js-edgedraw
+          make js-driver-tour
+      
+      - name: Verify build outputs
+        run: |
+          echo "Verifying build outputs..."
+          test -f wigglystuff/static/copybutton.js || (echo "Missing copybutton.js" && exit 1)
+          test -f wigglystuff/static/copybutton.css || (echo "Missing copybutton.css" && exit 1)
+          test -f wigglystuff/static/paint.js || (echo "Missing paint.js" && exit 1)
+          test -f wigglystuff/static/paint.css || (echo "Missing paint.css" && exit 1)
+          test -f wigglystuff/static/talk-widget.js || (echo "Missing talk-widget.js" && exit 1)
+          test -f wigglystuff/static/keystroke-widget.js || (echo "Missing keystroke-widget.js" && exit 1)
+          test -f wigglystuff/static/gamepad-widget.js || (echo "Missing gamepad-widget.js" && exit 1)
+          test -f wigglystuff/static/edgedraw.js || (echo "Missing edgedraw.js" && exit 1)
+          test -f wigglystuff/static/driver-tour.js || (echo "Missing driver-tour.js" && exit 1)
+          test -f wigglystuff/static/driver-tour.css || (echo "Missing driver-tour.css" && exit 1)
+          echo "✓ All build outputs verified"
+      
+      - name: Check file sizes
+        run: |
+          echo "Build output sizes:"
+          ls -lh wigglystuff/static/*.js | awk '{print $5, $9}'
+          echo ""
+          echo "CSS file sizes:"
+          ls -lh wigglystuff/static/*.css 2>/dev/null | awk '{print $5, $9}' || echo "No CSS files"
