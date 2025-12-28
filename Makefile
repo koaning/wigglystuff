@@ -16,7 +16,7 @@ pypi: clean
 	uv publish
 
 js-edgedraw:
-	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/edgedraw.js js/edgedraw.js
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/edgedraw.js js/edgedraw.js
 
 js-gamepad:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/gamepad-widget.js js/gamepad/widget.js
