@@ -39,7 +39,7 @@ def _():
             axis_labels=["R", "G", "B"],
         )
     )
-    return (widget,)
+    return random, widget
 
 
 @app.cell
@@ -48,8 +48,26 @@ def _(widget):
     return
 
 
-@app.cell
-def _():
+@app.cell(hide_code=True)
+def _(random, widget):
+    def recolor(_):
+        updates = []
+        for _point in widget.data:
+            hex_value = f"#{random.randint(0, 0xFFFFFF):06x}"
+            updates.append({"color": hex_value})
+        widget.update_points(updates, animate=True, duration_ms=50)
+
+    def shuffle(_):
+        updates = []
+        for _point in widget.data:
+            updates.append(
+                {
+                    "x": random.random(),
+                    "y": random.random(),
+                    "z": random.random(),
+                }
+            )
+        widget.update_points(updates, animate=True, duration_ms=65)
     return
 
 
