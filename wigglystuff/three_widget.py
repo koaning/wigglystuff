@@ -36,6 +36,8 @@ class ThreeWidget(anywidget.AnyWidget):
     axis_labels = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
     animate_updates = traitlets.Bool(False).tag(sync=True)
     animation_duration_ms = traitlets.Int(400).tag(sync=True)
+    auto_rotate = traitlets.Bool(False).tag(sync=True)
+    auto_rotate_speed = traitlets.Float(2.0).tag(sync=True)
 
     def __init__(
         self,
@@ -49,6 +51,8 @@ class ThreeWidget(anywidget.AnyWidget):
         axis_labels: Optional[Iterable[str]] = None,
         animate_updates: bool = False,
         animation_duration_ms: int = 400,
+        auto_rotate: bool = False,
+        auto_rotate_speed: float = 2.0,
         **kwargs: Any,
     ) -> None:
         """Create a ThreeWidget.
@@ -64,6 +68,8 @@ class ThreeWidget(anywidget.AnyWidget):
             axis_labels: Optional axis labels for x/y/z.
             animate_updates: Whether to animate point updates.
             animation_duration_ms: Animation duration in milliseconds.
+            auto_rotate: Whether to start with automatic rotation enabled.
+            auto_rotate_speed: Speed of automatic rotation.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         super().__init__(
@@ -76,6 +82,8 @@ class ThreeWidget(anywidget.AnyWidget):
             axis_labels=list(axis_labels) if axis_labels is not None else [],
             animate_updates=animate_updates,
             animation_duration_ms=animation_duration_ms,
+            auto_rotate=auto_rotate,
+            auto_rotate_speed=auto_rotate_speed,
             **kwargs,
         )
 
@@ -111,3 +119,14 @@ class ThreeWidget(anywidget.AnyWidget):
             self.animation_duration_ms = duration_ms
         self.animate_updates = animate
         self.data = merged
+
+    def start_rotate(self, speed: float = 2.0) -> None:
+        """Start automatic rotation around the center of all points.
+
+        Rotation stops when the user interacts with the widget.
+
+        Args:
+            speed: Speed of automatic rotation.
+        """
+        self.auto_rotate_speed = speed
+        self.auto_rotate = True
