@@ -6,9 +6,13 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
-    import random
-
     import marimo as mo
+    return (mo,)
+
+
+@app.cell
+def _(mo):
+    import random
 
     from wigglystuff import ThreeWidget
 
@@ -29,17 +33,24 @@ def _():
             }
         )
 
-    widget = mo.ui.anywidget(
-        ThreeWidget(
-            data=data,
-            width=640,
-            height=420,
-            show_grid=True,
-            show_axes=True,
-            axis_labels=["R", "G", "B"],
-        )
+    three = ThreeWidget(
+        data=data,
+        width=640,
+        height=420,
+        # show_grid=True,
+        # show_axes=True,
+        # axis_labels=["R", "G", "B"],
     )
-    return random, widget
+    widget = mo.ui.anywidget(three)
+    return data, random, three, widget
+
+
+@app.cell
+def _(mo, reset, shuffle):
+    btn_reset = mo.ui.button(on_click=reset, label="reset")
+    btn_shuffle = mo.ui.button(on_click=shuffle, label="make some noise")
+    [btn_reset, btn_shuffle]
+    return
 
 
 @app.cell
@@ -49,26 +60,22 @@ def _(widget):
 
 
 @app.cell(hide_code=True)
-def _(random, widget):
-    def recolor(_):
-        updates = []
-        for _point in widget.data:
-            hex_value = f"#{random.randint(0, 0xFFFFFF):06x}"
-            updates.append({"color": hex_value})
-        widget.update_points(updates, animate=True, duration_ms=50)
-
+def _(data, random, three):
     def shuffle(_):
         updates = []
-        for _point in widget.data:
+        for _point in three.data:
             updates.append(
                 {
-                    "x": random.random(),
-                    "y": random.random(),
-                    "z": random.random(),
+                    "x": _point["x"] + (random.random()-0.5)*0.1,
+                    "y": _point["y"] + (random.random()-0.5)*0.3,
+                    "z": _point["z"] + (random.random()-0.5)*0.1,
                 }
             )
-        widget.update_points(updates, animate=True, duration_ms=65)
-    return
+        three.update_points(updates, animate=True, duration_ms=650)
+
+    def reset(_):
+        three.update_points(data, animate=True, duration_ms=650)
+    return reset, shuffle
 
 
 @app.cell
