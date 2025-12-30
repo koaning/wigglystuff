@@ -91,6 +91,21 @@ hide:
 <a href="examples/webcam-capture/" class="gallery-img"><img src="assets/gallery/webcam-capture.png" alt="WebcamCapture widget"></a>
 <div class="gallery-links"><a href="examples/webcam-capture/">Demo</a><a href="reference/webcam-capture/">API</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">ImageRefreshWidget</div>
+<a href="examples/html/" class="gallery-img"><img src="assets/gallery/imagerefresh.png" alt="ImageRefreshWidget"></a>
+<div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/html/">API</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title">HTMLRefreshWidget</div>
+<a href="examples/html/" class="gallery-img"><img src="assets/gallery/htmlwidget.png" alt="HTMLRefreshWidget"></a>
+<div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/html/">API</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title">ProgressBar</div>
+<a href="examples/html/" class="gallery-img"><img src="assets/gallery/progressbar.png" alt="ProgressBar widget"></a>
+<div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/html/">API</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.

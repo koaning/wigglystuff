@@ -47,6 +47,7 @@ nav:
       - GamepadWidget: reference/gamepad.md
       - WebcamCapture: reference/webcam-capture.md
       - CellTour: reference/cell-tour.md
+      - HTML Widgets: reference/html.md
 plugins:
   - search
   - section-index

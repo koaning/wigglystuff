@@ -35,6 +35,11 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>ThreeWidget</b><br><img src="./mkdocs/assets/gallery/threewidget.png" width="200"><br><a href="./demos/threewidget.py">Demo</a> · <a href="./wigglystuff/three_widget.py">Source</a></td>
+<td align="center"><b>ImageRefreshWidget</b><br><img src="./mkdocs/assets/gallery/imagerefresh.png" width="200"><br><a href="./demos/html.py">Demo</a> · <a href="./wigglystuff/html.py">Source</a></td>
+<td align="center"><b>HTMLRefreshWidget</b><br><img src="./mkdocs/assets/gallery/htmlwidget.png" width="200"><br><a href="./demos/html.py">Demo</a> · <a href="./wigglystuff/html.py">Source</a></td>
+</tr>
+<tr>
+<td align="center"><b>ProgressBar</b><br><img src="./mkdocs/assets/gallery/progressbar.png" width="200"><br><a href="./demos/html.py">Demo</a> · <a href="./wigglystuff/html.py">Source</a></td>
 <td align="center"></td>
 <td align="center"></td>
 </tr>
