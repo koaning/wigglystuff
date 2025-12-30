@@ -42,6 +42,11 @@ hide:
 <div class="gallery-links"><a href="examples/paint/">Demo</a><a href="reference/paint/">API</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">ThreeWidget</div>
+<a href="examples/threewidget/" class="gallery-img"><img src="assets/gallery/threewidget.png" alt="ThreeWidget widget"></a>
+<div class="gallery-links"><a href="examples/threewidget/">Demo</a><a href="reference/three-widget/">API</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">EdgeDraw</div>
 <a href="examples/edgedraw/" class="gallery-img"><img src="assets/gallery/edgedraw.png" alt="EdgeDraw widget"></a>
 <div class="gallery-links"><a href="examples/edgedraw/">Demo</a><a href="reference/edge-draw/">API</a></div>

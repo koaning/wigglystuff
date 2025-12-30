@@ -178,6 +178,63 @@ def _(color_picker, mo):
 
 
 @app.cell
+def _(mo, three_widget):
+    import random
+
+    def recolor(_):
+        updates = []
+        for _point in three_widget.data:
+            hex_value = f"#{random.randint(0, 0xFFFFFF):06x}"
+            updates.append({"color": hex_value})
+        three_widget.update_points(updates, animate=True, duration_ms=500)
+
+    def shuffle(_):
+        updates = []
+        for _point in three_widget.data:
+            updates.append(
+                {
+                    "x": random.random(),
+                    "y": random.random(),
+                    "z": random.random(),
+                }
+            )
+        three_widget.update_points(updates, animate=True, duration_ms=650)
+
+    mo.vstack(
+        [
+            mo.md(
+                """
+        ## `ThreeWidget` demo
+
+        ```python
+        from wigglystuff import ThreeWidget
+
+        widget = ThreeWidget(
+            data=points,
+            show_grid=True,
+            show_axes=True,
+            axis_labels=["R", "G", "B"],
+        )
+
+        widget.update_points([{"color": "#ff0000"}] * len(points), animate=True)
+        ```
+
+        Update individual point properties with `update_points` and optionally animate the changes.
+        """
+            ),
+            three_widget,
+            mo.hstack(
+                [
+                    mo.ui.button(label="Recolor", on_click=recolor),
+                    mo.ui.button(label="Shuffle positions", on_click=shuffle),
+                ]
+            ),
+        ]
+    )
+    return
+
+
+@app.cell
 def _(edge_widget, mo):
     mo.vstack([
         mo.md(f"""
@@ -350,6 +407,41 @@ def _(mo):
     from wigglystuff import ColorPicker
     color_picker = mo.ui.anywidget(ColorPicker(color="#444444"))
     return (color_picker,)
+
+
+@app.cell
+def _(mo):
+    import random
+
+    from wigglystuff import ThreeWidget
+
+    random.seed(42)
+    points = []
+    for _ in range(600):
+        r = random.randint(0, 255)
+        g = random.randint(0, 255)
+        b = random.randint(0, 255)
+        points.append(
+            {
+                "x": r / 255.0,
+                "y": g / 255.0,
+                "z": b / 255.0,
+                "color": f"#{r:02x}{g:02x}{b:02x}",
+                "size": random.uniform(0.06, 0.18),
+            }
+        )
+
+    three_widget = mo.ui.anywidget(
+        ThreeWidget(
+            data=points,
+            width=520,
+            height=360,
+            show_grid=True,
+            show_axes=True,
+            axis_labels=["R", "G", "B"],
+        )
+    )
+    return (three_widget,)
 
 
 @app.cell
