@@ -1,0 +1,1 @@
+import{t as s}from"./requests-THIDPq-F.js";import{t as r}from"./DeferredRequestRegistry-DfLQSvoS.js";const o=new r("secrets-result",async(t,e)=>{await s().listSecretKeys({requestId:t,...e})});export{o as t};
