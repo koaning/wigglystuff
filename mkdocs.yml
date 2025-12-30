@@ -47,6 +47,10 @@ nav:
       - GamepadWidget: reference/gamepad.md
       - WebcamCapture: reference/webcam-capture.md
       - CellTour: reference/cell-tour.md
+      - ImageRefreshWidget: reference/image-refresh.md
+      - HTMLRefreshWidget: reference/html-refresh.md
+      - ProgressBar: reference/progress-bar.md
+      - Utils: reference/utils.md
 plugins:
   - search
   - section-index
