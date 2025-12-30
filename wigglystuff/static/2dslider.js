@@ -20,6 +20,8 @@ function render({ model, el }) {
   let isDragging = false;
   let currentX = 0;
   let currentY = 0;
+  let animationFrame = null;
+  let lastUpdate = 0;
 
   function drawSlider() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -39,9 +41,15 @@ function render({ model, el }) {
       const mappedY = y_min + ((-currentY / radius) + 1) / 2 * (y_max - y_min); // Y is inverted
 
       sliderValuesDiv.textContent = `X: ${mappedX.toFixed(2)}, Y: ${mappedY.toFixed(2)}`;
-      model.set('x', mappedX);
-      model.set('y', mappedY);
-      model.save_changes();
+      
+      // Throttle model updates
+      const now = Date.now();
+      if (now - lastUpdate > 16) { // ~60fps
+        model.set('x', mappedX);
+        model.set('y', mappedY);
+        model.save_changes();
+        lastUpdate = now;
+      }
   }
 
   function syncFromModel() {
@@ -70,12 +78,25 @@ function render({ model, el }) {
           currentY = event.offsetY - centerY;
           currentX = Math.max(-radius, Math.min(radius, currentX));
           currentY = Math.max(-radius, Math.min(radius, currentY));
-          drawSlider();
+          
+          // Use requestAnimationFrame for smooth updates
+          if (!animationFrame) {
+              animationFrame = requestAnimationFrame(() => {
+                  drawSlider();
+                  animationFrame = null;
+              });
+          }
       }
   }
 
   function handleMouseUp() {
       isDragging = false;
+      if (animationFrame) {
+          cancelAnimationFrame(animationFrame);
+          animationFrame = null;
+      }
+      // Ensure final state is saved
+      drawSlider();
   }
 
   canvas.addEventListener('mousedown', handleMouseDown);

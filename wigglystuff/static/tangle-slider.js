@@ -18,15 +18,16 @@ function render({model, el}) {
     el.appendChild(container);
 
     function renderValue() {
-        container.innerHTML = '';
-        const element = document.createElement('span');
-        element.className = 'tangle-value';
-        element.style.color = '#0066cc';
-        element.style.textDecoration = 'underline';
-        element.style.cursor = 'ew-resize';
+        // Only recreate element if it doesn't exist
+        let element = container.querySelector('.tangle-value');
+        if (!element) {
+            element = document.createElement('span');
+            element.className = 'tangle-value';
+            element.style.cssText = 'color: #0066cc; text-decoration: underline; cursor: ew-resize';
+            element.addEventListener('mousedown', startDragging);
+            container.appendChild(element);
+        }
         element.textContent = config.prefix + amount.toFixed(config.digits) + config.suffix;
-        element.addEventListener('mousedown', startDragging);
-        container.appendChild(element);
     }
 
     function updateModel() {
@@ -37,7 +38,7 @@ function render({model, el}) {
     let updateTimeout;
     function debouncedUpdateModel() {
         clearTimeout(updateTimeout);
-        updateTimeout = setTimeout(updateModel, 50); // Debounce for 100ms
+        updateTimeout = setTimeout(updateModel, 16); // ~60fps throttling
     }
 
     function startDragging(e) {
@@ -53,7 +54,11 @@ function render({model, el}) {
             amount = Math.max(config.minValue, 
                            Math.min(config.maxValue, 
                                     startValue + steps * config.stepSize));
-            renderValue();
+            
+            // Update text content directly without full re-render
+            const element = container.querySelector('.tangle-value');
+            element.textContent = config.prefix + amount.toFixed(config.digits) + config.suffix;
+            
             debouncedUpdateModel();
         }
 

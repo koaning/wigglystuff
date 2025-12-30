@@ -5,9 +5,16 @@ function render({ model, el }) {
   let draggedIndex = null;
   let dropTarget = null;
   let dropPosition = null;
+  let dropIndicator = null; // Reuse single indicator element
 
   function renderList() {
-    el.replaceChildren();
+    // Use DocumentFragment for better performance
+    const fragment = document.createDocumentFragment();
+    
+    // Clear only if not dragging to preserve drag state
+    if (!draggedItem) {
+      el.replaceChildren();
+    }
 
     // Render label if provided
     let labelText = model.get("label");
@@ -144,7 +151,11 @@ function render({ model, el }) {
       container.appendChild(listItem);
     });
 
-    el.appendChild(container);
+    fragment.appendChild(container);
+    
+    if (!draggedItem) {
+      el.appendChild(fragment);
+    }
 
     if (model.get("addable")) {
       let addInput = document.createElement("input");
@@ -170,43 +181,48 @@ function render({ model, el }) {
   }
 
   function removeItem(index) {
-    model.set("value",  model.get("value").toSpliced(index, 1));
+    model.set("value", model.get("value").slice(0, index).concat(model.get("value").slice(index + 1)));
     model.save_changes();
   }
 
   function showDropIndicator(element, position) {
-    let indicator = document.createElement("div");
-    indicator.className = "drop-indicator";
-    indicator.style.position = "absolute";
-    indicator.style.left = "0";
-    indicator.style.right = "0";
-    indicator.style.height = "2px";
-    indicator.style.backgroundColor = "#0066cc";
-    indicator.style.zIndex = "1000";
-
-    if (position === "top") {
-      indicator.style.top = "-1px";
-    } else {
-      indicator.style.bottom = "-1px";
+    // Remove existing indicator if any
+    if (dropIndicator && dropIndicator.parentNode) {
+      dropIndicator.remove();
     }
+    
+    // Create or reuse indicator
+    dropIndicator = document.createElement("div");
+    dropIndicator.className = "drop-indicator";
+    dropIndicator.style.cssText = `
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #0066cc;
+      z-index: 1000;
+      ${position === "top" ? "top: -1px" : "bottom: -1px"};
+    `;
 
     element.style.position = "relative";
-    element.appendChild(indicator);
+    element.appendChild(dropIndicator);
   }
 
   function clearDropIndicators() {
-    el.querySelectorAll(".drop-indicator").forEach(indicator => {
-      indicator.remove();
-    });
+    if (dropIndicator && dropIndicator.parentNode) {
+      dropIndicator.remove();
+    }
     dropTarget = null;
     dropPosition = null;
   }
 
   function reorderItems(fromIndex, toIndex) {
-    let items = [...model.get("value")];
-    let [movedItem] = items.splice(fromIndex, 1);
-    items.splice(toIndex, 0, movedItem);
-    model.set("value", items);
+    // Use more efficient array manipulation
+    const items = model.get("value");
+    const newItems = items.slice();
+    const [movedItem] = newItems.splice(fromIndex, 1);
+    newItems.splice(toIndex, 0, movedItem);
+    model.set("value", newItems);
     model.save_changes();
   }
 
