@@ -16,3 +16,7 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [GamepadWidget](gamepad.md)
 - [CellTour](cell-tour.md)
 - [WebcamCapture](webcam-capture.md)
+- [ImageRefreshWidget](image-refresh.md)
+- [HTMLRefreshWidget](html-refresh.md)
+- [ProgressBar](progress-bar.md)
+- [Utils](utils.md)
