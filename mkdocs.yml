@@ -37,6 +37,7 @@ nav:
       - Matrix: reference/matrix.md
       - SortableList: reference/sortable-list.md
       - Paint: reference/paint.md
+      - ThreeWidget: reference/three-widget.md
       - EdgeDraw: reference/edge-draw.md
       - KeystrokeWidget: reference/keystroke.md
       - WebkitSpeechToText: reference/talk.md

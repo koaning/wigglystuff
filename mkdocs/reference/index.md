@@ -6,6 +6,7 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [Matrix](matrix.md)
 - [SortableList](sortable-list.md)
 - [Paint](paint.md)
+- [ThreeWidget](three-widget.md)
 - [EdgeDraw](edge-draw.md)
 - [KeystrokeWidget](keystroke.md)
 - [WebkitSpeechToTextWidget](talk.md)

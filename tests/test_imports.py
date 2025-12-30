@@ -59,3 +59,7 @@ def test_import_tangle_slider():
 
 def test_import_talk():
     from wigglystuff.talk import WebkitSpeechToTextWidget
+
+
+def test_import_three_widget():
+    from wigglystuff.three_widget import ThreeWidget

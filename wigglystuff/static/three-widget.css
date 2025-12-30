@@ -1,0 +1,59 @@
+.three-widget-root {
+  color-scheme: light dark;
+  --three-widget-bg: #f8fafc;
+  --three-widget-border: rgba(15, 23, 42, 0.12);
+  --three-widget-shadow: 0 12px 28px rgba(15, 23, 42, 0.15);
+  --three-widget-radius: 10px;
+}
+
+.dark .three-widget-root,
+.dark-theme .three-widget-root,
+[data-theme="dark"] .three-widget-root {
+  --three-widget-bg: #0f172a;
+  --three-widget-border: rgba(148, 163, 184, 0.28);
+  --three-widget-shadow: 0 16px 32px rgba(2, 6, 23, 0.55);
+}
+
+.three-widget-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--three-widget-bg);
+  border: 1px solid var(--three-widget-border);
+  border-radius: var(--three-widget-radius);
+  box-shadow: var(--three-widget-shadow);
+  overflow: hidden;
+}
+
+.three-widget-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.three-widget-axis-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.2);
+  color: #0f172a;
+  pointer-events: none;
+  user-select: none;
+  transform: translate(-50%, -50%);
+}
+
+.dark .three-widget-axis-label,
+.dark-theme .three-widget-axis-label,
+[data-theme="dark"] .three-widget-axis-label {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(148, 163, 184, 0.5);
+  color: #e2e8f0;
+}
