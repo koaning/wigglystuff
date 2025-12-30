@@ -58,6 +58,9 @@ class Matrix(anywidget.AnyWidget):
             col_names: Custom labels for columns.
             static: Disable editing when ``True``.
             flexible_cols: Allow column count changes interactively.
+            step: Increment step size for cell value adjustments (via ``**kwargs``).
+            digits: Number of decimal digits to display (via ``**kwargs``).
+            mirror: If ``True``, mirror edits symmetrically across the diagonal (via ``**kwargs``).
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         if matrix is not None:
