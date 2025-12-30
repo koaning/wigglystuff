@@ -1,5 +1,6 @@
+from collections.abc import Iterable, Mapping
 from pathlib import Path
-from typing import Any, Iterable, Optional
+from typing import Any, Optional
 
 import anywidget
 import traitlets
@@ -33,6 +34,8 @@ class ThreeWidget(anywidget.AnyWidget):
     show_axes = traitlets.Bool(False).tag(sync=True)
     dark_mode = traitlets.Bool(False).tag(sync=True)
     axis_labels = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
+    animate_updates = traitlets.Bool(False).tag(sync=True)
+    animation_duration_ms = traitlets.Int(400).tag(sync=True)
 
     def __init__(
         self,
@@ -44,6 +47,8 @@ class ThreeWidget(anywidget.AnyWidget):
         show_axes: bool = False,
         dark_mode: bool = False,
         axis_labels: Optional[Iterable[str]] = None,
+        animate_updates: bool = False,
+        animation_duration_ms: int = 400,
         **kwargs: Any,
     ) -> None:
         """Create a ThreeWidget.
@@ -57,6 +62,8 @@ class ThreeWidget(anywidget.AnyWidget):
             show_axes: Whether to show axis helpers.
             dark_mode: Whether to render with a dark background.
             axis_labels: Optional axis labels for x/y/z.
+            animate_updates: Whether to animate point updates.
+            animation_duration_ms: Animation duration in milliseconds.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         super().__init__(
@@ -67,5 +74,40 @@ class ThreeWidget(anywidget.AnyWidget):
             show_axes=show_axes,
             dark_mode=dark_mode,
             axis_labels=list(axis_labels) if axis_labels is not None else [],
+            animate_updates=animate_updates,
+            animation_duration_ms=animation_duration_ms,
             **kwargs,
         )
+
+    def update_points(
+        self,
+        updates: Iterable[Mapping[str, Any]],
+        *,
+        animate: bool = False,
+        duration_ms: Optional[int] = None,
+    ) -> None:
+        """Update point properties in-place while preserving list length.
+
+        Args:
+            updates: Iterable of dict-like updates aligned with existing points.
+                Each update can include any subset of ``x``, ``y``, ``z``,
+                ``color``, ``size`` keys.
+            animate: Whether to animate the transition.
+            duration_ms: Optional animation duration override in milliseconds.
+        """
+        update_list = list(updates)
+        if len(update_list) != len(self.data):
+            raise ValueError(
+                "updates must have the same length as the current data list."
+            )
+        merged: list[dict[str, Any]] = []
+        for current, update in zip(self.data, update_list):
+            if not isinstance(update, Mapping):
+                raise TypeError("Each update must be a mapping of point properties.")
+            next_point = dict(current)
+            next_point.update(update)
+            merged.append(next_point)
+        if duration_ms is not None:
+            self.animation_duration_ms = duration_ms
+        self.animate_updates = animate
+        self.data = merged

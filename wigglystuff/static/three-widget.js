@@ -20759,6 +20759,13 @@ function render({ model, el }) {
   let gridHelper = null;
   let axesHelper = null;
   let chartObjects = [];
+  let points = null;
+  let geometry = null;
+  let material = null;
+  let updateAnimationId = null;
+  let currentPositions = null;
+  let currentColors = null;
+  let currentSizes = null;
   let containerWidth = 1;
   let containerHeight = 1;
   let axisLabelsVisible = false;
@@ -20929,6 +20936,10 @@ function render({ model, el }) {
     controls.update();
   }
   function clearChart() {
+    if (updateAnimationId) {
+      cancelAnimationFrame(updateAnimationId);
+      updateAnimationId = null;
+    }
     chartObjects.forEach((obj) => {
       scene.remove(obj);
       if (obj.geometry) {
@@ -20939,9 +20950,40 @@ function render({ model, el }) {
       }
     });
     chartObjects = [];
+    points = null;
+    geometry = null;
+    material = null;
+    currentPositions = null;
+    currentColors = null;
+    currentSizes = null;
+  }
+  function applyBuffers(positionArray, colorArray, sizeArray) {
+    if (!geometry) {
+      return;
+    }
+    const positionAttr = geometry.getAttribute("position");
+    if (!positionAttr || positionAttr.array.length !== positionArray.length) {
+      geometry.setAttribute("position", new Float32BufferAttribute(positionArray, 3));
+    } else {
+      positionAttr.array.set(positionArray);
+      positionAttr.needsUpdate = true;
+    }
+    const colorAttr = geometry.getAttribute("color");
+    if (!colorAttr || colorAttr.array.length !== colorArray.length) {
+      geometry.setAttribute("color", new Float32BufferAttribute(colorArray, 3));
+    } else {
+      colorAttr.array.set(colorArray);
+      colorAttr.needsUpdate = true;
+    }
+    const sizeAttr = geometry.getAttribute("size");
+    if (!sizeAttr || sizeAttr.array.length !== sizeArray.length) {
+      geometry.setAttribute("size", new Float32BufferAttribute(sizeArray, 1));
+    } else {
+      sizeAttr.array.set(sizeArray);
+      sizeAttr.needsUpdate = true;
+    }
   }
   function updateChart() {
-    clearChart();
     const data = model.get("data");
     const positions = [];
     const colors = [];
@@ -21002,23 +21044,78 @@ function render({ model, el }) {
     if (!userHasInteracted) {
       frameCameraToBounds();
     }
-    const geometry = new BufferGeometry();
-    geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
-    geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
-    geometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
-    const material = new PointsMaterial({
-      vertexColors: true,
-      sizeAttenuation: true
-    });
-    material.onBeforeCompile = (shader) => {
-      shader.vertexShader = shader.vertexShader.replace(
-        "uniform float size;",
-        "attribute float size;"
-      );
+    const nextPositions = new Float32Array(positions);
+    const nextColors = new Float32Array(colors);
+    const nextSizes = new Float32Array(sizes);
+    if (!points || !geometry || !material || !currentPositions || currentPositions.length !== nextPositions.length) {
+      clearChart();
+      geometry = new BufferGeometry();
+      geometry.setAttribute("position", new Float32BufferAttribute(nextPositions, 3));
+      geometry.setAttribute("color", new Float32BufferAttribute(nextColors, 3));
+      geometry.setAttribute("size", new Float32BufferAttribute(nextSizes, 1));
+      material = new PointsMaterial({
+        vertexColors: true,
+        sizeAttenuation: true
+      });
+      material.onBeforeCompile = (shader) => {
+        shader.vertexShader = shader.vertexShader.replace(
+          "uniform float size;",
+          "attribute float size;"
+        );
+      };
+      points = new Points(geometry, material);
+      scene.add(points);
+      chartObjects.push(points);
+      currentPositions = nextPositions;
+      currentColors = nextColors;
+      currentSizes = nextSizes;
+      return;
+    }
+    const shouldAnimate = model.get("animate_updates");
+    const duration = Math.max(0, model.get("animation_duration_ms") || 400);
+    if (!shouldAnimate || duration === 0) {
+      applyBuffers(nextPositions, nextColors, nextSizes);
+      currentPositions = nextPositions;
+      currentColors = nextColors;
+      currentSizes = nextSizes;
+      return;
+    }
+    if (updateAnimationId) {
+      cancelAnimationFrame(updateAnimationId);
+      updateAnimationId = null;
+    }
+    const startPositions = new Float32Array(geometry.getAttribute("position").array);
+    const startColors = new Float32Array(geometry.getAttribute("color").array);
+    const startSizes = new Float32Array(geometry.getAttribute("size").array);
+    const positionAttr = geometry.getAttribute("position");
+    const colorAttr = geometry.getAttribute("color");
+    const sizeAttr = geometry.getAttribute("size");
+    const startTime = performance.now();
+    const animateUpdate = (now) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = progress * (2 - progress);
+      for (let i = 0; i < positionAttr.array.length; i++) {
+        positionAttr.array[i] = startPositions[i] + (nextPositions[i] - startPositions[i]) * eased;
+      }
+      for (let i = 0; i < colorAttr.array.length; i++) {
+        colorAttr.array[i] = startColors[i] + (nextColors[i] - startColors[i]) * eased;
+      }
+      for (let i = 0; i < sizeAttr.array.length; i++) {
+        sizeAttr.array[i] = startSizes[i] + (nextSizes[i] - startSizes[i]) * eased;
+      }
+      positionAttr.needsUpdate = true;
+      colorAttr.needsUpdate = true;
+      sizeAttr.needsUpdate = true;
+      if (progress < 1) {
+        updateAnimationId = requestAnimationFrame(animateUpdate);
+      } else {
+        updateAnimationId = null;
+        currentPositions = nextPositions;
+        currentColors = nextColors;
+        currentSizes = nextSizes;
+      }
     };
-    const points = new Points(geometry, material);
-    scene.add(points);
-    chartObjects.push(points);
+    updateAnimationId = requestAnimationFrame(animateUpdate);
   }
   updateSizing();
   updateGrid();

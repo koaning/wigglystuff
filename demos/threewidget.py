@@ -14,14 +14,11 @@ def _():
 
     random.seed(42)
     data = []
-    hex_samples = []
     for _ in range(900):
         r = random.randint(0, 255)
         g = random.randint(0, 255)
         b = random.randint(0, 255)
         hex_value = f"#{r:02x}{g:02x}{b:02x}"
-        if len(hex_samples) < 12:
-            hex_samples.append(hex_value)
         data.append(
             {
                 "x": r / 255.0,
@@ -39,6 +36,7 @@ def _():
             height=420,
             show_grid=True,
             show_axes=True,
+            axis_labels=["R", "G", "B"],
         )
     )
     return (widget,)
