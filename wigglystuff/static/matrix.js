@@ -15,18 +15,13 @@ function render({model, el}){
     };
     
     let matrix = JSON.parse(JSON.stringify(model.get("matrix"))); // Deep copy
-    let isDragging = false;
-    let lastUpdateTime = 0;
 
     const wrapper = document.createElement('div');
     wrapper.classList.add("matrix-wrapper");
     el.appendChild(wrapper);
 
     function renderMatrix() {
-        // Only clear and re-render if not dragging
-        if (!isDragging) {
-            wrapper.innerHTML = '';
-        }
+        wrapper.innerHTML = '';
         
         // Create main grid container
         const gridContainer = document.createElement('div');
@@ -35,17 +30,13 @@ function render({model, el}){
             gridContainer.classList.add('flexible-columns');
         }
         
-        // Cache row names length to avoid repeated property access
-        const hasRowNames = config.rowNames.length > 0;
-        const hasColNames = config.colNames.length > 0;
-        
         // First column for row labels (if they exist)
-        if (hasRowNames) {
+        if (config.rowNames.length > 0) {
             const rowLabelColumn = document.createElement('div');
             rowLabelColumn.className = 'matrix-column matrix-label-column';
             
             // Empty corner cell if we have column names
-            if (hasColNames) {
+            if (config.colNames.length > 0) {
                 const corner = document.createElement('div');
                 corner.className = 'matrix-cell matrix-corner-cell';
                 rowLabelColumn.appendChild(corner);
@@ -72,7 +63,7 @@ function render({model, el}){
             column.className = 'matrix-column matrix-data-column';
             
             // Column header if exists
-            if (hasColNames) {
+            if (config.colNames.length > 0) {
                 const header = document.createElement('div');
                 header.className = 'matrix-cell matrix-col-label';
                 header.textContent = config.colNames[colIndex] || '';
@@ -117,7 +108,6 @@ function render({model, el}){
 
     function startDragging(e) {
         e.preventDefault();
-        isDragging = true;
         const element = e.target;
         const startX = e.clientX;
         const startValue = parseFloat(element.textContent);
@@ -129,24 +119,14 @@ function render({model, el}){
             const steps = Math.floor(deltaX / config.pixelsPerStep);
             const newValue = Math.max(config.minValue, Math.min(config.maxValue, startValue + steps * config.stepSize));
             updateMatrixValue(row, col, newValue);
-            
-            // Only update the specific cell text during drag
-            element.textContent = newValue.toFixed(config.digits);
-            
-            // Throttle model updates
-            const now = Date.now();
-            if (now - lastUpdateTime > 50) {
-                debouncedUpdateModel();
-                lastUpdateTime = now;
-            }
+            renderMatrix();
+            debouncedUpdateModel();
         }
 
         function onMouseUp() {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
-            isDragging = false;
             updateModel(); // Ensure final state is updated
-            renderMatrix(); // Full re-render after drag ends
         }
 
         document.addEventListener('mousemove', onMouseMove);
