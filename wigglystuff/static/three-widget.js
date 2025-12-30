@@ -20747,9 +20747,14 @@ function render({ model, el }) {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
+  controls.autoRotate = model.get("auto_rotate");
+  controls.autoRotateSpeed = model.get("auto_rotate_speed");
   let userHasInteracted = false;
   controls.addEventListener("start", () => {
     userHasInteracted = true;
+    controls.autoRotate = false;
+    model.set("auto_rotate", false);
+    model.save_changes();
   });
   const ambientLight = new AmbientLight(16777215, darkMode ? 0.4 : 0.6);
   scene.add(ambientLight);
@@ -21130,6 +21135,15 @@ function render({ model, el }) {
   model.on("change:axis_labels", () => {
     updateAxisLabels();
     updateAxisLabelPositions();
+  });
+  model.on("change:auto_rotate", () => {
+    const shouldRotate = model.get("auto_rotate");
+    if (shouldRotate) {
+      controls.autoRotate = true;
+    }
+  });
+  model.on("change:auto_rotate_speed", () => {
+    controls.autoRotateSpeed = model.get("auto_rotate_speed");
   });
   let animationId;
   function animate() {
