@@ -4,7 +4,6 @@
 #     "altair==5.5.0",
 #     "marimo",
 #     "matplotlib==3.10.1",
-#     "mofresh==0.1.0",
 #     "mohtml==0.1.7",
 #     "numpy==2.2.5",
 #     "polars==1.29.0",
@@ -73,7 +72,7 @@ def _(mo):
 
 @app.cell
 def _(cumsum_linechart):
-    from mofresh import ImageRefreshWidget
+    from wigglystuff import ImageRefreshWidget
 
     widget = ImageRefreshWidget(
         src=cumsum_linechart([1,2,3,4])

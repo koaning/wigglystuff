@@ -94,17 +94,17 @@ hide:
 <div class="gallery-item">
 <div class="gallery-title">ImageRefreshWidget</div>
 <a href="examples/html/" class="gallery-img"><img src="assets/gallery/imagerefresh.png" alt="ImageRefreshWidget"></a>
-<div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/html/">API</a></div>
+<div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/image-refresh/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">HTMLRefreshWidget</div>
 <a href="examples/html/" class="gallery-img"><img src="assets/gallery/htmlwidget.png" alt="HTMLRefreshWidget"></a>
-<div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/html/">API</a></div>
+<div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/html-refresh/">API</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">ProgressBar</div>
 <a href="examples/html/" class="gallery-img"><img src="assets/gallery/progressbar.png" alt="ProgressBar widget"></a>
-<div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/html/">API</a></div>
+<div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/progress-bar/">API</a></div>
 </div>
 </div>
 
