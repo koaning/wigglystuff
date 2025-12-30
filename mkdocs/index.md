@@ -91,6 +91,11 @@ hide:
 <a href="examples/webcam-capture/" class="gallery-img"><img src="assets/gallery/webcam-capture.png" alt="WebcamCapture widget"></a>
 <div class="gallery-links"><a href="examples/webcam-capture/">Demo</a><a href="reference/webcam-capture/">API</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">ThreeWidget</div>
+<a href="examples/threewidget/" class="gallery-img"><img src="assets/gallery/threewidget.png" alt="ThreeJS widget"></a>
+<div class="gallery-links"><a href="examples/threewidget/">Demo</a><a href="reference/threewidget/">API</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
