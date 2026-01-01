@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.1"
+__generated_with = "0.18.4"
 app = marimo.App(width="medium")
 
 
@@ -40,6 +40,11 @@ def _(mo, widget):
 
     mo.callout("Click the button to copy the payload below:")
     mo.md(f"```text\n{truncated}\n```")
+    return
+
+
+@app.cell
+def _():
     return
 
 
