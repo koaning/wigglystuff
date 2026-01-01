@@ -80,7 +80,7 @@ def _(data, random, three):
 
 @app.cell
 def _(widget):
-    widget.start_rotate(speed=1.0)
+    widget.start_rotate(speed=10.0)
     return
 
 
