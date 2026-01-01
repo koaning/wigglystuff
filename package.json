@@ -1,7 +1,7 @@
 {
   "name": "wigglystuff",
   "scripts": {
-    "dev-copy-btn": "./node_modules/.bin/esbuild js/copybutton/widget.tsx --bundle --outfile=wigglystuff/static/copybutton.js --format=esm --watch --minify",
+    "dev-copy-btn": "./node_modules/.bin/esbuild js/copybutton/widget.js --bundle --outfile=wigglystuff/static/copybutton.js --format=esm --watch --minify",
     "build-three-widget": "./node_modules/.bin/esbuild js/three-widget/widget.js --bundle --outfile=wigglystuff/static/three-widget.js --format=esm --minify",
     "dev-three-widget": "./node_modules/.bin/esbuild js/three-widget/widget.js --bundle --outfile=wigglystuff/static/three-widget.js --format=esm --watch --minify"
   },
