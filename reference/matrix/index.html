@@ -1285,6 +1285,51 @@
           </tr>
           <tr class="doc-section-item">
             <td>
+                <code>step</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Increment step size for cell value adjustments (via <code>**kwargs</code>).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>digits</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of decimal digits to display (via <code>**kwargs</code>).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>mirror</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>True</code>, mirror edits symmetrically across the diagonal (via <code>**kwargs</code>).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
                 <code>**kwargs</code>
             </td>
             <td>
@@ -1384,7 +1429,10 @@
 <span class="normal"><a href="#__codelineno-0-104">104</a></span>
 <span class="normal"><a href="#__codelineno-0-105">105</a></span>
 <span class="normal"><a href="#__codelineno-0-106">106</a></span>
-<span class="normal"><a href="#__codelineno-0-107">107</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-107">107</a></span>
+<span class="normal"><a href="#__codelineno-0-108">108</a></span>
+<span class="normal"><a href="#__codelineno-0-109">109</a></span>
+<span class="normal"><a href="#__codelineno-0-110">110</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 <a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="bp">self</span><span class="p">,</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="n">matrix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="n">rows</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
@@ -1411,53 +1459,56 @@
 <a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="sd">        col_names: Custom labels for columns.</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="sd">        static: Disable editing when ``True``.</span>
 <a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">        flexible_cols: Allow column count changes interactively.</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="k">if</span> <span class="n">matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="n">matrix_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="k">if</span> <span class="n">matrix_array</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">min_value</span><span class="p">:</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>                <span class="sa">f</span><span class="s2">&quot;The min value of input matrix is less than min_value=</span><span class="si">{</span><span class="n">min_value</span><span class="si">}</span><span class="s2">.&quot;</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="p">)</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="k">if</span> <span class="n">matrix_array</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">:</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>                <span class="sa">f</span><span class="s2">&quot;The max value of input matrix is less than max_value=</span><span class="si">{</span><span class="n">max_value</span><span class="si">}</span><span class="s2">.&quot;</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>            <span class="p">)</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">matrix_array</span><span class="o">.</span><span class="n">shape</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix_array</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="n">matrix</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a>            <span class="p">[(</span><span class="n">min_value</span> <span class="o">+</span> <span class="n">max_value</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cols</span><span class="p">)]</span>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a>            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a>        <span class="p">]</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>    <span class="k">if</span> <span class="n">row_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_names</span><span class="p">)</span> <span class="o">!=</span> <span class="n">rows</span><span class="p">:</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>            <span class="sa">f</span><span class="s2">&quot;Length of row_names (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">row_names</span><span class="p">)</span><span class="si">}</span><span class="s2">) must match number of rows (</span><span class="si">{</span><span class="n">rows</span><span class="si">}</span><span class="s2">).&quot;</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>        <span class="p">)</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>    <span class="k">if</span> <span class="n">col_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)</span> <span class="o">!=</span> <span class="n">cols</span><span class="p">:</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>            <span class="sa">f</span><span class="s2">&quot;Length of col_names (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)</span><span class="si">}</span><span class="s2">) must match number of columns (</span><span class="si">{</span><span class="n">cols</span><span class="si">}</span><span class="s2">).&quot;</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a>        <span class="p">)</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="k">if</span> <span class="n">row_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-91" name="__codelineno-0-91"></a>        <span class="n">row_names</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="k">if</span> <span class="n">col_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="n">col_names</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">matrix</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="n">rows</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="n">max_value</span><span class="o">=</span><span class="n">max_value</span><span class="p">,</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="n">triangular</span><span class="o">=</span><span class="n">triangular</span><span class="p">,</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="n">row_names</span><span class="o">=</span><span class="n">row_names</span><span class="p">,</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a>        <span class="n">col_names</span><span class="o">=</span><span class="n">col_names</span><span class="p">,</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="n">static</span><span class="o">=</span><span class="n">static</span><span class="p">,</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a>        <span class="n">flexible_cols</span><span class="o">=</span><span class="n">flexible_cols</span><span class="p">,</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106"></a>        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="p">)</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">        step: Increment step size for cell value adjustments (via ``**kwargs``).</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">        digits: Number of decimal digits to display (via ``**kwargs``).</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">        mirror: If ``True``, mirror edits symmetrically across the diagonal (via ``**kwargs``).</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>    <span class="k">if</span> <span class="n">matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="n">matrix_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>        <span class="k">if</span> <span class="n">matrix_array</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">min_value</span><span class="p">:</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>                <span class="sa">f</span><span class="s2">&quot;The min value of input matrix is less than min_value=</span><span class="si">{</span><span class="n">min_value</span><span class="si">}</span><span class="s2">.&quot;</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="p">)</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="k">if</span> <span class="n">matrix_array</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">max_value</span><span class="p">:</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>                <span class="sa">f</span><span class="s2">&quot;The max value of input matrix is less than max_value=</span><span class="si">{</span><span class="n">max_value</span><span class="si">}</span><span class="s2">.&quot;</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>            <span class="p">)</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">matrix_array</span><span class="o">.</span><span class="n">shape</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="n">matrix</span> <span class="o">=</span> <span class="n">matrix_array</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a>        <span class="n">matrix</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>            <span class="p">[(</span><span class="n">min_value</span> <span class="o">+</span> <span class="n">max_value</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cols</span><span class="p">)]</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a>        <span class="p">]</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="k">if</span> <span class="n">row_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_names</span><span class="p">)</span> <span class="o">!=</span> <span class="n">rows</span><span class="p">:</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="sa">f</span><span class="s2">&quot;Length of row_names (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">row_names</span><span class="p">)</span><span class="si">}</span><span class="s2">) must match number of rows (</span><span class="si">{</span><span class="n">rows</span><span class="si">}</span><span class="s2">).&quot;</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a>        <span class="p">)</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="k">if</span> <span class="n">col_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)</span> <span class="o">!=</span> <span class="n">cols</span><span class="p">:</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a>            <span class="sa">f</span><span class="s2">&quot;Length of col_names (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)</span><span class="si">}</span><span class="s2">) must match number of columns (</span><span class="si">{</span><span class="n">cols</span><span class="si">}</span><span class="s2">).&quot;</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a>        <span class="p">)</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a>    <span class="k">if</span> <span class="n">row_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a>        <span class="n">row_names</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>    <span class="k">if</span> <span class="n">col_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">col_names</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="n">matrix</span><span class="o">=</span><span class="n">matrix</span><span class="p">,</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="n">rows</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="n">cols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a>        <span class="n">max_value</span><span class="o">=</span><span class="n">max_value</span><span class="p">,</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="n">triangular</span><span class="o">=</span><span class="n">triangular</span><span class="p">,</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>        <span class="n">row_names</span><span class="o">=</span><span class="n">row_names</span><span class="p">,</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>        <span class="n">col_names</span><span class="o">=</span><span class="n">col_names</span><span class="p">,</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>        <span class="n">static</span><span class="o">=</span><span class="n">static</span><span class="p">,</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a>        <span class="n">flexible_cols</span><span class="o">=</span><span class="n">flexible_cols</span><span class="p">,</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 

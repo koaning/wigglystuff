@@ -40,6 +40,8 @@ Parameters:
 | `axis_labels` | `Optional[Iterable[str]]` | Optional axis labels for x/y/z. | `None` |
 | `animate_updates` | `bool` | Whether to animate point updates. | `False` |
 | `animation_duration_ms` | `int` | Animation duration in milliseconds. | `400` |
+| `auto_rotate` | `bool` | Whether to start with automatic rotation enabled. | `False` |
+| `auto_rotate_speed` | `float` | Speed of automatic rotation. | `2.0` |
 | `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
 
  Source code in `wigglystuff/three_widget.py`
@@ -57,6 +59,8 @@ def __init__(
     axis_labels: Optional[Iterable[str]] = None,
     animate_updates: bool = False,
     animation_duration_ms: int = 400,
+    auto_rotate: bool = False,
+    auto_rotate_speed: float = 2.0,
     **kwargs: Any,
 ) -> None:
     """Create a ThreeWidget.
@@ -72,6 +76,8 @@ def __init__(
         axis_labels: Optional axis labels for x/y/z.
         animate_updates: Whether to animate point updates.
         animation_duration_ms: Animation duration in milliseconds.
+        auto_rotate: Whether to start with automatic rotation enabled.
+        auto_rotate_speed: Speed of automatic rotation.
         **kwargs: Forwarded to ``anywidget.AnyWidget``.
     """
     super().__init__(
@@ -84,8 +90,47 @@ def __init__(
         axis_labels=list(axis_labels) if axis_labels is not None else [],
         animate_updates=animate_updates,
         animation_duration_ms=animation_duration_ms,
+        auto_rotate=auto_rotate,
+        auto_rotate_speed=auto_rotate_speed,
         **kwargs,
     )
+```
+
+
+## start_rotate
+
+
+```
+start_rotate(speed: float = 2.0) -> None
+```
+
+
+Start automatic rotation around the center of all points.
+
+
+Rotation stops when the user interacts with the widget.
+
+
+Parameters:
+
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `speed` | `float` | Speed of automatic rotation. | `2.0` |
+
+ Source code in `wigglystuff/three_widget.py`
+
+```
+def start_rotate(self, speed: float = 2.0) -> None:
+    """Start automatic rotation around the center of all points.
+
+    Rotation stops when the user interacts with the widget.
+
+    Args:
+        speed: Speed of automatic rotation.
+    """
+    self.auto_rotate_speed = speed
+    self.auto_rotate = True
 ```
 
 
