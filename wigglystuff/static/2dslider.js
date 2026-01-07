@@ -4,10 +4,10 @@ function render({ model, el }) {
   canvas.setAttribute("width", model.get("width").toString());
   canvas.setAttribute("height", model.get("height").toString());
   canvas.setAttribute("style", "border: 1px solid #ccc; background: #eee;");
-  
+
   const sliderValuesDiv = document.createElement("div");
   sliderValuesDiv.setAttribute("id", "sliderValues");
-  
+
   el.appendChild(canvas);
   el.appendChild(sliderValuesDiv);
 
@@ -21,7 +21,7 @@ function render({ model, el }) {
   let currentX = 0;
   let currentY = 0;
 
-  function drawSlider() {
+  function drawSlider(updateModel = true) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       ctx.beginPath();
@@ -39,9 +39,11 @@ function render({ model, el }) {
       const mappedY = y_min + ((-currentY / radius) + 1) / 2 * (y_max - y_min); // Y is inverted
 
       sliderValuesDiv.textContent = `X: ${mappedX.toFixed(2)}, Y: ${mappedY.toFixed(2)}`;
-      model.set('x', mappedX);
-      model.set('y', mappedY);
-      model.save_changes();
+      if (updateModel) {
+        model.set('x', mappedX);
+        model.set('y', mappedY);
+        model.save_changes();
+      }
   }
 
   function syncFromModel() {
@@ -53,9 +55,9 @@ function render({ model, el }) {
       // Inverse mapping from user coordinates to pixel coordinates
       currentX = radius * (2 * (modelX - x_min) / (x_max - x_min) - 1);
       currentY = -radius * (2 * (modelY - y_min) / (y_max - y_min) - 1); // Y is inverted
-      
+
       if (!isDragging) {
-        drawSlider();
+        drawSlider(false);  // Don't update model when syncing from model
       }
   }
 
