@@ -1,3 +1,13 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "marimo",
+#     "matplotlib==3.10.8",
+#     "numpy==2.4.0",
+#     "pandas==2.3.3",
+#     "wigglystuff==0.2.11",
+# ]
+# ///
 import marimo
 
 __generated_with = "0.18.4"
@@ -74,9 +84,21 @@ def _(mo, widget):
 
 @app.cell
 def _(widget):
-    import polars as pl 
+    import matplotlib.pyplot as plt
 
-    plot = pl.DataFrame(widget.value["selected_row"]).plot.line(x="x", y="y").properties(width=500, height=500) if widget.value.get("selected_row") else None
+    def make_plot(selected_row):
+        if not selected_row:
+            return None
+        fig, ax = plt.subplots(figsize=(5, 5))
+        xs = [p["x"] for p in selected_row]
+        ys = [p["y"] for p in selected_row]
+        ax.plot(xs, ys)
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        plt.close(fig)
+        return fig
+
+    plot = make_plot(widget.value.get("selected_row"))
     return (plot,)
 
 
