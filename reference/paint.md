@@ -7,10 +7,10 @@
 Notebook-friendly paint widget with MS Paint style tools and PIL helpers.
 
 
-Examples:
-
 
 ```
+from wigglystuff import Paint
+
 paint = Paint(width=400, height=300)
 paint
 ```
@@ -19,17 +19,7 @@ paint
 Create a Paint widget.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `height` | `int` | Canvas height in pixels. | `DEFAULT_HEIGHT` |
-| `width` | `int` | Canvas width in pixels (ignored when `init_image` sets aspect ratio). | `DEFAULT_WIDTH` |
-| `store_background` | `bool` | Persist previous strokes when background changes. | `True` |
-| `init_image` | `Optional[Any]` | Optional path/URL/PIL image/bytes to preload. | `None` |
-
- Source code in `wigglystuff/paint.py`
+  Source code in `wigglystuff/paint.py`
 
 ```
 def __init__(self, height: int = DEFAULT_HEIGHT, width: int = DEFAULT_WIDTH, store_background: bool = True, init_image: Optional[Any] = None):

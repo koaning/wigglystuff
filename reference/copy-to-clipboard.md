@@ -7,10 +7,10 @@
 Button widget that copies the provided `text_to_copy` payload.
 
 
-Examples:
-
 
 ```
+from wigglystuff import CopyToClipboard
+
 button = CopyToClipboard(text_to_copy="Hello, world!")
 button
 ```
@@ -19,15 +19,7 @@ button
 Create a CopyToClipboard button.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `text_to_copy` | `str` | Initial string placed on the clipboard when clicked. | `''` |
-| `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
-
- Source code in `wigglystuff/copy_to_clipboard.py`
+  Source code in `wigglystuff/copy_to_clipboard.py`
 
 ```
 def __init__(self, text_to_copy: str = "", **kwargs: Any):

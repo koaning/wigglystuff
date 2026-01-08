@@ -7,10 +7,10 @@
 Simple color picker syncing a `#RRGGBB` hex value back to Python.
 
 
-Examples:
-
 
 ```
+from wigglystuff import ColorPicker
+
 picker = ColorPicker(color="#ff5733")
 picker
 ```
@@ -19,15 +19,7 @@ picker
 Create a ColorPicker widget.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `color` | `Optional[str]` | Optional starting hex color (e.g. `"#ff00aa"`). | `None` |
-| `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
-
- Source code in `wigglystuff/color_picker.py`
+  Source code in `wigglystuff/color_picker.py`
 
 ```
 def __init__(self, *, color: Optional[str] = None, **kwargs: Any):

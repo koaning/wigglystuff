@@ -10,8 +10,6 @@ A widget that displays HTML content and refreshes when it changes.
 This widget creates a div element that automatically updates whenever the `html` attribute is modified, making it ideal for displaying dynamically generated HTML content like SVG charts in Jupyter notebooks.
 
 
-Attributes:
-
 
 | Name | Type | Description |
 | --- | --- | --- |

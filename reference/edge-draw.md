@@ -7,10 +7,10 @@
 Sketch node/link diagrams and sync edges as adjacency-friendly data.
 
 
-Examples:
-
 
 ```
+from wigglystuff import EdgeDraw
+
 graph = EdgeDraw(names=["A", "B", "C", "D"])
 graph
 ```
@@ -19,20 +19,7 @@ graph
 Create an EdgeDraw widget.
 
 
-Parameters:
-
-
-**
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `names` | `List[str]` | Ordered list of node labels. | required |
-| `height` | `int` | Canvas height in pixels. | `400` |
-| `width` | `int` | Canvas width in pixels. | `600` |
-| `directed` | `bool` | Whether to draw directed edges with arrowheads. | `True` |
-| `links` | `Optional[Iterable[Union[Sequence[str], dict]]]` | Optional list of (source, target) pairs to seed the widget. | `None` |
-
- Source code in `wigglystuff/edge_draw.py`
+  Source code in `wigglystuff/edge_draw.py`
 
 ```
 def __init__(

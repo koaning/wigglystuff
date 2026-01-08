@@ -10,10 +10,10 @@ Two dimensional slider for simultaneous adjustments.
 Emits synchronized `x`/`y` floats that stay within configurable bounds while rendering to a pixel canvas sized via `width`/`height`.
 
 
-Examples:
-
 
 ```
+from wigglystuff import Slider2D
+
 slider = Slider2D(x=0.5, y=0.5, x_bounds=(0.0, 1.0), y_bounds=(0.0, 1.0))
 slider
 ```
@@ -22,20 +22,7 @@ slider
 Create a Slider2D widget.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `x` | `float` | Initial x coordinate. | `0.0` |
-| `y` | `float` | Initial y coordinate. | `0.0` |
-| `width` | `int` | Canvas width in pixels. | `400` |
-| `height` | `int` | Canvas height in pixels. | `400` |
-| `x_bounds` | `tuple[float, float]` | Min/max tuple for x. | `(-1.0, 1.0)` |
-| `y_bounds` | `tuple[float, float]` | Min/max tuple for y. | `(-1.0, 1.0)` |
-| `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
-
- Source code in `wigglystuff/slider2d.py`
+  Source code in `wigglystuff/slider2d.py`
 
 ```
 def __init__(

@@ -13,8 +13,6 @@ This widget displays a visual progress bar that updates in real-time as the `val
 One of the main benefits of this utility is that you have a progress bar that doesn't depend on ipywidgets while you still have something that works across notebook projects.
 
 
-Attributes:
-
 
 | Name | Type | Description |
 | --- | --- | --- |

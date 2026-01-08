@@ -7,10 +7,10 @@
 Spreadsheet-like numeric editor with bounds, naming, and symmetry helpers.
 
 
-Examples:
-
 
 ```
+from wigglystuff import Matrix
+
 matrix = Matrix(rows=3, cols=3, min_value=0, max_value=10)
 matrix
 ```
@@ -19,33 +19,7 @@ matrix
 Create a Matrix editor.
 
 
-Parameters:
-
-
-**
-
-**
-
-**
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `matrix` | `Optional[List[List[float]]]` | Optional 2D list of initial values. | `None` |
-| `rows` | `int` | Number of rows when `matrix` is omitted. | `3` |
-| `cols` | `int` | Number of columns when `matrix` is omitted. | `3` |
-| `min_value` | `float` | Lower bound for cell values. | `-100` |
-| `max_value` | `float` | Upper bound for cell values. | `100` |
-| `triangular` | `bool` | If `True`, enforce triangular editing constraints. | `False` |
-| `row_names` | `Optional[List[str]]` | Custom labels for rows. | `None` |
-| `col_names` | `Optional[List[str]]` | Custom labels for columns. | `None` |
-| `static` | `bool` | Disable editing when `True`. | `False` |
-| `flexible_cols` | `bool` | Allow column count changes interactively. | `False` |
-| `step` |  | Increment step size for cell value adjustments (via `**kwargs`). | required |
-| `digits` |  | Number of decimal digits to display (via `**kwargs`). | required |
-| `mirror` |  | If `True`, mirror edits symmetrically across the diagonal (via `**kwargs`). | required |
-| `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
-
- Source code in `wigglystuff/matrix.py`
+  Source code in `wigglystuff/matrix.py`
 
 ```
 def __init__(

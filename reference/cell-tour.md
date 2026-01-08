@@ -10,13 +10,13 @@ Simplified tour widget for marimo notebooks.
 Wraps `DriverTour` with cell-aware step helpers so you can reference marimo cells by index or `data-cell-name` attributes.
 
 
-Examples:
-
 
 Using cell indices:
 
 
 ```
+from wigglystuff import CellTour
+
 tour = CellTour(steps=[
     {"cell": 0, "title": "Imports", "description": "Load libraries"},
     {"cell": 2, "title": "Processing", "description": "Data transformation"},
@@ -40,17 +40,7 @@ tour
 Create a CellTour widget.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `steps` | `Sequence[dict]` | List of step dictionaries with cell, title, description keys. | `()` |
-| `auto_start` | `bool` | Start tour automatically on render. | `False` |
-| `show_progress` | `bool` | Show step progress indicator. | `True` |
-| `**kwargs` | `Any` | Forwarded to `DriverTour`. | `{}` |
-
- Source code in `wigglystuff/cell_tour.py`
+  Source code in `wigglystuff/cell_tour.py`
 
 ```
 def __init__(

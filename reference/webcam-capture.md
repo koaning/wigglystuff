@@ -10,10 +10,10 @@ Webcam capture widget with manual and interval snapshots.
 The widget shows a live webcam preview plus a capture button and an auto-capture toggle. When `capturing` is enabled, the browser updates `image_base64` on the cadence specified by `interval_ms`.
 
 
-Examples:
-
 
 ```
+from wigglystuff import WebcamCapture
+
 cam = WebcamCapture(interval_ms=1000)
 cam
 ```
@@ -22,15 +22,7 @@ cam
 Create a WebcamCapture widget.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `interval_ms` | `int` | Capture interval in milliseconds when auto-capture is on. | `1000` |
-| `facing_mode` | `str` | Camera facing mode ("user" or "environment"). | `'user'` |
-
- Source code in `wigglystuff/webcam_capture.py`
+  Source code in `wigglystuff/webcam_capture.py`
 
 ```
 def __init__(self, interval_ms: int = 1000, facing_mode: str = "user") -> None:

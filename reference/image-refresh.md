@@ -10,8 +10,6 @@ A widget that displays an image and refreshes when the source changes.
 This widget creates an image element that automatically updates whenever the `src` attribute is modified, making it ideal for displaying dynamically generated images in Jupyter notebooks.
 
 
-Attributes:
-
 
 | Name | Type | Description |
 | --- | --- | --- |

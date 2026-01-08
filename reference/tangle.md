@@ -10,10 +10,10 @@
 Inline slider inspired by Bret Victor's Tangle UI.
 
 
-Examples:
-
 
 ```
+from wigglystuff import Tangle Widgets
+
 slider = TangleSlider(amount=50, min_value=0, max_value=100)
 slider
 ```
@@ -22,22 +22,7 @@ slider
 Create a slider suitable for inline Tangle interactions.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `amount` | `Optional[float]` | Starting value; defaults to midpoint of bounds. | `None` |
-| `min_value` | `float` | Lower bound. | `-100` |
-| `max_value` | `float` | Upper bound. | `100` |
-| `step` | `float` | Increment size. | `1.0` |
-| `pixels_per_step` | `int` | Drag distance per step. | `2` |
-| `prefix` | `str` | Text shown before the value. | `''` |
-| `suffix` | `str` | Text shown after the value. | `''` |
-| `digits` | `int` | Number formatting precision. | `1` |
-| `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
-
- Source code in `wigglystuff/tangle.py`
+  Source code in `wigglystuff/tangle.py`
 
 ```
 def __init__(
@@ -105,10 +90,10 @@ def __init__(
 Inline choice widget that cycles through labeled options.
 
 
-Examples:
-
 
 ```
+from wigglystuff import Tangle Widgets
+
 choice = TangleChoice(choices=["small", "medium", "large"])
 choice
 ```
@@ -117,17 +102,7 @@ choice
 Create a TangleChoice widget.
 
 
-Parameters:
-
-
-**
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `choices` | `List[str]` | Ordered sequence of options (min two). | required |
-| `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
-
- Source code in `wigglystuff/tangle.py`
+  Source code in `wigglystuff/tangle.py`
 
 ```
 def __init__(self, choices: List[str], **kwargs: Any) -> None:
@@ -161,10 +136,10 @@ def __init__(self, choices: List[str], **kwargs: Any) -> None:
 Dropdown-based take on the Tangle choice pattern.
 
 
-Examples:
-
 
 ```
+from wigglystuff import Tangle Widgets
+
 select = TangleSelect(choices=["red", "green", "blue"])
 select
 ```
@@ -173,17 +148,7 @@ select
 Create a TangleSelect dropdown.
 
 
-Parameters:
-
-
-**
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `choices` | `List[str]` | Ordered sequence of options (min two). | required |
-| `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
-
- Source code in `wigglystuff/tangle.py`
+  Source code in `wigglystuff/tangle.py`
 
 ```
 def __init__(self, choices: List[str], **kwargs: Any) -> None:

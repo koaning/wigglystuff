@@ -7,10 +7,10 @@
 Drag-and-drop list widget with optional add/remove/edit affordances.
 
 
-Examples:
-
 
 ```
+from wigglystuff import SortableList
+
 sortable = SortableList(value=["apple", "banana", "cherry"], removable=True)
 sortable
 ```
@@ -19,21 +19,7 @@ sortable
 Create a sortable list widget.
 
 
-Parameters:
-
-
-**
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `value` | `Sequence[str]` | Initial sequence of string items. | required |
-| `addable` | `bool` | Allow inserting new entries. | `False` |
-| `removable` | `bool` | Allow deleting entries. | `False` |
-| `editable` | `bool` | Enable inline text editing. | `False` |
-| `label` | `str` | Optional heading shown above the list. | `''` |
-| `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
-
- Source code in `wigglystuff/sortable_list.py`
+  Source code in `wigglystuff/sortable_list.py`
 
 ```
 def __init__(

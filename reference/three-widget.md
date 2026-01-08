@@ -10,10 +10,10 @@ Interactive 3D scatter plot powered by Three.js.
 The widget renders a collection of 3D points with per-point color and size attributes, suitable for quick exploratory visualizations in notebook environments.
 
 
-Examples:
-
 
 ```
+from wigglystuff import ThreeWidget
+
 data = [
     {"x": 1.0, "y": 2.0, "z": 3.0, "color": "tomato", "size": 0.2},
     {"x": -1.0, "y": 0.5, "z": -2.0, "color": "#22c55e", "size": 0.15},
@@ -26,25 +26,7 @@ widget
 Create a ThreeWidget.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `data` | `Optional[Iterable[dict[str, Any]]]` | Iterable of dicts with `x`, `y`, `z` coordinates and optional `color`/`size` keys. | `None` |
-| `width` | `int` | Canvas width in pixels. | `600` |
-| `height` | `int` | Canvas height in pixels. | `400` |
-| `show_grid` | `bool` | Whether to show a grid helper. | `False` |
-| `show_axes` | `bool` | Whether to show axis helpers. | `False` |
-| `dark_mode` | `bool` | Whether to render with a dark background. | `False` |
-| `axis_labels` | `Optional[Iterable[str]]` | Optional axis labels for x/y/z. | `None` |
-| `animate_updates` | `bool` | Whether to animate point updates. | `False` |
-| `animation_duration_ms` | `int` | Animation duration in milliseconds. | `400` |
-| `auto_rotate` | `bool` | Whether to start with automatic rotation enabled. | `False` |
-| `auto_rotate_speed` | `float` | Speed of automatic rotation. | `2.0` |
-| `**kwargs` | `Any` | Forwarded to `anywidget.AnyWidget`. | `{}` |
-
- Source code in `wigglystuff/three_widget.py`
+  Source code in `wigglystuff/three_widget.py`
 
 ```
 def __init__(
@@ -111,14 +93,7 @@ Start automatic rotation around the center of all points.
 Rotation stops when the user interacts with the widget.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `speed` | `float` | Speed of automatic rotation. | `2.0` |
-
- Source code in `wigglystuff/three_widget.py`
+  Source code in `wigglystuff/three_widget.py`
 
 ```
 def start_rotate(self, speed: float = 2.0) -> None:
@@ -150,18 +125,7 @@ update_points(
 Update point properties in-place while preserving list length.
 
 
-Parameters:
-
-
-**
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `updates` | `Iterable[Mapping[str, Any]]` | Iterable of dict-like updates aligned with existing points. Each update can include any subset of `x`, `y`, `z`, `color`, `size` keys. | required |
-| `animate` | `bool` | Whether to animate the transition. | `False` |
-| `duration_ms` | `Optional[int]` | Optional animation duration override in milliseconds. | `None` |
-
- Source code in `wigglystuff/three_widget.py`
+  Source code in `wigglystuff/three_widget.py`
 
 ```
 def update_points(

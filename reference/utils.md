@@ -7,16 +7,6 @@
 Convert an Altair chart to SVG format.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `chart` |  | An Altair chart object. | required |
-
-**
-
-Returns:
 
 
 | Name | Type | Description |
@@ -60,16 +50,6 @@ Decorator to convert matplotlib plotting functions to base64-encoded images.
 This decorator wraps a matplotlib plotting function and returns a base64-encoded data URI that can be used with ImageRefreshWidget for live updates.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `func` |  | A function that creates matplotlib plots using plt commands. | required |
-
-**
-
-Returns:
 
 
 | Name | Type | Description |
@@ -139,16 +119,6 @@ Decorator to convert Altair chart functions to SVG strings.
 This decorator wraps a function that returns an Altair chart and converts the chart to an SVG string that can be used with HTMLRefreshWidget for live updates.
 
 
-Parameters:
-
-
-| Name | Type | Description | Default |
-| --- | --- | --- | --- |
-| `func` |  | A function that returns an Altair chart object. | required |
-
-**
-
-Returns:
 
 
 | Name | Type | Description |

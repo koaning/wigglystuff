@@ -10,10 +10,10 @@ Listen to browser gamepad events and sync state back to Python.
 This widget does not require any initialization arguments; all state is mirrored through traitlets such as `axes` and `current_button_press`.
 
 
-Examples:
-
 
 ```
+from wigglystuff import GamepadWidget
+
 gamepad = GamepadWidget()
 gamepad
 ```

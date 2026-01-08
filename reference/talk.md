@@ -10,10 +10,10 @@ Speech-to-text widget backed by the browser's Webkit Speech API.
 The widget exposes the `transcript` text along with the `listening` and `trigger_listen` booleans; it does not require initialization arguments.
 
 
-Examples:
-
 
 ```
+from wigglystuff import WebkitSpeechToTextWidget
+
 speech = WebkitSpeechToTextWidget()
 speech
 ```

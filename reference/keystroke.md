@@ -13,10 +13,10 @@ No initialization arguments are required; the widget simply records keystrokes i
 The `last_key` payload mirrors browser `KeyboardEvent` data with: `key`, `code`, modifier booleans (`ctrlKey`, `shiftKey`, `altKey`, `metaKey`), and a `timestamp` in milliseconds since epoch.
 
 
-Examples:
-
 
 ```
+from wigglystuff import KeystrokeWidget
+
 keystroke = KeystrokeWidget()
 keystroke
 ```

@@ -1,0 +1,29 @@
+# wigglystuff
+
+> A collection of creative AnyWidgets for Python notebook environments like Jupyter, marimo, Shiny, and Colab.
+
+Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
+
+## Widgets
+
+- [Slider2D](https://koaning.github.io/wigglystuff/reference/slider2d.md): 2D slider for x/y value selection
+- [Matrix](https://koaning.github.io/wigglystuff/reference/matrix.md): Interactive matrix input
+- [SortableList](https://koaning.github.io/wigglystuff/reference/sortable-list.md): Drag-and-drop sortable list
+- [Paint](https://koaning.github.io/wigglystuff/reference/paint.md): Drawing canvas widget
+- [ThreeWidget](https://koaning.github.io/wigglystuff/reference/three-widget.md): 3D visualization with Three.js
+- [EdgeDraw](https://koaning.github.io/wigglystuff/reference/edge-draw.md): Edge/graph drawing widget
+- [KeystrokeWidget](https://koaning.github.io/wigglystuff/reference/keystroke.md): Keyboard input capture
+- [WebkitSpeechToText](https://koaning.github.io/wigglystuff/reference/talk.md): Speech-to-text input
+- [ColorPicker](https://koaning.github.io/wigglystuff/reference/color-picker.md): Color selection widget
+- [CopyToClipboard](https://koaning.github.io/wigglystuff/reference/copy-to-clipboard.md): Copy text to clipboard
+- [Tangle Widgets](https://koaning.github.io/wigglystuff/reference/tangle.md): Bret Victor-style tangle controls
+- [GamepadWidget](https://koaning.github.io/wigglystuff/reference/gamepad.md): Gamepad controller input
+- [WebcamCapture](https://koaning.github.io/wigglystuff/reference/webcam-capture.md): Webcam image capture
+- [CellTour](https://koaning.github.io/wigglystuff/reference/cell-tour.md): Guided notebook tours
+- [ImageRefreshWidget](https://koaning.github.io/wigglystuff/reference/image-refresh.md): Auto-refreshing images
+- [HTMLRefreshWidget](https://koaning.github.io/wigglystuff/reference/html-refresh.md): Auto-refreshing HTML content
+- [ProgressBar](https://koaning.github.io/wigglystuff/reference/progress-bar.md): Progress indicator widget
+
+## Optional
+
+- [Utils](https://koaning.github.io/wigglystuff/reference/utils.md): Utility functions
