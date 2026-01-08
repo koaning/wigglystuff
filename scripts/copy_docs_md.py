@@ -84,6 +84,11 @@ class _HtmlToMarkdown(HTMLParser):
         self._row_has_th = False
         self._first_row_is_header = False
         self._in_highlight_table = False
+        self._in_doc_section_title = False
+        self._skip_next_table = False
+        self._add_import_to_next_code = False
+        self._widget_name: str | None = None
+        self._capturing_h1 = False
 
     def get_markdown(self) -> str:
         self._flush_line()
@@ -118,11 +123,17 @@ class _HtmlToMarkdown(HTMLParser):
         if tag == "a" and "headerlink" in attr_map.get("class", ""):
             self._skip_depth = 1
             return
+        # Track doc-section-title spans to detect Parameters sections
+        if tag == "span" and "doc-section-title" in attr_map.get("class", ""):
+            self._in_doc_section_title = True
+            return
         if tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
             self._flush_line()
             self._ensure_blank_line()
             level = int(tag[1])
             self._line.append("#" * level + " ")
+            if tag == "h1":
+                self._capturing_h1 = True
         elif tag == "p":
             self._start_block()
         elif tag == "br":
@@ -164,6 +175,11 @@ class _HtmlToMarkdown(HTMLParser):
         elif tag == "table":
             if "highlighttable" in attr_map.get("class", ""):
                 self._in_highlight_table = True
+                return
+            # Skip parameters table (table following "Parameters:" section title)
+            if self._skip_next_table:
+                self._skip_next_table = False
+                self._skip_depth = 1
                 return
             self._start_block()
             self._in_table = True
@@ -235,6 +251,21 @@ class _HtmlToMarkdown(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self._skip_depth:
             return
+        # Capture widget name from H1 heading (e.g., "Slider2D API" -> "Slider2D")
+        if self._capturing_h1:
+            title = data.strip()
+            if title.endswith(" API"):
+                self._widget_name = title[:-4]
+            self._capturing_h1 = False
+        # Check if we're in a doc-section-title
+        if self._in_doc_section_title:
+            section_title = data.strip()
+            if section_title == "Parameters:":
+                self._skip_next_table = True
+            elif section_title == "Examples:" and self._widget_name:
+                self._add_import_to_next_code = True
+            self._in_doc_section_title = False
+            return
         if self._in_pre:
             self._pre_buffer.append(data)
             return
@@ -255,6 +286,11 @@ class _HtmlToMarkdown(HTMLParser):
     def _flush_pre(self) -> None:
         pre_text = "".join(self._pre_buffer)
         pre_text = pre_text.rstrip("\n")
+        # Prepend import statement to examples code block
+        if self._add_import_to_next_code and self._widget_name:
+            import_line = f"from wigglystuff import {self._widget_name}\n\n"
+            pre_text = import_line + pre_text
+            self._add_import_to_next_code = False
         fence = f"```{self._pre_lang or ''}".rstrip()
         self._lines.append(fence)
         if pre_text:
@@ -300,6 +336,14 @@ def main() -> None:
     legacy_dir = site_dir / "llm"
     if legacy_dir.exists():
         shutil.rmtree(legacy_dir)
+
+    # Copy llms.txt if it exists
+    llms_txt_source = docs_dir / "llms.txt"
+    if llms_txt_source.exists():
+        site_dir.mkdir(parents=True, exist_ok=True)
+        llms_txt_dest = site_dir / "llms.txt"
+        shutil.copy2(llms_txt_source, llms_txt_dest)
+        print(f"[docs] copied llms.txt to {site_dir.relative_to(ROOT)}")
 
     for source in sorted(docs_dir.rglob("*.md")):
         relative = source.relative_to(docs_dir).as_posix()
