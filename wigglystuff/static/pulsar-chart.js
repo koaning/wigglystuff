@@ -9560,8 +9560,7 @@ function render({ model, el }) {
   const svg = d3.select(container).append("svg").attr("width", width).attr("height", height).attr("class", "pulsar-chart-svg");
   const g = svg.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`);
   const clipId = `pulsar-clip-${Math.random().toString(36).substr(2, 9)}`;
-  const clipPadding = 10;
-  svg.append("defs").append("clipPath").attr("id", clipId).append("rect").attr("x", 0).attr("y", 0).attr("width", innerWidth).attr("height", innerHeight + clipPadding);
+  const clipRect = svg.append("defs").append("clipPath").attr("id", clipId).append("rect").attr("x", 0).attr("y", 0).attr("width", innerWidth).attr("height", innerHeight);
   const rowsGroup = g.append("g").attr("class", "pulsar-rows").attr("clip-path", `url(#${clipId})`);
   const yAxisGroup = g.append("g").attr("class", "pulsar-y-axis");
   const xAxisGroup = g.append("g").attr("class", "pulsar-x-axis").attr("transform", `translate(0, ${innerHeight})`);
@@ -9594,6 +9593,7 @@ function render({ model, el }) {
       return;
     }
     const { x, yBand, yAmplitude, rowHeight } = scales;
+    clipRect.attr("height", innerHeight + rowHeight);
     const baselineOffset = yAmplitude(0);
     const yAxis = d3.axisLeft(yBand).tickSize(0).tickPadding(10);
     yAxisGroup.call(yAxis);
@@ -9602,10 +9602,14 @@ function render({ model, el }) {
       const yPos = yBand(d) + yBand.bandwidth() / 2 + baselineOffset;
       return `translate(0, ${yPos})`;
     });
+    const xAxisOffset = rowHeight * 0.5;
+    xAxisGroup.attr("transform", `translate(0, ${innerHeight + xAxisOffset})`);
     xAxisGroup.selectAll("*").remove();
     const xAxis = d3.axisBottom(x).ticks(10);
     xAxisGroup.call(xAxis);
     xAxisGroup.select(".domain").remove();
+    xLabelText.attr("y", margin.top + innerHeight + xAxisOffset + 35);
+    svg.attr("height", height + xAxisOffset);
     const line2 = d3.line().defined((d) => !isNaN(d)).x((d, i) => x(i)).y((d) => yAmplitude(d));
     const area2 = d3.area().defined((d) => !isNaN(d)).x((d, i) => x(i)).y0(rowHeight * 0.5).y1((d) => yAmplitude(d));
     const sortedData = [...data].reverse();
@@ -9615,9 +9619,8 @@ function render({ model, el }) {
           const yPos = yBand(d.index) + yBand.bandwidth() / 2;
           return `translate(0, ${yPos})`;
         });
-        const hitboxHeight = yBand.bandwidth();
-        g2.append("rect").attr("class", "pulsar-row-hitbox").attr("x", 0).attr("y", -hitboxHeight * 0.5).attr("width", innerWidth).attr("height", hitboxHeight);
         g2.append("path").attr("class", "pulsar-area").attr("d", (d) => area2(d.values)).style("opacity", fillOpacity);
+        g2.append("path").attr("class", "pulsar-line-hitbox").attr("d", (d) => line2(d.values));
         g2.append("path").attr("class", "pulsar-line").attr("d", (d) => line2(d.values)).style("stroke-width", strokeWidth);
         return g2;
       },
@@ -9626,21 +9629,20 @@ function render({ model, el }) {
         return `translate(0, ${yPos})`;
       }).call((g2) => {
         g2.select(".pulsar-area").attr("d", (d) => area2(d.values)).style("opacity", fillOpacity);
+        g2.select(".pulsar-line-hitbox").attr("d", (d) => line2(d.values));
         g2.select(".pulsar-line").attr("d", (d) => line2(d.values)).style("stroke-width", strokeWidth);
-        const hitboxHeight = yBand.bandwidth();
-        g2.select(".pulsar-row-hitbox").attr("y", -hitboxHeight * 0.5).attr("height", hitboxHeight);
       }),
       (exit) => exit.remove()
     );
-    rows.on("mouseenter", handleMouseEnter).on("mouseleave", handleMouseLeave).on("click", handleClick);
+    rows.selectAll(".pulsar-line-hitbox").on("mouseenter", handleMouseEnter).on("mouseleave", handleMouseLeave).on("click", handleClick);
     updateSelection();
   }
   function handleMouseEnter(event, d) {
-    d3.select(this).classed("pulsar-row-hover", true);
+    d3.select(this.parentNode).classed("pulsar-row-hover", true);
     yAxisGroup.selectAll(".tick text").classed("pulsar-y-label-hover", (tickData) => tickData === d.index);
   }
   function handleMouseLeave(event, d) {
-    d3.select(this).classed("pulsar-row-hover", false);
+    d3.select(this.parentNode).classed("pulsar-row-hover", false);
     yAxisGroup.selectAll(".tick text").classed("pulsar-y-label-hover", false);
   }
   function handleClick(event, d) {

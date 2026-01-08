@@ -76,7 +76,7 @@ def _(mo, widget):
 def _(widget):
     import polars as pl 
 
-    plot = pl.DataFrame(widget.value["selected_row"]).plot.line(x="x", y="y").properties(width=600, height=600) if widget.value.get("selected_row") else None
+    plot = pl.DataFrame(widget.value["selected_row"]).plot.line(x="x", y="y").properties(width=500, height=500) if widget.value.get("selected_row") else None
     return (plot,)
 
 

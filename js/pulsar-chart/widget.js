@@ -46,17 +46,16 @@ function render({ model, el }) {
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     // Add clip path to prevent peaks from extending beyond chart area
-    // Extend slightly at bottom to avoid clipping the bottom row's baseline area
+    // We'll update the clip height dynamically based on the computed row height
     const clipId = `pulsar-clip-${Math.random().toString(36).substr(2, 9)}`;
-    const clipPadding = 10; // Extra space at bottom for the lowest waveform
-    svg.append("defs")
+    const clipRect = svg.append("defs")
         .append("clipPath")
         .attr("id", clipId)
         .append("rect")
         .attr("x", 0)
         .attr("y", 0)
         .attr("width", innerWidth)
-        .attr("height", innerHeight + clipPadding);
+        .attr("height", innerHeight);
 
     // Create groups for different elements
     const rowsGroup = g.append("g")
@@ -137,6 +136,10 @@ function render({ model, el }) {
 
         const { x, yBand, yAmplitude, rowHeight } = scales;
 
+        // Update clip path to extend below the chart to show the bottom row fully
+        // The bottom row's fill area extends down by rowHeight * 0.5, peaks can extend rowHeight
+        clipRect.attr("height", innerHeight + rowHeight);
+
         // Draw Y-axis with row indices
         // Position ticks at the baseline of each waveform (where y=0 maps to)
         const baselineOffset = yAmplitude(0);  // Where the baseline sits within the row
@@ -152,10 +155,19 @@ function render({ model, el }) {
             });
 
         // Draw X-axis with ticks (no axis line)
+        // Move x-axis down to accommodate the bottom row's waveform
+        const xAxisOffset = rowHeight * 0.5;
+        xAxisGroup.attr("transform", `translate(0, ${innerHeight + xAxisOffset})`);
         xAxisGroup.selectAll("*").remove();
         const xAxis = d3.axisBottom(x).ticks(10);
         xAxisGroup.call(xAxis);
         xAxisGroup.select(".domain").remove();
+
+        // Also move the x-axis label down
+        xLabelText.attr("y", margin.top + innerHeight + xAxisOffset + 35);
+
+        // Expand SVG height to fit the extended content
+        svg.attr("height", height + xAxisOffset);
 
         // Line generator
         const line = d3
@@ -188,23 +200,18 @@ function render({ model, el }) {
                             return `translate(0, ${yPos})`;
                         });
 
-                    // Add invisible rect for easier hover/click detection
-                    // Use a smaller hitbox centered on the baseline to avoid overlap issues
-                    const hitboxHeight = yBand.bandwidth();
-                    g.append("rect")
-                        .attr("class", "pulsar-row-hitbox")
-                        .attr("x", 0)
-                        .attr("y", -hitboxHeight * 0.5)
-                        .attr("width", innerWidth)
-                        .attr("height", hitboxHeight);
-
-                    // Add area (fill)
+                    // Add area (fill) - no pointer events
                     g.append("path")
                         .attr("class", "pulsar-area")
                         .attr("d", (d) => area(d.values))
                         .style("opacity", fillOpacity);
 
-                    // Add line (stroke)
+                    // Add invisible thick stroke for easier click targeting
+                    g.append("path")
+                        .attr("class", "pulsar-line-hitbox")
+                        .attr("d", (d) => line(d.values));
+
+                    // Add visible line (stroke)
                     g.append("path")
                         .attr("class", "pulsar-line")
                         .attr("d", (d) => line(d.values))
@@ -222,19 +229,17 @@ function render({ model, el }) {
                             g.select(".pulsar-area")
                                 .attr("d", (d) => area(d.values))
                                 .style("opacity", fillOpacity);
+                            g.select(".pulsar-line-hitbox")
+                                .attr("d", (d) => line(d.values));
                             g.select(".pulsar-line")
                                 .attr("d", (d) => line(d.values))
                                 .style("stroke-width", strokeWidth);
-                            const hitboxHeight = yBand.bandwidth();
-                            g.select(".pulsar-row-hitbox")
-                                .attr("y", -hitboxHeight * 0.5)
-                                .attr("height", hitboxHeight);
                         }),
                 (exit) => exit.remove()
             );
 
-        // Add interaction handlers
-        rows
+        // Add interaction handlers to the hitbox paths (not the row groups)
+        rows.selectAll(".pulsar-line-hitbox")
             .on("mouseenter", handleMouseEnter)
             .on("mouseleave", handleMouseLeave)
             .on("click", handleClick);
@@ -244,14 +249,16 @@ function render({ model, el }) {
     }
 
     function handleMouseEnter(event, d) {
-        d3.select(this).classed("pulsar-row-hover", true);
+        // Navigate to parent row group and add hover class
+        d3.select(this.parentNode).classed("pulsar-row-hover", true);
         // Highlight corresponding y-axis label
         yAxisGroup.selectAll(".tick text")
             .classed("pulsar-y-label-hover", (tickData) => tickData === d.index);
     }
 
     function handleMouseLeave(event, d) {
-        d3.select(this).classed("pulsar-row-hover", false);
+        // Navigate to parent row group and remove hover class
+        d3.select(this.parentNode).classed("pulsar-row-hover", false);
         // Remove highlight from y-axis label
         yAxisGroup.selectAll(".tick text")
             .classed("pulsar-y-label-hover", false);
