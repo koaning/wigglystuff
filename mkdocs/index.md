@@ -106,6 +106,11 @@ hide:
 <a href="examples/html/" class="gallery-img"><img src="assets/gallery/progressbar.png" alt="ProgressBar widget"></a>
 <div class="gallery-links"><a href="examples/html/">Demo</a><a href="reference/progress-bar/">API</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">PulsarChart</div>
+<a href="examples/pulsarchart/" class="gallery-img"><img src="assets/gallery/pulsarchart.png" alt="PulsarChart widget"></a>
+<div class="gallery-links"><a href="examples/pulsarchart/">Demo</a><a href="reference/pulsar-chart/">API</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
