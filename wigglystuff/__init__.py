@@ -12,6 +12,7 @@ from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
 from .matrix import Matrix
 from .paint import Paint
+from .pulsar_chart import PulsarChart
 from .slider2d import Slider2D
 from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget
@@ -31,6 +32,7 @@ __all__ = [
     "KeystrokeWidget",
     "Matrix",
     "Paint",
+    "PulsarChart",
     "Slider2D",
     "SortableList",
     "TangleChoice",
