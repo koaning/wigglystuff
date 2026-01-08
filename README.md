@@ -40,7 +40,7 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>ProgressBar</b><br><img src="./mkdocs/assets/gallery/progressbar.png" width="200"><br><a href="./demos/html.py">Demo</a> · <a href="./wigglystuff/html.py">Source</a></td>
-<td align="center"></td>
+<td align="center"><b>PulsarChart</b><br><img src="./mkdocs/assets/gallery/pulsarchart.png" width="200"><br><a href="./demos/pulsarchart.py">Demo</a> · <a href="./wigglystuff/pulsar_chart.py">Source</a></td>
 <td align="center"></td>
 </tr>
 </table>

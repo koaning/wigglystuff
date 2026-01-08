@@ -1,0 +1,131 @@
+/* PulsarChart Widget Styles */
+.pulsar-chart-container {
+    --pulsar-bg: #000000;
+    --pulsar-stroke: #ffffff;
+    --pulsar-fill: #000000;
+    --pulsar-hover-stroke: #ffcc00;
+    --pulsar-selected-stroke: #ff6b6b;
+    --pulsar-axis-color: #666666;
+    --pulsar-label-color: #999999;
+    color-scheme: light dark;
+}
+
+/* Light mode overrides */
+@media (prefers-color-scheme: light) {
+    .pulsar-chart-container {
+        --pulsar-bg: #ffffff;
+        --pulsar-stroke: #1a1a1a;
+        --pulsar-fill: #ffffff;
+        --pulsar-hover-stroke: #0066cc;
+        --pulsar-selected-stroke: #ff6b6b;
+        --pulsar-axis-color: #999999;
+        --pulsar-label-color: #666666;
+    }
+}
+
+/* Explicit light theme selectors */
+:where(:not(.dark):not(.dark-theme):not([data-theme="dark"])) .pulsar-chart-container {
+    --pulsar-bg: #ffffff;
+    --pulsar-stroke: #1a1a1a;
+    --pulsar-fill: #ffffff;
+    --pulsar-hover-stroke: #0066cc;
+    --pulsar-selected-stroke: #ff6b6b;
+    --pulsar-axis-color: #999999;
+    --pulsar-label-color: #666666;
+}
+
+/* Dark mode - explicit selectors for marimo and jupyter */
+:where(.dark, .dark-theme, [data-theme="dark"], body.dark, body[data-theme="dark"]) .pulsar-chart-container {
+    --pulsar-bg: #000000;
+    --pulsar-stroke: #ffffff;
+    --pulsar-fill: #000000;
+    --pulsar-hover-stroke: #ffcc00;
+    --pulsar-selected-stroke: #ff6b6b;
+    --pulsar-axis-color: #666666;
+    --pulsar-label-color: #999999;
+}
+
+.pulsar-chart-svg {
+    background-color: var(--pulsar-bg);
+    display: block;
+}
+
+.pulsar-row {
+    cursor: pointer;
+}
+
+.pulsar-area {
+    fill: var(--pulsar-fill);
+    stroke: none;
+    pointer-events: none;
+}
+
+/* Invisible thick stroke for easier click targeting */
+.pulsar-line-hitbox {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 12px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    pointer-events: stroke;
+    cursor: pointer;
+}
+
+.pulsar-line {
+    fill: none;
+    stroke: var(--pulsar-stroke);
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    pointer-events: none;
+}
+
+/* Hover state - thicker line, no color change */
+.pulsar-row-hover .pulsar-line {
+    stroke-width: 2.5px !important;
+}
+
+/* Selected state - same color, just thicker */
+.pulsar-row-selected .pulsar-line {
+    stroke-width: 3px !important;
+}
+
+/* Axis styling */
+.pulsar-y-axis text {
+    fill: var(--pulsar-axis-color);
+    font-size: 11px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.pulsar-y-axis line,
+.pulsar-y-axis path {
+    stroke: var(--pulsar-axis-color);
+}
+
+/* X-axis styling */
+.pulsar-x-axis text {
+    fill: var(--pulsar-axis-color);
+    font-size: 11px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.pulsar-x-axis line,
+.pulsar-x-axis path {
+    stroke: var(--pulsar-axis-color);
+}
+
+/* Y-axis label hover highlight - bold, no color change */
+.pulsar-y-label-hover {
+    font-weight: bold;
+}
+
+/* Y-axis label selected state - bold, no color change */
+.pulsar-y-label-selected {
+    font-weight: bold;
+}
+
+/* Axis labels */
+.pulsar-axis-label {
+    fill: var(--pulsar-label-color);
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}

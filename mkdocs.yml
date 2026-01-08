@@ -50,6 +50,7 @@ nav:
       - ImageRefreshWidget: reference/image-refresh.md
       - HTMLRefreshWidget: reference/html-refresh.md
       - ProgressBar: reference/progress-bar.md
+      - PulsarChart: reference/pulsar-chart.md
       - Utils: reference/utils.md
 plugins:
   - search

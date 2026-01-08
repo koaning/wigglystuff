@@ -39,6 +39,9 @@ js-paint:
 	./node_modules/.bin/tailwindcss -i ./js/paint/styles.css -o ./wigglystuff/static/paint.css
 	./node_modules/.bin/esbuild js/paint/widget.tsx --bundle --format=esm --outfile=wigglystuff/static/paint.js --minify
 
+js-pulsar-chart:
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/pulsar-chart.js js/pulsar-chart/widget.js
+
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
