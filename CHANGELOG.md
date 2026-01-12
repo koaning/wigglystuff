@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.12] - 2026-01-12
+
+### Added
+- New `TextCompare` widget for side-by-side text comparison with match highlighting. Useful for plagiarism detection or finding shared passages between documents. Features hover-based highlighting that syncs between panels, configurable minimum match length via `min_match_words`, and programmatic access to detected matches.
+
 ## [0.2.11] - 2026-01-08
 
 ### Added

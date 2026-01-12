@@ -19,4 +19,6 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [ImageRefreshWidget](image-refresh.md)
 - [HTMLRefreshWidget](html-refresh.md)
 - [ProgressBar](progress-bar.md)
+- [PulsarChart](pulsar-chart.md)
+- [TextCompare](text-compare.md)
 - [Utils](utils.md)

@@ -17,6 +17,7 @@ from .slider2d import Slider2D
 from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget
 from .tangle import TangleChoice, TangleSelect, TangleSlider
+from .text_compare import TextCompare
 from .three_widget import ThreeWidget
 from .webcam_capture import WebcamCapture
 
@@ -38,6 +39,7 @@ __all__ = [
     "TangleChoice",
     "TangleSelect",
     "TangleSlider",
+    "TextCompare",
     "WebkitSpeechToTextWidget",
     "ThreeWidget",
     "WebcamCapture",
