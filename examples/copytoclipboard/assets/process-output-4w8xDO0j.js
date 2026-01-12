@@ -1,0 +1,1 @@
+import{G as i,K as m,W as a}from"./cells-D_SkyFDn.js";function e(t){return t.mimetype.startsWith("application/vnd.marimo")||t.mimetype==="text/html"?m(a.asString(t.data)):i(a.asString(t.data))}export{e as t};

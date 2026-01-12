@@ -2,86 +2,90 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://wigglystuff.dev/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/cell-tour/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/color-picker/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/copy-to-clipboard/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/edge-draw/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/gamepad/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/html-refresh/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/image-refresh/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/keystroke/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/matrix/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/paint/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/progress-bar/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/pulsar-chart/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/slider2d/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/sortable-list/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/talk/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/tangle/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
+    </url>
+    <url>
+         <loc>https://wigglystuff.dev/reference/text-compare/</loc>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/three-widget/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/utils/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
     <url>
          <loc>https://wigglystuff.dev/reference/webcam-capture/</loc>
-         <lastmod>2026-01-08</lastmod>
+         <lastmod>2026-01-12</lastmod>
     </url>
 </urlset>

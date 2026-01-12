@@ -24,6 +24,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [HTMLRefreshWidget](https://koaning.github.io/wigglystuff/reference/html-refresh.md): Auto-refreshing HTML content
 - [ProgressBar](https://koaning.github.io/wigglystuff/reference/progress-bar.md): Progress indicator widget
 - [PulsarChart](https://koaning.github.io/wigglystuff/reference/pulsar-chart.md): Stacked waveform visualization (Joy Division style)
+- [TextCompare](https://koaning.github.io/wigglystuff/reference/text-compare.md): Side-by-side text comparison with match highlighting
 
 ## Optional
 
