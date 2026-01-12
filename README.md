@@ -41,6 +41,6 @@ uv pip install wigglystuff
 <tr>
 <td align="center"><b>ProgressBar</b><br><img src="./mkdocs/assets/gallery/progressbar.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/html/">Demo</a> · <a href="./wigglystuff/html.py">Source</a></td>
 <td align="center"><b>PulsarChart</b><br><img src="./mkdocs/assets/gallery/pulsarchart.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/pulsarchart/">Demo</a> · <a href="./wigglystuff/pulsar_chart.py">Source</a></td>
-<td align="center"></td>
+<td align="center"><b>TextCompare</b><br><img src="./mkdocs/assets/gallery/textcompare.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/textcompare/">Demo</a> · <a href="./wigglystuff/text_compare.py">Source</a></td>
 </tr>
 </table>
