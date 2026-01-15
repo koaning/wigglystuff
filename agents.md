@@ -52,3 +52,6 @@ syncs back to Python.
   (`mkdocs/index.md`) and the README gallery (`readme.md`). Add a screenshot
   to `mkdocs/assets/gallery/` and reference it from both locations to keep
   them in sync.
+- Each widget has a demo marimo notebook in the `demos/` folder (e.g.,
+  `demos/colorpicker.py`). When adding a new widget, create a corresponding
+  demo notebook. Run demos with `marimo edit demos/<widget>.py`.
