@@ -21,4 +21,5 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [ProgressBar](progress-bar.md)
 - [PulsarChart](pulsar-chart.md)
 - [TextCompare](text-compare.md)
+- [EnvConfig](env-config.md)
 - [Utils](utils.md)
