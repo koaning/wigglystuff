@@ -70,7 +70,7 @@ def _(mo):
 
 @app.cell
 def _(config_validated):
-    config_validated.widget["MY_API_KEY"]
+    config_validated["MY_API_KEY"]
     return
 
 
