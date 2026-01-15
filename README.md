@@ -43,4 +43,7 @@ uv pip install wigglystuff
 <td align="center"><b>PulsarChart</b><br><img src="./mkdocs/assets/gallery/pulsarchart.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/pulsarchart/">Demo</a> · <a href="./wigglystuff/pulsar_chart.py">Source</a></td>
 <td align="center"><b>TextCompare</b><br><img src="./mkdocs/assets/gallery/textcompare.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/textcompare/">Demo</a> · <a href="./wigglystuff/text_compare.py">Source</a></td>
 </tr>
+<tr>
+<td align="center"><b>EnvConfig</b><br><img src="./mkdocs/assets/gallery/envconfig.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/envconfig/">Demo</a> · <a href="./wigglystuff/env_config.py">Source</a></td>
+</tr>
 </table>

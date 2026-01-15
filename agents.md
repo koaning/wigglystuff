@@ -27,6 +27,7 @@ syncs back to Python.
 | DriverTour | `wigglystuff.driver_tour.DriverTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Guided product tours via Driver.js |
 | CellTour | `wigglystuff.cell_tour.CellTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Simplified cell-based tours for marimo |
 | TextCompare | `wigglystuff.text_compare.TextCompare` | `text_a`, `text_b`, `matches`, `selected_match`, `min_match_words` | Side-by-side text diff with match highlighting |
+| EnvConfig | `wigglystuff.env_config.EnvConfig` | `variables`, `all_valid` | Environment variable config with validation |
 
 ## Patterns to remember
 

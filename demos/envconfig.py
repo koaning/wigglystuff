@@ -52,9 +52,36 @@ def _(config_validated):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    You can fetch values from this widget directly.
+    """)
+    return
+
+
+@app.cell
+def _(config_validated):
+    config_validated.widget["MY_API_KEY"]
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    You can also check if all the inputs are valid. This is useful if you want to prevent other cells from running.
+    """)
+    return
+
+
 @app.cell
 def _(config_validated):
     config_validated.require_valid()
+    return
+
+
+@app.cell(hide_code=True)
+def _():
     return
 
 
