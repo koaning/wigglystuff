@@ -49,10 +49,10 @@ syncs back to Python.
   defaults to the widget root, mark `color-scheme: light dark`, and provide
   overrides that respond to `.dark`, `.dark-theme`, or `[data-theme="dark"]`
   ancestors so notebook-level theme toggles work instantly.
-- When adding a new widget, remember to update **both** the docs gallery
-  (`mkdocs/index.md`) and the README gallery (`readme.md`). Add a screenshot
-  to `mkdocs/assets/gallery/` and reference it from both locations to keep
-  them in sync.
+- When adding a new widget, remember to update the docs gallery
+  (`mkdocs/index.md`), the README gallery (`readme.md`), and the LLM context
+  file (`mkdocs/llms.txt`). Add a screenshot to `mkdocs/assets/gallery/` and
+  reference it from the gallery locations to keep them in sync.
 - Each widget has a demo marimo notebook in the `demos/` folder (e.g.,
   `demos/colorpicker.py`). When adding a new widget, create a corresponding
   demo notebook. Run demos with `marimo edit demos/<widget>.py`.
