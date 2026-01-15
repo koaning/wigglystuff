@@ -7,6 +7,7 @@ from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
 from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
+from .env_config import EnvConfig
 from .gamepad import GamepadWidget
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
@@ -29,6 +30,7 @@ __all__ = [
     "CopyToClipboard",
     "DriverTour",
     "EdgeDraw",
+    "EnvConfig",
     "GamepadWidget",
     "KeystrokeWidget",
     "Matrix",

@@ -27,6 +27,7 @@ syncs back to Python.
 | DriverTour | `wigglystuff.driver_tour.DriverTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Guided product tours via Driver.js |
 | CellTour | `wigglystuff.cell_tour.CellTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Simplified cell-based tours for marimo |
 | TextCompare | `wigglystuff.text_compare.TextCompare` | `text_a`, `text_b`, `matches`, `selected_match`, `min_match_words` | Side-by-side text diff with match highlighting |
+| EnvConfig | `wigglystuff.env_config.EnvConfig` | `variables`, `all_valid` | Environment variable config with validation |
 
 ## Patterns to remember
 
@@ -48,7 +49,10 @@ syncs back to Python.
   defaults to the widget root, mark `color-scheme: light dark`, and provide
   overrides that respond to `.dark`, `.dark-theme`, or `[data-theme="dark"]`
   ancestors so notebook-level theme toggles work instantly.
-- When adding a new widget, remember to update **both** the docs gallery
-  (`mkdocs/index.md`) and the README gallery (`readme.md`). Add a screenshot
-  to `mkdocs/assets/gallery/` and reference it from both locations to keep
-  them in sync.
+- When adding a new widget, remember to update the docs gallery
+  (`mkdocs/index.md`), the README gallery (`readme.md`), and the LLM context
+  file (`mkdocs/llms.txt`). Add a screenshot to `mkdocs/assets/gallery/` and
+  reference it from the gallery locations to keep them in sync.
+- Each widget has a demo marimo notebook in the `demos/` folder (e.g.,
+  `demos/colorpicker.py`). When adding a new widget, create a corresponding
+  demo notebook. Run demos with `marimo edit demos/<widget>.py`.
