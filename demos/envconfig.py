@@ -84,7 +84,7 @@ def _(mo):
 
 @app.cell
 def _(config_validated):
-    config_validated.widget.all_valid
+    config_validated.all_valid
     return
 
 
@@ -98,7 +98,7 @@ def _(mo):
 
 @app.cell
 def _(config_validated):
-    config_validated.widget.require_valid()
+    config_validated.require_valid()
     return
 
 
