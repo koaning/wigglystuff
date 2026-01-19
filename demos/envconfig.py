@@ -84,7 +84,21 @@ def _(mo):
 
 @app.cell
 def _(config_validated):
-    config_validated.require_valid()
+    config_validated.widget.all_valid
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    If you want to raise an error when the inputs are invalid, you can use `require_valid()`.
+    """)
+    return
+
+
+@app.cell
+def _(config_validated):
+    config_validated.widget.require_valid()
     return
 
 
