@@ -8,7 +8,7 @@
 
 import marimo
 
-__generated_with = "0.19.2"
+__generated_with = "0.19.4"
 app = marimo.App(width="medium")
 
 
@@ -40,13 +40,13 @@ def _(EnvConfig, mo, os):
             raise ValueError("Key must be at least 5 characters")
 
 
-    os.environ["MY_API_KEY"] = "hello"
+    os.environ["VALIDATED_KEY"] = "hi"
 
     config_validated = mo.ui.anywidget(
         EnvConfig(
             {
                 "VALIDATED_KEY": check_key,
-                "MY_API_KEY": None,
+                "MY_API_KEY": check_key,
                 "SIMPLE_KEY": None,  # just existence check
             }
         )

@@ -35,12 +35,11 @@ function render({ model, el }) {
       input.autocomplete = "off";
       inputs.push(input);
 
-      // Set initial value/placeholder
-      if (variable.status === "valid") {
+      // Set initial value/placeholder - show value even for invalid status
+      if (variable.status === "valid" || variable.status === "invalid") {
         input.value = variable.value || "";
-      } else if (variable.status === "invalid") {
-        input.placeholder = "Try again...";
-      } else {
+      }
+      if (variable.status === "missing") {
         input.placeholder = "Enter value...";
       }
 
@@ -102,7 +101,7 @@ function render({ model, el }) {
 
   function updateFooter() {
     const allValid = model.get("all_valid");
-    footer.className = `env-config-footer ${allValid ? "valid" : "incomplete"}`;
+    footer.className = "env-config-footer";
     footer.textContent = allValid
       ? "All variables configured"
       : "Press Enter to set each variable";
@@ -119,15 +118,13 @@ function render({ model, el }) {
       // Update row status (for background color)
       row.dataset.status = variable.status;
 
-      // Update input based on status - but don't clear user's current typing
-      if (variable.status === "valid") {
+      // Update input based on status - show value even for invalid status
+      if (variable.status === "valid" || variable.status === "invalid") {
         // Only update value if it changed (avoid overwriting while user types)
         if (input.value !== variable.value) {
           input.value = variable.value || "";
         }
         input.placeholder = "";
-      } else if (variable.status === "invalid") {
-        input.placeholder = "Try again...";
       } else {
         input.placeholder = "Enter value...";
       }
