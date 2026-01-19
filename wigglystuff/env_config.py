@@ -123,8 +123,8 @@ class EnvConfig(anywidget.AnyWidget):
             # Store internally only - never touch os.environ
             self._values[name] = value
 
-        # Update state in one go
-        self._set_var_status(name, result["status"], result["error"])
+        # Update state in one go - pass the entered value so it can be displayed
+        self._set_var_status(name, result["status"], result["error"], value)
         self._recalc_all_valid()
 
     def _set_var_status(
@@ -132,6 +132,7 @@ class EnvConfig(anywidget.AnyWidget):
         name: str,
         status: str,
         error: Optional[str],
+        value: Optional[str] = None,
     ) -> None:
         """Update status for a specific variable."""
         vars_copy = [dict(v) for v in self.variables]
@@ -139,8 +140,8 @@ class EnvConfig(anywidget.AnyWidget):
             if v["name"] == name:
                 v["status"] = status
                 v["error"] = error
-                # Include value for valid status
-                v["value"] = self._values.get(name, "")
+                # Include the entered value so JS can display it (even if invalid)
+                v["value"] = value if value is not None else self._values.get(name, "")
                 break
         self.variables = vars_copy
 

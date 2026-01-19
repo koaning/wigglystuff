@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.14] - 2026-01-19
+
+### Fixed
+- `EnvConfig` now displays values in input fields even when validation fails, so users can see what was loaded or entered rather than an empty field.
+- Removed footer color changes in `EnvConfig`. Individual row highlighting (green/red) is now the sole status indicator, making the UI more consistent.
+
 ## [0.2.13] - 2026-01-15
 
 ### Added
