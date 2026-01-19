@@ -114,7 +114,7 @@ def __init__(self, choices: List[str], **kwargs: Any) -> None:
     """
     if len(choices) < 2:
         raise ValueError("Must pass at least two choices.")
-    super().__init__(value=choices[1], choices=choices, **kwargs)
+    super().__init__(choice=choices[0], choices=choices, **kwargs)
 ```
 
 
