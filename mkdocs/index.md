@@ -121,6 +121,11 @@ hide:
 <a href="examples/envconfig/" class="gallery-img"><img src="assets/gallery/envconfig.png" alt="EnvConfig widget"></a>
 <div class="gallery-links"><a href="examples/envconfig/">Demo</a><a href="reference/env-config/">API</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">Tangle</div>
+<a href="examples/tangle/" class="gallery-img"><img src="assets/gallery/tangle.png" alt="Tangle widgets"></a>
+<div class="gallery-links"><a href="examples/tangle/">Demo</a><a href="reference/tangle/">API</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
