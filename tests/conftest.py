@@ -1,5 +1,6 @@
 """Pytest configuration and fixtures for browser integration tests."""
 
+import os
 import subprocess
 import time
 import socket
@@ -40,10 +41,18 @@ def marimo_server(request):
     )
 
     # Wait for server to start by polling the port
+    # Use longer timeout for CI environments
     url = f"http://127.0.0.1:{port}"
-    max_wait = 15  # seconds
+    max_wait = 60 if os.environ.get("CI") else 15
     start = time.time()
     while time.time() - start < max_wait:
+        # Check if process died
+        if proc.poll() is not None:
+            _, stderr = proc.communicate()
+            raise RuntimeError(
+                f"marimo server exited unexpectedly with code {proc.returncode}. "
+                f"stderr: {stderr.decode()}"
+            )
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.settimeout(1)
@@ -53,10 +62,14 @@ def marimo_server(request):
             time.sleep(0.5)
     else:
         proc.terminate()
-        raise RuntimeError(f"marimo server failed to start within {max_wait}s")
+        _, stderr = proc.communicate()
+        raise RuntimeError(
+            f"marimo server failed to start within {max_wait}s. "
+            f"stderr: {stderr.decode()}"
+        )
 
     # Give it a bit more time to fully initialize
-    time.sleep(1)
+    time.sleep(2 if os.environ.get("CI") else 1)
 
     yield url
 
