@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.16] - 2026-01-20
+
+### Added
+- New `ChartPuck` widget for overlaying draggable pucks on matplotlib charts. Allows interactive selection of coordinates in data space with automatic conversion between pixel and data coordinates. Supports single or multiple pucks, customizable styling (color, radius), and a `from_callback` factory method for charts that auto-update when the puck moves.
+
 ## [0.2.15] - 2026-01-20
 
 ### Added

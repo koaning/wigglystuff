@@ -46,5 +46,6 @@ uv pip install wigglystuff
 <tr>
 <td align="center"><b>EnvConfig</b><br><img src="./mkdocs/assets/gallery/envconfig.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/envconfig/">Demo</a> · <a href="./wigglystuff/env_config.py">Source</a></td>
 <td align="center"><b>Tangle</b><br><img src="./mkdocs/assets/gallery/tangle.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/tangle/">Demo</a> · <a href="./wigglystuff/tangle.py">Source</a></td>
+<td align="center"><b>ChartPuck</b><br><img src="./mkdocs/assets/gallery/chartpuck.png" width="200"><br><a href="https://koaning.github.io/wigglystuff/examples/chartpuck/">Demo</a> · <a href="./wigglystuff/chart_puck.py">Source</a></td>
 </tr>
 </table>
