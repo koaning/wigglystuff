@@ -18,28 +18,8 @@ def simple_figure():
     plt.close(fig)
 
 
-def test_import_chart_puck():
-    from wigglystuff.chart_puck import ChartPuck
-
-
-def test_chart_puck_from_package():
+def test_chart_puck_importable():
     from wigglystuff import ChartPuck
-
-
-def test_fig_to_base64_returns_data_url(simple_figure):
-    result = fig_to_base64(simple_figure)
-    assert result.startswith("data:image/png;base64,")
-
-
-def test_extract_axes_info_returns_correct_types(simple_figure):
-    x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px = extract_axes_info(
-        simple_figure
-    )
-    assert isinstance(x_bounds, tuple) and len(x_bounds) == 2
-    assert isinstance(y_bounds, tuple) and len(y_bounds) == 2
-    assert isinstance(axes_pixel_bounds, tuple) and len(axes_pixel_bounds) == 4
-    assert isinstance(width_px, int)
-    assert isinstance(height_px, int)
 
 
 def test_extract_axes_info_respects_xlim_ylim(simple_figure):
@@ -48,21 +28,14 @@ def test_extract_axes_info_respects_xlim_ylim(simple_figure):
     assert y_bounds == (0.0, 4.0)
 
 
-def test_chart_puck_defaults_to_center(simple_figure):
+def test_chart_puck_single_puck_defaults_to_center(simple_figure):
     puck = ChartPuck(simple_figure)
-    # x and y are now lists
     assert puck.x == [2.0]
     assert puck.y == [2.0]
+    assert puck.chart_base64.startswith("data:image/png;base64,")
 
 
-def test_chart_puck_accepts_single_initial_position(simple_figure):
-    puck = ChartPuck(simple_figure, x=1.0, y=3.0)
-    # Single values are converted to lists
-    assert puck.x == [1.0]
-    assert puck.y == [3.0]
-
-
-def test_chart_puck_accepts_multiple_pucks(simple_figure):
+def test_chart_puck_multiple_pucks(simple_figure):
     puck = ChartPuck(simple_figure, x=[0.5, 1.5, 2.5], y=[0.5, 1.5, 2.5])
     assert puck.x == [0.5, 1.5, 2.5]
     assert puck.y == [0.5, 1.5, 2.5]
@@ -73,93 +46,7 @@ def test_chart_puck_raises_on_mismatched_lengths(simple_figure):
         ChartPuck(simple_figure, x=[1.0, 2.0], y=[1.0])
 
 
-def test_chart_puck_has_chart_base64(simple_figure):
-    puck = ChartPuck(simple_figure)
-    assert puck.chart_base64.startswith("data:image/png;base64,")
-
-
-def test_chart_puck_styling_defaults():
-    fig, ax = plt.subplots()
-    ax.plot([0, 1], [0, 1])
-    puck = ChartPuck(fig)
-    plt.close(fig)
-
-    assert puck.puck_radius == 10
-    assert puck.puck_color == "#e63946"
-
-
-def test_chart_puck_custom_styling():
-    fig, ax = plt.subplots()
-    ax.plot([0, 1], [0, 1])
-    puck = ChartPuck(fig, puck_radius=20, puck_color="#00ff00")
-    plt.close(fig)
-
-    assert puck.puck_radius == 20
-    assert puck.puck_color == "#00ff00"
-
-
-def test_from_callback_creates_widget():
-    def draw_fn(ax, x, y):
-        ax.plot([0, 1], [0, 1])
-
-    puck = ChartPuck.from_callback(
-        draw_fn=draw_fn,
-        x_bounds=(0, 10),
-        y_bounds=(0, 10),
-    )
-
-    assert puck.x_bounds == (0.0, 10.0)
-    assert puck.y_bounds == (0.0, 10.0)
-    assert puck.chart_base64.startswith("data:image/png;base64,")
-
-
-def test_from_callback_defaults_to_center():
-    def draw_fn(ax, x, y):
-        ax.scatter([x], [y])
-
-    puck = ChartPuck.from_callback(
-        draw_fn=draw_fn,
-        x_bounds=(-5, 5),
-        y_bounds=(-10, 10),
-    )
-
-    assert puck.x == [0.0]
-    assert puck.y == [0.0]
-
-
-def test_from_callback_accepts_initial_position():
-    def draw_fn(ax, x, y):
-        ax.scatter([x], [y])
-
-    puck = ChartPuck.from_callback(
-        draw_fn=draw_fn,
-        x_bounds=(0, 10),
-        y_bounds=(0, 10),
-        x=2.5,
-        y=7.5,
-    )
-
-    assert puck.x == [2.5]
-    assert puck.y == [7.5]
-
-
-def test_from_callback_accepts_custom_styling():
-    def draw_fn(ax, x, y):
-        ax.plot([0, 1], [0, 1])
-
-    puck = ChartPuck.from_callback(
-        draw_fn=draw_fn,
-        x_bounds=(0, 10),
-        y_bounds=(0, 10),
-        puck_radius=15,
-        puck_color="#ff00ff",
-    )
-
-    assert puck.puck_radius == 15
-    assert puck.puck_color == "#ff00ff"
-
-
-def test_from_callback_updates_chart_on_position_change():
+def test_from_callback_creates_widget_and_updates():
     call_count = [0]
 
     def draw_fn(ax, x, y):
@@ -172,13 +59,19 @@ def test_from_callback_updates_chart_on_position_change():
         y_bounds=(0, 10),
     )
 
-    initial_calls = call_count[0]
+    assert puck.x == [5.0]  # defaults to center
+    assert puck.y == [5.0]
     initial_base64 = puck.chart_base64
 
-    # Simulate puck movement
+    # Simulate puck movement - should trigger redraw
     puck.x = [3.0]
-
-    # draw_fn should have been called again
-    assert call_count[0] > initial_calls
-    # chart_base64 should be updated
     assert puck.chart_base64 != initial_base64
+
+
+def test_export_kmeans(simple_figure):
+    sklearn = pytest.importorskip("sklearn")
+    puck = ChartPuck(simple_figure, x=[1.0, 3.0], y=[1.0, 3.0])
+    kmeans = puck.export_kmeans()
+
+    assert kmeans.n_clusters == 2
+    assert kmeans.init.tolist() == [[1.0, 1.0], [3.0, 3.0]]

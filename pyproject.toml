@@ -17,6 +17,7 @@ dependencies = [
     "anywidget>=0.9.2",
     "numpy",
     "pillow",
+    "scikit-learn>=1.7.2",
 ]
 
 [project.optional-dependencies]

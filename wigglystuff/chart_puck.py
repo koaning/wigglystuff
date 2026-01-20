@@ -249,3 +249,40 @@ class ChartPuck(anywidget.AnyWidget):
         widget.observe(on_change, names=["x", "y"])
 
         return widget
+
+    def export_kmeans(self, n_init: int = 1, max_iter: int = 300, **kwargs):
+        """Export puck positions as a KMeans estimator with pucks as initial centroids.
+
+        Creates a scikit-learn KMeans instance configured to use the current puck
+        positions as initial cluster centers. Useful for interactive clustering
+        where you manually position pucks to define cluster centers.
+
+        Args:
+            n_init: Number of initializations. Defaults to 1 since we're providing
+                    explicit initial centers.
+            max_iter: Maximum iterations for the algorithm.
+            **kwargs: Additional arguments passed to sklearn.cluster.KMeans.
+
+        Returns:
+            A sklearn.cluster.KMeans instance ready to fit on data.
+
+        Examples:
+            ```python
+            puck = ChartPuck(fig, x=[1.0, 3.0], y=[1.0, 3.0])
+            # ... user drags pucks to desired positions ...
+
+            kmeans = puck.export_kmeans()
+            labels = kmeans.fit_predict(data)
+            ```
+        """
+        import numpy as np
+        from sklearn.cluster import KMeans
+
+        centroids = np.array(list(zip(self.x, self.y)))
+        return KMeans(
+            n_clusters=len(self.x),
+            init=centroids,
+            n_init=n_init,
+            max_iter=max_iter,
+            **kwargs,
+        )
