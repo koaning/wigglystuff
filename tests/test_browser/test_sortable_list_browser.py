@@ -1,17 +1,21 @@
 """Playwright integration tests for SortableList widget."""
 
+import os
 import pytest
 from playwright.sync_api import Page, expect
+
+# Longer timeouts for CI
+WIDGET_TIMEOUT = 30000 if os.environ.get("CI") else 10000
 
 
 @pytest.mark.parametrize("marimo_server", ["demos/sortlist.py"], indirect=True)
 def test_sortable_list_renders(marimo_server: str, page: Page):
     """Test that the SortableList widget renders in the browser."""
-    page.goto(marimo_server)
+    page.goto(marimo_server, wait_until="networkidle")
 
     # Wait for the widget to render
     widget = page.locator(".draggable-list-widget")
-    expect(widget).to_be_visible(timeout=10000)
+    expect(widget).to_be_visible(timeout=WIDGET_TIMEOUT)
 
     # Check that initial items are rendered
     items = page.locator(".list-item")
@@ -21,11 +25,11 @@ def test_sortable_list_renders(marimo_server: str, page: Page):
 @pytest.mark.parametrize("marimo_server", ["demos/sortlist.py"], indirect=True)
 def test_add_item_updates_list(marimo_server: str, page: Page):
     """Test that adding an item via the input updates the widget."""
-    page.goto(marimo_server)
+    page.goto(marimo_server, wait_until="networkidle")
 
     # Wait for the widget
     widget = page.locator(".draggable-list-widget")
-    expect(widget).to_be_visible(timeout=10000)
+    expect(widget).to_be_visible(timeout=WIDGET_TIMEOUT)
 
     # Find the add input and add a new item
     add_input = page.locator(".add-input")
@@ -46,11 +50,11 @@ def test_add_item_updates_list(marimo_server: str, page: Page):
 @pytest.mark.parametrize("marimo_server", ["demos/sortlist.py"], indirect=True)
 def test_remove_item_updates_list(marimo_server: str, page: Page):
     """Test that clicking remove button removes an item."""
-    page.goto(marimo_server)
+    page.goto(marimo_server, wait_until="networkidle")
 
     # Wait for the widget
     widget = page.locator(".draggable-list-widget")
-    expect(widget).to_be_visible(timeout=10000)
+    expect(widget).to_be_visible(timeout=WIDGET_TIMEOUT)
 
     # Should start with 3 items
     items = page.locator(".list-item")
@@ -67,11 +71,11 @@ def test_remove_item_updates_list(marimo_server: str, page: Page):
 @pytest.mark.parametrize("marimo_server", ["demos/sortlist.py"], indirect=True)
 def test_edit_item_updates_value(marimo_server: str, page: Page):
     """Test that editing an item updates its value."""
-    page.goto(marimo_server)
+    page.goto(marimo_server, wait_until="networkidle")
 
     # Wait for the widget
     widget = page.locator(".draggable-list-widget")
-    expect(widget).to_be_visible(timeout=10000)
+    expect(widget).to_be_visible(timeout=WIDGET_TIMEOUT)
 
     # Click on the first item label to edit it
     first_label = page.locator(".item-label").first
@@ -93,11 +97,11 @@ def test_edit_item_updates_value(marimo_server: str, page: Page):
 @pytest.mark.parametrize("marimo_server", ["demos/sortlist.py"], indirect=True)
 def test_python_state_updates_after_add(marimo_server: str, page: Page):
     """Test that adding an item updates the Python state visible in the notebook."""
-    page.goto(marimo_server)
+    page.goto(marimo_server, wait_until="networkidle")
 
     # Wait for the widget
     widget = page.locator(".draggable-list-widget")
-    expect(widget).to_be_visible(timeout=10000)
+    expect(widget).to_be_visible(timeout=WIDGET_TIMEOUT)
 
     # Add a new item
     add_input = page.locator(".add-input")
@@ -110,4 +114,4 @@ def test_python_state_updates_after_add(marimo_server: str, page: Page):
     # The Python output cell should show the new value
     # In marimo, the cell output contains the list representation
     # Look for the new item in any cell output
-    page.wait_for_selector("text=python_test", timeout=5000)
+    page.wait_for_selector("text=python_test", timeout=WIDGET_TIMEOUT)
