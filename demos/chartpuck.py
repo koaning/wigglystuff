@@ -113,5 +113,60 @@ def _(mo, multi_widget):
     return (positions,)
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("## Dynamic Chart Updates")
+    return
+
+
+@app.cell
+def _(np):
+    np.random.seed(42)
+    dynamic_data_x = np.random.randn(50)
+    dynamic_data_y = np.random.randn(50)
+    return dynamic_data_x, dynamic_data_y
+
+
+@app.cell
+def _(ChartPuck, dynamic_data_x, dynamic_data_y):
+    def draw_with_crosshairs(ax, x, y):
+        ax.scatter(dynamic_data_x, dynamic_data_y, alpha=0.6)
+        ax.axvline(x, color="red", linestyle="--", alpha=0.7)
+        ax.axhline(y, color="red", linestyle="--", alpha=0.7)
+        ax.set_title(f"Position: ({x:.2f}, {y:.2f})")
+        ax.grid(True, alpha=0.3)
+
+    dynamic_puck = ChartPuck.from_callback(
+        draw_fn=draw_with_crosshairs,
+        x_bounds=(-3, 3),
+        y_bounds=(-3, 3),
+        figsize=(6, 6),
+        x=0,
+        y=0,
+        puck_color="#4caf50",
+    )
+    return draw_with_crosshairs, dynamic_puck
+
+
+@app.cell
+def _(dynamic_puck, mo):
+    dynamic_widget = mo.ui.anywidget(dynamic_puck)
+    return (dynamic_widget,)
+
+
+@app.cell
+def _(dynamic_widget):
+    dynamic_widget
+    return
+
+
+@app.cell
+def _(dynamic_widget, mo):
+    mo.callout(
+        f"Dynamic position: x = {dynamic_widget.x[0]:.3f}, y = {dynamic_widget.y[0]:.3f}"
+    )
+    return
+
+
 if __name__ == "__main__":
     app.run()

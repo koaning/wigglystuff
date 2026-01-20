@@ -96,3 +96,89 @@ def test_chart_puck_custom_styling():
 
     assert puck.puck_radius == 20
     assert puck.puck_color == "#00ff00"
+
+
+def test_from_callback_creates_widget():
+    def draw_fn(ax, x, y):
+        ax.plot([0, 1], [0, 1])
+
+    puck = ChartPuck.from_callback(
+        draw_fn=draw_fn,
+        x_bounds=(0, 10),
+        y_bounds=(0, 10),
+    )
+
+    assert puck.x_bounds == (0.0, 10.0)
+    assert puck.y_bounds == (0.0, 10.0)
+    assert puck.chart_base64.startswith("data:image/png;base64,")
+
+
+def test_from_callback_defaults_to_center():
+    def draw_fn(ax, x, y):
+        ax.scatter([x], [y])
+
+    puck = ChartPuck.from_callback(
+        draw_fn=draw_fn,
+        x_bounds=(-5, 5),
+        y_bounds=(-10, 10),
+    )
+
+    assert puck.x == [0.0]
+    assert puck.y == [0.0]
+
+
+def test_from_callback_accepts_initial_position():
+    def draw_fn(ax, x, y):
+        ax.scatter([x], [y])
+
+    puck = ChartPuck.from_callback(
+        draw_fn=draw_fn,
+        x_bounds=(0, 10),
+        y_bounds=(0, 10),
+        x=2.5,
+        y=7.5,
+    )
+
+    assert puck.x == [2.5]
+    assert puck.y == [7.5]
+
+
+def test_from_callback_accepts_custom_styling():
+    def draw_fn(ax, x, y):
+        ax.plot([0, 1], [0, 1])
+
+    puck = ChartPuck.from_callback(
+        draw_fn=draw_fn,
+        x_bounds=(0, 10),
+        y_bounds=(0, 10),
+        puck_radius=15,
+        puck_color="#ff00ff",
+    )
+
+    assert puck.puck_radius == 15
+    assert puck.puck_color == "#ff00ff"
+
+
+def test_from_callback_updates_chart_on_position_change():
+    call_count = [0]
+
+    def draw_fn(ax, x, y):
+        call_count[0] += 1
+        ax.scatter([x], [y])
+
+    puck = ChartPuck.from_callback(
+        draw_fn=draw_fn,
+        x_bounds=(0, 10),
+        y_bounds=(0, 10),
+    )
+
+    initial_calls = call_count[0]
+    initial_base64 = puck.chart_base64
+
+    # Simulate puck movement
+    puck.x = [3.0]
+
+    # draw_fn should have been called again
+    assert call_count[0] > initial_calls
+    # chart_base64 should be updated
+    assert puck.chart_base64 != initial_base64

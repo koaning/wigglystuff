@@ -163,3 +163,89 @@ class ChartPuck(anywidget.AnyWidget):
             puck_color=puck_color,
             **kwargs,
         )
+
+    @classmethod
+    def from_callback(
+        cls,
+        draw_fn,
+        x_bounds: tuple[float, float],
+        y_bounds: tuple[float, float],
+        figsize: tuple[float, float] = (6, 6),
+        x: float | list[float] | None = None,
+        y: float | list[float] | None = None,
+        **kwargs: Any,
+    ) -> "ChartPuck":
+        """Create a ChartPuck that auto-updates when the puck moves.
+
+        This is the recommended way to create a ChartPuck when you want the chart
+        to update dynamically as the puck is dragged. The callback function is
+        called on init and whenever the puck position changes.
+
+        Args:
+            draw_fn: A function(ax, x, y) that draws onto the axes.
+                     Called on init and whenever puck position changes.
+                     The axes is pre-cleared and bounds are pre-set.
+            x_bounds: (min, max) for x-axis - fixed for lifetime of widget.
+            y_bounds: (min, max) for y-axis - fixed for lifetime of widget.
+            figsize: Figure size in inches.
+            x: Initial x position(s). Defaults to center of x_bounds.
+            y: Initial y position(s). Defaults to center of y_bounds.
+            **kwargs: Passed to ChartPuck (puck_radius, puck_color, etc.)
+
+        Returns:
+            A ChartPuck instance with auto-update behavior.
+
+        Examples:
+            ```python
+            def draw_chart(ax, x, y):
+                ax.scatter(data_x, data_y, alpha=0.6)
+                ax.axvline(x, color='red', linestyle='--')
+                ax.axhline(y, color='red', linestyle='--')
+
+            puck = ChartPuck.from_callback(
+                draw_fn=draw_chart,
+                x_bounds=(-3, 3),
+                y_bounds=(-3, 3),
+                figsize=(6, 6),
+                x=0, y=0
+            )
+            ```
+        """
+        import matplotlib.pyplot as plt
+
+        # Default to center of bounds if not specified
+        if x is None:
+            x = (x_bounds[0] + x_bounds[1]) / 2
+        if y is None:
+            y = (y_bounds[0] + y_bounds[1]) / 2
+
+        # Normalize to lists
+        x_list = x if isinstance(x, list) else [x]
+        y_list = y if isinstance(y, list) else [y]
+
+        # Create figure (owned by this closure)
+        fig, ax = plt.subplots(figsize=figsize)
+
+        def render(x_vals, y_vals):
+            ax.clear()
+            ax.set_xlim(x_bounds)
+            ax.set_ylim(y_bounds)
+            # Call user's draw function with first puck position
+            draw_fn(ax, x_vals[0], y_vals[0])
+            return fig_to_base64(fig)
+
+        # Initial render
+        ax.set_xlim(x_bounds)
+        ax.set_ylim(y_bounds)
+        draw_fn(ax, x_list[0], y_list[0])
+
+        # Create widget
+        widget = cls(fig, x=x, y=y, **kwargs)
+
+        # Wire up observer for auto-updates
+        def on_change(change):
+            widget.chart_base64 = render(widget.x, widget.y)
+
+        widget.observe(on_change, names=["x", "y"])
+
+        return widget
