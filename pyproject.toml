@@ -27,6 +27,7 @@ test = [
 test-browser = [
     "pytest>=8.3.3",
     "pytest-playwright>=0.6.2",
+    "marimo>=0.18.0",
 ]
 docs = [
     "altair>=6.0.0",
