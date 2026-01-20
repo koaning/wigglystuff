@@ -9,7 +9,17 @@ install:
 
 test:
 	uv pip install -e '.[test]'
-	uv run pytest
+	uv run pytest --ignore=tests/test_browser
+
+test-browser:
+	uv pip install -e '.[test-browser]'
+	uv run playwright install chromium
+	uv run pytest tests/test_browser -v
+
+test-all:
+	uv pip install -e '.[test-browser]'
+	uv run playwright install chromium
+	uv run pytest -v
 
 pypi: clean
 	uv build

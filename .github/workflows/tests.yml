@@ -17,9 +17,32 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Pytest
+      - name: Pytest (unit tests)
         run: |
           python -m pip install --upgrade uv
           uv venv
           uv pip install -e ".[test]"
-          uv run pytest
+          uv run pytest --ignore=tests/test_browser
+
+  browser-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade uv
+          uv venv
+          uv pip install -e ".[test-browser]"
+      - name: Install Playwright browsers
+        run: uv run playwright install chromium --with-deps
+      - name: Pytest (browser tests)
+        run: uv run pytest tests/test_browser -v -s
+      - name: Upload debug screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshots
+          path: debug-*.png

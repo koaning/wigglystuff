@@ -24,6 +24,11 @@ dependencies = [
 test = [
     "pytest>=8.3.3",
 ]
+test-browser = [
+    "pytest>=8.3.3",
+    "pytest-playwright>=0.6.2",
+    "marimo>=0.18.0",
+]
 docs = [
     "altair>=6.0.0",
     "black>=24.8.0",
@@ -47,3 +52,6 @@ build-backend = "hatchling.build"
 [tool.hatch.build]
 only-packages = true
 artifacts = ["wigglystuff/static/*"]
+
+[tool.marimo.runtime]
+auto_instantiate = true
