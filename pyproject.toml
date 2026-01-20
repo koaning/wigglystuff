@@ -52,3 +52,6 @@ build-backend = "hatchling.build"
 [tool.hatch.build]
 only-packages = true
 artifacts = ["wigglystuff/static/*"]
+
+[tool.marimo.runtime]
+auto_instantiate = true
