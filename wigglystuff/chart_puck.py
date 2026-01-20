@@ -1,4 +1,4 @@
-"""ChartPuck widget for overlaying a draggable puck on matplotlib charts."""
+"""ChartPuck widget for overlaying draggable pucks on matplotlib charts."""
 
 from __future__ import annotations
 
@@ -48,9 +48,11 @@ class ChartPuck(anywidget.AnyWidget):
     """Draggable puck overlay for matplotlib charts.
 
     Allows interactive selection of coordinates on a static matplotlib chart.
-    The puck position is tracked in data coordinates.
+    Supports single or multiple pucks. The puck positions are tracked in data
+    coordinates.
 
     Examples:
+        Single puck:
         ```python
         import matplotlib.pyplot as plt
         from wigglystuff import ChartPuck
@@ -59,15 +61,22 @@ class ChartPuck(anywidget.AnyWidget):
         ax.scatter([1, 2, 3], [1, 2, 3])
 
         puck = ChartPuck(fig)
-        # puck.x, puck.y now track the puck position in data coordinates
+        # puck.x, puck.y track the puck position in data coordinates
+        ```
+
+        Multiple pucks:
+        ```python
+        puck = ChartPuck(fig, x=[0.5, 1.5, 2.5], y=[0.5, 1.5, 2.5])
+        # puck.x, puck.y are lists of coordinates
         ```
     """
 
     _esm = Path(__file__).parent / "static" / "chart-puck.js"
 
-    # Puck position in data coordinates (synced to Python)
-    x = traitlets.Float(0.0).tag(sync=True)
-    y = traitlets.Float(0.0).tag(sync=True)
+    # Puck positions in data coordinates (synced to Python)
+    # Always stored as lists internally
+    x = traitlets.List(traitlets.Float(), default_value=[0.0]).tag(sync=True)
+    y = traitlets.List(traitlets.Float(), default_value=[0.0]).tag(sync=True)
 
     # Bounds from matplotlib axes (auto-extracted)
     x_bounds = traitlets.Tuple(
@@ -98,8 +107,8 @@ class ChartPuck(anywidget.AnyWidget):
     def __init__(
         self,
         fig,
-        x: float | None = None,
-        y: float | None = None,
+        x: float | list[float] | None = None,
+        y: float | list[float] | None = None,
         puck_radius: int = 10,
         puck_color: str = "#e63946",
         **kwargs: Any,
@@ -108,10 +117,12 @@ class ChartPuck(anywidget.AnyWidget):
 
         Args:
             fig: A matplotlib figure to overlay the puck on.
-            x: Initial x coordinate in data space. Defaults to center of x_bounds.
-            y: Initial y coordinate in data space. Defaults to center of y_bounds.
-            puck_radius: Radius of the puck in pixels.
-            puck_color: Color of the puck (any CSS color).
+            x: Initial x coordinate(s) in data space. Can be a single value or
+               a list for multiple pucks. Defaults to center of x_bounds.
+            y: Initial y coordinate(s) in data space. Can be a single value or
+               a list for multiple pucks. Defaults to center of y_bounds.
+            puck_radius: Radius of the puck(s) in pixels.
+            puck_color: Color of the puck(s) (any CSS color).
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px = extract_axes_info(
@@ -120,10 +131,24 @@ class ChartPuck(anywidget.AnyWidget):
         chart_base64 = fig_to_base64(fig)
 
         # Default to center of bounds if not specified
+        center_x = (x_bounds[0] + x_bounds[1]) / 2
+        center_y = (y_bounds[0] + y_bounds[1]) / 2
+
+        # Normalize to lists
         if x is None:
-            x = (x_bounds[0] + x_bounds[1]) / 2
+            x = [center_x]
+        elif not isinstance(x, list):
+            x = [x]
+
         if y is None:
-            y = (y_bounds[0] + y_bounds[1]) / 2
+            y = [center_y]
+        elif not isinstance(y, list):
+            y = [y]
+
+        if len(x) != len(y):
+            raise ValueError(
+                f"x and y must have the same length, got {len(x)} and {len(y)}"
+            )
 
         super().__init__(
             x=x,

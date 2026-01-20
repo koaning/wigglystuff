@@ -50,14 +50,27 @@ def test_extract_axes_info_respects_xlim_ylim(simple_figure):
 
 def test_chart_puck_defaults_to_center(simple_figure):
     puck = ChartPuck(simple_figure)
-    assert puck.x == 2.0
-    assert puck.y == 2.0
+    # x and y are now lists
+    assert puck.x == [2.0]
+    assert puck.y == [2.0]
 
 
-def test_chart_puck_accepts_initial_position(simple_figure):
+def test_chart_puck_accepts_single_initial_position(simple_figure):
     puck = ChartPuck(simple_figure, x=1.0, y=3.0)
-    assert puck.x == 1.0
-    assert puck.y == 3.0
+    # Single values are converted to lists
+    assert puck.x == [1.0]
+    assert puck.y == [3.0]
+
+
+def test_chart_puck_accepts_multiple_pucks(simple_figure):
+    puck = ChartPuck(simple_figure, x=[0.5, 1.5, 2.5], y=[0.5, 1.5, 2.5])
+    assert puck.x == [0.5, 1.5, 2.5]
+    assert puck.y == [0.5, 1.5, 2.5]
+
+
+def test_chart_puck_raises_on_mismatched_lengths(simple_figure):
+    with pytest.raises(ValueError, match="same length"):
+        ChartPuck(simple_figure, x=[1.0, 2.0], y=[1.0])
 
 
 def test_chart_puck_has_chart_base64(simple_figure):

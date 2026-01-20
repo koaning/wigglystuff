@@ -16,6 +16,7 @@ function render({ model, el }) {
   const chartImage = new Image();
   let imageLoaded = false;
   let isDragging = false;
+  let dragIndex = -1; // Which puck is being dragged
 
   function pixelToData(pixelX, pixelY) {
     const [xMin, xMax] = model.get("x_bounds");
@@ -42,21 +43,9 @@ function render({ model, el }) {
     return { x: pixelX, y: pixelY };
   }
 
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw chart image as background
-    if (imageLoaded) {
-      ctx.drawImage(chartImage, 0, 0);
-    }
-
-    // Draw puck
-    const puckPos = dataToPixel(model.get("x"), model.get("y"));
-    const radius = model.get("puck_radius");
-    const color = model.get("puck_color");
-
+  function drawPuck(pixelX, pixelY, radius, color) {
     ctx.beginPath();
-    ctx.arc(puckPos.x, puckPos.y, radius, 0, 2 * Math.PI);
+    ctx.arc(pixelX, pixelY, radius, 0, 2 * Math.PI);
     ctx.fillStyle = color;
     ctx.fill();
 
@@ -71,6 +60,26 @@ function render({ model, el }) {
     ctx.stroke();
   }
 
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw chart image as background
+    if (imageLoaded) {
+      ctx.drawImage(chartImage, 0, 0);
+    }
+
+    // Draw all pucks
+    const xs = model.get("x");
+    const ys = model.get("y");
+    const radius = model.get("puck_radius");
+    const color = model.get("puck_color");
+
+    for (let i = 0; i < xs.length; i++) {
+      const puckPos = dataToPixel(xs[i], ys[i]);
+      drawPuck(puckPos.x, puckPos.y, radius, color);
+    }
+  }
+
   function getCanvasCoords(event) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -79,14 +88,44 @@ function render({ model, el }) {
     };
   }
 
+  function findClosestPuck(pixelX, pixelY) {
+    const xs = model.get("x");
+    const ys = model.get("y");
+    let closestIndex = 0;
+    let closestDist = Infinity;
+
+    for (let i = 0; i < xs.length; i++) {
+      const puckPos = dataToPixel(xs[i], ys[i]);
+      const dist = Math.hypot(puckPos.x - pixelX, puckPos.y - pixelY);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestIndex = i;
+      }
+    }
+
+    return closestIndex;
+  }
+
   function handleStart(event) {
     event.preventDefault();
+
+    let coords;
+    if (event.touches) {
+      coords = {
+        x: event.touches[0].clientX - canvas.getBoundingClientRect().left,
+        y: event.touches[0].clientY - canvas.getBoundingClientRect().top,
+      };
+    } else {
+      coords = getCanvasCoords(event);
+    }
+
+    dragIndex = findClosestPuck(coords.x, coords.y);
     isDragging = true;
     handleMove(event);
   }
 
   function handleMove(event) {
-    if (!isDragging) return;
+    if (!isDragging || dragIndex < 0) return;
     event.preventDefault();
 
     let coords;
@@ -100,14 +139,22 @@ function render({ model, el }) {
     }
 
     const data = pixelToData(coords.x, coords.y);
-    model.set("x", data.x);
-    model.set("y", data.y);
+
+    // Update the dragged puck's position
+    const xs = [...model.get("x")];
+    const ys = [...model.get("y")];
+    xs[dragIndex] = data.x;
+    ys[dragIndex] = data.y;
+
+    model.set("x", xs);
+    model.set("y", ys);
     model.save_changes();
     draw();
   }
 
   function handleEnd() {
     isDragging = false;
+    dragIndex = -1;
   }
 
   // Mouse events
