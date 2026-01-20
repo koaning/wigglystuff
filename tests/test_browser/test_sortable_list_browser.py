@@ -8,10 +8,30 @@ from playwright.sync_api import Page, expect
 WIDGET_TIMEOUT = 30000 if os.environ.get("CI") else 10000
 
 
+def debug_page_state(page: Page, test_name: str):
+    """Capture page state for debugging CI failures."""
+    if os.environ.get("CI"):
+        # Save screenshot
+        page.screenshot(path=f"debug-{test_name}.png")
+        # Log page content
+        print(f"\n=== DEBUG: Page URL: {page.url} ===")
+        print(f"=== DEBUG: Page title: {page.title()} ===")
+        # Check for any visible text
+        body_text = page.locator("body").inner_text()
+        print(f"=== DEBUG: Body text (first 500 chars): {body_text[:500]} ===")
+        # Check for console errors
+        print("=== DEBUG: Checking for widget class ===")
+        widget_count = page.locator(".draggable-list-widget").count()
+        print(f"=== DEBUG: Found {widget_count} widgets ===")
+
+
 @pytest.mark.parametrize("marimo_server", ["demos/sortlist.py"], indirect=True)
 def test_sortable_list_renders(marimo_server: str, page: Page):
     """Test that the SortableList widget renders in the browser."""
     page.goto(marimo_server, wait_until="networkidle")
+
+    # Debug: capture page state before assertion
+    debug_page_state(page, "sortable_list_renders")
 
     # Wait for the widget to render
     widget = page.locator(".draggable-list-widget")
@@ -26,6 +46,7 @@ def test_sortable_list_renders(marimo_server: str, page: Page):
 def test_add_item_updates_list(marimo_server: str, page: Page):
     """Test that adding an item via the input updates the widget."""
     page.goto(marimo_server, wait_until="networkidle")
+    debug_page_state(page, "add_item_updates_list")
 
     # Wait for the widget
     widget = page.locator(".draggable-list-widget")
@@ -51,6 +72,7 @@ def test_add_item_updates_list(marimo_server: str, page: Page):
 def test_remove_item_updates_list(marimo_server: str, page: Page):
     """Test that clicking remove button removes an item."""
     page.goto(marimo_server, wait_until="networkidle")
+    debug_page_state(page, "remove_item_updates_list")
 
     # Wait for the widget
     widget = page.locator(".draggable-list-widget")
@@ -72,6 +94,7 @@ def test_remove_item_updates_list(marimo_server: str, page: Page):
 def test_edit_item_updates_value(marimo_server: str, page: Page):
     """Test that editing an item updates its value."""
     page.goto(marimo_server, wait_until="networkidle")
+    debug_page_state(page, "edit_item_updates_value")
 
     # Wait for the widget
     widget = page.locator(".draggable-list-widget")
@@ -98,6 +121,7 @@ def test_edit_item_updates_value(marimo_server: str, page: Page):
 def test_python_state_updates_after_add(marimo_server: str, page: Page):
     """Test that adding an item updates the Python state visible in the notebook."""
     page.goto(marimo_server, wait_until="networkidle")
+    debug_page_state(page, "python_state_updates_after_add")
 
     # Wait for the widget
     widget = page.locator(".draggable-list-widget")

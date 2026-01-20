@@ -29,8 +29,9 @@ def marimo_server(request):
 
     proc = subprocess.Popen(
         [
-            "uv", "run", "marimo", "run",
+            "uv", "run", "marimo", "edit",
             "--headless",
+            "--no-token",
             "--host", "127.0.0.1",
             "--port", str(port),
             notebook_path,
