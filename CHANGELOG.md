@@ -2,18 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.14] - 2026-01-19
+## [0.2.15] - 2026-01-20
 
 ### Added
 - Playwright browser integration tests for `SortableList` widget, verifying full browser-to-Python round-trip communication. Tests cover rendering, adding/removing/editing items, and Python state synchronization.
 - New `test-browser` optional dependency group and CI workflow for running browser tests with marimo.
 
+### Removed
+- Removed unused `pydantic-ai` dependency that was pulling in `openai` and breaking WASM demos.
+
+## [0.2.14] - 2026-01-19
+
 ### Fixed
 - `EnvConfig` now displays values in input fields even when validation fails, so users can see what was loaded or entered rather than an empty field.
 - Removed footer color changes in `EnvConfig`. Individual row highlighting (green/red) is now the sole status indicator, making the UI more consistent.
-
-### Removed
-- Removed unused `pydantic-ai` dependency that was pulling in `openai` and breaking WASM demos.
 
 ## [0.2.13] - 2026-01-15
 
