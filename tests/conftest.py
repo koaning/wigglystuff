@@ -14,64 +14,65 @@ def find_free_port():
         return s.getsockname()[1]
 
 
-@pytest.fixture(scope="function")
-def marimo_server(request):
-    """Start a marimo server for the specified notebook.
+@pytest.fixture
+def start_marimo():
+    """Returns a function that starts a marimo server for a notebook.
 
     Usage:
-        @pytest.mark.parametrize("marimo_server", ["demos/sortlist.py"], indirect=True)
-        def test_something(marimo_server, page):
-            page.goto(marimo_server)
-            ...
+        def test_something(start_marimo, page):
+            url = start_marimo("demos/sortlist.py")
+            page.goto(url)
     """
-    notebook_path = request.param
-    port = find_free_port()
+    servers = []
 
-    proc = subprocess.Popen(
-        [
-            "uv", "run", "marimo", "edit",
-            "--headless",
-            "--no-token",
-            "--host", "127.0.0.1",
-            "--port", str(port),
-            notebook_path,
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
+    def _start(notebook_path: str) -> str:
+        port = find_free_port()
+        proc = subprocess.Popen(
+            [
+                "uv", "run", "marimo", "edit",
+                "--headless",
+                "--no-token",
+                "--host", "127.0.0.1",
+                "--port", str(port),
+                notebook_path,
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        servers.append(proc)
 
-    # Wait for server to start by polling the port
-    # Use longer timeout for CI environments
-    url = f"http://127.0.0.1:{port}"
-    max_wait = 60 if os.environ.get("CI") else 15
-    start = time.time()
-    while time.time() - start < max_wait:
-        # Check if process died
-        if proc.poll() is not None:
+        # Wait for server to start
+        url = f"http://127.0.0.1:{port}"
+        max_wait = 60 if os.environ.get("CI") else 15
+        start = time.time()
+        while time.time() - start < max_wait:
+            if proc.poll() is not None:
+                _, stderr = proc.communicate()
+                raise RuntimeError(
+                    f"marimo server exited unexpectedly with code {proc.returncode}. "
+                    f"stderr: {stderr.decode()}"
+                )
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                    s.settimeout(1)
+                    s.connect(("127.0.0.1", port))
+                    break
+            except (ConnectionRefusedError, socket.timeout):
+                time.sleep(0.5)
+        else:
+            proc.terminate()
             _, stderr = proc.communicate()
             raise RuntimeError(
-                f"marimo server exited unexpectedly with code {proc.returncode}. "
+                f"marimo server failed to start within {max_wait}s. "
                 f"stderr: {stderr.decode()}"
             )
-        try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.settimeout(1)
-                s.connect(("127.0.0.1", port))
-                break
-        except (ConnectionRefusedError, socket.timeout):
-            time.sleep(0.5)
-    else:
+
+        time.sleep(2 if os.environ.get("CI") else 1)
+        return url
+
+    yield _start
+
+    # Cleanup all servers started during the test
+    for proc in servers:
         proc.terminate()
-        _, stderr = proc.communicate()
-        raise RuntimeError(
-            f"marimo server failed to start within {max_wait}s. "
-            f"stderr: {stderr.decode()}"
-        )
-
-    # Give it a bit more time to fully initialize
-    time.sleep(2 if os.environ.get("CI") else 1)
-
-    yield url
-
-    proc.terminate()
-    proc.wait(timeout=5)
+        proc.wait(timeout=5)
