@@ -138,15 +138,16 @@ def _(mo):
 @app.cell
 def _(TangleSelect, mo):
     shouting = mo.ui.anywidget(TangleSelect(["🥔", "🥕", "🍎"]))
-    return (shouting,)
+    times2 = mo.ui.anywidget(TangleSlider(min_value=1, max_value=20, step=1, suffix=" times", amount=3))    
+    return shouting, times2
 
 
 @app.cell
 def _(mo, shouting, times):
     mo.md(f"""
-    As a quick demo, let's repeat {shouting} {times}.
+    As a quick demo, let's repeat {shouting} {times2}.
 
-    {" ".join([shouting.choice] * int(times.amount))}
+    {" ".join([shouting.choice] * int(times2.amount))}
     """)
     return
 
