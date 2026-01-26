@@ -1,18 +1,19 @@
 # /// script
-# requires-python = ">=3.14"
+# requires-python = ">=3.10"
 # dependencies = [
-#     "marimo>=0.19.6",
-#     "matplotlib==3.10.8",
-#     "numpy==2.4.1",
-#     "scikit-learn==1.8.0",
-#     "scipy==1.17.0",
-#     "wigglystuff==0.2.16",
+#     "marimo",
+#     "matplotlib",
+#     "numpy",
+#     "scikit-learn",
+#     "scipy",
+#     "wigglystuff==0.2.17",
 # ]
 # ///
+
 import marimo
 
-__generated_with = "0.19.4"
-app = marimo.App(width="medium")
+__generated_with = "0.19.6"
+app = marimo.App()
 
 
 @app.cell
@@ -145,7 +146,8 @@ def _(np):
 
 @app.cell
 def _(ChartPuck, dynamic_data_x, dynamic_data_y):
-    def draw_with_crosshairs(ax, x, y):
+    def draw_with_crosshairs(ax, widget):
+        x, y = widget.x[0], widget.y[0]
         ax.scatter(dynamic_data_x, dynamic_data_y, alpha=0.6)
         ax.axvline(x, color="red", linestyle="--", alpha=0.7)
         ax.axhline(y, color="red", linestyle="--", alpha=0.7)
@@ -198,19 +200,15 @@ def _(mo):
 @app.cell
 def _(mo):
     n_pucks_slider = mo.ui.slider(3, 8, value=5, label="Number of pucks")
-    spline_method = mo.ui.dropdown(
-        options=["CubicSpline", "Pchip", "Akima", "Linear"],
-        value="CubicSpline",
-        label="Interpolation method",
-    )
-    mo.hstack([n_pucks_slider, spline_method], gap=2)
-    return n_pucks_slider, spline_method
+    return (n_pucks_slider,)
 
 
 @app.cell
-def _(ChartPuck, n_pucks_slider, np, plt, spline_method):
-    from scipy.interpolate import CubicSpline, PchipInterpolator, Akima1DInterpolator, interp1d
-    from wigglystuff.chart_puck import fig_to_base64
+def _(ChartPuck, n_pucks_slider, np):
+    from scipy.interpolate import CubicSpline, PchipInterpolator, Akima1DInterpolator, interp1d, BarycentricInterpolator
+
+    # Internal state for interpolation method (not a marimo dependency)
+    method_state = {"value": "CubicSpline"}
 
     def draw_spline_chart(ax, x_pucks, y_pucks, method):
         # Add fixed anchor points at (-3, 0) and (3, 1)
@@ -237,8 +235,16 @@ def _(ChartPuck, n_pucks_slider, np, plt, spline_method):
             spline = PchipInterpolator(x_sorted, y_sorted)
         elif method == "Akima":
             spline = Akima1DInterpolator(x_sorted, y_sorted)
-        else:  # Linear
+        elif method == "Linear":
             spline = interp1d(x_sorted, y_sorted, kind="linear", fill_value="extrapolate")
+        elif method == "Quadratic":
+            spline = interp1d(x_sorted, y_sorted, kind="quadratic", fill_value="extrapolate")
+        elif method == "Step":
+            spline = interp1d(x_sorted, y_sorted, kind="zero", fill_value="extrapolate")
+        elif method == "Nearest":
+            spline = interp1d(x_sorted, y_sorted, kind="nearest", fill_value="extrapolate")
+        else:  # Barycentric
+            spline = BarycentricInterpolator(x_sorted, y_sorted)
 
         y_dense = spline(x_dense)
 
@@ -255,33 +261,41 @@ def _(ChartPuck, n_pucks_slider, np, plt, spline_method):
         # Mark fixed anchor points
         ax.plot([-3, 3], [0, 1], "ko", markersize=8, zorder=5)
 
+    def draw_spline(ax, widget):
+        draw_spline_chart(ax, list(widget.x), list(widget.y), method_state["value"])
+
     # Initial puck positions: evenly spaced between anchors (excluding -3 and 3)
     _n = n_pucks_slider.value
     _init_x = np.linspace(-2.5, 2.5, _n).tolist()
     _init_y = np.linspace(0.1, 0.9, _n).tolist()
 
-    # Create initial figure
-    _fig, _ax = plt.subplots(figsize=(6, 4))
-    draw_spline_chart(_ax, _init_x, _init_y, spline_method.value)
-
-    spline_puck = ChartPuck(
-        _fig,
+    spline_puck = ChartPuck.from_callback(
+        draw_fn=draw_spline,
+        x_bounds=(-3, 3),
+        y_bounds=(-0.1, 1.1),
+        figsize=(6, 4),
         x=_init_x,
         y=_init_y,
         puck_color="#9c27b0",
-        drag_y_bounds=(0, 1),  # Constrain y to valid spline range
+        drag_y_bounds=(0, 1),
     )
-    plt.close(_fig)
+    return method_state, spline_puck
 
-    # Observer to redraw spline when pucks move
-    def on_spline_change(change):
-        _fig_update, _ax_update = plt.subplots(figsize=(6, 4))
-        draw_spline_chart(_ax_update, list(spline_puck.x), list(spline_puck.y), spline_method.value)
-        spline_puck.chart_base64 = fig_to_base64(_fig_update)
-        plt.close(_fig_update)
 
-    spline_puck.observe(on_spline_change, names=["x", "y"])
-    return (spline_puck,)
+@app.cell
+def _(method_state, mo, n_pucks_slider, spline_puck):
+    def on_method_change(new_val):
+        method_state["value"] = new_val
+        spline_puck.redraw()
+
+    spline_method = mo.ui.dropdown(
+        options=["CubicSpline", "Pchip", "Akima", "Linear", "Quadratic", "Step", "Nearest", "Barycentric"],
+        value=method_state["value"],
+        label="Interpolation method",
+        on_change=on_method_change,
+    )
+    mo.hstack([n_pucks_slider, spline_method], gap=2)
+    return
 
 
 @app.cell
@@ -343,8 +357,10 @@ def _(mo, run_kmeans_button):
 
 @app.cell
 def _(ChartPuck, np, plt, reduced_data, x_max, x_min, y_max, y_min):
-    def draw_kmeans_boundaries(ax, centroids, reduced_data, x_min, x_max, y_min, y_max):
-        from sklearn.cluster import KMeans
+    from sklearn.cluster import KMeans
+
+    def draw_kmeans(ax, widget):
+        centroids = list(zip(widget.x, widget.y))
 
         h = 0.3  # mesh step size
         xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
@@ -385,42 +401,21 @@ def _(ChartPuck, np, plt, reduced_data, x_max, x_min, y_max, y_min):
             )
 
         ax.set_title("Drag pucks to move cluster centroids")
-        ax.set_xlim(x_min, x_max)
-        ax.set_ylim(y_min, y_max)
-
 
     # Initial centroid positions (spread in a grid pattern)
     init_x = [-30, -15, 0, 15, 30, -30, -15, 0, 15, 30]
     init_y = [-20, -20, -20, -20, -20, 20, 20, 20, 20, 20]
 
-    # Create initial figure
-    fig_km, ax_km = plt.subplots(figsize=(6, 5))
-    initial_centroids = list(zip(init_x, init_y))
-    draw_kmeans_boundaries(ax_km, initial_centroids, reduced_data, x_min, x_max, y_min, y_max)
-
-    # Create widget with 10 pucks (one for each digit)
-    kmeans_puck = ChartPuck(
-        fig_km,
+    kmeans_puck = ChartPuck.from_callback(
+        draw_fn=draw_kmeans,
+        x_bounds=(x_min, x_max),
+        y_bounds=(y_min, y_max),
+        figsize=(6, 5),
         x=init_x,
         y=init_y,
         puck_color="#e63946",
         puck_radius=8,
     )
-    plt.close(fig_km)
-
-
-    # Set up observer to redraw on puck movement
-    def on_kmeans_change(change):
-        fig_update, ax_update = plt.subplots(figsize=(6, 5))
-        centroids = list(zip(kmeans_puck.x, kmeans_puck.y))
-        draw_kmeans_boundaries(ax_update, centroids, reduced_data, x_min, x_max, y_min, y_max)
-        from wigglystuff.chart_puck import fig_to_base64
-
-        kmeans_puck.chart_base64 = fig_to_base64(fig_update)
-        plt.close(fig_update)
-
-
-    kmeans_puck.observe(on_kmeans_change, names=["x", "y"])
     return (kmeans_puck,)
 
 

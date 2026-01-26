@@ -57,6 +57,8 @@ syncs back to Python.
 - Each widget has a demo marimo notebook in the `demos/` folder (e.g.,
   `demos/colorpicker.py`). When adding a new widget, create a corresponding
   demo notebook. Run demos with `marimo edit demos/<widget>.py`.
+- **Always run `uv run marimo check demos/<notebook>.py`** after editing a demo
+  notebook to verify it parses correctly and has no cell dependency issues.
 - Dumber is better. Prefer obvious, direct code over clever abstractions—someone
   new to the project should be able to read the code top-to-bottom and grok it
   without needing to look up framework magic or trace through indirection.

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.17] - 2026-01-26
+
+### Changed
+- **Breaking:** `ChartPuck.from_callback` now passes the widget to the draw function instead of scalar coordinates. The signature changed from `draw_fn(ax, x, y)` to `draw_fn(ax, widget)`, giving access to all puck positions via `widget.x` and `widget.y` lists.
+
+### Added
+- New `redraw()` method on `ChartPuck` for manually triggering chart re-renders when external state changes (e.g., dropdown selections). Only available for widgets created via `from_callback()`.
+- Added Step, Nearest, Quadratic, and Barycentric interpolation methods to the ChartPuck spline demo.
+
 ## [0.2.16] - 2026-01-20
 
 ### Added
