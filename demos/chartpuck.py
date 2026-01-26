@@ -269,6 +269,7 @@ def _(ChartPuck, n_pucks_slider, np, plt, spline_method):
         x=_init_x,
         y=_init_y,
         puck_color="#9c27b0",
+        drag_y_bounds=(0, 1),  # Constrain y to valid spline range
     )
     plt.close(_fig)
 

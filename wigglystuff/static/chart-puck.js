@@ -28,8 +28,20 @@ function render({ model, el }) {
     pixelY = Math.max(top, Math.min(bottom, pixelY));
 
     // Map (Y inverted because canvas Y goes down, data Y goes up)
-    const dataX = xMin + ((pixelX - left) / (right - left)) * (xMax - xMin);
-    const dataY = yMin + ((bottom - pixelY) / (bottom - top)) * (yMax - yMin);
+    let dataX = xMin + ((pixelX - left) / (right - left)) * (xMax - xMin);
+    let dataY = yMin + ((bottom - pixelY) / (bottom - top)) * (yMax - yMin);
+
+    // Apply optional drag constraints in data space
+    const dragXBounds = model.get("drag_x_bounds");
+    const dragYBounds = model.get("drag_y_bounds");
+
+    if (dragXBounds) {
+      dataX = Math.max(dragXBounds[0], Math.min(dragXBounds[1], dataX));
+    }
+    if (dragYBounds) {
+      dataY = Math.max(dragYBounds[0], Math.min(dragYBounds[1], dataY));
+    }
+
     return { x: dataX, y: dataY };
   }
 
