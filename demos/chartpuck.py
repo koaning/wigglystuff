@@ -1,18 +1,19 @@
 # /// script
-# requires-python = ">=3.14"
+# requires-python = ">=3.10"
 # dependencies = [
-#     "marimo>=0.19.6",
-#     "matplotlib==3.10.8",
-#     "numpy==2.4.1",
-#     "scikit-learn==1.8.0",
-#     "scipy==1.17.0",
-#     "wigglystuff==0.2.16",
+#     "marimo",
+#     "matplotlib",
+#     "numpy",
+#     "scikit-learn",
+#     "scipy",
+#     "wigglystuff==0.2.17",
 # ]
 # ///
+
 import marimo
 
-__generated_with = "0.19.4"
-app = marimo.App(width="medium")
+__generated_with = "0.19.6"
+app = marimo.App()
 
 
 @app.cell
@@ -278,11 +279,11 @@ def _(ChartPuck, n_pucks_slider, np):
         puck_color="#9c27b0",
         drag_y_bounds=(0, 1),
     )
-    return spline_puck, method_state
+    return method_state, spline_puck
 
 
 @app.cell
-def _(mo, n_pucks_slider, spline_puck, method_state):
+def _(method_state, mo, n_pucks_slider, spline_puck):
     def on_method_change(new_val):
         method_state["value"] = new_val
         spline_puck.redraw()
@@ -294,7 +295,7 @@ def _(mo, n_pucks_slider, spline_puck, method_state):
         on_change=on_method_change,
     )
     mo.hstack([n_pucks_slider, spline_method], gap=2)
-    return (spline_method,)
+    return
 
 
 @app.cell
