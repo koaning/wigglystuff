@@ -1,3 +1,14 @@
+# /// script
+# requires-python = ">=3.14"
+# dependencies = [
+#     "marimo>=0.19.6",
+#     "matplotlib==3.10.8",
+#     "numpy==2.4.1",
+#     "scikit-learn==1.8.0",
+#     "scipy==1.17.0",
+#     "wigglystuff==0.2.16",
+# ]
+# ///
 import marimo
 
 __generated_with = "0.19.4"
@@ -169,6 +180,125 @@ def _(dynamic_widget):
 @app.cell
 def _(dynamic_widget, mo):
     mo.callout(f"Dynamic position: x = {dynamic_widget.x[0]:.3f}, y = {dynamic_widget.y[0]:.3f}")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Spline Curve Editor
+
+    Drag the pucks to shape a curve. The spline interpolates through all control points,
+    with fixed anchors at (-3, 0) and (3, 1) shown as black dots.
+    Use the slider to change the number of pucks, and the dropdown to select the interpolation method.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    n_pucks_slider = mo.ui.slider(3, 8, value=5, label="Number of pucks")
+    spline_method = mo.ui.dropdown(
+        options=["CubicSpline", "Pchip", "Akima", "Linear"],
+        value="CubicSpline",
+        label="Interpolation method",
+    )
+    mo.hstack([n_pucks_slider, spline_method], gap=2)
+    return n_pucks_slider, spline_method
+
+
+@app.cell
+def _(ChartPuck, n_pucks_slider, np, plt, spline_method):
+    from scipy.interpolate import CubicSpline, PchipInterpolator, Akima1DInterpolator, interp1d
+    from wigglystuff.chart_puck import fig_to_base64
+
+    def draw_spline_chart(ax, x_pucks, y_pucks, method):
+        # Add fixed anchor points at (-3, 0) and (3, 1)
+        x_all = np.concatenate([[-3], x_pucks, [3]])
+        y_all = np.concatenate([[0], y_pucks, [1]])
+
+        # Sort points by x for proper spline fitting
+        sorted_indices = np.argsort(x_all)
+        x_sorted = x_all[sorted_indices]
+        y_sorted = y_all[sorted_indices]
+
+        # Ensure strictly increasing x by adding small perturbations to duplicates
+        for i in range(1, len(x_sorted)):
+            if x_sorted[i] <= x_sorted[i - 1]:
+                x_sorted[i] = x_sorted[i - 1] + 1e-6
+
+        # Create dense x values for smooth curve
+        x_dense = np.linspace(-3, 3, 200)
+
+        # Select interpolation method
+        if method == "CubicSpline":
+            spline = CubicSpline(x_sorted, y_sorted)
+        elif method == "Pchip":
+            spline = PchipInterpolator(x_sorted, y_sorted)
+        elif method == "Akima":
+            spline = Akima1DInterpolator(x_sorted, y_sorted)
+        else:  # Linear
+            spline = interp1d(x_sorted, y_sorted, kind="linear", fill_value="extrapolate")
+
+        y_dense = spline(x_dense)
+
+        # Plot the spline curve
+        ax.plot(x_dense, y_dense, "b-", linewidth=2)
+        ax.set_xlim(-3, 3)
+        ax.set_ylim(-0.1, 1.1)
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.set_title(f"Spline Curve ({method})")
+        ax.grid(True, alpha=0.3)
+        ax.axhline(0, color="gray", linewidth=0.5)
+        ax.axhline(1, color="gray", linewidth=0.5)
+        # Mark fixed anchor points
+        ax.plot([-3, 3], [0, 1], "ko", markersize=8, zorder=5)
+
+    # Initial puck positions: evenly spaced between anchors (excluding -3 and 3)
+    _n = n_pucks_slider.value
+    _init_x = np.linspace(-2.5, 2.5, _n).tolist()
+    _init_y = np.linspace(0.1, 0.9, _n).tolist()
+
+    # Create initial figure
+    _fig, _ax = plt.subplots(figsize=(6, 4))
+    draw_spline_chart(_ax, _init_x, _init_y, spline_method.value)
+
+    spline_puck = ChartPuck(
+        _fig,
+        x=_init_x,
+        y=_init_y,
+        puck_color="#9c27b0",
+    )
+    plt.close(_fig)
+
+    # Observer to redraw spline when pucks move
+    def on_spline_change(change):
+        _fig_update, _ax_update = plt.subplots(figsize=(6, 4))
+        draw_spline_chart(_ax_update, list(spline_puck.x), list(spline_puck.y), spline_method.value)
+        spline_puck.chart_base64 = fig_to_base64(_fig_update)
+        plt.close(_fig_update)
+
+    spline_puck.observe(on_spline_change, names=["x", "y"])
+    return (spline_puck,)
+
+
+@app.cell
+def _(mo, spline_puck):
+    spline_widget = mo.ui.anywidget(spline_puck)
+    return (spline_widget,)
+
+
+@app.cell
+def _(spline_widget):
+    spline_widget
+    return
+
+
+@app.cell
+def _(mo, spline_widget):
+    _positions = [f"({x:.2f}, {y:.2f})" for x, y in zip(spline_widget.x, spline_widget.y)]
+    mo.callout(f"Control points: {', '.join(_positions)}")
     return
 
 
