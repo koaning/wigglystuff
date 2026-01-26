@@ -48,6 +48,8 @@ def __init__(
     y: float | list[float] | None = None,
     puck_radius: int = 10,
     puck_color: str = "#e63946",
+    drag_x_bounds: tuple[float, float] | None = None,
+    drag_y_bounds: tuple[float, float] | None = None,
     **kwargs: Any,
 ) -> None:
     """Create a ChartPuck widget from a matplotlib figure.
@@ -60,6 +62,10 @@ def __init__(
            a list for multiple pucks. Defaults to center of y_bounds.
         puck_radius: Radius of the puck(s) in pixels.
         puck_color: Color of the puck(s) (any CSS color).
+        drag_x_bounds: Optional (min, max) to constrain puck dragging on x-axis.
+                      If None, uses the chart's x_bounds.
+        drag_y_bounds: Optional (min, max) to constrain puck dragging on y-axis.
+                      If None, uses the chart's y_bounds.
         **kwargs: Forwarded to ``anywidget.AnyWidget``.
     """
     x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px = extract_axes_info(
@@ -98,6 +104,8 @@ def __init__(
         chart_base64=chart_base64,
         puck_radius=puck_radius,
         puck_color=puck_color,
+        drag_x_bounds=drag_x_bounds,
+        drag_y_bounds=drag_y_bounds,
         **kwargs,
     )
 ```
@@ -190,6 +198,8 @@ from_callback(
     figsize: tuple[float, float] = (6, 6),
     x: float | list[float] | None = None,
     y: float | list[float] | None = None,
+    drag_x_bounds: tuple[float, float] | None = None,
+    drag_y_bounds: tuple[float, float] | None = None,
     **kwargs: Any
 ) -> "ChartPuck"
 ```
@@ -198,24 +208,24 @@ from_callback(
 Create a ChartPuck that auto-updates when the puck moves.
 
 
-This is the recommended way to create a ChartPuck when you want the chart to update dynamically as the puck is dragged. The callback function is called on init and whenever the puck position changes.
+This is the recommended way to create a ChartPuck when you want the chart to update dynamically as the puck is dragged. The callback function is called on init and whenever the puck position changes. Use `redraw()` to manually trigger a re-render (e.g., when external state changes).
 
 
 
 
 | Type | Description |
 | --- | --- |
-| `'ChartPuck'` | A ChartPuck instance with auto-update behavior. |
+| `'ChartPuck'` | A ChartPuck instance with auto-update behavior and redraw() method. |
 
 
 
 ```
 from wigglystuff import ChartPuck
 
-def draw_chart(ax, x, y):
+def draw_chart(ax, widget):
     ax.scatter(data_x, data_y, alpha=0.6)
-    ax.axvline(x, color='red', linestyle='--')
-    ax.axhline(y, color='red', linestyle='--')
+    ax.axvline(widget.x[0], color='red', linestyle='--')
+    ax.axhline(widget.y[0], color='red', linestyle='--')
 
 puck = ChartPuck.from_callback(
     draw_fn=draw_chart,
@@ -224,6 +234,9 @@ puck = ChartPuck.from_callback(
     figsize=(6, 6),
     x=0, y=0
 )
+
+# Manually trigger redraw (e.g., when external state changes)
+puck.redraw()
 ```
 
  Source code in `wigglystuff/chart_puck.py`
@@ -238,16 +251,21 @@ def from_callback(
     figsize: tuple[float, float] = (6, 6),
     x: float | list[float] | None = None,
     y: float | list[float] | None = None,
+    drag_x_bounds: tuple[float, float] | None = None,
+    drag_y_bounds: tuple[float, float] | None = None,
     **kwargs: Any,
 ) -> "ChartPuck":
     """Create a ChartPuck that auto-updates when the puck moves.
 
     This is the recommended way to create a ChartPuck when you want the chart
     to update dynamically as the puck is dragged. The callback function is
-    called on init and whenever the puck position changes.
+    called on init and whenever the puck position changes. Use ``redraw()``
+    to manually trigger a re-render (e.g., when external state changes).
 
     Args:
-        draw_fn: A function(ax, x, y) that draws onto the axes.
+        draw_fn: A function(ax, widget) that draws onto the axes.
+                 Receives the axes and the widget instance, allowing access
+                 to widget.x and widget.y (lists of all puck positions).
                  Called on init and whenever puck position changes.
                  The axes is pre-cleared and bounds are pre-set.
         x_bounds: (min, max) for x-axis - fixed for lifetime of widget.
@@ -255,17 +273,19 @@ def from_callback(
         figsize: Figure size in inches.
         x: Initial x position(s). Defaults to center of x_bounds.
         y: Initial y position(s). Defaults to center of y_bounds.
+        drag_x_bounds: Optional (min, max) to constrain puck dragging on x-axis.
+        drag_y_bounds: Optional (min, max) to constrain puck dragging on y-axis.
         **kwargs: Passed to ChartPuck (puck_radius, puck_color, etc.)
 
     Returns:
-        A ChartPuck instance with auto-update behavior.
+        A ChartPuck instance with auto-update behavior and redraw() method.
 
     Examples:
         ```python
-        def draw_chart(ax, x, y):
+        def draw_chart(ax, widget):
             ax.scatter(data_x, data_y, alpha=0.6)
-            ax.axvline(x, color='red', linestyle='--')
-            ax.axhline(y, color='red', linestyle='--')
+            ax.axvline(widget.x[0], color='red', linestyle='--')
+            ax.axhline(widget.y[0], color='red', linestyle='--')
 
         puck = ChartPuck.from_callback(
             draw_fn=draw_chart,
@@ -274,6 +294,9 @@ def from_callback(
             figsize=(6, 6),
             x=0, y=0
         )
+
+        # Manually trigger redraw (e.g., when external state changes)
+        puck.redraw()
         ```
     """
     import matplotlib.pyplot as plt
@@ -291,29 +314,60 @@ def from_callback(
     # Create figure (owned by this closure)
     fig, ax = plt.subplots(figsize=figsize)
 
-    def render(x_vals, y_vals):
+    # Create widget first so render() can reference it
+    # Initial render happens below after widget exists
+    ax.set_xlim(x_bounds)
+    ax.set_ylim(y_bounds)
+    widget = cls(fig, x=x, y=y, drag_x_bounds=drag_x_bounds, drag_y_bounds=drag_y_bounds, **kwargs)
+
+    def render():
         ax.clear()
         ax.set_xlim(x_bounds)
         ax.set_ylim(y_bounds)
-        # Call user's draw function with first puck position
-        draw_fn(ax, x_vals[0], y_vals[0])
+        draw_fn(ax, widget)
         return fig_to_base64(fig)
 
-    # Initial render
-    ax.set_xlim(x_bounds)
-    ax.set_ylim(y_bounds)
-    draw_fn(ax, x_list[0], y_list[0])
+    # Store render for redraw() method
+    widget._render = render
 
-    # Create widget
-    widget = cls(fig, x=x, y=y, **kwargs)
+    # Initial render with widget
+    widget.chart_base64 = render()
 
     # Wire up observer for auto-updates
     def on_change(change):
-        widget.chart_base64 = render(widget.x, widget.y)
+        widget.chart_base64 = render()
 
     widget.observe(on_change, names=["x", "y"])
 
     return widget
+```
+
+
+## redraw
+
+
+```
+redraw() -> None
+```
+
+
+Re-render the chart using the stored callback.
+
+
+Only available for widgets created via `from_callback()`. Call this when external state that affects the chart has changed (e.g., a dropdown selection) to trigger a re-render without moving the pucks.
+
+ Source code in `wigglystuff/chart_puck.py`
+
+```
+def redraw(self) -> None:
+    """Re-render the chart using the stored callback.
+
+    Only available for widgets created via ``from_callback()``. Call this
+    when external state that affects the chart has changed (e.g., a dropdown
+    selection) to trigger a re-render without moving the pucks.
+    """
+    if hasattr(self, "_render"):
+        self.chart_base64 = self._render()
 ```
 
 
