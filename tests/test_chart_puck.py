@@ -49,9 +49,9 @@ def test_chart_puck_raises_on_mismatched_lengths(simple_figure):
 def test_from_callback_creates_widget_and_updates():
     call_count = [0]
 
-    def draw_fn(ax, x, y):
+    def draw_fn(ax, widget):
         call_count[0] += 1
-        ax.scatter([x], [y])
+        ax.scatter(widget.x, widget.y)
 
     puck = ChartPuck.from_callback(
         draw_fn=draw_fn,
