@@ -356,8 +356,10 @@ def _(mo, run_kmeans_button):
 
 @app.cell
 def _(ChartPuck, np, plt, reduced_data, x_max, x_min, y_max, y_min):
-    def draw_kmeans_boundaries(ax, centroids, reduced_data, x_min, x_max, y_min, y_max):
-        from sklearn.cluster import KMeans
+    from sklearn.cluster import KMeans
+
+    def draw_kmeans(ax, widget):
+        centroids = list(zip(widget.x, widget.y))
 
         h = 0.3  # mesh step size
         xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
@@ -398,42 +400,21 @@ def _(ChartPuck, np, plt, reduced_data, x_max, x_min, y_max, y_min):
             )
 
         ax.set_title("Drag pucks to move cluster centroids")
-        ax.set_xlim(x_min, x_max)
-        ax.set_ylim(y_min, y_max)
-
 
     # Initial centroid positions (spread in a grid pattern)
     init_x = [-30, -15, 0, 15, 30, -30, -15, 0, 15, 30]
     init_y = [-20, -20, -20, -20, -20, 20, 20, 20, 20, 20]
 
-    # Create initial figure
-    fig_km, ax_km = plt.subplots(figsize=(6, 5))
-    initial_centroids = list(zip(init_x, init_y))
-    draw_kmeans_boundaries(ax_km, initial_centroids, reduced_data, x_min, x_max, y_min, y_max)
-
-    # Create widget with 10 pucks (one for each digit)
-    kmeans_puck = ChartPuck(
-        fig_km,
+    kmeans_puck = ChartPuck.from_callback(
+        draw_fn=draw_kmeans,
+        x_bounds=(x_min, x_max),
+        y_bounds=(y_min, y_max),
+        figsize=(6, 5),
         x=init_x,
         y=init_y,
         puck_color="#e63946",
         puck_radius=8,
     )
-    plt.close(fig_km)
-
-
-    # Set up observer to redraw on puck movement
-    def on_kmeans_change(change):
-        fig_update, ax_update = plt.subplots(figsize=(6, 5))
-        centroids = list(zip(kmeans_puck.x, kmeans_puck.y))
-        draw_kmeans_boundaries(ax_update, centroids, reduced_data, x_min, x_max, y_min, y_max)
-        from wigglystuff.chart_puck import fig_to_base64
-
-        kmeans_puck.chart_base64 = fig_to_base64(fig_update)
-        plt.close(fig_update)
-
-
-    kmeans_puck.observe(on_kmeans_change, names=["x", "y"])
     return (kmeans_puck,)
 
 
