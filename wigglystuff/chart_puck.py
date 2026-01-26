@@ -104,6 +104,18 @@ class ChartPuck(anywidget.AnyWidget):
     puck_radius = traitlets.Int(10).tag(sync=True)
     puck_color = traitlets.Unicode("#e63946").tag(sync=True)
 
+    # Optional drag constraints (if None, uses chart bounds)
+    drag_x_bounds = traitlets.Union(
+        [traitlets.Tuple(traitlets.Float(), traitlets.Float()), traitlets.Instance(type(None))],
+        default_value=None,
+        allow_none=True,
+    ).tag(sync=True)
+    drag_y_bounds = traitlets.Union(
+        [traitlets.Tuple(traitlets.Float(), traitlets.Float()), traitlets.Instance(type(None))],
+        default_value=None,
+        allow_none=True,
+    ).tag(sync=True)
+
     def __init__(
         self,
         fig,
@@ -111,6 +123,8 @@ class ChartPuck(anywidget.AnyWidget):
         y: float | list[float] | None = None,
         puck_radius: int = 10,
         puck_color: str = "#e63946",
+        drag_x_bounds: tuple[float, float] | None = None,
+        drag_y_bounds: tuple[float, float] | None = None,
         **kwargs: Any,
     ) -> None:
         """Create a ChartPuck widget from a matplotlib figure.
@@ -123,6 +137,10 @@ class ChartPuck(anywidget.AnyWidget):
                a list for multiple pucks. Defaults to center of y_bounds.
             puck_radius: Radius of the puck(s) in pixels.
             puck_color: Color of the puck(s) (any CSS color).
+            drag_x_bounds: Optional (min, max) to constrain puck dragging on x-axis.
+                          If None, uses the chart's x_bounds.
+            drag_y_bounds: Optional (min, max) to constrain puck dragging on y-axis.
+                          If None, uses the chart's y_bounds.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px = extract_axes_info(
@@ -161,6 +179,8 @@ class ChartPuck(anywidget.AnyWidget):
             chart_base64=chart_base64,
             puck_radius=puck_radius,
             puck_color=puck_color,
+            drag_x_bounds=drag_x_bounds,
+            drag_y_bounds=drag_y_bounds,
             **kwargs,
         )
 
@@ -173,6 +193,8 @@ class ChartPuck(anywidget.AnyWidget):
         figsize: tuple[float, float] = (6, 6),
         x: float | list[float] | None = None,
         y: float | list[float] | None = None,
+        drag_x_bounds: tuple[float, float] | None = None,
+        drag_y_bounds: tuple[float, float] | None = None,
         **kwargs: Any,
     ) -> "ChartPuck":
         """Create a ChartPuck that auto-updates when the puck moves.
@@ -190,6 +212,8 @@ class ChartPuck(anywidget.AnyWidget):
             figsize: Figure size in inches.
             x: Initial x position(s). Defaults to center of x_bounds.
             y: Initial y position(s). Defaults to center of y_bounds.
+            drag_x_bounds: Optional (min, max) to constrain puck dragging on x-axis.
+            drag_y_bounds: Optional (min, max) to constrain puck dragging on y-axis.
             **kwargs: Passed to ChartPuck (puck_radius, puck_color, etc.)
 
         Returns:
@@ -240,7 +264,7 @@ class ChartPuck(anywidget.AnyWidget):
         draw_fn(ax, x_list[0], y_list[0])
 
         # Create widget
-        widget = cls(fig, x=x, y=y, **kwargs)
+        widget = cls(fig, x=x, y=y, drag_x_bounds=drag_x_bounds, drag_y_bounds=drag_y_bounds, **kwargs)
 
         # Wire up observer for auto-updates
         def on_change(change):
