@@ -3458,15 +3458,13 @@ wheels = [
 
 [[package]]
 name = "wigglystuff"
-version = "0.2.17"
+version = "0.2.18"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pillow" },
-    { name = "scikit-learn", version = "1.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scikit-learn", version = "1.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
 
 [package.optional-dependencies]
@@ -3520,7 +3518,6 @@ requires-dist = [
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.3.3" },
     { name = "pytest", marker = "extra == 'test-browser'", specifier = ">=8.3.3" },
     { name = "pytest-playwright", marker = "extra == 'test-browser'", specifier = ">=0.6.2" },
-    { name = "scikit-learn", specifier = ">=1.7.2" },
     { name = "scikit-learn", marker = "extra == 'test'", specifier = ">=1.0" },
 ]
 provides-extras = ["test", "test-browser", "docs"]

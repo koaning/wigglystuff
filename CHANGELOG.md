@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.18] - 2026-01-26
+
+### Fixed
+- Removed `scikit-learn` from core dependencies. It was accidentally added as a required dependency but is only used by the optional `ChartPuck.export_kmeans()` method. Users of this method should install with `pip install wigglystuff[test]`.
+
 ## [0.2.17] - 2026-01-26
 
 ### Changed
