@@ -48,4 +48,7 @@ uv pip install wigglystuff
 <td align="center"><b>Tangle</b><br><a href="https://koaning.github.io/wigglystuff/examples/tangle/"><img src="./mkdocs/assets/gallery/tangle.png" width="200"></a><br><a href="https://koaning.github.io/wigglystuff/examples/tangle/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/tangle/">API</a> · <a href="https://github.com/koaning/wigglystuff/blob/main/mkdocs/reference/tangle.md">MD</a></td>
 <td align="center"><b>ChartPuck</b><br><a href="https://koaning.github.io/wigglystuff/examples/chartpuck/"><img src="./mkdocs/assets/gallery/chartpuck.png" width="200"></a><br><a href="https://koaning.github.io/wigglystuff/examples/chartpuck/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/chart-puck/">API</a> · <a href="https://github.com/koaning/wigglystuff/blob/main/mkdocs/reference/chart-puck.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>ChartSelect</b><br><a href="https://koaning.github.io/wigglystuff/examples/chartselect/"><img src="./mkdocs/assets/gallery/chartselect.png" width="200"></a><br><a href="https://koaning.github.io/wigglystuff/examples/chartselect/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/chart-select/">API</a> · <a href="https://github.com/koaning/wigglystuff/blob/main/mkdocs/reference/chart-select.md">MD</a></td>
+</tr>
 </table>
