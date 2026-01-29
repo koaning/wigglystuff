@@ -131,6 +131,11 @@ hide:
 <a href="examples/chartpuck/" class="gallery-img"><img src="assets/gallery/chartpuck.png" alt="ChartPuck widget"></a>
 <div class="gallery-links"><a href="examples/chartpuck/">Demo</a><a href="reference/chart-puck/">API</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">ChartSelect</div>
+<a href="examples/chartselect/" class="gallery-img"><img src="assets/gallery/chartselect.png" alt="ChartSelect widget"></a>
+<div class="gallery-links"><a href="examples/chartselect/">Demo</a><a href="reference/chart-select/">API</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
