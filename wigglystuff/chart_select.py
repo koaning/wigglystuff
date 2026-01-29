@@ -140,6 +140,10 @@ class ChartSelect(AnyWidget):
         self.selection = {}
         self.has_selection = False
 
+    def _is_box_selection(self) -> bool:
+        """Check if current selection is box format (vs lasso/polygon)."""
+        return "x_min" in self.selection
+
     def get_bounds(self) -> tuple[float, float, float, float] | None:
         """Get bounding box of selection in data coordinates.
 
@@ -149,7 +153,7 @@ class ChartSelect(AnyWidget):
         if not self.has_selection or not self.selection:
             return None
 
-        if self.mode == "box":
+        if self._is_box_selection():
             return (
                 self.selection["x_min"],
                 self.selection["y_min"],
@@ -176,7 +180,7 @@ class ChartSelect(AnyWidget):
         if not self.has_selection or not self.selection:
             return []
 
-        if self.mode == "box":
+        if self._is_box_selection():
             x_min = self.selection["x_min"]
             y_min = self.selection["y_min"]
             x_max = self.selection["x_max"]
@@ -200,7 +204,7 @@ class ChartSelect(AnyWidget):
         if not self.has_selection:
             return False
 
-        if self.mode == "box":
+        if self._is_box_selection():
             bounds = self.get_bounds()
             if not bounds:
                 return False
@@ -232,7 +236,7 @@ class ChartSelect(AnyWidget):
         if not self.has_selection:
             return np.zeros(len(x_arr), dtype=bool)
 
-        if self.mode == "box":
+        if self._is_box_selection():
             bounds = self.get_bounds()
             if not bounds:
                 return np.zeros(len(x_arr), dtype=bool)
