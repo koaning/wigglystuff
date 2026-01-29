@@ -1,0 +1,97 @@
+.chart-select {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  display: inline-block;
+  color-scheme: light dark;
+
+  /* CSS Variables for theming */
+  --cs-bg: #ffffff;
+  --cs-border: #e2e8f0;
+  --cs-text: #1e293b;
+  --cs-text-muted: #64748b;
+  --cs-accent: #3b82f6;
+  --cs-accent-hover: #2563eb;
+  --cs-btn-bg: #f8fafc;
+  --cs-btn-active-bg: #dbeafe;
+  --cs-btn-active-border: #3b82f6;
+  --cs-shadow: rgba(0, 0, 0, 0.08);
+}
+
+/* Dark mode */
+.dark .chart-select,
+.dark-theme .chart-select,
+[data-theme="dark"] .chart-select {
+  --cs-bg: #1e1e1e;
+  --cs-border: #3a3a3a;
+  --cs-text: #f1f5f9;
+  --cs-text-muted: #94a3b8;
+  --cs-accent: #60a5fa;
+  --cs-accent-hover: #3b82f6;
+  --cs-btn-bg: #2a2a2a;
+  --cs-btn-active-bg: #1e3a5f;
+  --cs-btn-active-border: #60a5fa;
+  --cs-shadow: rgba(0, 0, 0, 0.3);
+}
+
+.chart-select__controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: var(--cs-bg);
+  border: 1px solid var(--cs-border);
+  border-radius: 4px 4px 0 0;
+}
+
+.chart-select__canvas {
+  display: block;
+  cursor: crosshair;
+  border: 1px solid var(--cs-border);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-width: 100%;
+  height: auto;
+}
+
+.chart-select__mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border: 1px solid var(--cs-border);
+  border-radius: 3px;
+  background: var(--cs-btn-bg);
+  color: var(--cs-text);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.chart-select__mode-btn:hover {
+  border-color: var(--cs-accent);
+}
+
+.chart-select__mode-btn.active {
+  background: var(--cs-btn-active-bg);
+  border-color: var(--cs-btn-active-border);
+  color: var(--cs-accent);
+}
+
+.chart-select__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-select__icon svg {
+  display: block;
+}
+
+.chart-select__label {
+  font-size: 10px;
+}
+
+.chart-select__canvas--no-controls {
+  border-top: 1px solid var(--cs-border);
+  border-radius: 4px;
+}

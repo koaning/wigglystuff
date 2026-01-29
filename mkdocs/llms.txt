@@ -8,6 +8,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 
 - [Slider2D](https://koaning.github.io/wigglystuff/reference/slider2d.md): 2D slider for x/y value selection
 - [ChartPuck](https://koaning.github.io/wigglystuff/reference/chart-puck.md): Draggable puck overlay for matplotlib charts
+- [ChartSelect](https://koaning.github.io/wigglystuff/reference/chart-select.md): Box/lasso selection on matplotlib charts
 - [Matrix](https://koaning.github.io/wigglystuff/reference/matrix.md): Interactive matrix input
 - [SortableList](https://koaning.github.io/wigglystuff/reference/sortable-list.md): Drag-and-drop sortable list
 - [Paint](https://koaning.github.io/wigglystuff/reference/paint.md): Drawing canvas widget

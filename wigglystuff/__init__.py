@@ -4,6 +4,7 @@ import importlib.metadata
 
 from .cell_tour import CellTour
 from .chart_puck import ChartPuck
+from .chart_select import ChartSelect
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
 from .driver_tour import DriverTour
@@ -28,6 +29,7 @@ __version__ = importlib.metadata.version("wigglystuff")
 __all__ = [
     "CellTour",
     "ChartPuck",
+    "ChartSelect",
     "ColorPicker",
     "CopyToClipboard",
     "DriverTour",
