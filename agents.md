@@ -63,3 +63,6 @@ syncs back to Python.
 - Dumber is better. Prefer obvious, direct code over clever abstractions—someone
   new to the project should be able to read the code top-to-bottom and grok it
   without needing to look up framework magic or trace through indirection.
+- **Do not modify `package-lock.json`** unless intentionally updating JS
+  dependencies. If it shows up in `git diff`, revert it with
+  `git checkout package-lock.json`.

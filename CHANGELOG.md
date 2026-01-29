@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.19] - 2026-01-29
+
+### Added
+- New `ChartSelect` widget for interactive region selection on matplotlib charts. Supports box and lasso (freehand) selection modes, returns selection coordinates in data space, and includes helper methods (`get_mask()`, `get_indices()`, `get_bounds()`, `contains_point()`) for filtering data points. Also supports `from_callback()` factory for auto-updating charts.
+
 ## [0.2.18] - 2026-01-26
 
 ### Fixed
