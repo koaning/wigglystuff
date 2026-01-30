@@ -8,6 +8,10 @@ hide:
 
 > "A collection of creative AnyWidgets for Python notebook environments."
 
+## These docs are special 
+
+The documentation for wigglystuff is designed for humans (via hosted marimo notebooks) and robots (via markdown pages to quickly paste into prompts). The reasoning behind this is explained in more detail in [this YT video](https://youtu.be/IgyRh2FuoAk). Follow the links in each example below to find the resources that you're looking for. 
+
 ## Install wigglystuff
 
 === "uv"
