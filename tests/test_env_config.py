@@ -169,3 +169,32 @@ def test_has_validator_flag():
     vars_by_name = {v["name"]: v for v in config.variables}
     assert vars_by_name["WITH_VALIDATOR"]["has_validator"] is True
     assert vars_by_name["WITHOUT_VALIDATOR"]["has_validator"] is False
+
+
+def test_require_valid_with_subset():
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setenv("SUBSET_A", "value_a")
+        mp.delenv("SUBSET_B", raising=False)
+        config = EnvConfig({"SUBSET_A": None, "SUBSET_B": None})
+        config.require_valid(["SUBSET_A"])  # Should pass
+        config.require_valid([])  # Empty list should pass
+        with pytest.raises(EnvironmentError, match="Missing"):
+            config.require_valid(["SUBSET_B"])
+        with pytest.raises(ValueError, match="not configured"):
+            config.require_valid(["UNKNOWN_VAR"])
+
+
+@pytest.mark.parametrize("name,default,expected", [
+    ("GET_VAR", None, "value"),  # configured and set
+    ("GET_VAR", "fallback", "value"),  # set ignores default
+    ("MISSING_VAR", None, None),  # configured but missing
+    ("MISSING_VAR", "fallback", "fallback"),  # missing uses default
+    ("UNKNOWN", None, None),  # not configured
+    ("UNKNOWN", "fallback", "fallback"),  # not configured uses default
+])
+def test_get(name, default, expected):
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setenv("GET_VAR", "value")
+        mp.delenv("MISSING_VAR", raising=False)
+        config = EnvConfig({"GET_VAR": None, "MISSING_VAR": None})
+        assert config.get(name, default) == expected

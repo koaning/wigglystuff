@@ -149,19 +149,36 @@ class EnvConfig(anywidget.AnyWidget):
         """Recalculate all_valid based on current variable statuses."""
         self.all_valid = all(v["status"] == "valid" for v in self.variables)
 
-    def require_valid(self) -> None:
-        """Assert all environment variables are valid.
+    def require_valid(self, variables: Optional[Sequence[str]] = None) -> None:
+        """Assert environment variables are valid.
+
+        Args:
+            variables: Optional list of variable names to check. If None,
+                checks all configured variables.
 
         Raises:
-            EnvironmentError: If any variable is missing or invalid.
+            EnvironmentError: If any checked variable is missing or invalid.
+            ValueError: If a variable name is not configured in this widget.
         """
-        if self.all_valid:
+        configured = {v["name"] for v in self.variables}
+        to_check = configured if variables is None else set(variables)
+        unknown = to_check - configured
+        if unknown:
+            raise ValueError(
+                f"Variable(s) not configured in this EnvConfig: {', '.join(sorted(unknown))}"
+            )
+
+        # Filter to only checked variables
+        checked_vars = [v for v in self.variables if v["name"] in to_check]
+
+        # Early return if all checked vars are valid
+        if all(v["status"] == "valid" for v in checked_vars):
             return
 
-        missing = [v["name"] for v in self.variables if v["status"] == "missing"]
+        missing = [v["name"] for v in checked_vars if v["status"] == "missing"]
         invalid = [
             f"{v['name']} ({v['error']})"
-            for v in self.variables
+            for v in checked_vars
             if v["status"] == "invalid"
         ]
 
@@ -192,6 +209,20 @@ class EnvConfig(anywidget.AnyWidget):
             raise KeyError(f"{name!r} is not configured in this EnvConfig")
         if name not in self._values:
             raise KeyError(f"{name!r} is not set")
+        return self._values[name]
+
+    def get(self, name: str, default: Optional[str] = None) -> Optional[str]:
+        """Get variable value by name, with optional default.
+
+        Args:
+            name: The variable name.
+            default: Value to return if variable is not configured or not set.
+
+        Returns:
+            The value if set, otherwise the default.
+        """
+        if name not in self._var_names or name not in self._values:
+            return default
         return self._values[name]
 
     def __contains__(self, name: str) -> bool:

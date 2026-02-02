@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.20] - 2026-02-02
+
+### Added
+- `EnvConfig.get(name, default=None)` method for dict-like access that returns a default value instead of raising `KeyError`.
+- Optional `variables` parameter to `EnvConfig.require_valid()` to check only a subset of configured variables, allowing some to remain unset.
+
 ## [0.2.19] - 2026-01-29
 
 ### Added
