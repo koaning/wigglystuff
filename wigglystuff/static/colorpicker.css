@@ -1,0 +1,33 @@
+.colorpicker-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: light dark;
+  position: relative;
+
+  --colorpicker-border: #d1d5db;
+  --colorpicker-label-bg: #f3f4f6;
+  --colorpicker-label-text: #111827;
+}
+
+.colorpicker-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--colorpicker-border);
+  background: var(--colorpicker-label-bg);
+  color: var(--colorpicker-label-text);
+  user-select: none;
+}
+
+.dark .colorpicker-wrapper,
+.dark-theme .colorpicker-wrapper,
+[data-theme="dark"] .colorpicker-wrapper {
+  --colorpicker-border: #475569;
+  --colorpicker-label-bg: #1f2937;
+  --colorpicker-label-text: #e2e8f0;
+}

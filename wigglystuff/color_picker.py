@@ -16,18 +16,27 @@ class ColorPicker(anywidget.AnyWidget):
     """
 
     _esm = Path(__file__).parent / "static" / "colorpicker.js"
+    _css = Path(__file__).parent / "static" / "colorpicker.css"
     color = traitlets.Unicode("#000000").tag(sync=True)
+    show_label = traitlets.Bool(True).tag(sync=True)
 
-    def __init__(self, *, color: Optional[str] = None, **kwargs: Any):
+    def __init__(
+        self,
+        *,
+        color: Optional[str] = None,
+        show_label: bool = True,
+        **kwargs: Any,
+    ):
         """Create a ColorPicker widget.
 
         Args:
             color: Optional starting hex color (e.g. ``"#ff00aa"``).
+            show_label: Whether to show the hex label next to the picker.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
-        if color is not None:
-            kwargs["color"] = color
-        super().__init__(**kwargs)
+        if color is None:
+            color = "#000000"
+        super().__init__(color=color, show_label=show_label, **kwargs)
 
     @property
     def rgb(self):
