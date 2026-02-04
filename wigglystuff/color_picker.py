@@ -24,7 +24,7 @@ class ColorPicker(anywidget.AnyWidget):
         self,
         *,
         color: Optional[str] = None,
-        show_label: Optional[bool] = None,
+        show_label: bool = True,
         **kwargs: Any,
     ):
         """Create a ColorPicker widget.
@@ -34,11 +34,9 @@ class ColorPicker(anywidget.AnyWidget):
             show_label: Whether to show the hex label next to the picker.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
-        if color is not None:
-            kwargs["color"] = color
-        if show_label is not None:
-            kwargs["show_label"] = show_label
-        super().__init__(**kwargs)
+        if color is None:
+            color = "#000000"
+        super().__init__(color=color, show_label=show_label, **kwargs)
 
     @property
     def rgb(self):

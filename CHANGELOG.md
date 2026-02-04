@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.21] - 2026-02-04
 
+### Added
+- ColorPicker now shows the hex value next to the input by default (toggle with `show_label`).
+
 ### Fixed
 - ColorPicker now keeps its hex label in sync when the color is updated programmatically (e.g., demo button updates).
 
