@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.21] - 2026-02-04
+
+### Fixed
+- ColorPicker now keeps its hex label in sync when the color is updated programmatically (e.g., demo button updates).
+
 ## [0.2.20] - 2026-02-02
 
 ### Added
