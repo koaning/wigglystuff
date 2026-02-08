@@ -136,6 +136,28 @@ function render({ model, el }) {
     handleMove(event);
   }
 
+  // Throttle state for save_changes
+  let throttleTimer = null;
+
+  function syncToModel() {
+    model.save_changes();
+  }
+
+  function throttledSync() {
+    const throttle = model.get("throttle");
+    if (throttle === "dragend") return;
+    if (throttle === 0) {
+      syncToModel();
+    } else {
+      if (throttleTimer === null) {
+        throttleTimer = setTimeout(() => {
+          throttleTimer = null;
+          syncToModel();
+        }, throttle);
+      }
+    }
+  }
+
   function handleMove(event) {
     if (!isDragging || dragIndex < 0) return;
     event.preventDefault();
@@ -160,11 +182,19 @@ function render({ model, el }) {
 
     model.set("x", xs);
     model.set("y", ys);
-    model.save_changes();
+    throttledSync();
     draw();
   }
 
   function handleEnd() {
+    if (isDragging) {
+      // Clear any pending throttle and do a final sync
+      if (throttleTimer !== null) {
+        clearTimeout(throttleTimer);
+        throttleTimer = null;
+      }
+      syncToModel();
+    }
     isDragging = false;
     dragIndex = -1;
   }

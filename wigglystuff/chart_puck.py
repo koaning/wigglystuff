@@ -104,6 +104,12 @@ class ChartPuck(anywidget.AnyWidget):
     puck_radius = traitlets.Int(10).tag(sync=True)
     puck_color = traitlets.List(traitlets.Unicode(), default_value=["#e63946"]).tag(sync=True)
 
+    # Drag throttling: 0 = every move, int = ms throttle, "dragend" = on release
+    throttle = traitlets.Union(
+        [traitlets.Int(), traitlets.Unicode()],
+        default_value=0,
+    ).tag(sync=True)
+
     # Optional drag constraints (if None, uses chart bounds)
     drag_x_bounds = traitlets.Union(
         [traitlets.Tuple(traitlets.Float(), traitlets.Float()), traitlets.Instance(type(None))],
@@ -123,6 +129,7 @@ class ChartPuck(anywidget.AnyWidget):
         y: float | list[float] | None = None,
         puck_radius: int = 10,
         puck_color: str | list[str] = "#e63946",
+        throttle: int | str = 0,
         drag_x_bounds: tuple[float, float] | None = None,
         drag_y_bounds: tuple[float, float] | None = None,
     ) -> None:
@@ -138,6 +145,10 @@ class ChartPuck(anywidget.AnyWidget):
             puck_color: Color of the puck(s). A single CSS color string applies
                 to all pucks. A list of CSS colors assigns one color per puck
                 (cycled if shorter than the number of pucks).
+            throttle: Controls how often puck position syncs to Python during
+                drag. ``0`` syncs on every mouse move (default). An integer
+                syncs at most once every N milliseconds. ``"dragend"`` syncs
+                only when the user releases the puck.
             drag_x_bounds: Optional (min, max) to constrain puck dragging on x-axis.
                           If None, uses the chart's x_bounds.
             drag_y_bounds: Optional (min, max) to constrain puck dragging on y-axis.
@@ -183,6 +194,7 @@ class ChartPuck(anywidget.AnyWidget):
             chart_base64=chart_base64,
             puck_radius=puck_radius,
             puck_color=puck_color,
+            throttle=throttle,
             drag_x_bounds=drag_x_bounds,
             drag_y_bounds=drag_y_bounds,
         )

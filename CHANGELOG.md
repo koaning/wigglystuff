@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.22] - 2026-02-08
+
+### Added
+- `ChartPuck.puck_color` now accepts a list of CSS colors for per-puck coloring (e.g., `puck_color=["red", "green", "blue"]`). A single string still applies to all pucks.
+- New `throttle` parameter on `ChartPuck` to control how often puck positions sync to Python during drag. Set to an integer for millisecond throttling (e.g., `throttle=100`) or `"dragend"` to sync only on release.
+
+### Changed
+- Removed `**kwargs` from `ChartPuck.__init__`; all parameters are now explicit.
+
 ## [0.2.21] - 2026-02-04
 
 ### Added

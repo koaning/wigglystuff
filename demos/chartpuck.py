@@ -52,7 +52,7 @@ def _(ChartPuck, np, plt):
 
     puck = ChartPuck(fig, x=0, y=0)
     plt.close(fig)
-    return fig, puck
+    return (puck,)
 
 
 @app.cell
@@ -70,12 +70,6 @@ def _(widget):
 @app.cell
 def _(mo, widget):
     mo.callout(f"Selected position: x = {widget.x[0]:.3f}, y = {widget.y[0]:.3f}")
-    return
-
-
-@app.cell
-def _(ChartPuck, fig):
-    ChartPuck(fig, x=[1, 2, 3], y=[1, 2, 3], puck_color=["red", "green", "blue"], puck_radius=5)
     return
 
 
@@ -107,7 +101,7 @@ def _(ChartPuck, np, plt):
         fig2,
         x=[-1.5, 0, 1.5],
         y=[-1.5, 0, 1.5],
-        puck_color="#2196f3",
+        puck_color=["green", "red", "blue"],
     )
     plt.close(fig2)
     return (multi_puck,)
@@ -161,6 +155,7 @@ def _(ChartPuck, dynamic_data_x, dynamic_data_y):
         ax.set_title(f"Position: ({x:.2f}, {y:.2f})")
         ax.grid(True, alpha=0.3)
 
+    # ChartPuck(fig, x=[1, 2, 3], y=[1, 2, 3], puck_color=["red", "green", "blue"], puck_radius=5, throttle=100)
 
     dynamic_puck = ChartPuck.from_callback(
         draw_fn=draw_with_crosshairs,
@@ -170,6 +165,7 @@ def _(ChartPuck, dynamic_data_x, dynamic_data_y):
         x=0,
         y=0,
         puck_color="#4caf50",
+        throttle=100
     )
     return (dynamic_puck,)
 
