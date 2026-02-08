@@ -47,10 +47,10 @@ def __init__(
     x: float | list[float] | None = None,
     y: float | list[float] | None = None,
     puck_radius: int = 10,
-    puck_color: str = "#e63946",
+    puck_color: str | list[str] = "#e63946",
+    throttle: int | str = 0,
     drag_x_bounds: tuple[float, float] | None = None,
     drag_y_bounds: tuple[float, float] | None = None,
-    **kwargs: Any,
 ) -> None:
     """Create a ChartPuck widget from a matplotlib figure.
 
@@ -61,12 +61,17 @@ def __init__(
         y: Initial y coordinate(s) in data space. Can be a single value or
            a list for multiple pucks. Defaults to center of y_bounds.
         puck_radius: Radius of the puck(s) in pixels.
-        puck_color: Color of the puck(s) (any CSS color).
+        puck_color: Color of the puck(s). A single CSS color string applies
+            to all pucks. A list of CSS colors assigns one color per puck
+            (cycled if shorter than the number of pucks).
+        throttle: Controls how often puck position syncs to Python during
+            drag. ``0`` syncs on every mouse move (default). An integer
+            syncs at most once every N milliseconds. ``"dragend"`` syncs
+            only when the user releases the puck.
         drag_x_bounds: Optional (min, max) to constrain puck dragging on x-axis.
                       If None, uses the chart's x_bounds.
         drag_y_bounds: Optional (min, max) to constrain puck dragging on y-axis.
                       If None, uses the chart's y_bounds.
-        **kwargs: Forwarded to ``anywidget.AnyWidget``.
     """
     x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px = extract_axes_info(
         fig
@@ -93,6 +98,10 @@ def __init__(
             f"x and y must have the same length, got {len(x)} and {len(y)}"
         )
 
+    # Normalize puck_color to list
+    if isinstance(puck_color, str):
+        puck_color = [puck_color]
+
     super().__init__(
         x=x,
         y=y,
@@ -104,9 +113,9 @@ def __init__(
         chart_base64=chart_base64,
         puck_radius=puck_radius,
         puck_color=puck_color,
+        throttle=throttle,
         drag_x_bounds=drag_x_bounds,
         drag_y_bounds=drag_y_bounds,
-        **kwargs,
     )
 ```
 
@@ -385,4 +394,5 @@ def redraw(self) -> None:
 | `height` | `int` | Canvas height in pixels. |
 | `chart_base64` | `str` | Base64-encoded PNG of the matplotlib figure. |
 | `puck_radius` | `int` | Radius of puck(s) in pixels. |
-| `puck_color` | `str` | CSS color of puck(s). |
+| `puck_color` | `str \\| list[str]` | CSS color(s) of puck(s). A single color applies to all; a list assigns one per puck. |
+| `throttle` | `int \\| str` | Drag sync rate. `0` = every move, int = ms throttle, `"dragend"` = on release. |
