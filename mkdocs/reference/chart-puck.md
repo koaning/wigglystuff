@@ -15,4 +15,5 @@
 | `height` | `int` | Canvas height in pixels. |
 | `chart_base64` | `str` | Base64-encoded PNG of the matplotlib figure. |
 | `puck_radius` | `int` | Radius of puck(s) in pixels. |
-| `puck_color` | `str` | CSS color of puck(s). |
+| `puck_color` | `str \| list[str]` | CSS color(s) of puck(s). A single color applies to all; a list assigns one per puck. |
+| `throttle` | `int \| str` | Drag sync rate. `0` = every move, int = ms throttle, `"dragend"` = on release. |

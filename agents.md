@@ -10,7 +10,7 @@ syncs back to Python.
 | Agent | Module/Class | Core traitlets | One-liner |
 | --- | --- | --- | --- |
 | Slider2D | `wigglystuff.slider2d.Slider2D` | `x`, `y`, `x_bounds`, `y_bounds`, `width`, `height` | 2D pointer for coupled parameters |
-| ChartPuck | `wigglystuff.chart_puck.ChartPuck` | `x`, `y`, `x_bounds`, `y_bounds`, `axes_pixel_bounds`, `width`, `height`, `chart_base64`, `puck_radius`, `puck_color` | Draggable puck overlay for matplotlib charts |
+| ChartPuck | `wigglystuff.chart_puck.ChartPuck` | `x`, `y`, `x_bounds`, `y_bounds`, `axes_pixel_bounds`, `width`, `height`, `chart_base64`, `puck_radius`, `puck_color`, `throttle` | Draggable puck overlay for matplotlib charts |
 | ChartSelect | `wigglystuff.chart_select.ChartSelect` | `mode`, `selection`, `has_selection`, `x_bounds`, `y_bounds`, `axes_pixel_bounds`, `width`, `height`, `chart_base64`, `selection_color`, `selection_opacity` | Box/lasso selection on matplotlib charts |
 | Matrix | `wigglystuff.matrix.Matrix` | `matrix`, `rows`, `cols`, `min_value`, `max_value`, `step`, `mirror` | Spreadsheet-like numeric editor |
 | TangleSlider | `wigglystuff.tangle.TangleSlider` | `amount`, `min_value`, `max_value`, `step`, `pixels_per_step` | Inline slider ala Bret Victor |

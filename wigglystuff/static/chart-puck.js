@@ -84,11 +84,11 @@ function render({ model, el }) {
     const xs = model.get("x");
     const ys = model.get("y");
     const radius = model.get("puck_radius");
-    const color = model.get("puck_color");
+    const colors = model.get("puck_color");
 
     for (let i = 0; i < xs.length; i++) {
       const puckPos = dataToPixel(xs[i], ys[i]);
-      drawPuck(puckPos.x, puckPos.y, radius, color);
+      drawPuck(puckPos.x, puckPos.y, radius, colors[i % colors.length]);
     }
   }
 
@@ -136,6 +136,28 @@ function render({ model, el }) {
     handleMove(event);
   }
 
+  // Throttle state for save_changes
+  let throttleTimer = null;
+
+  function syncToModel() {
+    model.save_changes();
+  }
+
+  function throttledSync() {
+    const throttle = model.get("throttle");
+    if (throttle === "dragend") return;
+    if (throttle === 0) {
+      syncToModel();
+    } else {
+      if (throttleTimer === null) {
+        throttleTimer = setTimeout(() => {
+          throttleTimer = null;
+          syncToModel();
+        }, throttle);
+      }
+    }
+  }
+
   function handleMove(event) {
     if (!isDragging || dragIndex < 0) return;
     event.preventDefault();
@@ -160,11 +182,19 @@ function render({ model, el }) {
 
     model.set("x", xs);
     model.set("y", ys);
-    model.save_changes();
+    throttledSync();
     draw();
   }
 
   function handleEnd() {
+    if (isDragging) {
+      // Clear any pending throttle and do a final sync
+      if (throttleTimer !== null) {
+        clearTimeout(throttleTimer);
+        throttleTimer = null;
+      }
+      syncToModel();
+    }
     isDragging = false;
     dragIndex = -1;
   }
