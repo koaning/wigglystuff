@@ -12,7 +12,7 @@
 
 import marimo
 
-__generated_with = "0.19.6"
+__generated_with = "0.19.9"
 app = marimo.App()
 
 
@@ -22,6 +22,7 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
     from wigglystuff import ChartPuck
+
     return ChartPuck, mo, np, plt
 
 
@@ -51,7 +52,7 @@ def _(ChartPuck, np, plt):
 
     puck = ChartPuck(fig, x=0, y=0)
     plt.close(fig)
-    return (puck,)
+    return fig, puck
 
 
 @app.cell
@@ -69,6 +70,12 @@ def _(widget):
 @app.cell
 def _(mo, widget):
     mo.callout(f"Selected position: x = {widget.x[0]:.3f}, y = {widget.y[0]:.3f}")
+    return
+
+
+@app.cell
+def _(ChartPuck, fig):
+    ChartPuck(fig, x=[1, 2, 3], y=[1, 2, 3], puck_color=["red", "green", "blue"], puck_radius=5)
     return
 
 

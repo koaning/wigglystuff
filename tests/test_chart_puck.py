@@ -68,6 +68,21 @@ def test_from_callback_creates_widget_and_updates():
     assert puck.chart_base64 != initial_base64
 
 
+def test_chart_puck_single_color_string(simple_figure):
+    puck = ChartPuck(simple_figure, puck_color="blue")
+    assert puck.puck_color == ["blue"]
+
+
+def test_chart_puck_color_list(simple_figure):
+    puck = ChartPuck(
+        simple_figure,
+        x=[1.0, 2.0, 3.0],
+        y=[1.0, 2.0, 3.0],
+        puck_color=["red", "green", "blue"],
+    )
+    assert puck.puck_color == ["red", "green", "blue"]
+
+
 def test_export_kmeans(simple_figure):
     sklearn = pytest.importorskip("sklearn")
     puck = ChartPuck(simple_figure, x=[1.0, 3.0], y=[1.0, 3.0])

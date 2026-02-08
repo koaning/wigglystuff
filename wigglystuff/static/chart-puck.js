@@ -84,11 +84,11 @@ function render({ model, el }) {
     const xs = model.get("x");
     const ys = model.get("y");
     const radius = model.get("puck_radius");
-    const color = model.get("puck_color");
+    const colors = model.get("puck_color");
 
     for (let i = 0; i < xs.length; i++) {
       const puckPos = dataToPixel(xs[i], ys[i]);
-      drawPuck(puckPos.x, puckPos.y, radius, color);
+      drawPuck(puckPos.x, puckPos.y, radius, colors[i % colors.length]);
     }
   }
 

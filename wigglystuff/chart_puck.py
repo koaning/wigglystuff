@@ -102,7 +102,7 @@ class ChartPuck(anywidget.AnyWidget):
 
     # Puck styling
     puck_radius = traitlets.Int(10).tag(sync=True)
-    puck_color = traitlets.Unicode("#e63946").tag(sync=True)
+    puck_color = traitlets.List(traitlets.Unicode(), default_value=["#e63946"]).tag(sync=True)
 
     # Optional drag constraints (if None, uses chart bounds)
     drag_x_bounds = traitlets.Union(
@@ -122,10 +122,9 @@ class ChartPuck(anywidget.AnyWidget):
         x: float | list[float] | None = None,
         y: float | list[float] | None = None,
         puck_radius: int = 10,
-        puck_color: str = "#e63946",
+        puck_color: str | list[str] = "#e63946",
         drag_x_bounds: tuple[float, float] | None = None,
         drag_y_bounds: tuple[float, float] | None = None,
-        **kwargs: Any,
     ) -> None:
         """Create a ChartPuck widget from a matplotlib figure.
 
@@ -136,12 +135,13 @@ class ChartPuck(anywidget.AnyWidget):
             y: Initial y coordinate(s) in data space. Can be a single value or
                a list for multiple pucks. Defaults to center of y_bounds.
             puck_radius: Radius of the puck(s) in pixels.
-            puck_color: Color of the puck(s) (any CSS color).
+            puck_color: Color of the puck(s). A single CSS color string applies
+                to all pucks. A list of CSS colors assigns one color per puck
+                (cycled if shorter than the number of pucks).
             drag_x_bounds: Optional (min, max) to constrain puck dragging on x-axis.
                           If None, uses the chart's x_bounds.
             drag_y_bounds: Optional (min, max) to constrain puck dragging on y-axis.
                           If None, uses the chart's y_bounds.
-            **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px = extract_axes_info(
             fig
@@ -168,6 +168,10 @@ class ChartPuck(anywidget.AnyWidget):
                 f"x and y must have the same length, got {len(x)} and {len(y)}"
             )
 
+        # Normalize puck_color to list
+        if isinstance(puck_color, str):
+            puck_color = [puck_color]
+
         super().__init__(
             x=x,
             y=y,
@@ -181,7 +185,6 @@ class ChartPuck(anywidget.AnyWidget):
             puck_color=puck_color,
             drag_x_bounds=drag_x_bounds,
             drag_y_bounds=drag_y_bounds,
-            **kwargs,
         )
 
     @classmethod
