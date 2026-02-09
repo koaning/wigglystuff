@@ -29,6 +29,12 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [TextCompare](https://koaning.github.io/wigglystuff/reference/text-compare.md): Side-by-side text comparison with match highlighting
 - [EnvConfig](https://koaning.github.io/wigglystuff/reference/env-config.md): Environment variable configuration with validation
 
+## 3rd party widgets
+
+These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io) because many of the dependencies are not compatible with WASM.
+
+- [ModuleTreeWidget](https://koaning.github.io/wigglystuff/reference/module-tree.md): Interactive tree viewer for PyTorch nn.Module architecture
+
 ## Optional
 
 - [Utils](https://koaning.github.io/wigglystuff/reference/utils.md): Utility functions
