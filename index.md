@@ -29,3 +29,11 @@ pip install wigglystuff
   Slider2D DemoAPIMD  Matrix DemoAPIMD  Paint DemoAPIMD  ThreeWidget DemoAPIMD  EdgeDraw DemoAPIMD  SortableList DemoAPIMD  ColorPicker DemoAPIMD  GamepadWidget DemoAPIMD  KeystrokeWidget DemoAPIMD  SpeechToText DemoAPIMD  CopyToClipboard DemoAPIMD  CellTour DemoAPIMD  WebcamCapture DemoAPIMD  ImageRefreshWidget DemoAPIMD  HTMLRefreshWidget DemoAPIMD  ProgressBar DemoAPIMD  PulsarChart DemoAPIMD  TextCompare DemoAPIMD  EnvConfig DemoAPIMD  Tangle DemoAPIMD  ChartPuck DemoAPIMD  ChartSelect DemoAPIMD
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
+
+
+## 3rd party widgets
+
+
+These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on molab because many of the dependencies are not compatible with WASM.(https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi).
+
+  ModuleTreeWidget DemoAPIMD  WandbChart DemoAPIMD
