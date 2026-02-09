@@ -50,6 +50,15 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>ChartSelect</b><br><a href="https://koaning.github.io/wigglystuff/examples/chartselect/"><img src="./mkdocs/assets/gallery/chartselect.png" width="200"></a><br><a href="https://koaning.github.io/wigglystuff/examples/chartselect/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/chart-select/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/chart-select.md">MD</a></td>
+</tr>
+</table>
+
+## molab
+
+These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://github.com/koaning/molab).
+
+<table>
+<tr>
 <td align="center"><b>ModuleTreeWidget</b><br>PyTorch nn.Module tree viewer<br><a href="https://koaning.github.io/wigglystuff/reference/module-tree/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/module-tree.md">MD</a></td>
 </tr>
 </table>
