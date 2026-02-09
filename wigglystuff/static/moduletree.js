@@ -5,6 +5,13 @@ function formatCount(n) {
   return String(n);
 }
 
+function formatBytes(bytes) {
+  if (bytes >= 1_073_741_824) return (bytes / 1_073_741_824).toFixed(1) + " GB";
+  if (bytes >= 1_048_576) return (bytes / 1_048_576).toFixed(1) + " MB";
+  if (bytes >= 1_024) return (bytes / 1_024).toFixed(1) + " KB";
+  return bytes + " B";
+}
+
 function formatShape(shape) {
   return "[" + shape.join(", ") + "]";
 }
@@ -15,7 +22,8 @@ function buildNode(node, depth, initialExpandDepth, rootTotal) {
 
   const hasChildren = node.children && node.children.length > 0;
   const hasParams = node.params && node.params.length > 0;
-  const isLeaf = !hasChildren && !hasParams;
+  const hasWarnings = node.unregistered_warnings && node.unregistered_warnings.length > 0;
+  const isLeaf = !hasChildren && !hasParams && !hasWarnings;
   const startExpanded = depth < initialExpandDepth;
 
   // Header
@@ -72,12 +80,12 @@ function buildNode(node, depth, initialExpandDepth, rootTotal) {
 
         const shape = document.createElement("span");
         shape.className = "mt-param-shape";
-        shape.textContent = formatShape(p.shape);
+        shape.textContent = p.is_lazy ? "uninitialized" : formatShape(p.shape);
         row.appendChild(shape);
 
         const numel = document.createElement("span");
         numel.className = "mt-param-numel";
-        numel.textContent = p.numel.toLocaleString();
+        numel.textContent = p.is_lazy ? "—" : p.numel.toLocaleString();
         row.appendChild(numel);
 
         const badge = document.createElement("span");
@@ -93,6 +101,27 @@ function buildNode(node, depth, initialExpandDepth, rootTotal) {
         }
         row.appendChild(badge);
 
+        if (p.is_shared) {
+          const sharedBadge = document.createElement("span");
+          sharedBadge.className = "mt-param-badge shared";
+          sharedBadge.textContent = "shared";
+          row.appendChild(sharedBadge);
+        }
+
+        if (p.is_lazy) {
+          const lazyBadge = document.createElement("span");
+          lazyBadge.className = "mt-param-badge lazy";
+          lazyBadge.textContent = "lazy";
+          row.appendChild(lazyBadge);
+        }
+
+        if (p.dtype) {
+          const dtypeBadge = document.createElement("span");
+          dtypeBadge.className = "mt-param-badge dtype";
+          dtypeBadge.textContent = p.dtype;
+          row.appendChild(dtypeBadge);
+        }
+
         paramsDiv.appendChild(row);
       }
       body.appendChild(paramsDiv);
@@ -102,6 +131,16 @@ function buildNode(node, depth, initialExpandDepth, rootTotal) {
     if (hasChildren) {
       for (const child of node.children) {
         body.appendChild(buildNode(child, depth + 1, initialExpandDepth, rootTotal));
+      }
+    }
+
+    // Unregistered module warnings
+    if (node.unregistered_warnings && node.unregistered_warnings.length > 0) {
+      for (const w of node.unregistered_warnings) {
+        const warn = document.createElement("div");
+        warn.className = "mt-warning";
+        warn.textContent = "\u26A0 " + w.count + " unregistered nn.Module(s) in self." + w.attr + " \u2014 use nn.ModuleList";
+        body.appendChild(warn);
       }
     }
 
@@ -177,6 +216,12 @@ function render({ model, el }) {
       const frozenSpan = document.createElement("span");
       frozenSpan.innerHTML = `Frozen: <span class="mt-summary-value">${formatCount(frozenCount)}</span>`;
       summary.appendChild(frozenSpan);
+    }
+
+    if (tree.total_size_bytes > 0) {
+      const sizeSpan = document.createElement("span");
+      sizeSpan.innerHTML = `Size: <span class="mt-summary-value">${formatBytes(tree.total_size_bytes)}</span>`;
+      summary.appendChild(sizeSpan);
     }
 
     container.appendChild(summary);

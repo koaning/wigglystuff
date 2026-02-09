@@ -179,6 +179,50 @@
   color: #c4b5fd;
 }
 
+.mt-param-badge.shared {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.dark-mode .mt-param-badge.shared {
+  background: #451a03;
+  color: #fbbf24;
+}
+
+.mt-param-badge.lazy {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.dark-mode .mt-param-badge.lazy {
+  background: #0c4a6e;
+  color: #7dd3fc;
+}
+
+.mt-warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px 3px 22px;
+  font-size: 11px;
+  color: #b45309;
+}
+
+.dark-mode .mt-warning {
+  color: #fbbf24;
+}
+
+.mt-param-badge.dtype {
+  background: #f0f4f8;
+  color: #475569;
+  text-transform: none;
+}
+
+.dark-mode .mt-param-badge.dtype {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
 /* Summary bar at top */
 .mt-summary {
   display: flex;

@@ -37,14 +37,15 @@ def _():
 
 @app.cell
 def _():
+    import torch
     import torch.nn as nn
     from wigglystuff import ModuleTreeWidget
 
-    return ModuleTreeWidget, nn
+    return ModuleTreeWidget, nn, torch
 
 
 @app.cell
-def _(nn):
+def _(nn, torch):
     class ResidualBlock(nn.Module):
         def __init__(self, channels):
             super().__init__()
@@ -134,14 +135,56 @@ def _(nn):
     def build_nested():
         return TinyResNet()
 
+    def build_shared_weights():
+        class TiedEmbeddingModel(nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.embedding = nn.Embedding(1000, 128)
+                self.encoder = nn.Linear(128, 64)
+                self.decoder = nn.Linear(64, 128)
+                self.output_proj = nn.Linear(128, 1000)
+                # Tie output projection weight to embedding weight
+                self.output_proj.weight = self.embedding.weight
+
+            def forward(self, x):
+                x = self.embedding(x)
+                x = self.encoder(x)
+                x = self.decoder(x)
+                return self.output_proj(x)
+
+        return TiedEmbeddingModel()
+
+    def build_param_containers():
+        class ParamContainerModel(nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.scales = nn.ParameterList(
+                    [nn.Parameter(torch.randn(32)) for _ in range(4)]
+                )
+                self.biases = nn.ParameterDict({
+                    "alpha": nn.Parameter(torch.randn(16)),
+                    "beta": nn.Parameter(torch.randn(16)),
+                })
+                self.backbone = nn.Linear(32, 16)
+
+            def forward(self, x):
+                for s in self.scales:
+                    x = x * s
+                x = x + self.biases["alpha"]
+                return self.backbone(x)
+
+        return ParamContainerModel()
+
     architectures = {
         "MLP": build_mlp,
         "CNN": build_cnn,
         "Transformer encoder": build_transformer,
         "BERT (HuggingFace)": build_bert,
         "Custom nested (TinyResNet)": build_nested,
+        "Shared weights (tied)": build_shared_weights,
+        "ParameterList + ParameterDict": build_param_containers,
     }
-    return architectures, build_cnn
+    return architectures, build_mlp
 
 
 @app.cell
@@ -156,9 +199,9 @@ def _(architectures, mo):
 
 
 @app.cell
-def _(ModuleTreeWidget, architectures, dropdown):
+def _(ModuleTreeWidget, architectures, dropdown, mo):
     model = architectures[dropdown.value]()
-    widget = ModuleTreeWidget(model, initial_expand_depth=2)
+    widget = mo.ui.anywidget(ModuleTreeWidget(model, initial_expand_depth=2))
     widget
     return
 
@@ -172,12 +215,12 @@ def _(mo):
 
 
 @app.cell
-def _(ModuleTreeWidget, build_cnn):
+def _(ModuleTreeWidget, build_mlp):
     from torch.nn import Module
 
     Module._display_ = lambda d: ModuleTreeWidget(d)
 
-    build_cnn()
+    build_mlp()
     return
 
 
