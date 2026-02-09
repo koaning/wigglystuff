@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.24] - 2026-02-09
+
+### Added
+- `WandbChart` widget for live wandb run visualization with configurable smoothing (rolling mean, exponential moving average, gaussian). Supports multiple runs, auto-polling, and an interactive dropdown to switch smoothing kind.
+
+### Fixed
+- Removed `wandb` from core dependencies. It was accidentally added as a required dependency but should only be an optional extra (`pip install wigglystuff[wandb]`).
+
 ## [0.2.23] - 2026-02-09
 
 ### Added

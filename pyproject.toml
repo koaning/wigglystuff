@@ -1,6 +1,6 @@
 [project]
 name = "wigglystuff"
-version = "0.2.23"
+version = "0.2.24"
 description = "Collection of Anywidget Widgets"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -18,7 +18,6 @@ dependencies = [
     "numpy",
     "pillow",
     "python-dotenv>=1.2.1",
-    "wandb>=0.24.2",
 ]
 
 [project.optional-dependencies]
