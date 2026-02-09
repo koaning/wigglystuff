@@ -53,9 +53,9 @@ uv pip install wigglystuff
 </tr>
 </table>
 
-## molab
+## 3rd party widgets
 
-These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi).
+These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io) because many of the dependencies are not compatible with WASM.
 
 <table>
 <tr>
