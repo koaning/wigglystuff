@@ -201,7 +201,9 @@ def _(architectures, mo):
 @app.cell
 def _(ModuleTreeWidget, architectures, dropdown, mo):
     model = architectures[dropdown.value]()
-    widget = mo.ui.anywidget(ModuleTreeWidget(model, initial_expand_depth=2))
+    widget = mo.ui.anywidget(
+        ModuleTreeWidget(model, initial_expand_depth=2)
+    )
     widget
     return
 

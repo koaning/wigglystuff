@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.23] - 2026-02-09
+
+### Added
+- `ModuleTreeWidget` for visualising PyTorch `nn.Module` architecture as an interactive tree with parameter counts, shapes, and trainable/frozen/buffer badges.
+- Shared parameter detection: tied weights are marked with a "shared" badge and counted only once in totals.
+- Lazy (uninitialized) parameter detection: `nn.LazyLinear` and similar modules show a "lazy" badge with "uninitialized" instead of a shape.
+- Unregistered module detection: warns when `nn.Module` instances are stored in plain Python lists instead of `nn.ModuleList`.
+- Convenience properties on `ModuleTreeWidget`: `total_param_count`, `total_trainable_count`, `total_size_bytes`.
+- New "molab" gallery section for widgets that depend on 3rd party packages.
+
+### Changed
+- Removed `**kwargs` from `ModuleTreeWidget.__init__`.
+
 ## [0.2.22] - 2026-02-08
 
 ### Added

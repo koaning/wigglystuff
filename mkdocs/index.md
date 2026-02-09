@@ -146,11 +146,12 @@ Each widget page embeds a marimo-powered html-wasm export and links back to the 
 
 ## molab
 
-These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://github.com/koaning/molab).
+These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi).
 
 <div class="widget-gallery">
 <div class="gallery-item">
 <div class="gallery-title">ModuleTreeWidget</div>
-<div class="gallery-links"><a href="reference/module-tree/">API</a><a href="reference/module-tree.md">MD</a></div>
+<a href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi" class="gallery-img"><img src="assets/gallery/moduletree.png" alt="ModuleTreeWidget"></a>
+<div class="gallery-links"><a href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi">Demo</a><a href="reference/module-tree/">API</a><a href="reference/module-tree.md">MD</a></div>
 </div>
 </div>
