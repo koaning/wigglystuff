@@ -170,3 +170,5 @@ Untitled.ipynb
 **/__marimo__/**
 mkdocs/examples/
 !mkdocs/examples/.gitkeep
+
+wandb/**
