@@ -53,6 +53,7 @@ nav:
       - HTMLRefreshWidget: reference/html-refresh.md
       - ProgressBar: reference/progress-bar.md
       - PulsarChart: reference/pulsar-chart.md
+      - ModuleTreeWidget: reference/module-tree.md
       - Utils: reference/utils.md
 plugins:
   - search
