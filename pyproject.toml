@@ -17,6 +17,7 @@ dependencies = [
     "anywidget>=0.9.2",
     "numpy",
     "pillow",
+    "transformers>=5.1.0",
 ]
 
 [project.optional-dependencies]

@@ -5,15 +5,6 @@ function formatCount(n) {
   return String(n);
 }
 
-function densityColor(paramCount, rootTotal) {
-  if (rootTotal === 0) return "hsl(210, 10%, 70%)";
-  const ratio = paramCount / rootTotal;
-  const hue = 210 * (1 - ratio);
-  const saturation = 30 + 50 * ratio;
-  const lightness = 60 - 15 * ratio;
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
-
 function formatShape(shape) {
   return "[" + shape.join(", ") + "]";
 }
@@ -57,12 +48,6 @@ function buildNode(node, depth, initialExpandDepth, rootTotal) {
     count.className = "mt-count";
     count.textContent = formatCount(node.total_param_count) + " params";
     header.appendChild(count);
-
-    // Density dot
-    const dot = document.createElement("span");
-    dot.className = "mt-density";
-    dot.style.background = densityColor(node.total_param_count, rootTotal);
-    header.appendChild(dot);
   }
 
   el.appendChild(header);

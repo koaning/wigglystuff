@@ -102,14 +102,6 @@
   white-space: nowrap;
 }
 
-/* Density dot */
-.mt-density {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
 /* Collapsible body */
 .mt-body {
   margin-left: 12px;
