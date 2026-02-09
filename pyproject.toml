@@ -17,9 +17,14 @@ dependencies = [
     "anywidget>=0.9.2",
     "numpy",
     "pillow",
+    "python-dotenv>=1.2.1",
+    "wandb>=0.24.2",
 ]
 
 [project.optional-dependencies]
+wandb = [
+    "wandb>=0.15.0",
+]
 torch = [
     "torch>=2.10.0",
 ]

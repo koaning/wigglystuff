@@ -23,6 +23,7 @@ from .talk import WebkitSpeechToTextWidget
 from .tangle import TangleChoice, TangleSelect, TangleSlider
 from .text_compare import TextCompare
 from .three_widget import ThreeWidget
+from .wandb_chart import WandbChart
 from .webcam_capture import WebcamCapture
 
 __version__ = importlib.metadata.version("wigglystuff")
@@ -50,6 +51,7 @@ __all__ = [
     "TextCompare",
     "WebkitSpeechToTextWidget",
     "ThreeWidget",
+    "WandbChart",
     "WebcamCapture",
     "HTMLRefreshWidget",
     "ImageRefreshWidget",
