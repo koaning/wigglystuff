@@ -14,6 +14,7 @@ from .gamepad import GamepadWidget
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
 from .matrix import Matrix
+from .module_tree import ModuleTreeWidget
 from .paint import Paint
 from .pulsar_chart import PulsarChart
 from .slider2d import Slider2D
@@ -38,6 +39,7 @@ __all__ = [
     "GamepadWidget",
     "KeystrokeWidget",
     "Matrix",
+    "ModuleTreeWidget",
     "Paint",
     "PulsarChart",
     "Slider2D",
