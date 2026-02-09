@@ -143,3 +143,15 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
+
+## molab
+
+These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi).
+
+<div class="widget-gallery">
+<div class="gallery-item">
+<div class="gallery-title">ModuleTreeWidget</div>
+<a href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi" class="gallery-img"><img src="assets/gallery/moduletree.png" alt="ModuleTreeWidget"></a>
+<div class="gallery-links"><a href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi">Demo</a><a href="reference/module-tree/">API</a><a href="reference/module-tree.md">MD</a></div>
+</div>
+</div>

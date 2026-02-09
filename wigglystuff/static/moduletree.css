@@ -1,0 +1,241 @@
+.module-tree-root {
+  --mt-bg: #ffffff;
+  --mt-bg-hover: #f5f5f7;
+  --mt-text: #1a1a1a;
+  --mt-text-secondary: #555555;
+  --mt-text-muted: #999999;
+  --mt-border: #e0e0e0;
+  --mt-guide: #e8e8e8;
+  --mt-type-bg: #f0f0f2;
+  --mt-type-text: #555555;
+  --mt-frozen-text: #94a3b8;
+  --mt-buffer-text: #8b7ec8;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  color: var(--mt-text);
+  background: var(--mt-bg);
+  padding: 12px;
+  line-height: 1.5;
+  max-width: 700px;
+}
+
+.module-tree-root.dark-mode {
+  --mt-bg: #1a1a1a;
+  --mt-bg-hover: #252528;
+  --mt-text: #e0e0e0;
+  --mt-text-secondary: #aaaaaa;
+  --mt-text-muted: #666666;
+  --mt-border: #333333;
+  --mt-guide: #2a2a2a;
+  --mt-type-bg: #2a2a2e;
+  --mt-type-text: #aaaaaa;
+  --mt-frozen-text: #64748b;
+  --mt-buffer-text: #a78bfa;
+}
+
+/* Module node */
+.mt-node {
+  margin: 0;
+  padding: 0;
+}
+
+/* Header row — clickable */
+.mt-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mt-header:hover {
+  background: var(--mt-bg-hover);
+}
+
+/* Toggle chevron */
+.mt-toggle {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--mt-text-muted);
+  transition: transform 0.15s ease;
+}
+
+.mt-toggle.expanded {
+  transform: rotate(90deg);
+}
+
+.mt-toggle.leaf {
+  visibility: hidden;
+}
+
+/* Module name */
+.mt-name {
+  font-weight: 600;
+  color: var(--mt-text);
+  white-space: nowrap;
+}
+
+/* Module type badge */
+.mt-type {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--mt-type-bg);
+  color: var(--mt-type-text);
+  white-space: nowrap;
+}
+
+/* Parameter count */
+.mt-count {
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  font-size: 11px;
+  color: var(--mt-text-secondary);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* Collapsible body */
+.mt-body {
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--mt-guide);
+}
+
+.mt-body.collapsed {
+  display: none;
+}
+
+/* Parameter rows */
+.mt-params {
+  margin: 2px 0 4px 0;
+}
+
+.mt-param {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 6px 1px 22px;
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  font-size: 11px;
+  color: var(--mt-text-secondary);
+}
+
+.mt-param-name {
+  color: var(--mt-text-secondary);
+}
+
+.mt-param-shape {
+  color: var(--mt-text-muted);
+}
+
+.mt-param-numel {
+  color: var(--mt-text-muted);
+  margin-left: auto;
+}
+
+.mt-param-badge {
+  font-size: 9px;
+  padding: 0 4px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.mt-param-badge.trainable {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.mt-param-badge.frozen {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.mt-param-badge.buffer {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.dark-mode .mt-param-badge.trainable {
+  background: #14532d;
+  color: #86efac;
+}
+
+.dark-mode .mt-param-badge.frozen {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+.dark-mode .mt-param-badge.buffer {
+  background: #2e1065;
+  color: #c4b5fd;
+}
+
+.mt-param-badge.shared {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.dark-mode .mt-param-badge.shared {
+  background: #451a03;
+  color: #fbbf24;
+}
+
+.mt-param-badge.lazy {
+  background: #e0f2fe;
+  color: #075985;
+}
+
+.dark-mode .mt-param-badge.lazy {
+  background: #0c4a6e;
+  color: #7dd3fc;
+}
+
+.mt-warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px 3px 22px;
+  font-size: 11px;
+  color: #b45309;
+}
+
+.dark-mode .mt-warning {
+  color: #fbbf24;
+}
+
+.mt-param-badge.dtype {
+  background: #f0f4f8;
+  color: #475569;
+  text-transform: none;
+}
+
+.dark-mode .mt-param-badge.dtype {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+/* Summary bar at top */
+.mt-summary {
+  display: flex;
+  gap: 16px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--mt-text-secondary);
+  border-bottom: 1px solid var(--mt-border);
+}
+
+.mt-summary-value {
+  font-weight: 600;
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  color: var(--mt-text);
+}
