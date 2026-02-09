@@ -101,7 +101,8 @@ def _(WandbChart, api_key, baseline, experiment):
         project=baseline.project,
         runs=[baseline, experiment],
         key="loss",
-        rolling_mean=5,
+        smoothing_kind="exponential",
+        smoothing_param=0.6,
         poll_seconds=1,
         width=400
     )
@@ -116,7 +117,8 @@ def _(WandbChart, api_key, baseline, experiment):
         project=baseline.project,
         runs=[baseline, experiment],
         key="acc",
-        rolling_mean=5,
+        smoothing_kind="gaussian",
+        smoothing_param=2.0,
         poll_seconds=2,
         width=400
     )
@@ -145,7 +147,8 @@ def _(WandbChart, api_key, baseline, experiment):
         project=baseline.project,
         runs=[baseline, experiment],
         key="loss",
-        rolling_mean=5,
+        smoothing_kind="rolling",
+        smoothing_param=5,
         poll_seconds=None,
     )
     manual_chart

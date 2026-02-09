@@ -68,12 +68,53 @@ function rollingMean(points, win) {
     });
 }
 
+function exponentialSmooth(points, alpha) {
+    if (alpha <= 0 || points.length === 0) return points;
+    const out = [{ x: points[0].x, y: points[0].y }];
+    for (let i = 1; i < points.length; i++) {
+        const prev = out[i - 1].y;
+        out.push({ x: points[i].x, y: alpha * prev + (1 - alpha) * points[i].y });
+    }
+    return out;
+}
+
+function gaussianSmooth(points, sigma) {
+    if (sigma <= 0 || points.length === 0) return points;
+    const radius = Math.ceil(3 * sigma);
+    const kernel = [];
+    let kernelSum = 0;
+    for (let j = -radius; j <= radius; j++) {
+        const w = Math.exp(-0.5 * (j / sigma) * (j / sigma));
+        kernel.push(w);
+        kernelSum += w;
+    }
+    for (let j = 0; j < kernel.length; j++) kernel[j] /= kernelSum;
+
+    return points.map((p, i) => {
+        let sum = 0, wSum = 0;
+        for (let j = -radius; j <= radius; j++) {
+            const idx = i + j;
+            if (idx < 0 || idx >= points.length) continue;
+            const w = kernel[j + radius];
+            sum += w * points[idx].y;
+            wSum += w;
+        }
+        return { x: p.x, y: sum / wSum };
+    });
+}
+
+const SLIDER_CONFIG = {
+    rolling:     { label: "Rolling mean:",   min: 0, max: 50,   step: 1,    fmt: v => v === 0 ? "off" : String(Math.round(v)),  toParam: v => v < 2 ? null : v },
+    exponential: { label: "EMA weight:",     min: 0, max: 0.99, step: 0.01, fmt: v => v === 0 ? "off" : v.toFixed(2),           toParam: v => v === 0 ? null : v },
+    gaussian:    { label: "Gaussian \u03c3:", min: 0, max: 10,   step: 0.1,  fmt: v => v === 0 ? "off" : v.toFixed(1),           toParam: v => v === 0 ? null : v },
+};
+
 const COLORS = [
     "#4e79a7","#f28e2b","#e15759","#76b7b2","#59a14f",
     "#edc948","#b07aa1","#ff9da7","#9c755f","#bab0ac"
 ];
 
-function prepareSeries(runData, runs, key, rmWin) {
+function prepareSeries(runData, runs, key, smoothKind, smoothParam) {
     return runs.map((run, i) => {
         const rd = runData[run.id];
         const color = COLORS[i % COLORS.length];
@@ -81,11 +122,23 @@ function prepareSeries(runData, runs, key, rmWin) {
         const raw = rd.rows
             .filter(r => r[key] !== undefined && r._step !== undefined)
             .map(r => ({ x: r._step, y: r[key] }));
+
+        let smoothed = raw;
+        if (smoothParam != null && smoothParam > 0) {
+            if (smoothKind === "rolling" && smoothParam >= 2) {
+                smoothed = rollingMean(raw, smoothParam);
+            } else if (smoothKind === "exponential") {
+                smoothed = exponentialSmooth(raw, smoothParam);
+            } else if (smoothKind === "gaussian") {
+                smoothed = gaussianSmooth(raw, smoothParam);
+            }
+        }
+        const hasSmoothing = smoothed !== raw;
         return {
             label: run.label,
             color,
-            points: rmWin > 1 ? rollingMean(raw, rmWin) : raw,
-            raw: rmWin > 1 ? raw : [],
+            points: smoothed,
+            raw: hasSmoothing ? raw : [],
         };
     });
 }
@@ -238,25 +291,50 @@ function render({ model, el }) {
     container.style.width = w + "px";
     container.style.boxSizing = "border-box";
 
-    // Controls row: refresh button left, slider right
+    // Controls row: smoothing controls left, refresh button right
     const controlsRow = document.createElement("div");
     controlsRow.style.cssText = "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:13px;color:#666";
 
-    // Smoothing slider (left side)
+    // Smoothing controls (left side)
+    let kind = model.get("smoothing_kind") || "gaussian";
+    let cfg = SLIDER_CONFIG[kind] || SLIDER_CONFIG.rolling;
+
     const smoothGroup = document.createElement("div");
     smoothGroup.style.cssText = "display:flex;align-items:center;gap:8px";
-    const smoothLabel = document.createElement("span");
-    smoothLabel.textContent = "Rolling mean:";
+
+    // Smoothing kind dropdown
+    const kindSelect = document.createElement("select");
+    kindSelect.style.cssText = "font-size:12px;padding:1px 4px;border:1px solid #ccc;border-radius:3px;background:#fff;font-family:system-ui,sans-serif";
+    for (const [value, label] of [["rolling", "Rolling"], ["exponential", "Exponential"], ["gaussian", "Gaussian"]]) {
+        const opt = document.createElement("option");
+        opt.value = value;
+        opt.textContent = label;
+        if (value === kind) opt.selected = true;
+        kindSelect.appendChild(opt);
+    }
+
+    // Slider
     const smoothSlider = document.createElement("input");
     smoothSlider.type = "range";
-    smoothSlider.min = "0";
-    smoothSlider.max = "50";
-    smoothSlider.value = String(model.get("rolling_mean") || 0);
+    smoothSlider.min = String(cfg.min);
+    smoothSlider.max = String(cfg.max);
+    smoothSlider.step = String(cfg.step);
+    const initParam = model.get("smoothing_param") ?? 0;
+    smoothSlider.value = String(initParam);
     smoothSlider.style.width = "120px";
     const smoothValEl = document.createElement("span");
-    smoothValEl.textContent = smoothSlider.value === "0" ? "off" : smoothSlider.value;
+    smoothValEl.textContent = cfg.fmt(parseFloat(smoothSlider.value));
 
-    smoothGroup.appendChild(smoothLabel);
+    function configureSlider() {
+        cfg = SLIDER_CONFIG[kind] || SLIDER_CONFIG.rolling;
+        smoothSlider.min = String(cfg.min);
+        smoothSlider.max = String(cfg.max);
+        smoothSlider.step = String(cfg.step);
+        smoothSlider.value = "0";
+        smoothValEl.textContent = "off";
+    }
+
+    smoothGroup.appendChild(kindSelect);
     smoothGroup.appendChild(smoothSlider);
     smoothGroup.appendChild(smoothValEl);
     if (model.get("show_slider")) controlsRow.appendChild(smoothGroup);
@@ -292,9 +370,9 @@ function render({ model, el }) {
 
     let lastSeries = [];
 
-    function getSliderRmWin() {
-        const v = parseInt(smoothSlider.value, 10);
-        return v < 2 ? null : v;
+    function getSliderParam() {
+        const v = parseFloat(smoothSlider.value);
+        return cfg.toParam(v);
     }
 
     function redraw() {
@@ -302,16 +380,24 @@ function render({ model, el }) {
         const key = model.get("key");
         const w = model.get("width") || 700;
         const h = model.get("height") || 300;
-        lastSeries = prepareSeries(runData, runs, key, getSliderRmWin());
+        lastSeries = prepareSeries(runData, runs, key, kind, getSliderParam());
         drawChart(chartCanvas, lastSeries, { title: key, width: w, height: h });
     }
 
+    kindSelect.addEventListener("change", () => {
+        kind = kindSelect.value;
+        model.set("smoothing_kind", kind);
+        configureSlider();
+        model.set("smoothing_param", null);
+        model.save_changes();
+        redraw();
+    });
+
     smoothSlider.addEventListener("input", () => {
-        const v = parseInt(smoothSlider.value, 10);
-        if (v === 1) { smoothSlider.value = "2"; }
-        const rmWin = getSliderRmWin();
-        smoothValEl.textContent = rmWin === null ? "off" : String(rmWin);
-        model.set("rolling_mean", rmWin);
+        let v = parseFloat(smoothSlider.value);
+        if (kind === "rolling" && v === 1) { smoothSlider.value = "2"; v = 2; }
+        smoothValEl.textContent = cfg.fmt(v);
+        model.set("smoothing_param", cfg.toParam(v));
         model.save_changes();
         redraw();
     });

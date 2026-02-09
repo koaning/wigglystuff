@@ -60,5 +60,6 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 <table>
 <tr>
 <td align="center"><b>ModuleTreeWidget</b><br><a href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi"><img src="./mkdocs/assets/gallery/moduletree.png" width="200"></a><br><a href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/module-tree/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/module-tree.md">MD</a></td>
+<td align="center"><b>WandbChart</b><br><a href="https://molab.marimo.io/notebooks/nb_pbN8i6DyggB26Xrzw9Bztw"><img src="./mkdocs/assets/gallery/wandbchart.png" width="200"></a><br><a href="https://molab.marimo.io/notebooks/nb_pbN8i6DyggB26Xrzw9Bztw">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/wandb-chart/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/wandb-chart.md">MD</a></td>
 </tr>
 </table>
