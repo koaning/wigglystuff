@@ -9590,7 +9590,7 @@ function render({ model, el }) {
   inputWrapper.appendChild(dropdown);
   const runBtn = document.createElement("button");
   runBtn.classList.add("neo4j-run-btn");
-  runBtn.textContent = "Run";
+  runBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"/></svg>';
   queryBar.appendChild(runBtn);
   const errorBar = document.createElement("div");
   errorBar.classList.add("neo4j-error-bar");
@@ -9923,7 +9923,7 @@ function render({ model, el }) {
   });
   model.on("change:query_running", () => {
     const running = model.get("query_running");
-    runBtn.textContent = running ? "..." : "Run";
+    runBtn.innerHTML = running ? "..." : '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 13,8 3,15"/></svg>';
     runBtn.disabled = running;
   });
   if ((model.get("nodes") || []).length > 0) {

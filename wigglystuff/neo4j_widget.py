@@ -92,7 +92,7 @@ class Neo4jWidget(anywidget.AnyWidget):
             return
         self._expand_node(data["element_id"])
 
-    def _execute_query(self, query: str) -> None:
+    def _execute_query(self, query: str, merge: bool = False) -> None:
         self.query_running = True
         self.error = ""
         try:
@@ -101,19 +101,23 @@ class Neo4jWidget(anywidget.AnyWidget):
                 graph = result.graph()
                 new_nodes = self._convert_nodes(graph.nodes)
                 new_rels = self._convert_relationships(graph.relationships)
-            self._merge_graph(new_nodes, new_rels)
+            if merge:
+                self._merge_graph(new_nodes, new_rels)
+            else:
+                self.selected_nodes = []
+                self.selected_relationships = []
+                self.nodes = new_nodes
+                self.relationships = new_rels
         except Exception as e:
             self.error = str(e)
         finally:
             self.query_running = False
 
     def _expand_node(self, element_id: str) -> None:
+        query = "MATCH (n)-[r]-(m) WHERE elementId(n) = $eid RETURN n, r, m"
         self.query_running = True
         self.error = ""
         try:
-            query = (
-                "MATCH (n)-[r]-(m) WHERE elementId(n) = $eid RETURN n, r, m"
-            )
             with self._driver.session(database=self._database) as session:
                 result = session.run(query, eid=element_id)
                 graph = result.graph()

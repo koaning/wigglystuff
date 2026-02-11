@@ -47,6 +47,7 @@
 /* Query bar */
 .neo4j-query-bar {
     display: flex;
+    align-items: flex-start;
     gap: 8px;
     padding: 8px;
     border-bottom: 1px solid var(--neo4j-border);
@@ -79,16 +80,18 @@
 }
 
 .neo4j-run-btn {
-    padding: 6px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 32px;
+    padding: 0;
     border: none;
     border-radius: 4px;
     background: var(--neo4j-accent);
     color: #fff;
-    font-weight: 600;
-    font-size: 13px;
     cursor: pointer;
-    white-space: nowrap;
-    min-width: 56px;
+    flex-shrink: 0;
 }
 
 .neo4j-run-btn:hover {
