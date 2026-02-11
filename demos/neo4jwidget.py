@@ -52,7 +52,7 @@ def _(db_input, mo, pass_input, uri_input, user_input):
             uri=uri_input.value,
             auth=(user_input.value, pass_input.value),
             database=db_input.value,
-            height=1000
+            height=400
         )
     )
     widget

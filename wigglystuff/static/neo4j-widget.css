@@ -248,3 +248,44 @@
 .neo4j-ac-item.neo4j-ac-active {
     background: var(--neo4j-ac-hover);
 }
+
+/* Lasso toggle */
+.neo4j-lasso-btn {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--neo4j-border);
+    border-radius: 4px;
+    background: var(--neo4j-bg);
+    color: var(--neo4j-text-muted);
+    cursor: pointer;
+    z-index: 5;
+    opacity: 0.8;
+    transition: opacity 0.15s, background 0.15s;
+}
+
+.neo4j-lasso-btn:hover {
+    opacity: 1;
+}
+
+.neo4j-lasso-btn.neo4j-lasso-active {
+    background: var(--neo4j-accent);
+    border-color: var(--neo4j-accent);
+    color: #fff;
+    opacity: 1;
+}
+
+/* Lasso path drawn on SVG */
+.neo4j-lasso-path {
+    fill: color-mix(in srgb, var(--neo4j-accent) 15%, transparent);
+    stroke: var(--neo4j-accent);
+    stroke-width: 1.5px;
+    stroke-dasharray: 4 3;
+    pointer-events: none;
+}

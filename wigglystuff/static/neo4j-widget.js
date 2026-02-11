@@ -9643,15 +9643,101 @@ function render({ model, el }) {
   const svg = d3.select(svgEl);
   svg.append("defs").append("marker").attr("id", "neo4j-arrowhead").attr("viewBox", "-0 -5 10 10").attr("refX", 20).attr("refY", 0).attr("orient", "auto").attr("markerWidth", 6).attr("markerHeight", 6).append("path").attr("d", "M0,-5L10,0L0,5").attr("class", "neo4j-arrow");
   const zoomGroup = svg.append("g").attr("class", "neo4j-zoom-group");
-  svg.call(d3.zoom().scaleExtent([0.1, 5]).on("zoom", (event) => {
+  const zoomBehavior = d3.zoom().scaleExtent([0.1, 5]).on("zoom", (event) => {
     zoomGroup.attr("transform", event.transform);
-  }));
+  });
+  svg.call(zoomBehavior);
   const linkGroup = zoomGroup.append("g").attr("class", "neo4j-links");
   const nodeGroup = zoomGroup.append("g").attr("class", "neo4j-nodes");
   const tooltip = document.createElement("div");
   tooltip.classList.add("neo4j-tooltip");
   tooltip.style.display = "none";
   container.appendChild(tooltip);
+  /* Lasso tool */
+  let lassoMode = false;
+  const lassoBtn = document.createElement("button");
+  lassoBtn.classList.add("neo4j-lasso-btn");
+  lassoBtn.title = "Lasso select (L)";
+  lassoBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="8" cy="7" rx="6" ry="5"/><path d="M12 10c0 2-1.5 4-3 4"/><circle cx="9" cy="14" r="1" fill="currentColor" stroke="none"/></svg>';
+  container.appendChild(lassoBtn);
+  function setLassoMode(on) {
+    lassoMode = on;
+    lassoBtn.classList.toggle("neo4j-lasso-active", on);
+    svgEl.style.cursor = on ? "crosshair" : "";
+    if (on) {
+      svg.on(".zoom", null);
+    } else {
+      svg.call(zoomBehavior);
+    }
+  }
+  lassoBtn.addEventListener("click", () => setLassoMode(!lassoMode));
+  document.addEventListener("keydown", (e) => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    if (e.key === "l" || e.key === "L") setLassoMode(!lassoMode);
+  });
+  const lassoPath = svg.append("path").attr("class", "neo4j-lasso-path").style("display", "none");
+  let lassoPoints = [];
+  let lassoActive = false;
+  svgEl.addEventListener("mousedown", (e) => {
+    if (!lassoMode || e.button !== 0) return;
+    e.preventDefault();
+    lassoActive = true;
+    lassoPoints = [];
+    const pt = svgPoint(e);
+    lassoPoints.push(pt);
+    lassoPath.style("display", null).attr("d", "M" + pt[0] + "," + pt[1]);
+  });
+  svgEl.addEventListener("mousemove", (e) => {
+    if (!lassoActive) return;
+    const pt = svgPoint(e);
+    lassoPoints.push(pt);
+    lassoPath.attr("d", lassoPoints.map((p, i) => (i === 0 ? "M" : "L") + p[0] + "," + p[1]).join("") + "Z");
+  });
+  svgEl.addEventListener("mouseup", (e) => {
+    if (!lassoActive) return;
+    lassoActive = false;
+    lassoPath.style("display", "none");
+    if (lassoPoints.length < 3) return;
+    const additive = e.ctrlKey || e.metaKey;
+    if (!additive) {
+      selectedNodeIds.clear();
+      selectedRelIds.clear();
+    }
+    const currentTransform = d3.zoomTransform(svgEl);
+    simNodes.forEach((n) => {
+      const sx = currentTransform.applyX(n.x);
+      const sy = currentTransform.applyY(n.y);
+      if (pointInPolygon([sx, sy], lassoPoints)) {
+        selectedNodeIds.add(n.element_id);
+      }
+    });
+    const selSet = selectedNodeIds;
+    simLinks.forEach((l) => {
+      const srcId = typeof l.source === "object" ? l.source.element_id : l.source;
+      const tgtId = typeof l.target === "object" ? l.target.element_id : l.target;
+      if (selSet.has(srcId) && selSet.has(tgtId)) {
+        selectedRelIds.add(l.element_id);
+      }
+    });
+    syncSelection();
+    updateVisuals();
+  });
+  function svgPoint(e) {
+    const rect = svgEl.getBoundingClientRect();
+    return [e.clientX - rect.left, e.clientY - rect.top];
+  }
+  function pointInPolygon(pt, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i][0], yi = poly[i][1];
+      const xj = poly[j][0], yj = poly[j][1];
+      if (((yi > pt[1]) !== (yj > pt[1])) && (pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi)) {
+        inside = !inside;
+      }
+    }
+    return inside;
+  }
+
   let simNodes = [];
   let simLinks = [];
   let selectedNodeIds = /* @__PURE__ */ new Set();
@@ -9773,6 +9859,7 @@ function render({ model, el }) {
     updateVisuals();
   }
   svgEl.addEventListener("click", (e) => {
+    if (lassoMode) return;
     if (e.target === svgEl) {
       selectedNodeIds.clear();
       selectedRelIds.clear();
