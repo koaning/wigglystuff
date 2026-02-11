@@ -15,6 +15,7 @@ from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
 from .matrix import Matrix
 from .module_tree import ModuleTreeWidget
+from .neo4j_widget import Neo4jWidget
 from .paint import Paint
 from .pulsar_chart import PulsarChart
 from .slider2d import Slider2D
@@ -41,6 +42,7 @@ __all__ = [
     "KeystrokeWidget",
     "Matrix",
     "ModuleTreeWidget",
+    "Neo4jWidget",
     "Paint",
     "PulsarChart",
     "Slider2D",

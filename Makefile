@@ -52,6 +52,9 @@ js-paint:
 js-pulsar-chart:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/pulsar-chart.js js/pulsar-chart/widget.js
 
+js-neo4j-widget:
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/neo4j-widget.js js/neo4j-widget/widget.js
+
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
