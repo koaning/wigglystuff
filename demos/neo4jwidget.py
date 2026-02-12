@@ -69,13 +69,13 @@ def _(mo, widget):
 
 @app.cell
 def _(widget):
-    widget.value
+    widget.get_selected_node_data()
     return
 
 
 @app.cell
 def _(widget):
-    widget.get_selected_node_data()
+    widget.value
     return
 
 

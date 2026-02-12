@@ -31,6 +31,7 @@ syncs back to Python.
 | TextCompare | `wigglystuff.text_compare.TextCompare` | `text_a`, `text_b`, `matches`, `selected_match`, `min_match_words` | Side-by-side text diff with match highlighting |
 | EnvConfig | `wigglystuff.env_config.EnvConfig` | `variables`, `all_valid` | Environment variable config with validation |
 | ModuleTreeWidget | `wigglystuff.module_tree.ModuleTreeWidget` | `tree`, `initial_expand_depth` | Interactive tree viewer for PyTorch nn.Module |
+| Neo4jWidget | `wigglystuff.neo4j_widget.Neo4jWidget` | `nodes`, `relationships`, `schema`, `error`, `query_running`, `selected_nodes`, `selected_relationships`, `width`, `height` | Interactive Neo4j graph explorer with Cypher query input |
 
 ## Patterns to remember
 

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.25] - 2026-02-11
+
+### Added
+- `Neo4jWidget` for interactive Neo4j graph exploration. Features a Cypher query input with schema-aware autocomplete, force-directed graph visualization with d3, node/edge selection (click, ctrl-click, and freeform lasso), double-click node expansion, and zoom/pan navigation. Requires a `neo4j` driver instance.
+
 ## [0.2.24] - 2026-02-09
 
 ### Added
