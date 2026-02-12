@@ -172,4 +172,3 @@ mkdocs/examples/
 !mkdocs/examples/.gitkeep
 
 wandb/**
-uv.lock

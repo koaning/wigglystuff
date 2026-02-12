@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 from anywidget import AnyWidget
@@ -364,8 +363,35 @@ class ChartSelect(AnyWidget):
         ax.set_xlim(x_bounds)
         ax.set_ylim(y_bounds)
 
-        # Preliminary render so draw_fn can configure axes (e.g. log scale)
-        _stub = SimpleNamespace(has_selection=False, selection={})
+        # Preliminary render so draw_fn can configure axes (e.g. log scale).
+        # The proxy mirrors no-selection helper behavior to keep callbacks
+        # that call widget helpers during init working.
+        class _InitialChartSelectProxy:
+            def __init__(self):
+                self.has_selection = False
+                self.selection = {}
+
+            def get_mask(self, x_arr, y_arr):
+                import numpy as np
+
+                x_arr = np.asarray(x_arr)
+                return np.zeros(len(x_arr), dtype=bool)
+
+            def get_indices(self, x_arr, y_arr):
+                import numpy as np
+
+                return np.array([], dtype=int)
+
+            def get_bounds(self):
+                return None
+
+            def get_vertices(self):
+                return []
+
+            def contains_point(self, x, y):
+                return False
+
+        _stub = _InitialChartSelectProxy()
         draw_fn(ax, _stub)
 
         widget = cls(fig, mode=mode, modes=modes, **kwargs)

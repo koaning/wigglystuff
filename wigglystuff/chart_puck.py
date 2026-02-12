@@ -5,7 +5,6 @@ from __future__ import annotations
 import base64
 from io import BytesIO
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import anywidget
@@ -283,8 +282,27 @@ class ChartPuck(anywidget.AnyWidget):
         ax.set_xlim(x_bounds)
         ax.set_ylim(y_bounds)
 
-        # Preliminary render so draw_fn can configure axes (e.g. log scale)
-        _stub = SimpleNamespace(x=x_list, y=y_list)
+        # Preliminary render so draw_fn can configure axes (e.g. log scale).
+        # The proxy includes helper methods used in user callbacks.
+        class _InitialChartPuckProxy:
+            def __init__(self, x_vals, y_vals):
+                self.x = list(x_vals)
+                self.y = list(y_vals)
+
+            def export_kmeans(self, n_init: int = 1, max_iter: int = 300, **kwargs):
+                import numpy as np
+                from sklearn.cluster import KMeans
+
+                centroids = np.array(list(zip(self.x, self.y)))
+                return KMeans(
+                    n_clusters=len(self.x),
+                    init=centroids,
+                    n_init=n_init,
+                    max_iter=max_iter,
+                    **kwargs,
+                )
+
+        _stub = _InitialChartPuckProxy(x_list, y_list)
         draw_fn(ax, _stub)
 
         widget = cls(fig, x=x, y=y, drag_x_bounds=drag_x_bounds, drag_y_bounds=drag_y_bounds, **kwargs)

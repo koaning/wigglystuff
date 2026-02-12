@@ -93,6 +93,26 @@ def test_from_callback_creates_widget_and_updates():
     assert puck.chart_base64 != initial_base64
 
 
+def test_from_callback_allows_export_kmeans_during_initial_draw():
+    pytest.importorskip("sklearn")
+
+    def draw_fn(ax, widget):
+        kmeans = widget.export_kmeans()
+        ax.scatter(widget.x, widget.y)
+        ax.set_title(f"{kmeans.n_clusters}")
+
+    puck = ChartPuck.from_callback(
+        draw_fn=draw_fn,
+        x_bounds=(0, 10),
+        y_bounds=(0, 10),
+        x=[2.0, 8.0],
+        y=[2.0, 8.0],
+    )
+
+    assert puck.x == [2.0, 8.0]
+    assert puck.y == [2.0, 8.0]
+
+
 def test_chart_puck_single_color_string(simple_figure):
     puck = ChartPuck(simple_figure, puck_color="blue")
     assert puck.puck_color == ["blue"]
