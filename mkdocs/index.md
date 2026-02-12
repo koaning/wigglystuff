@@ -161,7 +161,7 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 </div>
 <div class="gallery-item">
 <div class="gallery-title">Neo4jWidget</div>
-<a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU" class="gallery-img"><img src="assets/gallery/neo4jwidget.png" alt="Neo4jWidget"></a>
+<a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU" class="gallery-img"><img src="assets/gallery/neo4j-widget.png" alt="Neo4jWidget"></a>
 <div class="gallery-links"><a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU">Demo</a><a href="reference/neo4j-widget/">API</a><a href="reference/neo4j-widget.md">MD</a></div>
 </div>
 </div>
