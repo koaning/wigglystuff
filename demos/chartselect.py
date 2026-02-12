@@ -10,7 +10,7 @@
 
 import marimo
 
-__generated_with = "0.19.6"
+__generated_with = "0.19.11"
 app = marimo.App()
 
 
@@ -20,6 +20,7 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
     from wigglystuff import ChartSelect
+
     return ChartSelect, mo, np, plt
 
 
@@ -163,6 +164,78 @@ def _(box_only, lasso_only, mo):
     _box_widget = mo.ui.anywidget(box_only)
     _lasso_widget = mo.ui.anywidget(lasso_only)
     mo.hstack([_box_widget, _lasso_widget], justify="start", gap=1)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Log-Scale Chart
+
+    This section demonstrates ChartSelect on a chart with logarithmic axes.
+    Draw a selection and check whether the correct points get highlighted.
+    """)
+    return
+
+
+@app.cell
+def _(np):
+    np.random.seed(99)
+    x_log = 10 ** (np.random.uniform(0, 3, 200))
+    y_log = np.random.uniform(0, 10, 200)
+    return x_log, y_log
+
+
+@app.cell
+def _(ChartSelect, x_log, y_log):
+    def _draw_log(ax, widget):
+        ax.set_xscale("log")
+        if widget.has_selection:
+            mask = widget.get_mask(x_log, y_log)
+            ax.scatter(x_log[~mask], y_log[~mask], alpha=0.3, color="gray", s=20)
+            ax.scatter(x_log[mask], y_log[mask], alpha=0.8, color="#ef4444", s=40)
+            ax.set_title(f"Selected: {mask.sum()} / {len(x_log)} points")
+        else:
+            ax.scatter(x_log, y_log, alpha=0.6, color="#3b82f6")
+            ax.set_title("Select points on log x-axis")
+        ax.set_xlabel("X (log)")
+        ax.set_ylabel("Y")
+        ax.grid(True, alpha=0.3, which="both")
+
+    log_select = ChartSelect.from_callback(
+        draw_fn=_draw_log,
+        x_bounds=(1, 1000),
+        y_bounds=(0, 10),
+        figsize=(5, 5),
+        mode="box",
+        selection_color="#ef4444",
+    )
+    return (log_select,)
+
+
+@app.cell
+def _(log_select, mo):
+    log_widget = mo.ui.anywidget(log_select)
+    return (log_widget,)
+
+
+@app.cell
+def _(log_widget):
+    log_widget
+    return
+
+
+@app.cell
+def _(log_widget, mo, x_log, y_log):
+    _msg = "No selection yet (log chart)"
+    if log_widget.has_selection:
+        _mask = log_widget.get_mask(x_log, y_log)
+        _n = _mask.sum()
+        if _n > 0:
+            _msg = f"Selected {_n} points (log chart)"
+        else:
+            _msg = "Selection contains 0 points (log chart)"
+    mo.callout(_msg)
     return
 
 

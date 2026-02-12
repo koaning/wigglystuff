@@ -4023,11 +4023,10 @@ wheels = [
 
 [[package]]
 name = "wigglystuff"
-version = "0.2.24"
+version = "0.2.25"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
-    { name = "neo4j" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pillow" },
@@ -4087,7 +4086,6 @@ requires-dist = [
     { name = "mkdocs-section-index", marker = "extra == 'docs'", specifier = ">=0.3.6" },
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.25.1" },
     { name = "mohtml", marker = "extra == 'docs'", specifier = ">=0.1.11" },
-    { name = "neo4j", specifier = ">=6.1.0" },
     { name = "neo4j", marker = "extra == 'neo4j'", specifier = ">=5.0.0" },
     { name = "numpy" },
     { name = "pandas", marker = "extra == 'docs'", specifier = ">=2.3.3" },

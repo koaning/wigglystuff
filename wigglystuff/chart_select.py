@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 from anywidget import AnyWidget
@@ -58,7 +60,7 @@ class ChartSelect(AnyWidget):
         traitlets.Unicode(), default_value=["box", "lasso"]
     ).tag(sync=True)
 
-    # Selection data in data coordinates
+    # Selection data in display coordinates (log10 space for log axes)
     # For box: {"x_min": float, "y_min": float, "x_max": float, "y_max": float}
     # For lasso: {"vertices": [[x1, y1], [x2, y2], ...]}
     selection = traitlets.Dict(default_value={}).tag(sync=True)
@@ -66,7 +68,7 @@ class ChartSelect(AnyWidget):
     # Whether a selection is currently active
     has_selection = traitlets.Bool(False).tag(sync=True)
 
-    # Chart bounds from matplotlib axes (auto-extracted)
+    # Chart bounds sent to JS (in display space: log10 for log axes)
     x_bounds = traitlets.Tuple(
         traitlets.Float(), traitlets.Float(), default_value=(0.0, 1.0)
     ).tag(sync=True)
@@ -113,10 +115,20 @@ class ChartSelect(AnyWidget):
             selection_opacity: Opacity of selection fill (0-1).
             **kwargs: Forwarded to ``AnyWidget``.
         """
-        x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px = extract_axes_info(
+        x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px, x_scale, y_scale = extract_axes_info(
             fig
         )
         chart_base64 = fig_to_base64(fig)
+
+        # Store scale types for coordinate transforms in helper methods
+        self._x_scale = x_scale
+        self._y_scale = y_scale
+
+        # Send bounds in display space so JS can use plain linear math
+        if x_scale == "log":
+            x_bounds = (math.log10(x_bounds[0]), math.log10(x_bounds[1]))
+        if y_scale == "log":
+            y_bounds = (math.log10(y_bounds[0]), math.log10(y_bounds[1]))
 
         if modes is None:
             modes = ["box", "lasso"]
@@ -134,6 +146,22 @@ class ChartSelect(AnyWidget):
             selection_opacity=selection_opacity,
             **kwargs,
         )
+
+    def _to_display(self, x, y):
+        """Convert data-space coordinates to display space (log10 if needed)."""
+        if self._x_scale == "log":
+            x = math.log10(x)
+        if self._y_scale == "log":
+            y = math.log10(y)
+        return x, y
+
+    def _from_display(self, x, y):
+        """Convert display-space coordinates back to data space."""
+        if self._x_scale == "log":
+            x = 10 ** x
+        if self._y_scale == "log":
+            y = 10 ** y
+        return x, y
 
     def clear(self) -> None:
         """Clear the current selection."""
@@ -154,19 +182,23 @@ class ChartSelect(AnyWidget):
             return None
 
         if self._is_box_selection():
-            return (
-                self.selection["x_min"],
-                self.selection["y_min"],
-                self.selection["x_max"],
-                self.selection["y_max"],
-            )
+            x_min = self.selection["x_min"]
+            y_min = self.selection["y_min"]
+            x_max = self.selection["x_max"]
+            y_max = self.selection["y_max"]
         else:  # lasso or polygon
             vertices = self.selection.get("vertices", [])
             if not vertices:
                 return None
             xs = [v[0] for v in vertices]
             ys = [v[1] for v in vertices]
-            return (min(xs), min(ys), max(xs), max(ys))
+            x_min, x_max = min(xs), max(xs)
+            y_min, y_max = min(ys), max(ys)
+
+        # Transform back from display space to data space
+        x_min, y_min = self._from_display(x_min, y_min)
+        x_max, y_max = self._from_display(x_max, y_max)
+        return (x_min, y_min, x_max, y_max)
 
     def get_vertices(self) -> list[tuple[float, float]]:
         """Get selection vertices in data coordinates.
@@ -185,9 +217,11 @@ class ChartSelect(AnyWidget):
             y_min = self.selection["y_min"]
             x_max = self.selection["x_max"]
             y_max = self.selection["y_max"]
-            return [(x_min, y_min), (x_max, y_min), (x_max, y_max), (x_min, y_max)]
+            verts = [(x_min, y_min), (x_max, y_min), (x_max, y_max), (x_min, y_max)]
         else:
-            return [tuple(v) for v in self.selection.get("vertices", [])]
+            verts = [tuple(v) for v in self.selection.get("vertices", [])]
+
+        return [self._from_display(x, y) for x, y in verts]
 
     def contains_point(self, x: float, y: float) -> bool:
         """Check if a point is inside the selection region.
@@ -204,19 +238,20 @@ class ChartSelect(AnyWidget):
         if not self.has_selection:
             return False
 
-        if self._is_box_selection():
-            bounds = self.get_bounds()
-            if not bounds:
-                return False
-            return bounds[0] <= x <= bounds[2] and bounds[1] <= y <= bounds[3]
-        else:
-            from matplotlib.path import Path
+        # Work in display space (where the selection lives)
+        xd, yd = self._to_display(x, y)
 
-            vertices = self.get_vertices()
+        if self._is_box_selection():
+            s = self.selection
+            return s["x_min"] <= xd <= s["x_max"] and s["y_min"] <= yd <= s["y_max"]
+        else:
+            from matplotlib.path import Path as MplPath
+
+            vertices = self.selection.get("vertices", [])
             if len(vertices) < 3:
                 return False
-            path = Path(vertices)
-            return path.contains_point((x, y))
+            path = MplPath(vertices)
+            return path.contains_point((xd, yd))
 
     def get_mask(self, x_arr, y_arr):
         """Return boolean mask for points inside the selection.
@@ -230,30 +265,32 @@ class ChartSelect(AnyWidget):
         """
         import numpy as np
 
-        x_arr = np.asarray(x_arr)
-        y_arr = np.asarray(y_arr)
+        x_arr = np.asarray(x_arr, dtype=float)
+        y_arr = np.asarray(y_arr, dtype=float)
 
         if not self.has_selection:
             return np.zeros(len(x_arr), dtype=bool)
 
+        # Transform input data to display space for comparison
+        x_d = np.log10(x_arr) if self._x_scale == "log" else x_arr
+        y_d = np.log10(y_arr) if self._y_scale == "log" else y_arr
+
         if self._is_box_selection():
-            bounds = self.get_bounds()
-            if not bounds:
-                return np.zeros(len(x_arr), dtype=bool)
+            s = self.selection
             return (
-                (x_arr >= bounds[0])
-                & (x_arr <= bounds[2])
-                & (y_arr >= bounds[1])
-                & (y_arr <= bounds[3])
+                (x_d >= s["x_min"])
+                & (x_d <= s["x_max"])
+                & (y_d >= s["y_min"])
+                & (y_d <= s["y_max"])
             )
         else:
-            from matplotlib.path import Path
+            from matplotlib.path import Path as MplPath
 
-            vertices = self.get_vertices()
+            vertices = self.selection.get("vertices", [])
             if len(vertices) < 3:
                 return np.zeros(len(x_arr), dtype=bool)
-            path = Path(vertices)
-            points = np.column_stack([x_arr, y_arr])
+            path = MplPath(vertices)
+            points = np.column_stack([x_d, y_d])
             return path.contains_points(points)
 
     def get_indices(self, x_arr, y_arr):
@@ -324,6 +361,11 @@ class ChartSelect(AnyWidget):
 
         ax.set_xlim(x_bounds)
         ax.set_ylim(y_bounds)
+
+        # Preliminary render so draw_fn can configure axes (e.g. log scale)
+        _stub = SimpleNamespace(has_selection=False, selection={})
+        draw_fn(ax, _stub)
+
         widget = cls(fig, mode=mode, modes=modes, **kwargs)
 
         def render():

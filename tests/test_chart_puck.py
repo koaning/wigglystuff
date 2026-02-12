@@ -23,9 +23,34 @@ def test_chart_puck_importable():
 
 
 def test_extract_axes_info_respects_xlim_ylim(simple_figure):
-    x_bounds, y_bounds, _, _, _ = extract_axes_info(simple_figure)
+    x_bounds, y_bounds, _, _, _, x_scale, y_scale = extract_axes_info(simple_figure)
     assert x_bounds == (0.0, 4.0)
     assert y_bounds == (0.0, 4.0)
+    assert x_scale == "linear"
+    assert y_scale == "linear"
+
+
+def test_extract_axes_info_detects_log_scale():
+    fig, ax = plt.subplots()
+    ax.set_xscale("log")
+    ax.set_xlim(1, 1000)
+    ax.set_ylim(0, 10)
+    _, _, _, _, _, x_scale, y_scale = extract_axes_info(fig)
+    assert x_scale == "log"
+    assert y_scale == "linear"
+    plt.close(fig)
+
+
+def test_chart_puck_log_scale_traitlets():
+    fig, ax = plt.subplots()
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlim(1, 1000)
+    ax.set_ylim(1, 1000)
+    puck = ChartPuck(fig, x=[10], y=[10])
+    assert puck.x_scale == "log"
+    assert puck.y_scale == "log"
+    plt.close(fig)
 
 
 def test_chart_puck_single_puck_defaults_to_center(simple_figure):
