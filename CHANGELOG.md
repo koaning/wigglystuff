@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.26] - 2026-02-12
+
+### Fixed
+- `ChartSelect` and `ChartPuck` now work correctly with log-scale matplotlib axes. Coordinate transforms are done in Python (log10 space) so the JS frontend uses plain linear math.
+
 ## [0.2.25] - 2026-02-11
 
 ### Added
