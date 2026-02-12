@@ -28,6 +28,8 @@ Prepare a new wigglystuff release. Follow these steps:
    - Use `MOLAB_LINK_HERE` as a placeholder if the molab link is not yet available and tell the user they need to fill it in
    - Screenshot path should be `mkdocs/assets/gallery/<widgetname>.png` — tell the user if one is missing
 
-6. **Verify nothing is missed**: Check the git diff to make sure all new/changed widgets have corresponding updates in all locations listed above.
+6. **Check dependencies**: Read `pyproject.toml` and verify that no 3rd party widget dependency (neo4j, torch, wandb, etc.) has been added to core `[project] dependencies`. These must only appear under `[project.optional-dependencies]` as extras. Core dependencies should only include packages needed by all widgets (anywidget, numpy, pillow, python-dotenv). If a 3rd party dep has leaked into core dependencies, remove it.
 
-7. **Report** what was done and what still needs manual action (e.g., adding screenshots, replacing molab link placeholders).
+7. **Verify nothing is missed**: Check the git diff to make sure all new/changed widgets have corresponding updates in all locations listed above.
+
+8. **Report** what was done and what still needs manual action (e.g., adding screenshots, replacing molab link placeholders).
