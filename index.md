@@ -36,4 +36,4 @@ Each widget page embeds a marimo-powered html-wasm export and links back to the 
 
 These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on molab because many of the dependencies are not compatible with WASM.(https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi).
 
-  ModuleTreeWidget DemoAPIMD  WandbChart DemoAPIMD
+  ModuleTreeWidget DemoAPIMD  WandbChart DemoAPIMD  Neo4jWidget DemoAPIMD
