@@ -1,0 +1,291 @@
+.neo4j-widget {
+    --neo4j-bg: #ffffff;
+    --neo4j-bg-input: #f5f6f8;
+    --neo4j-border: #d8dce3;
+    --neo4j-text: #1a1a2e;
+    --neo4j-text-muted: #6b778c;
+    --neo4j-accent: #0052cc;
+    --neo4j-error-bg: #fff0f0;
+    --neo4j-error-text: #c0392b;
+    --neo4j-link-color: #888;
+    --neo4j-link-label-color: #555;
+    --neo4j-node-stroke: #ffffff;
+    --neo4j-selected-ring: #0052cc;
+    --neo4j-tooltip-bg: #1a1a2e;
+    --neo4j-tooltip-text: #f0f0f0;
+    --neo4j-ac-bg: #ffffff;
+    --neo4j-ac-hover: #e8ecf0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color-scheme: light dark;
+    color: var(--neo4j-text);
+    position: relative;
+    border: 1px solid var(--neo4j-border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--neo4j-bg);
+}
+
+:where(.dark, .dark-theme, [data-theme="dark"], body.dark, body[data-theme="dark"]) .neo4j-widget {
+    --neo4j-bg: #1e1e2e;
+    --neo4j-bg-input: #2a2a3e;
+    --neo4j-border: #3a3a4e;
+    --neo4j-text: #e0e0e0;
+    --neo4j-text-muted: #a0a0b0;
+    --neo4j-accent: #5a9fff;
+    --neo4j-error-bg: #3a1a1a;
+    --neo4j-error-text: #ff6b6b;
+    --neo4j-link-color: #666;
+    --neo4j-link-label-color: #999;
+    --neo4j-node-stroke: #1e1e2e;
+    --neo4j-selected-ring: #5a9fff;
+    --neo4j-tooltip-bg: #333348;
+    --neo4j-tooltip-text: #f0f0f0;
+    --neo4j-ac-bg: #2a2a3e;
+    --neo4j-ac-hover: #3a3a4e;
+}
+
+/* Query bar */
+.neo4j-query-bar {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px;
+    border-bottom: 1px solid var(--neo4j-border);
+    background: var(--neo4j-bg-input);
+}
+
+.neo4j-input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.neo4j-query-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--neo4j-border);
+    border-radius: 4px;
+    background: var(--neo4j-bg);
+    color: var(--neo4j-text);
+    font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 32px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.neo4j-query-input:focus {
+    border-color: var(--neo4j-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--neo4j-accent) 20%, transparent);
+}
+
+.neo4j-run-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: var(--neo4j-accent);
+    color: #fff;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.neo4j-run-btn:hover {
+    opacity: 0.9;
+}
+
+.neo4j-run-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Error bar */
+.neo4j-error-bar {
+    padding: 6px 12px;
+    background: var(--neo4j-error-bg);
+    color: var(--neo4j-error-text);
+    font-size: 13px;
+    border-bottom: 1px solid var(--neo4j-border);
+}
+
+/* Schema bar */
+.neo4j-schema-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--neo4j-border);
+    background: var(--neo4j-bg-input);
+    align-items: center;
+}
+
+.neo4j-schema-chip {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.15s;
+}
+
+.neo4j-schema-chip:hover {
+    opacity: 0.8;
+}
+
+.neo4j-schema-label {
+    color: #fff;
+}
+
+.neo4j-schema-rel {
+    background: var(--neo4j-bg);
+    color: var(--neo4j-text-muted);
+    border: 1px solid var(--neo4j-border);
+    font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+/* Graph SVG */
+.neo4j-graph {
+    display: block;
+    background: var(--neo4j-bg);
+}
+
+/* Links */
+.neo4j-link {
+    stroke: var(--neo4j-link-color);
+    stroke-width: 2px;
+    stroke-opacity: 0.6;
+    cursor: pointer;
+}
+
+.neo4j-link.neo4j-selected {
+    stroke: var(--neo4j-selected-ring);
+    stroke-width: 3px;
+    stroke-opacity: 1;
+}
+
+.neo4j-link-label {
+    fill: var(--neo4j-link-label-color);
+    font-size: 10px;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+/* Arrow marker */
+.neo4j-arrow {
+    fill: var(--neo4j-link-color);
+}
+
+/* Nodes */
+.neo4j-node {
+    stroke: var(--neo4j-node-stroke);
+    stroke-width: 2px;
+    cursor: pointer;
+}
+
+.neo4j-node.neo4j-selected {
+    stroke: var(--neo4j-selected-ring);
+    stroke-width: 3px;
+}
+
+.neo4j-node-label {
+    fill: var(--neo4j-text);
+    font-size: 11px;
+    pointer-events: none;
+}
+
+/* Tooltip */
+.neo4j-tooltip {
+    position: absolute;
+    background: var(--neo4j-tooltip-bg);
+    color: var(--neo4j-tooltip-text);
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+    pointer-events: none;
+    z-index: 10;
+    max-width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.neo4j-tooltip-key {
+    color: var(--neo4j-text-muted);
+}
+
+/* Autocomplete dropdown */
+.neo4j-autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--neo4j-ac-bg);
+    border: 1px solid var(--neo4j-border);
+    border-radius: 4px;
+    margin-top: 2px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 20;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.neo4j-ac-item {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+    font-size: 13px;
+    color: var(--neo4j-text);
+}
+
+.neo4j-ac-item:hover,
+.neo4j-ac-item.neo4j-ac-active {
+    background: var(--neo4j-ac-hover);
+}
+
+/* Lasso toggle */
+.neo4j-lasso-btn {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--neo4j-border);
+    border-radius: 4px;
+    background: var(--neo4j-bg);
+    color: var(--neo4j-text-muted);
+    cursor: pointer;
+    z-index: 5;
+    opacity: 0.8;
+    transition: opacity 0.15s, background 0.15s;
+}
+
+.neo4j-lasso-btn:hover {
+    opacity: 1;
+}
+
+.neo4j-lasso-btn.neo4j-lasso-active {
+    background: var(--neo4j-accent);
+    border-color: var(--neo4j-accent);
+    color: #fff;
+    opacity: 1;
+}
+
+/* Lasso path drawn on SVG */
+.neo4j-lasso-path {
+    fill: color-mix(in srgb, var(--neo4j-accent) 15%, transparent);
+    stroke: var(--neo4j-accent);
+    stroke-width: 1.5px;
+    stroke-dasharray: 4 3;
+    pointer-events: none;
+}
