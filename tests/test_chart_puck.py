@@ -23,9 +23,34 @@ def test_chart_puck_importable():
 
 
 def test_extract_axes_info_respects_xlim_ylim(simple_figure):
-    x_bounds, y_bounds, _, _, _ = extract_axes_info(simple_figure)
+    x_bounds, y_bounds, _, _, _, x_scale, y_scale = extract_axes_info(simple_figure)
     assert x_bounds == (0.0, 4.0)
     assert y_bounds == (0.0, 4.0)
+    assert x_scale == "linear"
+    assert y_scale == "linear"
+
+
+def test_extract_axes_info_detects_log_scale():
+    fig, ax = plt.subplots()
+    ax.set_xscale("log")
+    ax.set_xlim(1, 1000)
+    ax.set_ylim(0, 10)
+    _, _, _, _, _, x_scale, y_scale = extract_axes_info(fig)
+    assert x_scale == "log"
+    assert y_scale == "linear"
+    plt.close(fig)
+
+
+def test_chart_puck_log_scale_traitlets():
+    fig, ax = plt.subplots()
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlim(1, 1000)
+    ax.set_ylim(1, 1000)
+    puck = ChartPuck(fig, x=[10], y=[10])
+    assert puck.x_scale == "log"
+    assert puck.y_scale == "log"
+    plt.close(fig)
 
 
 def test_chart_puck_single_puck_defaults_to_center(simple_figure):
@@ -66,6 +91,26 @@ def test_from_callback_creates_widget_and_updates():
     # Simulate puck movement - should trigger redraw
     puck.x = [3.0]
     assert puck.chart_base64 != initial_base64
+
+
+def test_from_callback_allows_export_kmeans_during_initial_draw():
+    pytest.importorskip("sklearn")
+
+    def draw_fn(ax, widget):
+        kmeans = widget.export_kmeans()
+        ax.scatter(widget.x, widget.y)
+        ax.set_title(f"{kmeans.n_clusters}")
+
+    puck = ChartPuck.from_callback(
+        draw_fn=draw_fn,
+        x_bounds=(0, 10),
+        y_bounds=(0, 10),
+        x=[2.0, 8.0],
+        y=[2.0, 8.0],
+    )
+
+    assert puck.x == [2.0, 8.0]
+    assert puck.y == [2.0, 8.0]
 
 
 def test_chart_puck_single_color_string(simple_figure):

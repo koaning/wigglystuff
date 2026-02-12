@@ -23,13 +23,15 @@ def extract_axes_info(fig):
     """Extract axes bounds and pixel position from a matplotlib figure.
 
     Returns:
-        tuple: (x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px)
+        tuple: (x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px, x_scale, y_scale)
     """
     fig.canvas.draw()
     ax = fig.axes[0]
 
     x_bounds = ax.get_xlim()
     y_bounds = ax.get_ylim()
+    x_scale = ax.get_xscale()
+    y_scale = ax.get_yscale()
 
     bbox = ax.get_position()
     width_px = int(fig.get_figwidth() * fig.dpi)
@@ -41,7 +43,7 @@ def extract_axes_info(fig):
     top = (1 - bbox.y0 - bbox.height) * height_px
     bottom = (1 - bbox.y0) * height_px
 
-    return x_bounds, y_bounds, (left, top, right, bottom), width_px, height_px
+    return x_bounds, y_bounds, (left, top, right, bottom), width_px, height_px, x_scale, y_scale
 
 
 class ChartPuck(anywidget.AnyWidget):
@@ -94,6 +96,10 @@ class ChartPuck(anywidget.AnyWidget):
         traitlets.Float(),
         default_value=(0.0, 0.0, 100.0, 100.0),
     ).tag(sync=True)
+
+    # Axis scale types ("linear" or "log")
+    x_scale = traitlets.Unicode("linear").tag(sync=True)
+    y_scale = traitlets.Unicode("linear").tag(sync=True)
 
     # Image dimensions and content
     width = traitlets.Int(400).tag(sync=True)
@@ -154,7 +160,7 @@ class ChartPuck(anywidget.AnyWidget):
             drag_y_bounds: Optional (min, max) to constrain puck dragging on y-axis.
                           If None, uses the chart's y_bounds.
         """
-        x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px = extract_axes_info(
+        x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px, x_scale, y_scale = extract_axes_info(
             fig
         )
         chart_base64 = fig_to_base64(fig)
@@ -189,6 +195,8 @@ class ChartPuck(anywidget.AnyWidget):
             x_bounds=x_bounds,
             y_bounds=y_bounds,
             axes_pixel_bounds=axes_pixel_bounds,
+            x_scale=x_scale,
+            y_scale=y_scale,
             width=width_px,
             height=height_px,
             chart_base64=chart_base64,
@@ -271,10 +279,32 @@ class ChartPuck(anywidget.AnyWidget):
         # Create figure (owned by this closure)
         fig, ax = plt.subplots(figsize=figsize)
 
-        # Create widget first so render() can reference it
-        # Initial render happens below after widget exists
         ax.set_xlim(x_bounds)
         ax.set_ylim(y_bounds)
+
+        # Preliminary render so draw_fn can configure axes (e.g. log scale).
+        # The proxy includes helper methods used in user callbacks.
+        class _InitialChartPuckProxy:
+            def __init__(self, x_vals, y_vals):
+                self.x = list(x_vals)
+                self.y = list(y_vals)
+
+            def export_kmeans(self, n_init: int = 1, max_iter: int = 300, **kwargs):
+                import numpy as np
+                from sklearn.cluster import KMeans
+
+                centroids = np.array(list(zip(self.x, self.y)))
+                return KMeans(
+                    n_clusters=len(self.x),
+                    init=centroids,
+                    n_init=n_init,
+                    max_iter=max_iter,
+                    **kwargs,
+                )
+
+        _stub = _InitialChartPuckProxy(x_list, y_list)
+        draw_fn(ax, _stub)
+
         widget = cls(fig, x=x, y=y, drag_x_bounds=drag_x_bounds, drag_y_bounds=drag_y_bounds, **kwargs)
 
         def render():

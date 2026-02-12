@@ -22,14 +22,27 @@ function render({ model, el }) {
     const [xMin, xMax] = model.get("x_bounds");
     const [yMin, yMax] = model.get("y_bounds");
     const [left, top, right, bottom] = model.get("axes_pixel_bounds");
+    const xScale = model.get("x_scale") || "linear";
+    const yScale = model.get("y_scale") || "linear";
 
     // Clamp to axes area
     pixelX = Math.max(left, Math.min(right, pixelX));
     pixelY = Math.max(top, Math.min(bottom, pixelY));
 
-    // Map (Y inverted because canvas Y goes down, data Y goes up)
-    let dataX = xMin + ((pixelX - left) / (right - left)) * (xMax - xMin);
-    let dataY = yMin + ((bottom - pixelY) / (bottom - top)) * (yMax - yMin);
+    const xFrac = (pixelX - left) / (right - left);
+    const yFrac = (bottom - pixelY) / (bottom - top);
+
+    let dataX, dataY;
+    if (xScale === "log") {
+      dataX = Math.pow(10, Math.log10(xMin) + xFrac * (Math.log10(xMax) - Math.log10(xMin)));
+    } else {
+      dataX = xMin + xFrac * (xMax - xMin);
+    }
+    if (yScale === "log") {
+      dataY = Math.pow(10, Math.log10(yMin) + yFrac * (Math.log10(yMax) - Math.log10(yMin)));
+    } else {
+      dataY = yMin + yFrac * (yMax - yMin);
+    }
 
     // Apply optional drag constraints in data space
     const dragXBounds = model.get("drag_x_bounds");
@@ -49,9 +62,23 @@ function render({ model, el }) {
     const [xMin, xMax] = model.get("x_bounds");
     const [yMin, yMax] = model.get("y_bounds");
     const [left, top, right, bottom] = model.get("axes_pixel_bounds");
+    const xScale = model.get("x_scale") || "linear";
+    const yScale = model.get("y_scale") || "linear";
 
-    const pixelX = left + ((dataX - xMin) / (xMax - xMin)) * (right - left);
-    const pixelY = bottom - ((dataY - yMin) / (yMax - yMin)) * (bottom - top);
+    let xFrac, yFrac;
+    if (xScale === "log") {
+      xFrac = (Math.log10(dataX) - Math.log10(xMin)) / (Math.log10(xMax) - Math.log10(xMin));
+    } else {
+      xFrac = (dataX - xMin) / (xMax - xMin);
+    }
+    if (yScale === "log") {
+      yFrac = (Math.log10(dataY) - Math.log10(yMin)) / (Math.log10(yMax) - Math.log10(yMin));
+    } else {
+      yFrac = (dataY - yMin) / (yMax - yMin);
+    }
+
+    const pixelX = left + xFrac * (right - left);
+    const pixelY = bottom - yFrac * (bottom - top);
     return { x: pixelX, y: pixelY };
   }
 
