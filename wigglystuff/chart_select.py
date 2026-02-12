@@ -124,7 +124,9 @@ class ChartSelect(AnyWidget):
         self._x_scale = x_scale
         self._y_scale = y_scale
 
-        # Send bounds in display space so JS can use plain linear math
+        # Send bounds in display space so JS can use plain linear math.
+        # Using log10 is correct for any log base because the base cancels
+        # out in the fractional position: log_b(x)/log_b(max) == log10(x)/log10(max).
         if x_scale == "log":
             x_bounds = (math.log10(x_bounds[0]), math.log10(x_bounds[1]))
         if y_scale == "log":
