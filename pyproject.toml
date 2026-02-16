@@ -34,6 +34,8 @@ test = [
     "pytest>=8.3.3",
     "scikit-learn>=1.0",
     "matplotlib>=3.0",
+    "pandas>=2.3.3",
+    "polars>=1.36.1",
 ]
 test-browser = [
     "pytest>=8.3.3",

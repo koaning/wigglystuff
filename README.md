@@ -50,6 +50,7 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>ChartSelect</b><br><a href="https://koaning.github.io/wigglystuff/examples/chartselect/"><img src="./mkdocs/assets/gallery/chartselect.png" width="200"></a><br><a href="https://koaning.github.io/wigglystuff/examples/chartselect/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/chart-select/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/chart-select.md">MD</a></td>
+<td align="center"><b>ScatterWidget</b><br><a href="https://koaning.github.io/wigglystuff/examples/scatterwidget/"><img src="./mkdocs/assets/gallery/scatterwidget.png" width="200"></a><br><a href="https://koaning.github.io/wigglystuff/examples/scatterwidget/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/scatter-widget/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/scatter-widget.md">MD</a></td>
 </tr>
 </table>
 

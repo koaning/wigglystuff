@@ -28,6 +28,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [PulsarChart](https://koaning.github.io/wigglystuff/reference/pulsar-chart.md): Stacked waveform visualization (Joy Division style)
 - [TextCompare](https://koaning.github.io/wigglystuff/reference/text-compare.md): Side-by-side text comparison with match highlighting
 - [EnvConfig](https://koaning.github.io/wigglystuff/reference/env-config.md): Environment variable configuration with validation
+- [ScatterWidget](https://koaning.github.io/wigglystuff/reference/scatter-widget.md): Interactive scatter drawing for painting labeled 2D datasets
 
 ## 3rd party widgets
 

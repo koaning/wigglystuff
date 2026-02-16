@@ -32,6 +32,7 @@ syncs back to Python.
 | EnvConfig | `wigglystuff.env_config.EnvConfig` | `variables`, `all_valid` | Environment variable config with validation |
 | ModuleTreeWidget | `wigglystuff.module_tree.ModuleTreeWidget` | `tree`, `initial_expand_depth` | Interactive tree viewer for PyTorch nn.Module |
 | Neo4jWidget | `wigglystuff.neo4j_widget.Neo4jWidget` | `nodes`, `relationships`, `schema`, `error`, `query_running`, `selected_nodes`, `selected_relationships`, `width`, `height` | Interactive Neo4j graph explorer with Cypher query input |
+| ScatterWidget | `wigglystuff.scatter_widget.ScatterWidget` | `data`, `brushsize`, `width`, `height`, `n_classes` | Paint multi-class 2D scatter data with brush |
 
 ## Patterns to remember
 
