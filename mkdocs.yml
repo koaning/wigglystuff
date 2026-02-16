@@ -55,6 +55,7 @@ nav:
       - PulsarChart: reference/pulsar-chart.md
       - ModuleTreeWidget: reference/module-tree.md
       - Neo4jWidget: reference/neo4j-widget.md
+      - ScatterWidget: reference/scatter-widget.md
       - Utils: reference/utils.md
 plugins:
   - search

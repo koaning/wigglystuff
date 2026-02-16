@@ -140,6 +140,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <a href="examples/chartselect/" class="gallery-img"><img src="assets/gallery/chartselect.png" alt="ChartSelect widget"></a>
 <div class="gallery-links"><a href="examples/chartselect/">Demo</a><a href="reference/chart-select/">API</a><a href="reference/chart-select.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">ScatterWidget</div>
+<a href="examples/scatterwidget/" class="gallery-img"><img src="assets/gallery/scatterwidget.png" alt="ScatterWidget"></a>
+<div class="gallery-links"><a href="examples/scatterwidget/">Demo</a><a href="reference/scatter-widget/">API</a><a href="reference/scatter-widget.md">MD</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.

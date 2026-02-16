@@ -55,6 +55,10 @@ js-pulsar-chart:
 js-neo4j-widget:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/neo4j-widget.js js/neo4j-widget/widget.js
 
+js-scatter-widget:
+	cp js/scatter-widget/styles.css wigglystuff/static/scatter-widget.css
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/scatter-widget.js js/scatter-widget/widget.js
+
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
