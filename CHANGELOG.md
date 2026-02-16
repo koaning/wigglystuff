@@ -2,17 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.27] - 2026-02-12
+## [0.2.28] - 2026-02-16
 
 ### Added
 - New `ScatterWidget` for painting multi-class 2D datasets directly in notebooks. Includes class selection, brush controls, undo/reset, and synced point data with helper conversions (`data_as_pandas`, `data_as_polars`, `data_as_X_y`).
-- New ScatterWidget demo notebook, API reference page, gallery screenshot, and docs/gallery/index wiring.
+- `ScatterWidget.n_classes` is now validated on assignment (not only at construction), enforcing the documented `1..4` range.
+- `ScatterWidget.data_as_X_y` now returns stable output shapes based on configured mode (`n_classes==1` for regression, `n_classes>1` for classification).
+
+## [0.2.27] - 2026-02-12
 
 ### Fixed
 - `ChartSelect.from_callback` and `ChartPuck.from_callback` now use proper init proxies so user callbacks that call widget helpers (e.g. `get_mask`, `export_kmeans`) during the initial render no longer crash.
-- `ScatterWidget.n_classes` is now validated on assignment (not only at construction), enforcing the documented `1..4` range.
-- `ScatterWidget.data_as_X_y` now returns stable output shapes based on configured mode (`n_classes==1` for regression, `n_classes>1` for classification).
-- Added `pandas` and `polars` to the `test` extras so ScatterWidget conversion tests run in clean CI/test environments.
 
 ## [0.2.26] - 2026-02-12
 
