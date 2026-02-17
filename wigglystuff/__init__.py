@@ -2,6 +2,7 @@
 
 import importlib.metadata
 
+from .altair_widget import AltairWidget
 from .cell_tour import CellTour
 from .chart_puck import ChartPuck
 from .chart_select import ChartSelect
@@ -30,6 +31,7 @@ from .webcam_capture import WebcamCapture
 __version__ = importlib.metadata.version("wigglystuff")
 
 __all__ = [
+    "AltairWidget",
     "CellTour",
     "ChartPuck",
     "ChartSelect",

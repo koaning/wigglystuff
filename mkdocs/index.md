@@ -164,4 +164,9 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 <a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU" class="gallery-img"><img src="assets/gallery/neo4j-widget.png" alt="Neo4jWidget"></a>
 <div class="gallery-links"><a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU">Demo</a><a href="reference/neo4j-widget/">API</a><a href="reference/neo4j-widget.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">AltairWidget</div>
+<a href="examples/altairwidget/" class="gallery-img"><img src="assets/gallery/altairwidget.png" alt="AltairWidget"></a>
+<div class="gallery-links"><a href="examples/altairwidget/">Demo</a><a href="reference/altair-widget/">API</a><a href="reference/altair-widget.md">MD</a></div>
+</div>
 </div>
