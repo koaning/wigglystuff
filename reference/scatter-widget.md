@@ -1,6 +1,9 @@
 # ScatterWidget API
 
 
+**Note:** `ScatterWidget` is provided by the `drawdata` package and re-exported here for convenience. You can use it via `from wigglystuff import ScatterWidget` or `from drawdata import ScatterWidget`.
+
+
  Bases: `AnyWidget`
 
 
