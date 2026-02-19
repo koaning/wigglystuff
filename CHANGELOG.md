@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 - New `AltairWidget` for flicker-free Altair chart rendering. Uses Vega's persistent View API to patch data in-place via changesets, preserving interactive state (zoom, pan, selections) across updates. Loads vega-embed from CDN for minimal bundle size.
 
+### Changed
+- `ScatterWidget` is now re-exported from the [`drawdata`](https://github.com/koaning/drawdata) package. The import `from wigglystuff import ScatterWidget` still works, but the implementation lives in `drawdata`.
+
 ## [0.2.29] - 2026-02-19
 
 ### Added
