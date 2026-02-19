@@ -13,6 +13,7 @@
     "esbuild": "^0.25.1",
     "radix-ui": "^1.1.3",
     "react": "^19.0.0",
+    "@pierre/diffs": "latest",
     "three": "^0.170.0"
   },
   "devDependencies": {

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.29] - 2026-02-19
+
+### Added
+- New `DiffViewer` widget for rich file diffs powered by `@pierre/diffs`. Supports split and unified diff styles with syntax highlighting, dark mode, and configurable expansion of unchanged lines.
+
 ## [0.2.28] - 2026-02-16
 
 ### Added
