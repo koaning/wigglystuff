@@ -4023,7 +4023,7 @@ wheels = [
 
 [[package]]
 name = "wigglystuff"
-version = "0.2.27"
+version = "0.2.29"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
@@ -4054,6 +4054,8 @@ neo4j = [
 ]
 test = [
     { name = "matplotlib" },
+    { name = "pandas" },
+    { name = "polars" },
     { name = "pytest" },
     { name = "scikit-learn", version = "1.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scikit-learn", version = "1.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
@@ -4089,8 +4091,10 @@ requires-dist = [
     { name = "neo4j", marker = "extra == 'neo4j'", specifier = ">=5.0.0" },
     { name = "numpy" },
     { name = "pandas", marker = "extra == 'docs'", specifier = ">=2.3.3" },
+    { name = "pandas", marker = "extra == 'test'", specifier = ">=2.3.3" },
     { name = "pillow" },
     { name = "polars", marker = "extra == 'docs'", specifier = ">=1.36.1" },
+    { name = "polars", marker = "extra == 'test'", specifier = ">=1.36.1" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.3.3" },
     { name = "pytest", marker = "extra == 'test-browser'", specifier = ">=8.3.3" },
     { name = "pytest-playwright", marker = "extra == 'test-browser'", specifier = ">=0.6.2" },

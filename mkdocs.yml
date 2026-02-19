@@ -54,7 +54,10 @@ nav:
       - ProgressBar: reference/progress-bar.md
       - PulsarChart: reference/pulsar-chart.md
       - ModuleTreeWidget: reference/module-tree.md
+      - WandbChart: reference/wandb-chart.md
       - Neo4jWidget: reference/neo4j-widget.md
+      - ScatterWidget: reference/scatter-widget.md
+      - DiffViewer: reference/diff-viewer.md
       - Utils: reference/utils.md
 plugins:
   - search

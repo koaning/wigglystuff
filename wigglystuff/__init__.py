@@ -8,6 +8,7 @@ from .chart_puck import ChartPuck
 from .chart_select import ChartSelect
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
+from .diff_viewer import DiffViewer
 from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
@@ -19,6 +20,7 @@ from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
 from .paint import Paint
 from .pulsar_chart import PulsarChart
+from .scatter_widget import ScatterWidget
 from .slider2d import Slider2D
 from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget
@@ -37,6 +39,7 @@ __all__ = [
     "ChartSelect",
     "ColorPicker",
     "CopyToClipboard",
+    "DiffViewer",
     "DriverTour",
     "EdgeDraw",
     "EnvConfig",
@@ -47,6 +50,7 @@ __all__ = [
     "Neo4jWidget",
     "Paint",
     "PulsarChart",
+    "ScatterWidget",
     "Slider2D",
     "SortableList",
     "TangleChoice",

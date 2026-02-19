@@ -140,13 +140,23 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <a href="examples/chartselect/" class="gallery-img"><img src="assets/gallery/chartselect.png" alt="ChartSelect widget"></a>
 <div class="gallery-links"><a href="examples/chartselect/">Demo</a><a href="reference/chart-select/">API</a><a href="reference/chart-select.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">ScatterWidget</div>
+<a href="examples/scatterwidget/" class="gallery-img"><img src="assets/gallery/scatterwidget.png" alt="ScatterWidget"></a>
+<div class="gallery-links"><a href="examples/scatterwidget/">Demo</a><a href="reference/scatter-widget/">API</a><a href="reference/scatter-widget.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title">DiffViewer</div>
+<a href="examples/diffviewer/" class="gallery-img"><img src="assets/gallery/diffviewer.png" alt="DiffViewer"></a>
+<div class="gallery-links"><a href="examples/diffviewer/">Demo</a><a href="reference/diff-viewer/">API</a><a href="reference/diff-viewer.md">MD</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
 
 ## 3rd party widgets
 
-These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io) because many of the dependencies are not compatible with WASM.(https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi).
+These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io) because many of the dependencies are not compatible with WASM.
 
 <div class="widget-gallery">
 <div class="gallery-item">

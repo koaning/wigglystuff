@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.29] - 2026-02-19
+
+### Added
+- New `DiffViewer` widget for rich file diffs powered by `@pierre/diffs`. Supports split and unified diff styles with syntax highlighting, dark mode, and configurable expansion of unchanged lines.
+
+## [0.2.28] - 2026-02-16
+
+### Added
+- New `ScatterWidget` for painting multi-class 2D datasets directly in notebooks. Includes class selection, brush controls, undo/reset, and synced point data with helper conversions (`data_as_pandas`, `data_as_polars`, `data_as_X_y`).
+- `ScatterWidget.n_classes` is now validated on assignment (not only at construction), enforcing the documented `1..4` range.
+- `ScatterWidget.data_as_X_y` now returns stable output shapes based on configured mode (`n_classes==1` for regression, `n_classes>1` for classification).
+
 ## [0.2.27] - 2026-02-12
 
 ### Fixed

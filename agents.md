@@ -32,7 +32,10 @@ syncs back to Python.
 | TextCompare | `wigglystuff.text_compare.TextCompare` | `text_a`, `text_b`, `matches`, `selected_match`, `min_match_words` | Side-by-side text diff with match highlighting |
 | EnvConfig | `wigglystuff.env_config.EnvConfig` | `variables`, `all_valid` | Environment variable config with validation |
 | ModuleTreeWidget | `wigglystuff.module_tree.ModuleTreeWidget` | `tree`, `initial_expand_depth` | Interactive tree viewer for PyTorch nn.Module |
+| WandbChart | `wigglystuff.wandb_chart.WandbChart` | `api_key`, `entity`, `project`, `key`, `poll_seconds`, `smoothing_kind`, `smoothing_param`, `show_slider`, `width`, `height` | Live line chart that polls wandb for metric data with smoothing |
 | Neo4jWidget | `wigglystuff.neo4j_widget.Neo4jWidget` | `nodes`, `relationships`, `schema`, `error`, `query_running`, `selected_nodes`, `selected_relationships`, `width`, `height` | Interactive Neo4j graph explorer with Cypher query input |
+| ScatterWidget | `wigglystuff.scatter_widget.ScatterWidget` | `data`, `brushsize`, `width`, `height`, `n_classes` | Paint multi-class 2D scatter data with brush |
+| DiffViewer | `wigglystuff.diff_viewer.DiffViewer` | `old_name`, `old_contents`, `new_name`, `new_contents`, `diff_style`, `expand_unchanged` | Rich file diff viewer with split/unified modes |
 
 ## Patterns to remember
 

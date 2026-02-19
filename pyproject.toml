@@ -1,6 +1,6 @@
 [project]
 name = "wigglystuff"
-version = "0.2.27"
+version = "0.2.29"
 description = "Collection of Anywidget Widgets"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -34,6 +34,8 @@ test = [
     "pytest>=8.3.3",
     "scikit-learn>=1.0",
     "matplotlib>=3.0",
+    "pandas>=2.3.3",
+    "polars>=1.36.1",
 ]
 test-browser = [
     "pytest>=8.3.3",
