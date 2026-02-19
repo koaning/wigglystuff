@@ -20,7 +20,7 @@ from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
 from .paint import Paint
 from .pulsar_chart import PulsarChart
-from .scatter_widget import ScatterWidget
+from drawdata import ScatterWidget
 from .slider2d import Slider2D
 from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget

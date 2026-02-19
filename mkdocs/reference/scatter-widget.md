@@ -1,5 +1,7 @@
 # ScatterWidget API
 
+> **Note:** `ScatterWidget` is provided by the [`drawdata`](https://github.com/koaning/drawdata) package and re-exported here for convenience. You can use it via `from wigglystuff import ScatterWidget` or `from drawdata import ScatterWidget`.
+
 ::: wigglystuff.scatter_widget.ScatterWidget
 
 ## Synced traitlets
