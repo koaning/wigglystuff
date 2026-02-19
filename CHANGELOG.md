@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.30] - 2026-02-19
+
+### Added
+- New `AltairWidget` for flicker-free Altair chart rendering. Uses Vega's persistent View API to patch data in-place via changesets, preserving interactive state (zoom, pan, selections) across updates. Loads vega-embed from CDN for minimal bundle size.
+
 ## [0.2.29] - 2026-02-19
 
 ### Added

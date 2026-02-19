@@ -1,6 +1,10 @@
 """Test that all widgets can be imported."""
 
 
+def test_import_altair_widget():
+    from wigglystuff.altair_widget import AltairWidget
+
+
 def test_import_cell_tour():
     from wigglystuff.cell_tour import CellTour
 

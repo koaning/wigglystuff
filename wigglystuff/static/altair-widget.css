@@ -1,0 +1,19 @@
+.altair-widget-root {
+    color-scheme: light dark;
+}
+
+.altair-widget-container {
+    overflow: hidden;
+    position: relative;
+}
+
+.altair-widget-container .vega-embed {
+    padding: 0 !important;
+}
+
+/* Dark theme overrides */
+.dark .altair-widget-root,
+.dark-theme .altair-widget-root,
+[data-theme="dark"] .altair-widget-root {
+    --vega-bg: transparent;
+}
