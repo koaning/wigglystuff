@@ -66,6 +66,6 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 <td align="center"><b>Neo4jWidget</b><br><a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU"><img src="./mkdocs/assets/gallery/neo4j-widget.png" width="330"></a><br><a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/neo4j-widget/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/neo4j-widget.md">MD</a></td>
 </tr>
 <tr>
-<td align="center"><b>AltairWidget</b><br><a href="https://koaning.github.io/wigglystuff/examples/altairwidget/"><img src="./mkdocs/assets/gallery/altairwidget.png" width="200"></a><br><a href="https://koaning.github.io/wigglystuff/examples/altairwidget/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/altair-widget/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/altair-widget.md">MD</a></td>
+<td align="center"><b>AltairWidget</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py"><img src="./mkdocs/assets/gallery/altairwidget.png" width="200"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/altair-widget/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/altair-widget.md">MD</a></td>
 </tr>
 </table>

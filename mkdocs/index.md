@@ -176,7 +176,7 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 </div>
 <div class="gallery-item">
 <div class="gallery-title">AltairWidget</div>
-<a href="examples/altairwidget/" class="gallery-img"><img src="assets/gallery/altairwidget.png" alt="AltairWidget"></a>
-<div class="gallery-links"><a href="examples/altairwidget/">Demo</a><a href="reference/altair-widget/">API</a><a href="reference/altair-widget.md">MD</a></div>
+<a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py" class="gallery-img"><img src="assets/gallery/altairwidget.png" alt="AltairWidget"></a>
+<div class="gallery-links"><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py">Demo</a><a href="reference/altair-widget/">API</a><a href="reference/altair-widget.md">MD</a></div>
 </div>
 </div>

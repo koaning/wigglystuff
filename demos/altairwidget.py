@@ -1,3 +1,14 @@
+# /// script
+# requires-python = ">=3.14"
+# dependencies = [
+#     "altair==6.0.0",
+#     "marimo>=0.19.11",
+#     "numpy==2.4.2",
+#     "pandas==3.0.1",
+#     "wigglystuff==0.2.30",
+# ]
+# ///
+
 import marimo
 
 __generated_with = "0.19.11"
@@ -34,6 +45,12 @@ def _(mo):
 
 
 @app.cell
+def _(wrapped):
+    wrapped
+    return
+
+
+@app.cell
 def _(amplitude, phase, widget):
     import altair as alt
     import numpy as np
@@ -56,12 +73,6 @@ def _(amplitude, phase, widget):
     )
 
     widget.chart = chart
-    return
-
-
-@app.cell
-def _(wrapped):
-    wrapped
     return
 
 
