@@ -26,7 +26,7 @@ pip install wigglystuff
 
 ## What you can build
 
-  Slider2D DemoAPIMD  Matrix DemoAPIMD  Paint DemoAPIMD  ThreeWidget DemoAPIMD  EdgeDraw DemoAPIMD  SortableList DemoAPIMD  ColorPicker DemoAPIMD  GamepadWidget DemoAPIMD  KeystrokeWidget DemoAPIMD  SpeechToText DemoAPIMD  CopyToClipboard DemoAPIMD  CellTour DemoAPIMD  WebcamCapture DemoAPIMD  ImageRefreshWidget DemoAPIMD  HTMLRefreshWidget DemoAPIMD  ProgressBar DemoAPIMD  PulsarChart DemoAPIMD  TextCompare DemoAPIMD  EnvConfig DemoAPIMD  Tangle DemoAPIMD  ChartPuck DemoAPIMD  ChartSelect DemoAPIMD  ScatterWidget DemoAPIMD
+  Slider2D DemoAPIMD  Matrix DemoAPIMD  Paint DemoAPIMD  ThreeWidget DemoAPIMD  EdgeDraw DemoAPIMD  SortableList DemoAPIMD  ColorPicker DemoAPIMD  GamepadWidget DemoAPIMD  KeystrokeWidget DemoAPIMD  SpeechToText DemoAPIMD  CopyToClipboard DemoAPIMD  CellTour DemoAPIMD  WebcamCapture DemoAPIMD  ImageRefreshWidget DemoAPIMD  HTMLRefreshWidget DemoAPIMD  ProgressBar DemoAPIMD  PulsarChart DemoAPIMD  TextCompare DemoAPIMD  EnvConfig DemoAPIMD  Tangle DemoAPIMD  ChartPuck DemoAPIMD  ChartSelect DemoAPIMD  ScatterWidget DemoAPIMD  DiffViewer DemoAPIMD
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
 
