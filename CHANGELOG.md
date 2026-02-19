@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.31] - 2026-02-19
+
+### Fixed
+- `KeystrokeWidget` canvas and metadata text now includes a generic `monospace` fallback in the font stack, preventing the browser from falling back to a serif font when named monospace fonts are unavailable.
+
 ## [0.2.30] - 2026-02-19
 
 ### Added
