@@ -22,6 +22,7 @@ from .paint import Paint
 from .pulsar_chart import PulsarChart
 from drawdata import ScatterWidget
 from .slider2d import Slider2D
+from .spline_draw import SplineDraw
 from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget
 from .tangle import TangleChoice, TangleSelect, TangleSlider
@@ -52,6 +53,7 @@ __all__ = [
     "PulsarChart",
     "ScatterWidget",
     "Slider2D",
+    "SplineDraw",
     "SortableList",
     "TangleChoice",
     "TangleSelect",

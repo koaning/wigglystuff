@@ -150,6 +150,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <a href="examples/diffviewer/" class="gallery-img"><img src="assets/gallery/diffviewer.png" alt="DiffViewer"></a>
 <div class="gallery-links"><a href="examples/diffviewer/">Demo</a><a href="reference/diff-viewer/">API</a><a href="reference/diff-viewer.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">SplineDraw</div>
+<a href="examples/splinedraw/" class="gallery-img"><img src="assets/gallery/splinedraw.png" alt="SplineDraw"></a>
+<div class="gallery-links"><a href="examples/splinedraw/">Demo</a><a href="reference/spline-draw/">API</a><a href="reference/spline-draw.md">MD</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
