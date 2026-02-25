@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.32] - 2026-02-25
+
+### Added
+- New `ApiDoc` widget for rendering Python class and function API documentation directly in notebooks. Introspects signatures, parameters, docstrings, methods, and properties via stdlib `inspect`. Features collapsible method/property sections, colored badges for class/function/classmethod/staticmethod/property, Python syntax highlighting in fenced code blocks, inline markdown (`**bold**`, `` `code` ``), copy-to-clipboard on code examples, and light/dark theme support.
+
 ## [0.2.31] - 2026-02-19
 
 ### Fixed
