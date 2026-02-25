@@ -62,6 +62,10 @@ js-scatter-widget:
 	cp js/scatter-widget/styles.css wigglystuff/static/scatter-widget.css
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/scatter-widget.js js/scatter-widget/widget.js
 
+js-spline-draw:
+	cp js/spline-draw/styles.css wigglystuff/static/spline-draw.css
+	./esbuild --bundle --format=esm --outfile=wigglystuff/static/spline-draw.js js/spline-draw/widget.js
+
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 

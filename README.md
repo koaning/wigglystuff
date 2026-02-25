@@ -53,6 +53,9 @@ uv pip install wigglystuff
 <td align="center"><b>ScatterWidget</b><br><a href="https://koaning.github.io/wigglystuff/examples/scatterwidget/"><img src="./mkdocs/assets/gallery/scatterwidget.png" width="330"></a><br><a href="https://koaning.github.io/wigglystuff/examples/scatterwidget/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/scatter-widget/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/scatter-widget.md">MD</a></td>
 <td align="center"><b>DiffViewer</b><br><a href="https://koaning.github.io/wigglystuff/examples/diffviewer/"><img src="./mkdocs/assets/gallery/diffviewer.png" width="330"></a><br><a href="https://koaning.github.io/wigglystuff/examples/diffviewer/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/diff-viewer/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/diff-viewer.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>SplineDraw</b><br><a href="https://koaning.github.io/wigglystuff/examples/splinedraw/"><img src="./mkdocs/assets/gallery/splinedraw.png" width="330"></a><br><a href="https://koaning.github.io/wigglystuff/examples/splinedraw/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/spline-draw/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/spline-draw.md">MD</a></td>
+</tr>
 </table>
 
 ## 3rd party widgets
