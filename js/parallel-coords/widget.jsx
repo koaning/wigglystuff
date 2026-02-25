@@ -44,6 +44,8 @@ function render({ model, el }) {
   const root = ReactDOM.createRoot(el);
   const persistentState = {};
   let domObserver = null;
+  let themeObserver = null;
+  let lastRenderedDark = null;
 
   function applyHeaderLayout() {
     const headerRow = el.querySelector(".pc-wrapper .container-fluid .d-flex.flex-wrap");
@@ -89,6 +91,31 @@ function render({ model, el }) {
       applyHeaderLayout();
     });
     domObserver.observe(el, { childList: true, subtree: true });
+  }
+
+  function ensureThemeObserver() {
+    if (themeObserver) return;
+    themeObserver = new MutationObserver(() => {
+      const darkNow = isDark();
+      if (darkNow !== lastRenderedDark) {
+        doRender();
+      }
+    });
+    const observerOpts = {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "data-jp-theme-light"],
+    };
+    if (document.documentElement) {
+      themeObserver.observe(document.documentElement, observerOpts);
+    }
+    if (document.body) {
+      themeObserver.observe(document.body, observerOpts);
+    }
+    let node = el.parentElement;
+    while (node) {
+      themeObserver.observe(node, observerOpts);
+      node = node.parentElement;
+    }
   }
 
   function isDark() {
@@ -181,7 +208,9 @@ function render({ model, el }) {
   function doRender() {
     const experiment = buildExperiment();
     const height = model.get("height") || 600;
+    const dark = isDark();
     persistentState[`${DefaultPlugins.PARALLEL_PLOT}.height`] = height;
+    lastRenderedDark = dark;
 
     if (!experiment) {
       root.render(
@@ -201,10 +230,17 @@ function render({ model, el }) {
         style: { width: "100%" },
       },
         React.createElement(HiPlot, {
-          key: (model.get("data") || []).length + "_" + (model.get("color_by") || "") + "_" + String(height),
+          key:
+            (model.get("data") || []).length +
+            "_" +
+            (model.get("color_by") || "") +
+            "_" +
+            String(height) +
+            "_" +
+            (dark ? "dark" : "light"),
           experiment,
           plugins,
-          dark: isDark(),
+          dark,
           onChange: buildOnChange(),
           persistentState: new PersistentStateInMemory("", persistentState),
           asserts: false,
@@ -215,6 +251,7 @@ function render({ model, el }) {
     requestAnimationFrame(() => {
       applyHeaderLayout();
       ensureDomObserver();
+      ensureThemeObserver();
     });
   }
 
@@ -230,6 +267,10 @@ function render({ model, el }) {
     if (domObserver) {
       domObserver.disconnect();
       domObserver = null;
+    }
+    if (themeObserver) {
+      themeObserver.disconnect();
+      themeObserver = null;
     }
     root.unmount();
   };

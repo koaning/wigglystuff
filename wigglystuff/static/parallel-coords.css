@@ -12,6 +12,7 @@
     --pc-text-muted: #4b5563;
     --pc-btn-bg: #ffffff;
     --pc-btn-border: #64748b;
+    --pc-btn-text: #111827;
     --pc-btn-hover-bg: #f1f5f9;
     --pc-btn-hover-border: #1d4ed8;
     --pc-btn-active-bg: #bfdbfe;
@@ -22,19 +23,20 @@
 }
 
 .pc-wrapper .hip_thm--dark {
-    --pc-bg: #1e1e1e;
-    --pc-border: #3a3a3a;
-    --pc-text: #e5e7eb;
-    --pc-text-muted: #c4c8cf;
-    --pc-btn-bg: #2a2a2a;
-    --pc-btn-border: #4b5563;
-    --pc-btn-hover-bg: #334155;
-    --pc-btn-hover-border: #60a5fa;
-    --pc-btn-active-bg: #1e3a5f;
-    --pc-btn-active-border: #60a5fa;
-    --pc-btn-active-text: #93c5fd;
-    --pc-chip-bg: rgba(17, 24, 39, 0.92);
-    --pc-chip-border: rgba(235, 235, 235, 0.28);
+    --pc-bg: #111a24;
+    --pc-border: #2b3a4f;
+    --pc-text: #e6edf5;
+    --pc-text-muted: #b8c4d6;
+    --pc-btn-bg: #1b2738;
+    --pc-btn-border: #657790;
+    --pc-btn-text: #e6edf5;
+    --pc-btn-hover-bg: #25364c;
+    --pc-btn-hover-border: #97b5ff;
+    --pc-btn-active-bg: #2a4f8b;
+    --pc-btn-active-border: #97b5ff;
+    --pc-btn-active-text: #eaf1ff;
+    --pc-chip-bg: rgba(18, 28, 42, 0.96);
+    --pc-chip-border: rgba(176, 194, 218, 0.45);
 }
 
 /* Ensure the SVG brush layer overlays the canvas line layer. */
@@ -99,7 +101,7 @@
     background: var(--pc-btn-bg) !important;
     border: 1px solid var(--pc-btn-border) !important;
     border-radius: 4px;
-    color: var(--pc-text) !important;
+    color: var(--pc-btn-text) !important;
     cursor: pointer;
     display: inline-flex;
     font-size: 11px;
@@ -115,6 +117,13 @@
 
 .pc-wrapper .btn.btn-sm:last-child {
     margin-right: 0;
+}
+
+.pc-wrapper .hip_thm--dark .btn.btn-sm,
+.pc-wrapper .hip_thm--dark .btn.btn-sm.btn-light {
+    background: var(--pc-btn-bg) !important;
+    border-color: var(--pc-btn-border) !important;
+    color: var(--pc-btn-text) !important;
 }
 
 .pc-wrapper .btn.btn-sm:hover:not(:disabled) {
@@ -154,6 +163,17 @@
     transform: none !important;
     transform-origin: center center !important;
     z-index: 8;
+}
+
+.pc-wrapper .hip_thm--dark .label-name {
+    background: var(--pc-chip-bg) !important;
+    border-color: var(--pc-chip-border) !important;
+    color: var(--pc-text) !important;
+}
+
+.pc-wrapper .hip_thm--dark .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] {
+    color: var(--pc-text-muted) !important;
+    opacity: 1 !important;
 }
 
 /* Remove helper copy under headers ("Drag to move, right click for options"). */
