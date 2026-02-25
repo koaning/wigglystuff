@@ -10,6 +10,7 @@ syncs back to Python.
 | Agent | Module/Class | Core traitlets | One-liner |
 | --- | --- | --- | --- |
 | AltairWidget | `wigglystuff.altair_widget.AltairWidget` | `spec`, `width`, `height` | Flicker-free Altair chart with smooth data updates |
+| ApiDoc | `wigglystuff.api_doc.ApiDoc` | `doc`, `width`, `show_private` | Renders API docs for Python classes/functions |
 | Slider2D | `wigglystuff.slider2d.Slider2D` | `x`, `y`, `x_bounds`, `y_bounds`, `width`, `height` | 2D pointer for coupled parameters |
 | ChartPuck | `wigglystuff.chart_puck.ChartPuck` | `x`, `y`, `x_bounds`, `y_bounds`, `axes_pixel_bounds`, `width`, `height`, `chart_base64`, `puck_radius`, `puck_color`, `throttle` | Draggable puck overlay for matplotlib charts |
 | ChartSelect | `wigglystuff.chart_select.ChartSelect` | `mode`, `selection`, `has_selection`, `x_bounds`, `y_bounds`, `axes_pixel_bounds`, `width`, `height`, `chart_base64`, `selection_color`, `selection_opacity` | Box/lasso selection on matplotlib charts |
@@ -64,6 +65,11 @@ syncs back to Python.
 - Each widget has a demo marimo notebook in the `demos/` folder (e.g.,
   `demos/colorpicker.py`). When adding a new widget, create a corresponding
   demo notebook. Run demos with `marimo edit demos/<widget>.py`.
+- **Always smoke-test new or modified widget code** with
+  `uv run python -c "..."` to instantiate the widget, exercise traitlet changes,
+  and check edge cases (built-ins, empty inputs, toggles). `marimo check` only
+  validates notebook structure—it does **not** execute code, so it catches zero
+  runtime bugs.
 - **Always run `uv run marimo check demos/<notebook>.py`** after editing a demo
   notebook to verify it parses correctly and has no cell dependency issues.
 - Dumber is better. Prefer obvious, direct code over clever abstractions—someone

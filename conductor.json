@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "setup": "make install"
+    "setup": "make install",
+    "run": "uv run marimo edit --watch demos"
   }
 }
