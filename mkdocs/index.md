@@ -136,6 +136,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a href="examples/chartpuck/">Demo</a><a href="reference/chart-puck/">API</a><a href="reference/chart-puck.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">ChartMultiSelect</div>
+<a href="examples/chartmultiselect/" class="gallery-img"><img src="assets/gallery/chartmultiselect.png" alt="ChartMultiSelect widget"></a>
+<div class="gallery-links"><a href="examples/chartmultiselect/">Demo</a><a href="reference/chart-multi-select/">API</a><a href="reference/chart-multi-select.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">ChartSelect</div>
 <a href="examples/chartselect/" class="gallery-img"><img src="assets/gallery/chartselect.png" alt="ChartSelect widget"></a>
 <div class="gallery-links"><a href="examples/chartselect/">Demo</a><a href="reference/chart-select/">API</a><a href="reference/chart-select.md">MD</a></div>

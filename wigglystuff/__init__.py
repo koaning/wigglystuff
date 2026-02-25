@@ -6,6 +6,7 @@ from .altair_widget import AltairWidget
 from .api_doc import ApiDoc
 from .cell_tour import CellTour
 from .chart_puck import ChartPuck
+from .chart_multi_select import ChartMultiSelect
 from .chart_select import ChartSelect
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
@@ -39,6 +40,7 @@ __all__ = [
     "ApiDoc",
     "CellTour",
     "ChartPuck",
+    "ChartMultiSelect",
     "ChartSelect",
     "ColorPicker",
     "CopyToClipboard",
