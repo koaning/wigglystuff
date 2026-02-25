@@ -31,6 +31,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [ScatterWidget](https://koaning.github.io/wigglystuff/reference/scatter-widget.md): Interactive scatter drawing for painting labeled 2D datasets (re-exported from drawdata)
 - [DiffViewer](https://koaning.github.io/wigglystuff/reference/diff-viewer.md): Rich file diff viewer with split/unified modes powered by @pierre/diffs
 - [SplineDraw](https://koaning.github.io/wigglystuff/reference/spline-draw.md): Draw scatter points with Python-computed spline curve fitting
+- [ApiDoc](https://koaning.github.io/wigglystuff/reference/api-doc.md): Renders API docs for Python classes and functions directly in notebooks
 
 ## 3rd party widgets
 

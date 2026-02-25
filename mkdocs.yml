@@ -58,6 +58,11 @@ nav:
       - Neo4jWidget: reference/neo4j-widget.md
       - ScatterWidget: reference/scatter-widget.md
       - DiffViewer: reference/diff-viewer.md
+      - SplineDraw: reference/spline-draw.md
+      - TextCompare: reference/text-compare.md
+      - EnvConfig: reference/env-config.md
+      - AltairWidget: reference/altair-widget.md
+      - ApiDoc: reference/api-doc.md
       - Utils: reference/utils.md
 plugins:
   - search
