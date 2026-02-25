@@ -11,7 +11,7 @@
 
 import marimo
 
-__generated_with = "0.19.11"
+__generated_with = "0.20.2"
 app = marimo.App(width="medium")
 
 
@@ -88,7 +88,9 @@ def _(alt, amplitude, np, pd, phase, widget):
 
 @app.cell
 def _(mo):
-    mo.md("""## Layered chart demo""")
+    mo.md("""
+    ## Layered chart demo
+    """)
     return
 
 
@@ -99,7 +101,7 @@ def _(AltairWidget):
 
 
 @app.cell
-def _(mo, layered_widget):
+def _(layered_widget, mo):
     layered_wrapped = mo.ui.anywidget(layered_widget)
     return (layered_wrapped,)
 
@@ -119,7 +121,7 @@ def _(mo):
 
 @app.cell
 def _(alt, freq, layered_widget, np, pd):
-    _x = np.linspace(0, 4 * np.pi, 80)
+    _x = np.linspace(0, 4 * np.pi, 800)
     _df_sin = pd.DataFrame({"x": _x, "y": np.sin(freq.value * _x)})
     _df_cos = pd.DataFrame({"x": _x, "y": np.cos(freq.value * _x)})
 
@@ -141,6 +143,11 @@ def _(alt, freq, layered_widget, np, pd):
     )
 
     layered_widget.chart = (_c1 + _c2).properties(width=500, height=400)
+    return
+
+
+@app.cell
+def _():
     return
 
 
