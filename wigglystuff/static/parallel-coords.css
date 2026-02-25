@@ -1,7 +1,17 @@
-/* HiPlot's .hiplot class sets height:100% -- designed for full-page apps.
-   In a widget context we want it to size to its content instead. The hashed
-   class name (Ng6pw...) is the CSS-modules compiled name for .hiplot. We
-   also use a broad attribute selector as a fallback. */
-.pc-wrapper [class*="hiplot"] {
+/* Keep HiPlot content-sized inside notebook widget containers. */
+.pc-wrapper .hip_thm--light > div,
+.pc-wrapper .hip_thm--dark > div {
     height: auto !important;
+}
+
+/* Ensure the SVG brush layer overlays the canvas line layer. */
+.pc-wrapper .pplot-root {
+    position: relative;
+}
+
+.pc-wrapper .pplot-root canvas,
+.pc-wrapper .pplot-root svg {
+    left: 0;
+    position: absolute;
+    top: 0;
 }
