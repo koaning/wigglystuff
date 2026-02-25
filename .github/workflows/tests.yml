@@ -36,7 +36,20 @@ jobs:
           python -m pip install --upgrade uv
           uv venv
           uv pip install -e ".[test-browser]"
+      - name: Get Playwright version
+        id: pw-version
+        run: echo "version=$(uv run python -c 'import playwright; print(playwright.__version__)')" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ steps.pw-version.outputs.version }}-chromium
       - name: Install Playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
         run: uv run playwright install chromium --with-deps
+      - name: Install Playwright system deps
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: uv run playwright install-deps chromium
       - name: Pytest (browser tests)
         run: uv run pytest tests/test_browser -v
