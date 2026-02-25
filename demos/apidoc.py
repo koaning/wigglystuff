@@ -145,8 +145,8 @@ def train_model(
 
 
 @app.cell
-def _(ApiDoc, mo):
-    mo.ui.anywidget(ApiDoc(train_model))
+def _(ApiDoc):
+    ApiDoc(train_model)
     return
 
 
