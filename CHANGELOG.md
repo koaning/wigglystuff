@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.31] - 2026-02-19
+## [0.2.31] - 2026-02-25
+
+### Added
+- New `SplineDraw` widget for drawing scatter points with a Python-computed spline curve overlay. Accepts any callable with signature `(x, y) -> (x_curve, y_curve)` for flexible curve fitting (e.g. scikit-learn pipelines, interpolation functions). Built on the same D3/SVG canvas as `ScatterWidget`.
 
 ### Fixed
 - `KeystrokeWidget` canvas and metadata text now includes a generic `monospace` fallback in the font stack, preventing the browser from falling back to a serif font when named monospace fonts are unavailable.
