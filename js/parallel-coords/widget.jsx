@@ -43,19 +43,68 @@ const CATEGORICAL_COLOR_SCHEME = [
 function render({ model, el }) {
   const root = ReactDOM.createRoot(el);
   const persistentState = {};
+  let domObserver = null;
+
+  function applyHeaderLayout() {
+    const headerRow = el.querySelector(".pc-wrapper .container-fluid .d-flex.flex-wrap");
+    if (!headerRow) return;
+
+    headerRow.style.display = "flex";
+    headerRow.style.flexWrap = "nowrap";
+    headerRow.style.alignItems = "center";
+    headerRow.style.columnGap = "0.35rem";
+
+    const groups = Array.from(headerRow.children).filter(
+      (node) => node instanceof HTMLElement && node.tagName === "DIV"
+    );
+    const buttonGroup = groups.find((node) => node.querySelector("button"));
+    const selectedGroup = groups.find((node) => (node.textContent || "").includes("Selected:"));
+
+    if (buttonGroup) {
+      buttonGroup.style.display = "flex";
+      buttonGroup.style.alignItems = "center";
+      buttonGroup.style.gap = "0.5rem";
+      const buttons = buttonGroup.querySelectorAll("button.btn.btn-sm");
+      buttons.forEach((btn, idx) => {
+        btn.style.marginRight = idx === buttons.length - 1 ? "0" : "6px";
+      });
+    }
+
+    if (selectedGroup) {
+      selectedGroup.style.display = "flex";
+      selectedGroup.style.alignItems = "center";
+      selectedGroup.style.marginLeft = "auto";
+      const stat = selectedGroup.querySelector("div");
+      if (stat) {
+        stat.style.margin = "0";
+        stat.style.whiteSpace = "nowrap";
+        stat.style.fontSize = "12px";
+      }
+    }
+  }
+
+  function ensureDomObserver() {
+    if (domObserver) return;
+    domObserver = new MutationObserver(() => {
+      applyHeaderLayout();
+    });
+    domObserver.observe(el, { childList: true, subtree: true });
+  }
 
   function isDark() {
-    const darkEl = document.querySelector(
-      ".dark, .dark-theme, [data-theme='dark'], body[data-jp-theme-light='false']"
-    );
-    if (darkEl) return true;
+    const darkMatcher =
+      ".dark, .dark-theme, [data-theme='dark'], [data-jp-theme-light='false']";
+    const lightMatcher =
+      ".light, .light-theme, [data-theme='light'], [data-jp-theme-light='true']";
 
-    const lightEl = document.querySelector(
-      ".light, .light-theme, [data-theme='light'], body[data-jp-theme-light='true']"
-    );
-    if (lightEl) return false;
+    // Prefer nearest explicit theme marker around this widget container.
+    let node = el;
+    while (node) {
+      if (node.matches?.(darkMatcher)) return true;
+      if (node.matches?.(lightMatcher)) return false;
+      node = node.parentElement;
+    }
 
-    // Prefer explicit notebook/page theme; avoid OS-level fallback that can mismatch.
     return false;
   }
 
@@ -157,6 +206,11 @@ function render({ model, el }) {
         })
       )
     );
+
+    requestAnimationFrame(() => {
+      applyHeaderLayout();
+      ensureDomObserver();
+    });
   }
 
   doRender();
@@ -168,6 +222,10 @@ function render({ model, el }) {
     model.off("change:data", doRender);
     model.off("change:color_by", doRender);
     model.off("change:height", doRender);
+    if (domObserver) {
+      domObserver.disconnect();
+      domObserver = null;
+    }
     root.unmount();
   };
 }
