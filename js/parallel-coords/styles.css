@@ -7,6 +7,7 @@
 /* Ensure the SVG brush layer overlays the canvas line layer. */
 .pc-wrapper .pplot-root {
     position: relative;
+    z-index: 1;
 }
 
 .pc-wrapper .pplot-root canvas,
@@ -14,4 +15,30 @@
     left: 0;
     position: absolute;
     top: 0;
+}
+
+/* Defensive fallback: keep toolbar controls above plot layers and clickable. */
+.pc-wrapper .btn {
+    margin-right: 0.35rem;
+    position: relative;
+    z-index: 5;
+}
+
+.pc-wrapper .btn:last-child {
+    margin-right: 0;
+}
+
+/* Fallback button visuals if host theme strips bootstrap defaults. */
+.pc-wrapper .btn.btn-sm {
+    border: 1px solid rgba(127, 127, 127, 0.45);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    line-height: 1.2;
+    padding: 0.2rem 0.5rem;
+}
+
+.pc-wrapper .btn.btn-sm:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
 }

@@ -31,7 +31,7 @@ def _(mo):
     iris = load_iris(as_frame=True)
     df = iris.frame
     widget = mo.ui.anywidget(
-        ParallelCoordinates(df, color_by="target")
+        ParallelCoordinates(df, height=300, color_by="target")
     )
     widget
     return (widget,)
