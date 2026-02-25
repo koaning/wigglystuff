@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - `KeystrokeWidget` canvas and metadata text now includes a generic `monospace` fallback in the font stack, preventing the browser from falling back to a serif font when named monospace fonts are unavailable.
+- `AltairWidget` now correctly renders layered and concatenated Altair charts that use multiple datasets. Previously, `prepareSpec` dropped all but the first dataset, breaking layer-level data references.
 
 ## [0.2.30] - 2026-02-19
 
