@@ -94,10 +94,10 @@ def _extract_doc(obj, show_private=False):
     """Main entry point: extract documentation structure from a class or function."""
     if isinstance(obj, type):
         return _extract_class_doc(obj, show_private)
-    elif callable(obj):
+    elif inspect.isfunction(obj) or inspect.isbuiltin(obj) or inspect.ismethod(obj):
         return _extract_function_doc(obj)
     else:
-        # Try the object's type
+        # Callable instances, plain objects — document their class
         return _extract_class_doc(type(obj), show_private)
 
 
