@@ -28,34 +28,37 @@ async function loadVega() {
 }
 
 /**
- * Separate an Altair spec into a data-free spec and a data array.
+ * Separate an Altair spec into a data-free spec and a map of named datasets.
  *
  * Altair specs carry data in one of two shapes:
- *   a) spec.datasets = {"data-<hash>": [...]}  +  spec.data.name = "data-<hash>"
+ *   a) spec.datasets = {"data-<hash>": [...], ...}  with data.name refs in
+ *      the top level or inside layer/hconcat/vconcat sub-specs
  *   b) spec.data.values = [...]
  *
- * We replace the data reference with {name: DATA_NAME} so that the
- * compiled Vega view exposes a predictable dataset we can target with
- * view.change().
+ * For (a) we extract every dataset into dataMap keyed by its original name,
+ * replace each dataset's array with [] in the clean spec (so Vega-Lite still
+ * compiles the named sources), and leave all data.name references untouched.
+ *
+ * For (b) we extract the values into dataMap[DATA_NAME] and set
+ * clean.data = {name: DATA_NAME}.
+ *
+ * Returns {cleanSpec, dataMap} where dataMap is {name: rows[]}.
  */
 function prepareSpec(spec) {
   const clean = JSON.parse(JSON.stringify(spec));
-  let data = null;
+  const dataMap = {};
 
   if (clean.datasets) {
-    const keys = Object.keys(clean.datasets);
-    if (keys.length > 0) {
-      data = clean.datasets[keys[0]];
+    for (const [name, rows] of Object.entries(clean.datasets)) {
+      dataMap[name] = rows;
+      clean.datasets[name] = [];
     }
-    delete clean.datasets;
+  } else if (clean.data && clean.data.values) {
+    dataMap[DATA_NAME] = clean.data.values;
+    clean.data = { name: DATA_NAME };
   }
 
-  if (clean.data && clean.data.values) {
-    data = data || clean.data.values;
-  }
-
-  clean.data = { name: DATA_NAME };
-  return { cleanSpec: clean, data: data || [] };
+  return { cleanSpec: clean, dataMap };
 }
 
 /**
@@ -80,7 +83,7 @@ function render({ model, el }) {
     container.style.minHeight = model.get("height") + "px";
   }
 
-  async function fullEmbed(cleanSpec, data) {
+  async function fullEmbed(cleanSpec, dataMap) {
     if (currentView) {
       currentView.finalize();
       currentView = null;
@@ -98,9 +101,11 @@ function render({ model, el }) {
       currentView = result.view;
       currentCleanSpec = cleanSpec;
 
-      // Push data into the named source
-      const cs = vega.changeset().insert(data);
-      currentView.change(DATA_NAME, cs).run();
+      // Push data into every named source
+      for (const [name, rows] of Object.entries(dataMap)) {
+        currentView.change(name, vega.changeset().insert(rows));
+      }
+      currentView.run();
     } catch (err) {
       container.textContent = "Vega-Lite render error: " + err.message;
     }
@@ -118,21 +123,23 @@ function render({ model, el }) {
       return;
     }
 
-    const { cleanSpec, data } = prepareSpec(rawSpec);
+    const { cleanSpec, dataMap } = prepareSpec(rawSpec);
 
     // First render — or structural change
     if (!currentView || !currentCleanSpec || !specStructureEqual(currentCleanSpec, cleanSpec)) {
-      await fullEmbed(cleanSpec, data);
+      await fullEmbed(cleanSpec, dataMap);
       return;
     }
 
     // Data-only change — patch in-place, never re-parse
     const { vega } = await loadVega();
-    const cs = vega
-      .changeset()
-      .remove(() => true)
-      .insert(data);
-    currentView.change(DATA_NAME, cs).run();
+    for (const [name, rows] of Object.entries(dataMap)) {
+      currentView.change(
+        name,
+        vega.changeset().remove(() => true).insert(rows)
+      );
+    }
+    currentView.run();
   }
 
   applySize();
