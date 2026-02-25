@@ -89,7 +89,12 @@ def test_custom_dimensions():
 
 
 def test_layered_chart_spec_preserved():
-    """Layered chart specs should pass through with datasets intact."""
+    """Layered chart specs should preserve datasets and layer data refs.
+
+    This validates the Python-side spec shape only. The JS-side fix
+    (prepareSpec handling multiple datasets) must be verified in a browser
+    via ``marimo edit demos/altairwidget.py``.
+    """
     alt = pytest.importorskip("altair")
     pd = pytest.importorskip("pandas")
     from wigglystuff.altair_widget import AltairWidget
