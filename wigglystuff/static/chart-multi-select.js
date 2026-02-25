@@ -275,6 +275,16 @@ function render({ model, el }) {
     draw();
   }
 
+  function highlightAt(coords) {
+    const hitIndex = findSelectionAt(coords);
+    if (hitIndex >= 0) {
+      model.set("selected_index", hitIndex);
+      model.save_changes();
+      updateActionButtons();
+      draw();
+    }
+  }
+
   function cancelDrawing() {
     isSelecting = false;
     isDragging = false;
@@ -299,28 +309,25 @@ function render({ model, el }) {
     event.preventDefault();
     const coords = getCanvasCoords(event);
     const hitIndex = findSelectionAt(coords);
+    const selectedIdx = model.get("selected_index");
 
-    // Click on an existing selection → highlight it (and prepare drag)
-    if (hitIndex >= 0) {
-      model.set("selected_index", hitIndex);
-      model.save_changes();
-      updateActionButtons();
+    // Click on the already-highlighted selection → drag it
+    if (hitIndex >= 0 && hitIndex === selectedIdx) {
       isDragging = true;
       dragStart = coords;
       dragIndex = hitIndex;
-      draw();
       return;
     }
 
-    // Click on empty area → deselect any highlighted selection
-    if (model.get("selected_index") >= 0) {
+    // Deselect any highlighted selection when clicking elsewhere
+    if (selectedIdx >= 0) {
       model.set("selected_index", -1);
       model.save_changes();
       updateActionButtons();
       draw();
     }
 
-    // Start new selection if inside axes
+    // Start new selection if inside axes (draws on top of existing ones)
     if (!isInsideAxes(coords)) return;
 
     if (currentMode === "box") {
@@ -344,9 +351,10 @@ function render({ model, el }) {
       return;
     }
 
-    // Cursor feedback
+    // Cursor feedback — show "move" only on the highlighted selection
     const hitIndex = findSelectionAt(coords);
-    canvas.style.cursor = hitIndex >= 0 ? "move" : "crosshair";
+    const isHighlighted = hitIndex >= 0 && hitIndex === model.get("selected_index");
+    canvas.style.cursor = isHighlighted ? "move" : "crosshair";
 
     // Drawing preview
     if (currentMode === "box" && isSelecting) {
@@ -389,6 +397,9 @@ function render({ model, el }) {
         model.set("selections", selections);
         model.set("selected_index", -1);
         model.save_changes();
+      } else {
+        // Click was too small — treat as a highlight click
+        highlightAt(coords);
       }
       isSelecting = false;
       selectionStart = null;
@@ -408,6 +419,9 @@ function render({ model, el }) {
         model.set("selections", selections);
         model.set("selected_index", -1);
         model.save_changes();
+      } else {
+        // Click was too small — treat as a highlight click
+        highlightAt(coords);
       }
       isSelecting = false;
       lassoPath = [];
