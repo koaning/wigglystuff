@@ -1,0 +1,7 @@
+/* HiPlot's .hiplot class sets height:100% -- designed for full-page apps.
+   In a widget context we want it to size to its content instead. The hashed
+   class name (Ng6pw...) is the CSS-modules compiled name for .hiplot. We
+   also use a broad attribute selector as a fallback. */
+.pc-wrapper [class*="hiplot"] {
+    height: auto !important;
+}

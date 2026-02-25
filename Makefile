@@ -66,6 +66,10 @@ js-spline-draw:
 	cp js/spline-draw/styles.css wigglystuff/static/spline-draw.css
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/spline-draw.js js/spline-draw/widget.js
 
+js-parallel-coords:
+	cp js/parallel-coords/styles.css wigglystuff/static/parallel-coords.css
+	./node_modules/.bin/esbuild js/parallel-coords/widget.jsx --bundle --format=esm --outfile=wigglystuff/static/parallel-coords.js --minify --loader:.jsx=jsx
+
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
