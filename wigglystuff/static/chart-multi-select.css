@@ -1,0 +1,177 @@
+.chart-multi-select {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  display: inline-block;
+  color-scheme: light dark;
+
+  /* CSS Variables for theming */
+  --cms-bg: #ffffff;
+  --cms-border: #e2e8f0;
+  --cms-text: #1e293b;
+  --cms-text-muted: #64748b;
+  --cms-accent: #3b82f6;
+  --cms-accent-hover: #2563eb;
+  --cms-btn-bg: #f8fafc;
+  --cms-btn-active-bg: #dbeafe;
+  --cms-btn-active-border: #3b82f6;
+  --cms-shadow: rgba(0, 0, 0, 0.08);
+  --cms-danger: #ef4444;
+  --cms-danger-hover: #dc2626;
+}
+
+/* Dark mode */
+.dark .chart-multi-select,
+.dark-theme .chart-multi-select,
+[data-theme="dark"] .chart-multi-select {
+  --cms-bg: #1e1e1e;
+  --cms-border: #3a3a3a;
+  --cms-text: #f1f5f9;
+  --cms-text-muted: #94a3b8;
+  --cms-accent: #60a5fa;
+  --cms-accent-hover: #3b82f6;
+  --cms-btn-bg: #2a2a2a;
+  --cms-btn-active-bg: #1e3a5f;
+  --cms-btn-active-border: #60a5fa;
+  --cms-shadow: rgba(0, 0, 0, 0.3);
+  --cms-danger: #f87171;
+  --cms-danger-hover: #ef4444;
+}
+
+.chart-multi-select__controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: var(--cms-bg);
+  border: 1px solid var(--cms-border);
+  border-radius: 4px 4px 0 0;
+  flex-wrap: wrap;
+}
+
+.chart-multi-select__separator {
+  width: 1px;
+  height: 16px;
+  background: var(--cms-border);
+  margin: 0 2px;
+}
+
+.chart-multi-select__canvas {
+  display: block;
+  cursor: crosshair;
+  border: 1px solid var(--cms-border);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-width: 100%;
+  height: auto;
+}
+
+.chart-multi-select__canvas--no-controls {
+  border-top: 1px solid var(--cms-border);
+  border-radius: 4px;
+}
+
+/* Mode buttons (Box / Lasso) */
+.chart-multi-select__mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border: 1px solid var(--cms-border);
+  border-radius: 3px;
+  background: var(--cms-btn-bg);
+  color: var(--cms-text);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.chart-multi-select__mode-btn:hover {
+  border-color: var(--cms-accent);
+}
+
+.chart-multi-select__mode-btn.active {
+  background: var(--cms-btn-active-bg);
+  border-color: var(--cms-btn-active-border);
+  color: var(--cms-accent);
+}
+
+.chart-multi-select__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-multi-select__icon svg {
+  display: block;
+}
+
+.chart-multi-select__label {
+  font-size: 10px;
+}
+
+/* Class buttons */
+.chart-multi-select__class-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border: 1px solid var(--cms-border);
+  border-radius: 3px;
+  background: var(--cms-btn-bg);
+  color: var(--cms-text);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.chart-multi-select__class-btn:hover {
+  border-color: var(--cms-accent);
+}
+
+.chart-multi-select__class-btn.active {
+  border-width: 2px;
+  padding: 1px 5px; /* compensate for thicker border */
+}
+
+.chart-multi-select__class-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Action buttons (delete, undo, clear) */
+.chart-multi-select__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 4px;
+  border: 1px solid var(--cms-border);
+  border-radius: 3px;
+  background: var(--cms-btn-bg);
+  color: var(--cms-text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.chart-multi-select__action-btn:hover {
+  border-color: var(--cms-accent);
+  color: var(--cms-text);
+}
+
+.chart-multi-select__action-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+.chart-multi-select__action-btn--danger:hover {
+  border-color: var(--cms-danger);
+  color: var(--cms-danger);
+}
+
+.chart-multi-select__action-btn svg {
+  display: block;
+}
