@@ -1,0 +1,349 @@
+.api-doc-root {
+  --ad-bg: #ffffff;
+  --ad-text: #1a1a1a;
+  --ad-text-secondary: #555555;
+  --ad-text-muted: #999999;
+  --ad-border: #e0e0e0;
+  --ad-code-bg: #f5f5f7;
+  --ad-code-text: #1a1a1a;
+  --ad-badge-bg: #f0f0f2;
+  --ad-badge-text: #555555;
+  --ad-table-header-bg: #f8f8fa;
+  --ad-table-stripe: #fafafa;
+  --ad-link: #2563eb;
+  --ad-hl-kw: #cf222e;
+  --ad-hl-str: #0a3069;
+  --ad-hl-num: #0550ae;
+  --ad-hl-comment: #6e7781;
+  --ad-hl-builtin: #8250df;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: var(--ad-text);
+  background: var(--ad-bg);
+  padding: 16px;
+  line-height: 1.6;
+  color-scheme: light dark;
+}
+
+.api-doc-root.dark-mode {
+  --ad-bg: #1a1a1a;
+  --ad-text: #e0e0e0;
+  --ad-text-secondary: #aaaaaa;
+  --ad-text-muted: #666666;
+  --ad-border: #333333;
+  --ad-code-bg: #2a2a2e;
+  --ad-code-text: #e0e0e0;
+  --ad-badge-bg: #2a2a2e;
+  --ad-badge-text: #aaaaaa;
+  --ad-table-header-bg: #222225;
+  --ad-table-stripe: #1e1e20;
+  --ad-link: #60a5fa;
+  --ad-hl-kw: #ff7b72;
+  --ad-hl-str: #a5d6ff;
+  --ad-hl-num: #79c0ff;
+  --ad-hl-comment: #8b949e;
+  --ad-hl-builtin: #d2a8ff;
+}
+
+/* Title: module.ClassName */
+.ad-title {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.ad-module {
+  font-weight: 400;
+  color: var(--ad-text-muted);
+}
+
+/* Bases line */
+.ad-bases {
+  font-size: 13px;
+  color: var(--ad-text-secondary);
+  margin-bottom: 8px;
+}
+
+.ad-bases code {
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  font-size: 12px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--ad-code-bg);
+  color: var(--ad-code-text);
+}
+
+/* Signature block */
+.ad-signature {
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  font-size: 13px;
+  background: var(--ad-code-bg);
+  color: var(--ad-code-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Parameter table */
+.ad-param-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.ad-param-table th {
+  text-align: left;
+  padding: 6px 10px;
+  background: var(--ad-table-header-bg);
+  color: var(--ad-text-secondary);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--ad-border);
+}
+
+.ad-param-table td {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--ad-border);
+  vertical-align: top;
+}
+
+.ad-param-table tr:nth-child(even) td {
+  background: var(--ad-table-stripe);
+}
+
+.ad-param-table code {
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  font-size: 12px;
+}
+
+/* Docstring block */
+.ad-docstring {
+  font-size: 13px;
+  color: var(--ad-text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+/* Inline code in docstrings */
+.ad-inline-code {
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  font-size: 12px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--ad-code-bg);
+  color: var(--ad-code-text);
+}
+
+/* Code block wrapper (holds pre + copy button) */
+.ad-code-wrapper {
+  position: relative;
+  margin: 4px 0;
+  white-space: normal;
+}
+
+/* Fenced code blocks inside docstrings */
+.ad-code-block {
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  font-size: 12px;
+  background: var(--ad-code-bg);
+  color: var(--ad-code-text);
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+  line-height: 1.45;
+}
+
+.ad-code-block code {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  padding: 0;
+}
+
+/* Copy button */
+.ad-copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--ad-border);
+  background: var(--ad-bg);
+  color: var(--ad-text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.ad-code-wrapper:hover .ad-copy-btn {
+  opacity: 1;
+}
+
+.ad-copy-btn:hover {
+  background: var(--ad-code-bg);
+}
+
+/* Syntax highlighting */
+.ad-hl-kw { color: var(--ad-hl-kw); }
+.ad-hl-str { color: var(--ad-hl-str); }
+.ad-hl-num { color: var(--ad-hl-num); }
+.ad-hl-comment { color: var(--ad-hl-comment); font-style: italic; }
+.ad-hl-builtin { color: var(--ad-hl-builtin); }
+
+/* Section headings */
+.ad-section-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ad-text);
+  margin: 20px 0 8px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--ad-border);
+}
+
+/* Method/property collapsible header */
+.ad-method-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ad-method-header:hover {
+  background: var(--ad-code-bg);
+}
+
+/* Toggle chevron */
+.ad-toggle {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--ad-text-muted);
+  transition: transform 0.15s ease;
+}
+
+.ad-toggle.expanded {
+  transform: rotate(90deg);
+}
+
+/* Collapsible body */
+.ad-method-body {
+  margin-left: 22px;
+  padding-left: 10px;
+  border-left: 1px solid var(--ad-border);
+}
+
+.ad-method-body.collapsed {
+  display: none;
+}
+
+/* Method heading */
+.ad-method-heading {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ad-text);
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+}
+
+/* Decorator / kind badges — shared base */
+.ad-badge,
+.ad-kind {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.ad-badge {
+  margin-left: 6px;
+}
+
+/* classmethod */
+.ad-badge.ad-badge-classmethod {
+  background: #fef3c7;
+  color: #92400e;
+}
+.dark-mode .ad-badge.ad-badge-classmethod {
+  background: #451a03;
+  color: #fbbf24;
+}
+
+/* staticmethod */
+.ad-badge.ad-badge-staticmethod {
+  background: #ccfbf1;
+  color: #115e59;
+}
+.dark-mode .ad-badge.ad-badge-staticmethod {
+  background: #042f2e;
+  color: #5eead4;
+}
+
+/* property */
+.ad-badge.ad-badge-property {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+.dark-mode .ad-badge.ad-badge-property {
+  background: #2e1065;
+  color: #c4b5fd;
+}
+
+/* Property name */
+.ad-property-heading {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ad-text);
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+}
+
+/* Divider between methods */
+.ad-method-block {
+  margin-bottom: 4px;
+}
+
+/* Kind label (class / function) */
+.ad-kind {
+  margin-left: 8px;
+}
+
+/* class */
+.ad-kind-class {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.dark-mode .ad-kind-class {
+  background: #1e3a5f;
+  color: #93c5fd;
+}
+
+/* function */
+.ad-kind-function {
+  background: #dcfce7;
+  color: #166534;
+}
+.dark-mode .ad-kind-function {
+  background: #14532d;
+  color: #86efac;
+}
