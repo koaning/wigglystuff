@@ -56,3 +56,51 @@
 .pc-wrapper button[title="Start HiPlot tutorial"] {
     display: none !important;
 }
+
+/* Make axis titles legible and keep them above the brush region. */
+.pc-wrapper .label-name {
+    border-radius: 4px;
+    cursor: ew-resize !important;
+    display: inline-block;
+    margin-top: -10px;
+    padding: 1px 6px;
+    position: relative;
+    text-shadow: none !important;
+    transform: none !important;
+    transform-origin: center center !important;
+    z-index: 8;
+}
+
+.pc-wrapper .hip_thm--light .label-name {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(25, 25, 25, 0.2);
+    color: #1f2937 !important;
+}
+
+.pc-wrapper .hip_thm--dark .label-name {
+    background: rgba(17, 24, 39, 0.92);
+    border: 1px solid rgba(235, 235, 235, 0.28);
+    color: #f3f4f6 !important;
+}
+
+/* Remove helper copy under headers ("Drag to move, right click for options"). */
+.pc-wrapper .label-name + div,
+.pc-wrapper .label-name ~ div,
+.pc-wrapper .tooltiptext {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Keep controls compact: align selected stats to the right. */
+.pc-wrapper .container-fluid .d-flex.flex-wrap {
+    align-items: center;
+    column-gap: 0.35rem;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap > :last-child {
+    margin-left: auto;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="fontFamily"] {
+    margin-left: auto;
+}

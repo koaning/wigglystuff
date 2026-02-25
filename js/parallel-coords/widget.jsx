@@ -45,9 +45,18 @@ function render({ model, el }) {
   const persistentState = {};
 
   function isDark() {
-    const darkEl = document.querySelector(".dark, .dark-theme, [data-theme='dark']");
+    const darkEl = document.querySelector(
+      ".dark, .dark-theme, [data-theme='dark'], body[data-jp-theme-light='false']"
+    );
     if (darkEl) return true;
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    const lightEl = document.querySelector(
+      ".light, .light-theme, [data-theme='light'], body[data-jp-theme-light='true']"
+    );
+    if (lightEl) return false;
+
+    // Prefer explicit notebook/page theme; avoid OS-level fallback that can mismatch.
+    return false;
   }
 
   function buildExperiment() {
