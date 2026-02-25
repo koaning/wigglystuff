@@ -10,37 +10,29 @@ import numpy as np
 import traitlets
 
 
-def _gaussian_smooth(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """Default spline function using Gaussian kernel smoothing (Nadaraya-Watson).
-
-    Bandwidth auto-scales to 1/20th of the x-range. Requires only numpy.
-    """
-    if len(x) < 2:
-        return x, y
-    x_eval = np.linspace(x.min(), x.max(), 200)
-    bandwidth = (x.max() - x.min()) / 20
-    if bandwidth == 0:
-        return x_eval, np.full_like(x_eval, y.mean())
-    diff = x_eval[:, None] - x[None, :]
-    weights = np.exp(-0.5 * (diff / bandwidth) ** 2)
-    weights /= weights.sum(axis=1, keepdims=True)
-    return x_eval, weights @ y
-
-
 class SplineDraw(anywidget.AnyWidget):
     """Draw scatter points and see a spline curve fitted through them.
 
     This widget is built on the same D3/SVG canvas as ScatterWidget. The spline
     is computed by a Python callback function. Pass any callable with signature
     ``(x, y) -> (x_curve, y_curve)`` where inputs and outputs are 1-D numpy
-    arrays. A built-in Gaussian kernel smoother is used when no function is
-    provided.
+    arrays.
 
     Examples:
         ```python
         from wigglystuff import SplineDraw
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import SplineTransformer
+        from sklearn.linear_model import LinearRegression
 
-        widget = SplineDraw()
+        pipe = make_pipeline(SplineTransformer(), LinearRegression())
+
+        def spline_fn(x, y):
+            pipe.fit(x.reshape(-1, 1), y)
+            x_curve = np.linspace(x.min(), x.max(), 200)
+            return x_curve, pipe.predict(x_curve.reshape(-1, 1))
+
+        widget = SplineDraw(spline_fn=spline_fn)
         widget
         ```
     """
@@ -54,12 +46,16 @@ class SplineDraw(anywidget.AnyWidget):
     height = traitlets.Int(400).tag(sync=True)
     n_classes = traitlets.Int(1).tag(sync=True)
 
+    #: Fitted curve data computed by the spline function. A list of dicts,
+    #: one per class, each with ``"color"`` and ``"points"`` (list of
+    #: ``{"x": float, "y": float}``). Updated automatically when *data* changes.
     curve = traitlets.List([]).tag(sync=True)
+    #: Error message from the last spline computation, or empty string on success.
     curve_error = traitlets.Unicode("").tag(sync=True)
 
     def __init__(
         self,
-        spline_fn: Callable | None = None,
+        spline_fn: Callable,
         *,
         n_classes: int = 1,
         brushsize: int = 40,
@@ -73,7 +69,6 @@ class SplineDraw(anywidget.AnyWidget):
             spline_fn: A callable ``(x, y) -> (x_curve, y_curve)`` where
                 inputs are 1-D numpy arrays of drawn point coordinates and
                 outputs are 1-D numpy arrays defining the fitted curve.
-                Defaults to a Gaussian kernel smoother.
             n_classes: Number of point classes (1-4). Defaults to 1.
             brushsize: Initial brush radius in pixels.
             width: SVG viewBox width in pixels.
@@ -82,7 +77,7 @@ class SplineDraw(anywidget.AnyWidget):
         """
         if not 1 <= n_classes <= 4:
             raise ValueError("n_classes must be between 1 and 4")
-        self._spline_fn = spline_fn or _gaussian_smooth
+        self._spline_fn = spline_fn
         super().__init__(
             n_classes=n_classes,
             brushsize=brushsize,
