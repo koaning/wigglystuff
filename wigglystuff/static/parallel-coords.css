@@ -8,14 +8,15 @@
     color-scheme: light dark;
     --pc-bg: #ffffff;
     --pc-border: #d0d7de;
-    --pc-text: #1f2937;
+    --pc-text: #111827;
     --pc-text-muted: #4b5563;
-    --pc-btn-bg: #f8fafc;
-    --pc-btn-border: #cbd5e1;
-    --pc-btn-hover-border: #3b82f6;
-    --pc-btn-active-bg: #dbeafe;
-    --pc-btn-active-border: #3b82f6;
-    --pc-btn-active-text: #1d4ed8;
+    --pc-btn-bg: #ffffff;
+    --pc-btn-border: #64748b;
+    --pc-btn-hover-bg: #f1f5f9;
+    --pc-btn-hover-border: #1d4ed8;
+    --pc-btn-active-bg: #bfdbfe;
+    --pc-btn-active-border: #1d4ed8;
+    --pc-btn-active-text: #1e3a8a;
     --pc-chip-bg: rgba(255, 255, 255, 0.95);
     --pc-chip-border: rgba(25, 25, 25, 0.2);
 }
@@ -27,6 +28,7 @@
     --pc-text-muted: #c4c8cf;
     --pc-btn-bg: #2a2a2a;
     --pc-btn-border: #4b5563;
+    --pc-btn-hover-bg: #334155;
     --pc-btn-hover-border: #60a5fa;
     --pc-btn-active-bg: #1e3a5f;
     --pc-btn-active-border: #60a5fa;
@@ -81,7 +83,7 @@
 }
 
 .pc-wrapper .container-fluid .d-flex.flex-wrap > div:last-child {
-    margin-left: auto !important;
+    margin-left: 8px !important;
 }
 
 .pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] {
@@ -116,6 +118,7 @@
 }
 
 .pc-wrapper .btn.btn-sm:hover:not(:disabled) {
+    background: var(--pc-btn-hover-bg) !important;
     border-color: var(--pc-btn-hover-border) !important;
 }
 

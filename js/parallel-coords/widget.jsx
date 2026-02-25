@@ -73,7 +73,7 @@ function render({ model, el }) {
     if (selectedGroup) {
       selectedGroup.style.display = "flex";
       selectedGroup.style.alignItems = "center";
-      selectedGroup.style.marginLeft = "auto";
+      selectedGroup.style.marginLeft = "8px";
       const stat = selectedGroup.querySelector("div");
       if (stat) {
         stat.style.margin = "0";
@@ -155,17 +155,22 @@ function render({ model, el }) {
   }
 
   function buildOnChange() {
+    const toIndices = (uids) =>
+      uids.map((u) => parseInt(u, 10)).filter((n) => !isNaN(n));
+
     return {
       filtered_uids: (_type, uids) => {
         if (Array.isArray(uids)) {
-          const indices = uids.map((u) => parseInt(u, 10)).filter((n) => !isNaN(n));
+          const indices = toIndices(uids);
           model.set("filtered_indices", indices);
           model.save_changes();
         }
       },
       selected_uids: (_type, uids) => {
         if (Array.isArray(uids)) {
-          const indices = uids.map((u) => parseInt(u, 10)).filter((n) => !isNaN(n));
+          const indices = toIndices(uids);
+          // Keep filtered_indices aligned with the current brushed selection.
+          model.set("filtered_indices", indices);
           model.set("selected_indices", indices);
           model.save_changes();
         }
