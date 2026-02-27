@@ -2,57 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.32] - 2026-02-27
+## [0.2.33] - 2026-02-27
 
 ### Added
-- Added `ParallelCoordinates` to the docs/gallery surfaces (`README.md`, `mkdocs/index.md`, `mkdocs/llms.txt`) with a gallery screenshot and API/demo links.
-- Added `mkdocs/reference/parallel-coords.md` and wired `ParallelCoordinates` into MkDocs navigation and API overview.
-
-### Changed
-- `ParallelCoordinates.__init__` now uses explicit constructor arguments only (`data`, `color_by`, `height`) and no longer accepts `**kwargs`.
-- Expanded `ParallelCoordinates` class docstring with argument documentation to make constructor usage clearer in generated docs.
-
-### Fixed
-- Parallel coordinates drag interactions are now more robust under fast UI updates/theme toggles.
-- Axis-label drag no longer accelerates ahead of the pointer and label text is non-selectable while dragging.
-
-## [0.2.31] - 2026-02-25
-
-### Added
-- New `SplineDraw` widget for drawing scatter points with a Python-computed spline curve overlay. Accepts any callable with signature `(x, y) -> (x_curve, y_curve)` for flexible curve fitting (e.g. scikit-learn pipelines, interpolation functions). Built on the same D3/SVG canvas as `ScatterWidget`.
+- `ParallelCoordinates` added to the docs and gallery.
 - `SplineDraw.redraw()` method to retrigger spline recomputation or swap in a new `spline_fn` at runtime.
 
+## [0.2.32] - 2026-02-25
+
 ### Added
-- New `ApiDoc` widget for rendering Python class and function API documentation directly in notebooks. Introspects signatures, parameters, docstrings, methods, and properties via stdlib `inspect`. Features collapsible method/property sections, colored badges for class/function/classmethod/staticmethod/property, Python syntax highlighting in fenced code blocks, inline markdown (`**bold**`, `` `code` ``), copy-to-clipboard on code examples, and light/dark theme support.
+- New `SplineDraw` widget for drawing scatter points with a Python-computed spline curve overlay. Accepts any callable with signature `(x, y) -> (x_curve, y_curve)` for flexible curve fitting.
+- New `ApiDoc` widget for rendering Python class and function API documentation directly in notebooks. Introspects signatures, parameters, docstrings, methods, and properties via `inspect`. Features collapsible sections, colored badges, syntax highlighting, and light/dark theme support.
 
 ### Fixed
-- `KeystrokeWidget` canvas and metadata text now includes a generic `monospace` fallback in the font stack, preventing the browser from falling back to a serif font when named monospace fonts are unavailable.
-- `AltairWidget` now correctly renders layered and concatenated Altair charts that use multiple datasets. Previously, `prepareSpec` dropped all but the first dataset, breaking layer-level data references.
+- `KeystrokeWidget` canvas now includes a generic `monospace` fallback in the font stack.
+- `AltairWidget` now correctly renders layered and concatenated Altair charts that use multiple datasets.
 
 ## [0.2.30] - 2026-02-19
 
 ### Added
-- New `AltairWidget` for flicker-free Altair chart rendering. Uses Vega's persistent View API to patch data in-place via changesets, preserving interactive state (zoom, pan, selections) across updates. Loads vega-embed from CDN for minimal bundle size.
+- New `AltairWidget` for flicker-free Altair chart rendering. Uses Vega's persistent View API to patch data in-place via changesets, preserving interactive state across updates.
 
 ### Changed
-- `ScatterWidget` is now re-exported from the [`drawdata`](https://github.com/koaning/drawdata) package. The import `from wigglystuff import ScatterWidget` still works, but the implementation lives in `drawdata`.
+- `ScatterWidget` is now re-exported from the [`drawdata`](https://github.com/koaning/drawdata) package. The import `from wigglystuff import ScatterWidget` still works.
 
 ## [0.2.29] - 2026-02-19
 
 ### Added
-- New `DiffViewer` widget for rich file diffs powered by `@pierre/diffs`. Supports split and unified diff styles with syntax highlighting, dark mode, and configurable expansion of unchanged lines.
+- New `DiffViewer` widget for rich file diffs. Supports split and unified diff styles with syntax highlighting, dark mode, and configurable expansion of unchanged lines.
 
 ## [0.2.28] - 2026-02-16
 
 ### Added
 - New `ScatterWidget` for painting multi-class 2D datasets directly in notebooks. Includes class selection, brush controls, undo/reset, and synced point data with helper conversions (`data_as_pandas`, `data_as_polars`, `data_as_X_y`).
-- `ScatterWidget.n_classes` is now validated on assignment (not only at construction), enforcing the documented `1..4` range.
+- `ScatterWidget.n_classes` is now validated on assignment (not only at construction), enforcing the `1..4` range.
 - `ScatterWidget.data_as_X_y` now returns stable output shapes based on configured mode (`n_classes==1` for regression, `n_classes>1` for classification).
 
 ## [0.2.27] - 2026-02-12
 
 ### Fixed
-- `ChartSelect.from_callback` and `ChartPuck.from_callback` now use proper init proxies so user callbacks that call widget helpers (e.g. `get_mask`, `export_kmeans`) during the initial render no longer crash.
+- `ChartSelect.from_callback` and `ChartPuck.from_callback` now use proper init proxies so user callbacks that call widget helpers during the initial render no longer crash.
 
 ## [0.2.26] - 2026-02-12
 
@@ -62,12 +51,12 @@ All notable changes to this project will be documented in this file.
 ## [0.2.25] - 2026-02-11
 
 ### Added
-- `Neo4jWidget` for interactive Neo4j graph exploration. Features a Cypher query input with schema-aware autocomplete, force-directed graph visualization with d3, node/edge selection (click, ctrl-click, and freeform lasso), double-click node expansion, and zoom/pan navigation. Requires a `neo4j` driver instance.
+- `Neo4jWidget` for interactive Neo4j graph exploration. Features Cypher query input with schema-aware autocomplete, force-directed graph visualization, node/edge selection (click, ctrl-click, lasso), double-click node expansion, and zoom/pan navigation. Requires a `neo4j` driver instance.
 
 ## [0.2.24] - 2026-02-09
 
 ### Added
-- `WandbChart` widget for live wandb run visualization with configurable smoothing (rolling mean, exponential moving average, gaussian). Supports multiple runs, auto-polling, and an interactive dropdown to switch smoothing kind.
+- `WandbChart` widget for live wandb run visualization with configurable smoothing (rolling mean, EMA, gaussian). Supports multiple runs, auto-polling, and an interactive smoothing dropdown.
 
 ### Fixed
 - Removed `wandb` from core dependencies. It was accidentally added as a required dependency but should only be an optional extra (`pip install wigglystuff[wandb]`).
@@ -77,9 +66,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 - `ModuleTreeWidget` for visualising PyTorch `nn.Module` architecture as an interactive tree with parameter counts, shapes, and trainable/frozen/buffer badges.
 - Shared parameter detection: tied weights are marked with a "shared" badge and counted only once in totals.
-- Lazy (uninitialized) parameter detection: `nn.LazyLinear` and similar modules show a "lazy" badge with "uninitialized" instead of a shape.
+- Lazy parameter detection: `nn.LazyLinear` and similar modules show a "lazy" badge with "uninitialized" instead of a shape.
 - Unregistered module detection: warns when `nn.Module` instances are stored in plain Python lists instead of `nn.ModuleList`.
-- Convenience properties on `ModuleTreeWidget`: `total_param_count`, `total_trainable_count`, `total_size_bytes`.
+- Convenience properties: `total_param_count`, `total_trainable_count`, `total_size_bytes`.
 - New "molab" gallery section for widgets that depend on 3rd party packages.
 
 ### Changed
@@ -88,8 +77,8 @@ All notable changes to this project will be documented in this file.
 ## [0.2.22] - 2026-02-08
 
 ### Added
-- `ChartPuck.puck_color` now accepts a list of CSS colors for per-puck coloring (e.g., `puck_color=["red", "green", "blue"]`). A single string still applies to all pucks.
-- New `throttle` parameter on `ChartPuck` to control how often puck positions sync to Python during drag. Set to an integer for millisecond throttling (e.g., `throttle=100`) or `"dragend"` to sync only on release.
+- `ChartPuck.puck_color` now accepts a list of CSS colors for per-puck coloring. A single string still applies to all pucks.
+- New `throttle` parameter on `ChartPuck` to control how often puck positions sync to Python during drag. Set to an integer for millisecond throttling or `"dragend"` to sync only on release.
 
 ### Changed
 - Removed `**kwargs` from `ChartPuck.__init__`; all parameters are now explicit.
@@ -100,42 +89,42 @@ All notable changes to this project will be documented in this file.
 - ColorPicker now shows the hex value next to the input by default (toggle with `show_label`).
 
 ### Fixed
-- ColorPicker now keeps its hex label in sync when the color is updated programmatically (e.g., demo button updates).
+- ColorPicker now keeps its hex label in sync when the color is updated programmatically.
 
 ## [0.2.20] - 2026-02-02
 
 ### Added
-- `EnvConfig.get(name, default=None)` method for dict-like access that returns a default value instead of raising `KeyError`.
-- Optional `variables` parameter to `EnvConfig.require_valid()` to check only a subset of configured variables, allowing some to remain unset.
+- `EnvConfig.get(name, default=None)` method for dict-like access.
+- Optional `variables` parameter to `EnvConfig.require_valid()` to check only a subset of configured variables.
 
 ## [0.2.19] - 2026-01-29
 
 ### Added
-- New `ChartSelect` widget for interactive region selection on matplotlib charts. Supports box and lasso (freehand) selection modes, returns selection coordinates in data space, and includes helper methods (`get_mask()`, `get_indices()`, `get_bounds()`, `contains_point()`) for filtering data points. Also supports `from_callback()` factory for auto-updating charts.
+- New `ChartSelect` widget for interactive region selection on matplotlib charts. Supports box and lasso modes, returns selection coordinates in data space, and includes helper methods (`get_mask()`, `get_indices()`, `get_bounds()`, `contains_point()`). Also supports `from_callback()` factory for auto-updating charts.
 
 ## [0.2.18] - 2026-01-26
 
 ### Fixed
-- Removed `scikit-learn` from core dependencies. It was accidentally added as a required dependency but is only used by the optional `ChartPuck.export_kmeans()` method. Users of this method should install with `pip install wigglystuff[test]`.
+- Removed `scikit-learn` from core dependencies. It was accidentally added but is only used by the optional `ChartPuck.export_kmeans()` method.
 
 ## [0.2.17] - 2026-01-26
 
 ### Changed
-- **Breaking:** `ChartPuck.from_callback` now passes the widget to the draw function instead of scalar coordinates. The signature changed from `draw_fn(ax, x, y)` to `draw_fn(ax, widget)`, giving access to all puck positions via `widget.x` and `widget.y` lists.
+- **Breaking:** `ChartPuck.from_callback` now passes the widget to the draw function instead of scalar coordinates. Signature changed from `draw_fn(ax, x, y)` to `draw_fn(ax, widget)`, giving access to all puck positions via `widget.x` and `widget.y`.
 
 ### Added
-- New `redraw()` method on `ChartPuck` for manually triggering chart re-renders when external state changes (e.g., dropdown selections). Only available for widgets created via `from_callback()`.
+- New `redraw()` method on `ChartPuck` for manually triggering chart re-renders when external state changes. Only available for widgets created via `from_callback()`.
 - Added Step, Nearest, Quadratic, and Barycentric interpolation methods to the ChartPuck spline demo.
 
 ## [0.2.16] - 2026-01-20
 
 ### Added
-- New `ChartPuck` widget for overlaying draggable pucks on matplotlib charts. Allows interactive selection of coordinates in data space with automatic conversion between pixel and data coordinates. Supports single or multiple pucks, customizable styling (color, radius), a `from_callback` factory method for charts that auto-update when the puck moves, and an `export_kmeans()` method to use puck positions as initial centroids for scikit-learn KMeans clustering.
+- New `ChartPuck` widget for overlaying draggable pucks on matplotlib charts. Supports single or multiple pucks, customizable styling, a `from_callback` factory for auto-updating charts, and `export_kmeans()` for using puck positions as KMeans initial centroids.
 
 ## [0.2.15] - 2026-01-20
 
 ### Added
-- Playwright browser integration tests for `SortableList` widget, verifying full browser-to-Python round-trip communication. Tests cover rendering, adding/removing/editing items, and Python state synchronization.
+- Playwright browser integration tests for `SortableList` widget, verifying full browser-to-Python round-trip communication.
 - New `test-browser` optional dependency group and CI workflow for running browser tests with marimo.
 
 ### Removed
@@ -144,8 +133,8 @@ All notable changes to this project will be documented in this file.
 ## [0.2.14] - 2026-01-19
 
 ### Fixed
-- `EnvConfig` now displays values in input fields even when validation fails, so users can see what was loaded or entered rather than an empty field.
-- Removed footer color changes in `EnvConfig`. Individual row highlighting (green/red) is now the sole status indicator, making the UI more consistent.
+- `EnvConfig` now displays values in input fields even when validation fails.
+- Removed footer color changes in `EnvConfig`. Individual row highlighting is now the sole status indicator.
 
 ## [0.2.13] - 2026-01-15
 
@@ -155,14 +144,14 @@ All notable changes to this project will be documented in this file.
 ## [0.2.12] - 2026-01-12
 
 ### Added
-- New `TextCompare` widget for side-by-side text comparison with match highlighting. Useful for plagiarism detection or finding shared passages between documents. Features hover-based highlighting that syncs between panels, configurable minimum match length via `min_match_words`, and programmatic access to detected matches.
+- New `TextCompare` widget for side-by-side text comparison with match highlighting. Features hover-based highlighting that syncs between panels and configurable minimum match length via `min_match_words`.
 
 ## [0.2.11] - 2026-01-08
 
 ### Added
-- New `PulsarChart` widget for stacked waveform visualization, inspired by the iconic PSR B1919+21 pulsar visualization from Joy Division's "Unknown Pleasures" album cover. Features include clickable rows with selection state synced back to Python, customizable overlap, stroke width, fill opacity, and peak scale.
+- New `PulsarChart` widget for stacked waveform visualization. Features clickable rows with selection state synced back to Python, customizable overlap, stroke width, fill opacity, and peak scale.
 
 ## [0.2.10] - 2026-01-07
 
 ### Fixed
-- Fixed "Maximum call stack size exceeded" error when rendering `Slider2D` widget on latest marimo. The widget had an infinite loop where model change handlers would trigger redraws that updated the model again.
+- Fixed "Maximum call stack size exceeded" error when rendering `Slider2D` on latest marimo. The widget had an infinite loop where model change handlers would trigger redraws that updated the model again.
