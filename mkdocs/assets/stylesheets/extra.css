@@ -125,11 +125,17 @@
 .gallery-links {
   padding: 0.5rem 0.75rem;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   border-top: 1px solid var(--wiggly-demo-border);
 }
 
 .gallery-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  white-space: nowrap;
   font-size: 0.75rem;
   color: var(--md-accent-fg-color);
   text-decoration: none;
@@ -141,4 +147,16 @@
 
 .gallery-links a:hover {
   background-color: color-mix(in srgb, var(--md-accent-fg-color) 15%, transparent);
+}
+
+@media (max-width: 600px) {
+  .gallery-links {
+    gap: 0.375rem;
+    padding: 0.5rem;
+  }
+
+  .gallery-links a {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
 }
