@@ -263,6 +263,7 @@ function render({ model, el }) {
   function doRender() {
     const experiment = buildExperiment();
     const height = model.get("height") || 600;
+    const width = model.get("width") || 0;
     const dark = isDark();
     persistentState[`${DefaultPlugins.PARALLEL_PLOT}.height`] = height;
     lastRenderedDark = dark;
@@ -282,7 +283,7 @@ function render({ model, el }) {
     root.render(
       React.createElement("div", {
         className: "pc-wrapper",
-        style: { width: "100%" },
+        style: { width: width > 0 ? `${width}px` : "100%" },
       },
         React.createElement(HiPlot, {
           ref: hiplotRef,
@@ -316,11 +317,13 @@ function render({ model, el }) {
   model.on("change:data", doRender);
   model.on("change:color_by", doRender);
   model.on("change:height", doRender);
+  model.on("change:width", doRender);
 
   return () => {
     model.off("change:data", doRender);
     model.off("change:color_by", doRender);
     model.off("change:height", doRender);
+    model.off("change:width", doRender);
     if (domObserver) {
       domObserver.disconnect();
       domObserver = null;

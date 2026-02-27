@@ -56,6 +56,7 @@ uv pip install wigglystuff
 <tr>
 <td align="center"><b>SplineDraw</b><br><a href="https://koaning.github.io/wigglystuff/examples/splinedraw/"><img src="./mkdocs/assets/gallery/splinedraw.png" width="330"></a><br><a href="https://koaning.github.io/wigglystuff/examples/splinedraw/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/spline-draw/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/spline-draw.md">MD</a></td>
 <td align="center"><b>ApiDoc</b><br><a href="https://koaning.github.io/wigglystuff/examples/apidoc/"><img src="./mkdocs/assets/gallery/apidoc.png" width="330"></a><br><a href="https://koaning.github.io/wigglystuff/examples/apidoc/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/api-doc/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/api-doc.md">MD</a></td>
+<td align="center"><b>ParallelCoordinates</b><br><a href="https://koaning.github.io/wigglystuff/examples/parallelcoords/"><img src="./mkdocs/assets/gallery/parallelcoords.png" width="330"></a><br><a href="https://koaning.github.io/wigglystuff/examples/parallelcoords/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/parallel-coords/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/parallel-coords.md">MD</a></td>
 </tr>
 </table>
 

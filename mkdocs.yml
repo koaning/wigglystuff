@@ -36,6 +36,7 @@ nav:
       - Slider2D: reference/slider2d.md
       - ChartPuck: reference/chart-puck.md
       - ChartSelect: reference/chart-select.md
+      - ParallelCoordinates: reference/parallel-coords.md
       - Matrix: reference/matrix.md
       - SortableList: reference/sortable-list.md
       - Paint: reference/paint.md

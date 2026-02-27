@@ -16,6 +16,14 @@ class ParallelCoordinates(anywidget.AnyWidget):
     axes, axis reordering via drag, and coloring lines by a selected
     dimension -- all inside a notebook widget.
 
+    Args:
+        data: Dataset as a list of dictionaries, pandas DataFrame, or polars
+            DataFrame. Each row becomes one polyline in the chart.
+        color_by: Column name used to color lines. Leave empty for a single
+            default color.
+        height: Widget height in pixels.
+        width: Widget width in pixels. Set to 0 for container width.
+
     Examples:
         ```python
         from wigglystuff import ParallelCoordinates
@@ -37,6 +45,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
     data = traitlets.List([]).tag(sync=True)
     color_by = traitlets.Unicode("").tag(sync=True)
     height = traitlets.Int(600).tag(sync=True)
+    width = traitlets.Int(0).tag(sync=True)
 
     # Synced back from HiPlot via onChange callbacks
     filtered_indices = traitlets.List(traitlets.Int(), default_value=[]).tag(sync=True)
@@ -48,7 +57,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
         *,
         color_by: str = "",
         height: int = 600,
-        **kwargs: Any,
+        width: int = 0,
     ) -> None:
         """Create a ParallelCoordinates widget.
 
@@ -58,7 +67,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
             color_by: Column name to color lines by. Empty string for uniform
                 color.
             height: Widget height in pixels.
-            **kwargs: Forwarded to ``anywidget.AnyWidget``.
+            width: Widget width in pixels. Set to 0 for container width.
         """
         records = _to_records(data)
         filtered_indices = list(range(len(records)))
@@ -66,9 +75,9 @@ class ParallelCoordinates(anywidget.AnyWidget):
             data=records,
             color_by=color_by,
             height=height,
+            width=width,
             filtered_indices=filtered_indices,
             selected_indices=[],
-            **kwargs,
         )
 
     @property
