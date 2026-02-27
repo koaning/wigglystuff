@@ -134,6 +134,41 @@ data_as_polars
 Return the drawn points as a :class:`polars.DataFrame`.
 
 
+## redraw
+
+
+```
+redraw(spline_fn: Callable | None = None) -> None
+```
+
+
+Recompute the spline curve, optionally with a new function.
+
+
+Call this when external state affecting `spline_fn` has changed (e.g. model hyperparameters controlled by another widget), or pass a new callable to replace the fitting function entirely.
+
+
+  Source code in `wigglystuff/spline_draw.py`
+
+```
+def redraw(self, spline_fn: Callable | None = None) -> None:
+    """Recompute the spline curve, optionally with a new function.
+
+    Call this when external state affecting ``spline_fn`` has changed
+    (e.g. model hyperparameters controlled by another widget), or pass
+    a new callable to replace the fitting function entirely.
+
+    Args:
+        spline_fn: If provided, replaces the current spline function
+            before recomputing.  Must have the same
+            ``(x, y) -> (x_curve, y_curve)`` signature.
+    """
+    if spline_fn is not None:
+        self._spline_fn = spline_fn
+    self._recompute_curve()
+```
+
+
 ## Synced traitlets
 
 
