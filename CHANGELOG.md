@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - New `SplineDraw` widget for drawing scatter points with a Python-computed spline curve overlay. Accepts any callable with signature `(x, y) -> (x_curve, y_curve)` for flexible curve fitting (e.g. scikit-learn pipelines, interpolation functions). Built on the same D3/SVG canvas as `ScatterWidget`.
+- `SplineDraw.redraw()` method to retrigger spline recomputation or swap in a new `spline_fn` at runtime.
 
 ### Added
 - New `ApiDoc` widget for rendering Python class and function API documentation directly in notebooks. Introspects signatures, parameters, docstrings, methods, and properties via stdlib `inspect`. Features collapsible method/property sections, colored badges for class/function/classmethod/staticmethod/property, Python syntax highlighting in fenced code blocks, inline markdown (`**bold**`, `` `code` ``), copy-to-clipboard on code examples, and light/dark theme support.
