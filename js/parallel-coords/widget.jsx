@@ -48,7 +48,6 @@ function render({ model, el }) {
   let domObserver = null;
   let themeObserver = null;
   let labelDragGuardInstalled = false;
-  let activeLabelDrag = null;
   let lastRenderedDark = null;
 
   function applyHeaderLayout() {
@@ -135,7 +134,6 @@ function render({ model, el }) {
 
   function ensureLabelDragGuard() {
     if (labelDragGuardInstalled) return;
-    const ownerWindow = el.ownerDocument?.defaultView || window;
 
     const onPointerDown = (event) => {
       const target = event.target;
@@ -163,48 +161,15 @@ function render({ model, el }) {
           dragging: false,
         },
       };
-      activeLabelDrag = {
-        lastClientX: event.clientX,
-      };
-    };
-
-    const onPointerMove = (event) => {
-      if (!activeLabelDrag) return;
-      const plugin = getParallelPlotPlugin();
-      const dragState = plugin?.state?.dragging;
-      if (!plugin || !dragState) return;
-
-      const dx = event.clientX - activeLabelDrag.lastClientX;
-      if (!Number.isFinite(dx) || dx === 0) return;
-      activeLabelDrag.lastClientX = event.clientX;
-
-      const width = Number.isFinite(plugin.w) ? plugin.w : dragState.pos;
-      const nextPos = Math.min(width, Math.max(0, dragState.pos + dx));
-      plugin.state.dragging = {
-        ...dragState,
-        pos: nextPos,
-        dragging: true,
-      };
-    };
-
-    const onPointerDone = () => {
-      activeLabelDrag = null;
     };
 
     el.addEventListener("pointerdown", onPointerDown, true);
-    ownerWindow.addEventListener("pointermove", onPointerMove, true);
-    ownerWindow.addEventListener("pointerup", onPointerDone, true);
-    ownerWindow.addEventListener("pointercancel", onPointerDone, true);
     labelDragGuardInstalled = true;
 
     // Stash cleanup handles on the element so we can remove listeners in widget dispose.
     el.__pcCleanupLabelDragGuard = () => {
       el.removeEventListener("pointerdown", onPointerDown, true);
-      ownerWindow.removeEventListener("pointermove", onPointerMove, true);
-      ownerWindow.removeEventListener("pointerup", onPointerDone, true);
-      ownerWindow.removeEventListener("pointercancel", onPointerDone, true);
       labelDragGuardInstalled = false;
-      activeLabelDrag = null;
     };
   }
 

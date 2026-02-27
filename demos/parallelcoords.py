@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.20.2"
-app = marimo.App(width="medium")
+app = marimo.App()
 
 
 @app.cell
@@ -31,7 +31,7 @@ def _(mo):
     iris = load_iris(as_frame=True)
     df = iris.frame
 
-    widget = mo.ui.anywidget(ParallelCoordinates(df, height=300, color_by="target"))
+    widget = mo.ui.anywidget(ParallelCoordinates(df, height=300, width=500, color_by="target"))
     widget
     return ParallelCoordinates, widget
 
