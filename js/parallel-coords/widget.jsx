@@ -4,6 +4,7 @@ import {
   HiPlot,
   Experiment,
   DefaultPlugins,
+  ParallelPlot,
   createDefaultPlugins,
   PersistentStateInMemory,
 } from "hiplot";
@@ -42,9 +43,12 @@ const CATEGORICAL_COLOR_SCHEME = [
 
 function render({ model, el }) {
   const root = ReactDOM.createRoot(el);
+  const hiplotRef = React.createRef();
   const persistentState = {};
   let domObserver = null;
   let themeObserver = null;
+  let labelDragGuardInstalled = false;
+  let activeLabelDrag = null;
   let lastRenderedDark = null;
 
   function applyHeaderLayout() {
@@ -116,6 +120,92 @@ function render({ model, el }) {
       themeObserver.observe(node, observerOpts);
       node = node.parentElement;
     }
+  }
+
+  function getParallelPlotPlugin() {
+    try {
+      if (!hiplotRef.current || typeof hiplotRef.current.getPlugin !== "function") {
+        return null;
+      }
+      return hiplotRef.current.getPlugin(ParallelPlot);
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function ensureLabelDragGuard() {
+    if (labelDragGuardInstalled) return;
+    const ownerWindow = el.ownerDocument?.defaultView || window;
+
+    const onPointerDown = (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      const label = target.closest(".label-name");
+      if (!label || !el.contains(label)) return;
+
+      const plugin = getParallelPlotPlugin();
+      if (!plugin || typeof plugin.xscale !== "function") return;
+
+      const dimensionEl = label.closest(".dimension");
+      const dimension = dimensionEl?.__data__;
+      if (!dimension) return;
+
+      const origin = Number(plugin.xscale(dimension));
+      if (!Number.isFinite(origin)) return;
+
+      // HiPlot's drag handlers assume dragging is always non-null.
+      plugin.state = {
+        ...plugin.state,
+        dragging: {
+          col: dimension,
+          pos: origin,
+          origin,
+          dragging: false,
+        },
+      };
+      activeLabelDrag = {
+        lastClientX: event.clientX,
+      };
+    };
+
+    const onPointerMove = (event) => {
+      if (!activeLabelDrag) return;
+      const plugin = getParallelPlotPlugin();
+      const dragState = plugin?.state?.dragging;
+      if (!plugin || !dragState) return;
+
+      const dx = event.clientX - activeLabelDrag.lastClientX;
+      if (!Number.isFinite(dx) || dx === 0) return;
+      activeLabelDrag.lastClientX = event.clientX;
+
+      const width = Number.isFinite(plugin.w) ? plugin.w : dragState.pos;
+      const nextPos = Math.min(width, Math.max(0, dragState.pos + dx));
+      plugin.state.dragging = {
+        ...dragState,
+        pos: nextPos,
+        dragging: true,
+      };
+    };
+
+    const onPointerDone = () => {
+      activeLabelDrag = null;
+    };
+
+    el.addEventListener("pointerdown", onPointerDown, true);
+    ownerWindow.addEventListener("pointermove", onPointerMove, true);
+    ownerWindow.addEventListener("pointerup", onPointerDone, true);
+    ownerWindow.addEventListener("pointercancel", onPointerDone, true);
+    labelDragGuardInstalled = true;
+
+    // Stash cleanup handles on the element so we can remove listeners in widget dispose.
+    el.__pcCleanupLabelDragGuard = () => {
+      el.removeEventListener("pointerdown", onPointerDown, true);
+      ownerWindow.removeEventListener("pointermove", onPointerMove, true);
+      ownerWindow.removeEventListener("pointerup", onPointerDone, true);
+      ownerWindow.removeEventListener("pointercancel", onPointerDone, true);
+      labelDragGuardInstalled = false;
+      activeLabelDrag = null;
+    };
   }
 
   function isDark() {
@@ -230,6 +320,7 @@ function render({ model, el }) {
         style: { width: "100%" },
       },
         React.createElement(HiPlot, {
+          ref: hiplotRef,
           key:
             (model.get("data") || []).length +
             "_" +
@@ -252,6 +343,7 @@ function render({ model, el }) {
       applyHeaderLayout();
       ensureDomObserver();
       ensureThemeObserver();
+      ensureLabelDragGuard();
     });
   }
 
@@ -271,6 +363,10 @@ function render({ model, el }) {
     if (themeObserver) {
       themeObserver.disconnect();
       themeObserver = null;
+    }
+    if (typeof el.__pcCleanupLabelDragGuard === "function") {
+      el.__pcCleanupLabelDragGuard();
+      delete el.__pcCleanupLabelDragGuard;
     }
     root.unmount();
   };

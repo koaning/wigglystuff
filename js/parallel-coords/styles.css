@@ -148,6 +148,16 @@
     cursor: ew-resize !important;
 }
 
+.pc-wrapper .label-name,
+.pc-wrapper .label-name *,
+.pc-wrapper [class*="tooltipContainer"],
+.pc-wrapper [class*="tooltipContainer"] * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
 .pc-wrapper .label-name {
     background: var(--pc-chip-bg);
     border: 1px solid var(--pc-chip-border);
