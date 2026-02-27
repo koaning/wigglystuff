@@ -1,6 +1,6 @@
 {
   "scripts": {
     "setup": "make install",
-    "run": "uv run marimo edit --watch demos"
+    "run": "uv run marimo edit --watch --no-token demos"
   }
 }

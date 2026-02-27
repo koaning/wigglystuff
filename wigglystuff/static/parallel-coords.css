@@ -1,0 +1,193 @@
+/* Keep HiPlot content-sized inside notebook widget containers. */
+.pc-wrapper .hip_thm--light > div,
+.pc-wrapper .hip_thm--dark > div {
+    height: auto !important;
+}
+
+.pc-wrapper {
+    color-scheme: light dark;
+    --pc-bg: #ffffff;
+    --pc-border: #d0d7de;
+    --pc-text: #111827;
+    --pc-text-muted: #4b5563;
+    --pc-btn-bg: #ffffff;
+    --pc-btn-border: #64748b;
+    --pc-btn-text: #111827;
+    --pc-btn-hover-bg: #f1f5f9;
+    --pc-btn-hover-border: #1d4ed8;
+    --pc-btn-active-bg: #bfdbfe;
+    --pc-btn-active-border: #1d4ed8;
+    --pc-btn-active-text: #1e3a8a;
+    --pc-chip-bg: rgba(255, 255, 255, 0.95);
+    --pc-chip-border: rgba(25, 25, 25, 0.2);
+}
+
+.pc-wrapper .hip_thm--dark {
+    --pc-bg: #111a24;
+    --pc-border: #2b3a4f;
+    --pc-text: #e6edf5;
+    --pc-text-muted: #b8c4d6;
+    --pc-btn-bg: #1b2738;
+    --pc-btn-border: #657790;
+    --pc-btn-text: #e6edf5;
+    --pc-btn-hover-bg: #25364c;
+    --pc-btn-hover-border: #97b5ff;
+    --pc-btn-active-bg: #2a4f8b;
+    --pc-btn-active-border: #97b5ff;
+    --pc-btn-active-text: #eaf1ff;
+    --pc-chip-bg: rgba(18, 28, 42, 0.96);
+    --pc-chip-border: rgba(176, 194, 218, 0.45);
+}
+
+/* Ensure the SVG brush layer overlays the canvas line layer. */
+.pc-wrapper .pplot-root {
+    position: relative;
+    z-index: 1;
+}
+
+.pc-wrapper .pplot-root canvas,
+.pc-wrapper .pplot-root svg {
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+
+/* Productized controls: hide branding and disabled actions. */
+.pc-wrapper .container-fluid .d-flex > img[style],
+.pc-wrapper .hide-when-loaded img,
+.pc-wrapper button[title="Export data as CSV"],
+.pc-wrapper button[title="Start HiPlot tutorial"] {
+    display: none !important;
+}
+
+/* Header and controls layout: keep buttons + selected stats on one row. */
+.pc-wrapper .container-fluid[class*="header"] {
+    background: var(--pc-bg) !important;
+    border-bottom: 1px solid var(--pc-border) !important;
+    color: var(--pc-text);
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap {
+    align-items: center;
+    column-gap: 0.35rem;
+    flex-wrap: nowrap !important;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap > div {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    margin: 0 !important;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap > div > div[style*="clear"] {
+    display: none !important;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap > div:last-child {
+    margin-left: 8px !important;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] {
+    color: var(--pc-text-muted);
+    font-size: 12px !important;
+    margin: 0 !important;
+    white-space: nowrap;
+}
+
+/* Button styling inspired by chart_select. */
+.pc-wrapper .btn.btn-sm {
+    align-items: center;
+    background: var(--pc-btn-bg) !important;
+    border: 1px solid var(--pc-btn-border) !important;
+    border-radius: 4px;
+    color: var(--pc-btn-text) !important;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 11px;
+    font-weight: 500;
+    gap: 3px;
+    line-height: 1.3;
+    margin-right: 6px;
+    padding: 3px 10px;
+    position: relative;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    z-index: 5;
+}
+
+.pc-wrapper .btn.btn-sm:last-child {
+    margin-right: 0;
+}
+
+.pc-wrapper .hip_thm--dark .btn.btn-sm,
+.pc-wrapper .hip_thm--dark .btn.btn-sm.btn-light {
+    background: var(--pc-btn-bg) !important;
+    border-color: var(--pc-btn-border) !important;
+    color: var(--pc-btn-text) !important;
+}
+
+.pc-wrapper .btn.btn-sm:hover:not(:disabled) {
+    background: var(--pc-btn-hover-bg) !important;
+    border-color: var(--pc-btn-hover-border) !important;
+}
+
+.pc-wrapper .btn.btn-sm.btn-info {
+    background: var(--pc-btn-active-bg) !important;
+    border-color: var(--pc-btn-active-border) !important;
+    color: var(--pc-btn-active-text) !important;
+}
+
+.pc-wrapper .btn.btn-sm:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+/* Axis titles: keep horizontal, above brushes, and easy to drag left/right. */
+.pc-wrapper .label-name,
+.pc-wrapper [class*="tooltipContainer"] {
+    cursor: ew-resize !important;
+}
+
+.pc-wrapper .label-name,
+.pc-wrapper .label-name *,
+.pc-wrapper [class*="tooltipContainer"],
+.pc-wrapper [class*="tooltipContainer"] * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.pc-wrapper .label-name {
+    background: var(--pc-chip-bg);
+    border: 1px solid var(--pc-chip-border);
+    border-radius: 4px;
+    color: var(--pc-text) !important;
+    display: inline-block;
+    margin-top: -14px;
+    padding: 1px 6px;
+    position: relative;
+    rotate: 0deg !important;
+    text-shadow: none !important;
+    top: -4px;
+    transform: none !important;
+    transform-origin: center center !important;
+    z-index: 8;
+}
+
+.pc-wrapper .hip_thm--dark .label-name {
+    background: var(--pc-chip-bg) !important;
+    border-color: var(--pc-chip-border) !important;
+    color: var(--pc-text) !important;
+}
+
+.pc-wrapper .hip_thm--dark .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] {
+    color: var(--pc-text-muted) !important;
+    opacity: 1 !important;
+}
+
+/* Remove helper copy under headers ("Drag to move, right click for options"). */
+.pc-wrapper .label-name + div {
+    display: none !important;
+    visibility: hidden !important;
+}

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.32] - 2026-02-27
+
+### Added
+- Added `ParallelCoordinates` to the docs/gallery surfaces (`README.md`, `mkdocs/index.md`, `mkdocs/llms.txt`) with a gallery screenshot and API/demo links.
+- Added `mkdocs/reference/parallel-coords.md` and wired `ParallelCoordinates` into MkDocs navigation and API overview.
+
+### Changed
+- `ParallelCoordinates.__init__` now uses explicit constructor arguments only (`data`, `color_by`, `height`) and no longer accepts `**kwargs`.
+- Expanded `ParallelCoordinates` class docstring with argument documentation to make constructor usage clearer in generated docs.
+
+### Fixed
+- Parallel coordinates drag interactions are now more robust under fast UI updates/theme toggles.
+- Axis-label drag no longer accelerates ahead of the pointer and label text is non-selectable while dragging.
+
 ## [0.2.31] - 2026-02-25
 
 ### Added

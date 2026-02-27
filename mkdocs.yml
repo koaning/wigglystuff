@@ -37,6 +37,7 @@ nav:
       - ChartPuck: reference/chart-puck.md
       - ChartMultiSelect: reference/chart-multi-select.md
       - ChartSelect: reference/chart-select.md
+      - ParallelCoordinates: reference/parallel-coords.md
       - Matrix: reference/matrix.md
       - SortableList: reference/sortable-list.md
       - Paint: reference/paint.md

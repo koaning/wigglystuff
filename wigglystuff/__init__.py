@@ -21,6 +21,7 @@ from .matrix import Matrix
 from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
 from .paint import Paint
+from .parallel_coords import ParallelCoordinates
 from .pulsar_chart import PulsarChart
 from drawdata import ScatterWidget
 from .slider2d import Slider2D
@@ -54,6 +55,7 @@ __all__ = [
     "ModuleTreeWidget",
     "Neo4jWidget",
     "Paint",
+    "ParallelCoordinates",
     "PulsarChart",
     "ScatterWidget",
     "Slider2D",

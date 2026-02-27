@@ -146,6 +146,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a href="examples/chartselect/">Demo</a><a href="reference/chart-select/">API</a><a href="reference/chart-select.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">ParallelCoordinates</div>
+<a href="examples/parallelcoords/" class="gallery-img"><img src="assets/gallery/parallelcoords.png" alt="ParallelCoordinates"></a>
+<div class="gallery-links"><a href="examples/parallelcoords/">Demo</a><a href="reference/parallel-coords/">API</a><a href="reference/parallel-coords.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">ScatterWidget</div>
 <a href="examples/scatterwidget/" class="gallery-img"><img src="assets/gallery/scatterwidget.png" alt="ScatterWidget"></a>
 <div class="gallery-links"><a href="examples/scatterwidget/">Demo</a><a href="reference/scatter-widget/">API</a><a href="reference/scatter-widget.md">MD</a></div>

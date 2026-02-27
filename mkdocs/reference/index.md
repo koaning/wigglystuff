@@ -4,6 +4,8 @@ Browse widget-specific reference pages below. Each page is generated automatical
 
 - [Slider2D](slider2d.md)
 - [ChartPuck](chart-puck.md)
+- [ChartSelect](chart-select.md)
+- [ParallelCoordinates](parallel-coords.md)
 - [Matrix](matrix.md)
 - [SortableList](sortable-list.md)
 - [Paint](paint.md)
