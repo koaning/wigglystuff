@@ -70,6 +70,60 @@ def _(mo, np, pipe, sklearn_widget):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    ## Swapping the spline function with `redraw()`
+
+    Use `widget.redraw()` to recompute the curve when external state changes,
+    or pass a new callable to swap the fitting function entirely.
+    """)
+    return
+
+
+@app.cell
+def _(np):
+    from sklearn.kernel_ridge import KernelRidge as _KR
+
+    def make_kernel_fn(gamma):
+        def fn(x, y):
+            kr = _KR(kernel="rbf", gamma=gamma)
+            kr.fit(x.reshape(-1, 1), y)
+            x_curve = np.linspace(x.min(), x.max(), 200)
+            return x_curve, kr.predict(x_curve.reshape(-1, 1))
+        return fn
+
+    return (make_kernel_fn,)
+
+
+@app.cell
+def _(mo):
+    gamma_slider = mo.ui.slider(
+        start=-6, stop=0, step=0.5, value=-4, label="log10(gamma)"
+    )
+    return (gamma_slider,)
+
+
+@app.cell
+def _(SplineDraw, make_kernel_fn, mo):
+    redraw_widget = mo.ui.anywidget(
+        SplineDraw(spline_fn=make_kernel_fn(10 ** (-4)))
+    )
+    return (redraw_widget,)
+
+
+@app.cell
+def _(gamma_slider, mo, redraw_widget):
+    mo.vstack([gamma_slider, redraw_widget])
+    return
+
+
+@app.cell
+def _(gamma_slider, make_kernel_fn, redraw_widget):
+    redraw_widget.widget.redraw(spline_fn=make_kernel_fn(10 ** gamma_slider.value))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ## Multiple Classes
 
     With `n_classes > 1`, each class gets its own independent spline curve

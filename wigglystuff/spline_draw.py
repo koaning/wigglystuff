@@ -95,6 +95,22 @@ class SplineDraw(anywidget.AnyWidget):
             raise traitlets.TraitError("n_classes must be between 1 and 4")
         return value
 
+    def redraw(self, spline_fn: Callable | None = None) -> None:
+        """Recompute the spline curve, optionally with a new function.
+
+        Call this when external state affecting ``spline_fn`` has changed
+        (e.g. model hyperparameters controlled by another widget), or pass
+        a new callable to replace the fitting function entirely.
+
+        Args:
+            spline_fn: If provided, replaces the current spline function
+                before recomputing.  Must have the same
+                ``(x, y) -> (x_curve, y_curve)`` signature.
+        """
+        if spline_fn is not None:
+            self._spline_fn = spline_fn
+        self._recompute_curve()
+
     def _recompute_curve(self, change: Any = None) -> None:
         """Call spline_fn per class on current data and update the curve traitlet."""
         if len(self.data) < 2:
