@@ -7,6 +7,7 @@ docs_dir: mkdocs
 site_dir: site
 theme:
   name: material
+  custom_dir: mkdocs/overrides
   logo: assets/logo.png
   favicon: assets/logo.png
   icon:
