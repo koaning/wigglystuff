@@ -16,9 +16,9 @@ Wraps Facebook Research's HiPlot library to provide brush filtering on axes, axi
 from wigglystuff import ParallelCoordinates
 
 from wigglystuff import ParallelCoordinates
-import pandas as pd
+import polars as pl
 
-df = pd.DataFrame({
+df = pl.DataFrame({
     "x": [1, 2, 3, 4, 5],
     "y": [5, 4, 3, 2, 1],
     "label": ["a", "a", "b", "b", "b"],
