@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.34] - 2026-03-02
+
+### Fixed
+- `ParallelCoordinates` now works with polars DataFrames. The polars `to_dicts` check is performed before the pandas `to_dict` check, since polars also exposes `.to_dict`.
+
+### Changed
+- `ParallelCoordinates` demo notebook and docstring examples now use polars instead of pandas.
+
+### Added
+- New `examples/fashion-mnist-parallel-coords.py` example notebook showing PCA + parallel coordinates on Fashion MNIST.
+
 ## [0.2.33] - 2026-02-27
 
 ### Added
