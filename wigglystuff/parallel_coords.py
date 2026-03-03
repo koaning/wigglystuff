@@ -27,9 +27,9 @@ class ParallelCoordinates(anywidget.AnyWidget):
     Examples:
         ```python
         from wigglystuff import ParallelCoordinates
-        import pandas as pd
+        import polars as pl
 
-        df = pd.DataFrame({
+        df = pl.DataFrame({
             "x": [1, 2, 3, 4, 5],
             "y": [5, 4, 3, 2, 1],
             "label": ["a", "a", "b", "b", "b"],
@@ -109,12 +109,12 @@ def _to_records(data: Any) -> list[dict]:
     """Convert data to list of plain dicts, handling DataFrames and numpy types."""
     if data is None:
         return []
-    # pandas DataFrame
-    if hasattr(data, "to_dict") and callable(data.to_dict):
-        records = data.to_dict("records")
-    # polars DataFrame
-    elif hasattr(data, "to_dicts") and callable(data.to_dicts):
+    # polars DataFrame (check first -- polars also has .to_dict)
+    if hasattr(data, "to_dicts") and callable(data.to_dicts):
         records = data.to_dicts()
+    # pandas DataFrame
+    elif hasattr(data, "to_dict") and callable(data.to_dict):
+        records = data.to_dict("records")
     elif isinstance(data, list):
         records = list(data)
     else:

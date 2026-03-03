@@ -28,12 +28,16 @@ def _(mo):
 
     from wigglystuff import ParallelCoordinates
 
-    iris = load_iris(as_frame=True)
-    df = iris.frame
+    import polars as pl
+
+    iris = load_iris()
+    df = pl.DataFrame(
+        {name: iris.data[:, i] for i, name in enumerate(iris.feature_names)}
+    ).with_columns(pl.Series("target", iris.target))
 
     widget = mo.ui.anywidget(ParallelCoordinates(df, height=300, width=700, color_by="target"))
     widget
-    return ParallelCoordinates, widget
+    return ParallelCoordinates, pl, widget
 
 
 @app.cell
@@ -46,7 +50,7 @@ def _(mo, widget):
 
 @app.cell
 def _(widget):
-    widget.filtered_as_pandas
+    widget.filtered_as_polars
     return
 
 
@@ -61,15 +65,14 @@ def _(mo):
 
 
 @app.cell
-def _(ParallelCoordinates, mo):
+def _(ParallelCoordinates, mo, pl):
     import numpy as np
-    import pandas as pd
 
     rng = np.random.default_rng(42)
     n_rows = 15_000
     segments = rng.integers(0, 4, size=n_rows)
 
-    big_df = pd.DataFrame(
+    big_df = pl.DataFrame(
         {
             "x0": rng.normal(segments * 0.7, 1.0),
             "x1": rng.normal(segments * 0.3, 1.1),
@@ -77,7 +80,7 @@ def _(ParallelCoordinates, mo):
             "x3": rng.normal(segments * 0.2, 1.2),
             "x4": rng.normal(segments * 0.4, 1.0),
             "x5": rng.normal(segments * 0.6, 1.0),
-            "segment": segments.astype(str),
+            "segment": [str(s) for s in segments],
         }
     )
 
