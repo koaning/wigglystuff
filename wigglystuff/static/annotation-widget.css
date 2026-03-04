@@ -1,0 +1,352 @@
+.annotation-widget {
+  color-scheme: light dark;
+  --ann-bg: #ffffff;
+  --ann-bg-secondary: #f9fafb;
+  --ann-border: #e5e7eb;
+  --ann-text: #374151;
+  --ann-text-muted: #9ca3af;
+  --ann-hover: #f3f4f6;
+  --ann-accept: #16a34a;
+  --ann-accept-light: #dcfce7;
+  --ann-fail: #dc2626;
+  --ann-fail-light: #fef2f2;
+  --ann-previous: #6b7280;
+  --ann-previous-light: #f3f4f6;
+  --ann-defer: #d97706;
+  --ann-defer-light: #fef3c7;
+  --ann-focus-ring: #3b82f6;
+  --ann-flash: #dbeafe;
+  --ann-mic-active: #dc2626;
+  --ann-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0 auto;
+  border: 1px solid var(--ann-border);
+  border-radius: 0.5rem;
+  background: var(--ann-bg);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--ann-shadow);
+}
+
+/* Dark mode */
+.dark .annotation-widget,
+.dark-theme .annotation-widget,
+[data-theme="dark"] .annotation-widget {
+  --ann-bg: #1e1e1e;
+  --ann-bg-secondary: #2d2d2d;
+  --ann-border: #3a3a3a;
+  --ann-text: #e5e7eb;
+  --ann-text-muted: #6b7280;
+  --ann-hover: #333333;
+  --ann-accept: #4ade80;
+  --ann-accept-light: #14532d;
+  --ann-fail: #f87171;
+  --ann-fail-light: #450a0a;
+  --ann-previous: #9ca3af;
+  --ann-previous-light: #374151;
+  --ann-defer: #fbbf24;
+  --ann-defer-light: #451a03;
+  --ann-focus-ring: #60a5fa;
+  --ann-flash: #1e3a5f;
+  --ann-mic-active: #f87171;
+  --ann-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Keyboard capture area */
+.annotation-key-area {
+  padding: 6px 10px;
+  border: 1px dashed var(--ann-border);
+  border-radius: 0.375rem;
+  background: var(--ann-bg-secondary);
+  color: var(--ann-text-muted);
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.annotation-key-area:focus,
+.annotation-key-area.is-focused {
+  border-color: var(--ann-focus-ring);
+  border-style: solid;
+  color: var(--ann-text);
+  background: var(--ann-bg);
+}
+
+/* Button row */
+.annotation-btn-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.annotation-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ann-border);
+  border-radius: 0.375rem;
+  background: var(--ann-bg);
+  color: var(--ann-text);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: var(--ann-shadow);
+  white-space: nowrap;
+}
+
+.annotation-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.annotation-btn:hover {
+  background: var(--ann-hover);
+  border-color: var(--ann-text-muted);
+}
+
+.annotation-btn:active {
+  transform: scale(0.97);
+}
+
+/* Action-specific hover tints */
+.annotation-btn-previous:hover {
+  border-color: var(--ann-previous);
+  color: var(--ann-previous);
+}
+
+.annotation-btn-accept:hover {
+  border-color: var(--ann-accept);
+  color: var(--ann-accept);
+  background: var(--ann-accept-light);
+}
+
+.annotation-btn-fail:hover {
+  border-color: var(--ann-fail);
+  color: var(--ann-fail);
+  background: var(--ann-fail-light);
+}
+
+.annotation-btn-defer:hover {
+  border-color: var(--ann-defer);
+  color: var(--ann-defer);
+  background: var(--ann-defer-light);
+}
+
+/* Flash effect on activation */
+.annotation-btn.is-flash {
+  transform: scale(0.95);
+}
+.annotation-btn-accept.is-flash {
+  background: var(--ann-accept-light);
+  border-color: var(--ann-accept);
+  color: var(--ann-accept);
+}
+.annotation-btn-fail.is-flash {
+  background: var(--ann-fail-light);
+  border-color: var(--ann-fail);
+  color: var(--ann-fail);
+}
+.annotation-btn-previous.is-flash {
+  background: var(--ann-previous-light);
+  border-color: var(--ann-previous);
+}
+.annotation-btn-defer.is-flash {
+  background: var(--ann-defer-light);
+  border-color: var(--ann-defer);
+  color: var(--ann-defer);
+}
+
+/* Note row */
+.annotation-note-row {
+  display: flex;
+  gap: 0.375rem;
+  align-items: center;
+}
+
+.annotation-note-input {
+  flex: 1;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--ann-border);
+  border-radius: 0.375rem;
+  background: var(--ann-bg);
+  color: var(--ann-text);
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  box-shadow: var(--ann-shadow);
+}
+
+.annotation-note-input:focus {
+  border-color: var(--ann-focus-ring);
+}
+
+.annotation-note-input::placeholder {
+  color: var(--ann-text-muted);
+}
+
+/* Mic button */
+.annotation-mic-btn {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--ann-border);
+  border-radius: 0.375rem;
+  background: var(--ann-bg);
+  color: var(--ann-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  box-shadow: var(--ann-shadow);
+}
+
+.annotation-mic-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.annotation-mic-btn:hover {
+  background: var(--ann-hover);
+  border-color: var(--ann-text-muted);
+}
+
+.annotation-mic-btn.is-listening {
+  color: var(--ann-mic-active);
+  border-color: var(--ann-mic-active);
+  animation: annotation-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes annotation-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Footer area: save + status */
+.annotation-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 6px;
+  border-top: 1px solid var(--ann-border);
+}
+
+.annotation-save-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--ann-border);
+  border-radius: 0.375rem;
+  background: var(--ann-bg);
+  color: var(--ann-text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: var(--ann-shadow);
+}
+
+.annotation-save-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.annotation-save-btn:hover {
+  color: var(--ann-text);
+  border-color: var(--ann-text-muted);
+  background: var(--ann-hover);
+}
+
+.annotation-save-btn.is-flash {
+  color: var(--ann-accept);
+  border-color: var(--ann-accept);
+  transform: scale(0.95);
+}
+
+/* Status area */
+.annotation-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--ann-text-muted);
+}
+
+.annotation-gamepad-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ann-border);
+  vertical-align: middle;
+}
+
+.annotation-gamepad-dot.is-connected {
+  background: var(--ann-accept);
+}
+
+/* Gamepad mapping display */
+.annotation-gamepad-map {
+  display: none;
+  padding: 8px 0 0;
+  border-top: 1px solid var(--ann-border);
+}
+
+.annotation-gamepad-map.is-visible {
+  display: block;
+}
+
+.annotation-gamepad-map-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.annotation-gamepad-diagram {
+  flex-shrink: 0;
+}
+
+.annotation-gamepad-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--ann-text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.annotation-gamepad-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.annotation-gamepad-legend-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--ann-border);
+  background: var(--ann-bg-secondary);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--ann-text-muted);
+}
+
+.annotation-gamepad-legend-btn.gp-green { border-color: var(--ann-accept); color: var(--ann-accept); }
+.annotation-gamepad-legend-btn.gp-red { border-color: var(--ann-fail); color: var(--ann-fail); }
+.annotation-gamepad-legend-btn.gp-blue { border-color: var(--ann-focus-ring); color: var(--ann-focus-ring); }
+.annotation-gamepad-legend-btn.gp-yellow { border-color: var(--ann-defer); color: var(--ann-defer); }

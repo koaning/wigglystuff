@@ -10,6 +10,7 @@ syncs back to Python.
 | Agent | Module/Class | Core traitlets | One-liner |
 | --- | --- | --- | --- |
 | AltairWidget | `wigglystuff.altair_widget.AltairWidget` | `spec`, `width`, `height` | Flicker-free Altair chart with smooth data updates |
+| AnnotationWidget | `wigglystuff.annotation.AnnotationWidget` | `action`, `action_timestamp`, `note`, `listening`, `actions`, `keyboard_mapping`, `gamepad_mapping`, `debounce_ms`, `width` | Annotation input surface with buttons, keyboard, gamepad, and speech-to-text |
 | ApiDoc | `wigglystuff.api_doc.ApiDoc` | `doc`, `width`, `show_private` | Renders API docs for Python classes/functions |
 | Slider2D | `wigglystuff.slider2d.Slider2D` | `x`, `y`, `x_bounds`, `y_bounds`, `width`, `height` | 2D pointer for coupled parameters |
 | ChartPuck | `wigglystuff.chart_puck.ChartPuck` | `x`, `y`, `x_bounds`, `y_bounds`, `axes_pixel_bounds`, `width`, `height`, `chart_base64`, `puck_radius`, `puck_color`, `throttle` | Draggable puck overlay for matplotlib charts |
@@ -81,3 +82,6 @@ syncs back to Python.
 - **Do not modify `package-lock.json`** unless intentionally updating JS
   dependencies. If it shows up in `git diff`, revert it with
   `git checkout package-lock.json`.
+- When planning a new widget, always present the proposed Python API
+  (constructor, traitlets, helper methods) during plan review so the user
+  can sign off on the interface before implementation.
