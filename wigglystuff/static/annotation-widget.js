@@ -107,17 +107,18 @@ function render({ model, el }) {
   micBtn.innerHTML = ICONS.mic;
   micBtn.title = "Toggle speech-to-text";
 
-  noteRow.appendChild(noteInput);
-  noteRow.appendChild(micBtn);
-
-  // Footer: save button + status
-  const footer = document.createElement("div");
-  footer.className = "annotation-footer";
-
   const saveBtn = document.createElement("button");
   saveBtn.className = "annotation-save-btn";
   saveBtn.innerHTML = ICONS.save + " Save";
   saveBtn.addEventListener("click", () => triggerAction("save"));
+
+  noteRow.appendChild(noteInput);
+  noteRow.appendChild(micBtn);
+  noteRow.appendChild(saveBtn);
+
+  // Footer: status
+  const footer = document.createElement("div");
+  footer.className = "annotation-footer";
 
   const statusArea = document.createElement("div");
   statusArea.className = "annotation-status";
@@ -137,7 +138,6 @@ function render({ model, el }) {
   statusArea.appendChild(shortcutHints);
   statusArea.appendChild(gamepadStatusSpan);
 
-  footer.appendChild(saveBtn);
   footer.appendChild(statusArea);
 
   // Gamepad mapping panel (hidden until connected)
@@ -270,6 +270,7 @@ function render({ model, el }) {
   });
 
   // --- Speech-to-text ---
+  let noteBeforeSpeech = "";
   try {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -279,6 +280,7 @@ function render({ model, el }) {
       recognition.interimResults = true;
 
       recognition.onstart = () => {
+        noteBeforeSpeech = model.get("note") || "";
         model.set("listening", true);
         model.save_changes();
         micBtn.classList.add("is-listening");
@@ -286,17 +288,28 @@ function render({ model, el }) {
 
       recognition.onresult = (event) => {
         let finalTranscript = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
+        let interimTranscript = "";
+        for (let i = 0; i < event.results.length; i++) {
           if (event.results[i].isFinal) {
             finalTranscript += event.results[i][0].transcript;
+          } else {
+            interimTranscript += event.results[i][0].transcript;
           }
         }
+        // Build the full note: base + final + interim preview
+        const base = noteBeforeSpeech;
+        const separator = base.length > 0 ? " " : "";
+        const confirmed = finalTranscript ? separator + finalTranscript : "";
+        const preview = interimTranscript
+          ? (base.length > 0 || finalTranscript ? " " : "") + interimTranscript
+          : "";
+        const newNote = base + confirmed + preview;
+        noteInput.value = newNote;
+        // Only sync finalized text to the model
         if (finalTranscript) {
-          const currentNote = model.get("note") || "";
-          const separator = currentNote.length > 0 ? " " : "";
-          const newNote = currentNote + separator + finalTranscript;
-          noteInput.value = newNote;
-          model.set("note", newNote);
+          const finalNote = base + confirmed;
+          noteBeforeSpeech = finalNote;
+          model.set("note", finalNote);
           model.save_changes();
         }
       };

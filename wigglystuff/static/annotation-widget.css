@@ -232,10 +232,10 @@
   50% { opacity: 0.5; }
 }
 
-/* Footer area: save + status */
+/* Footer area: status */
 .annotation-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding-top: 6px;
   border-top: 1px solid var(--ann-border);
@@ -245,7 +245,8 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 0.25rem 0.625rem;
+  height: 30px;
+  padding: 0 0.5rem;
   border: 1px solid var(--ann-border);
   border-radius: 0.375rem;
   background: var(--ann-bg);
@@ -254,6 +255,7 @@
   cursor: pointer;
   transition: all 0.15s ease;
   box-shadow: var(--ann-shadow);
+  flex-shrink: 0;
 }
 
 .annotation-save-btn svg {
