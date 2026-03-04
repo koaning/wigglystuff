@@ -14,57 +14,6 @@ const ICONS = {
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
 };
 
-// Standard gamepad face button colors (Xbox-style)
-const GP_BUTTON_COLORS = { 0: "gp-green", 1: "gp-red", 2: "gp-blue", 3: "gp-yellow" };
-
-// Inline SVG of a simple gamepad outline with labeled face buttons
-function gamepadDiagram(mapping) {
-  // Map button indices to positions on face button diamond (right side of pad)
-  // Standard layout: 0=bottom(A), 1=right(B), 2=left(X), 3=top(Y)
-  const facePositions = {
-    0: { cx: 148, cy: 42 }, // A - bottom
-    1: { cx: 160, cy: 30 }, // B - right
-    2: { cx: 136, cy: 30 }, // X - left
-    3: { cx: 148, cy: 18 }, // Y - top
-  };
-
-  let faceButtons = "";
-  for (const [idx, pos] of Object.entries(facePositions)) {
-    const action = mapping[idx];
-    const color = GP_BUTTON_COLORS[idx] || "";
-    const cls = `annotation-gamepad-legend-btn ${color}`;
-    // SVG circle for each button
-    const strokeColor =
-      idx === "0"
-        ? "#16a34a"
-        : idx === "1"
-          ? "#dc2626"
-          : idx === "2"
-            ? "#3b82f6"
-            : "#d97706";
-    faceButtons += `<circle cx="${pos.cx}" cy="${pos.cy}" r="5" fill="none" stroke="${strokeColor}" stroke-width="1.5"/>`;
-    if (action) {
-      faceButtons += `<text x="${pos.cx}" y="${pos.cy + 1}" text-anchor="middle" dominant-baseline="central" fill="${strokeColor}" font-size="5" font-weight="600">${action.charAt(0).toUpperCase()}</text>`;
-    }
-  }
-
-  return `<svg class="annotation-gamepad-diagram" width="120" height="48" viewBox="60 6 130 48" xmlns="http://www.w3.org/2000/svg">
-    <!-- Gamepad body -->
-    <path d="M80,15 Q80,10 85,10 L155,10 Q160,10 160,15 L162,35 Q163,48 155,50 L145,50 Q138,50 135,40 L130,30 Q128,26 125,26 L115,26 Q112,26 110,30 L105,40 Q102,50 95,50 L85,50 Q77,48 78,35 Z"
-      fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
-    <!-- D-pad cross -->
-    <rect x="87" y="25" width="4" height="14" rx="1" fill="currentColor" opacity="0.15"/>
-    <rect x="82" y="30" width="14" height="4" rx="1" fill="currentColor" opacity="0.15"/>
-    <!-- Face buttons -->
-    ${faceButtons}
-    <!-- Shoulder buttons (L/R) -->
-    <rect x="82" y="8" width="18" height="4" rx="2" fill="currentColor" opacity="0.15"/>
-    <rect x="140" y="8" width="18" height="4" rx="2" fill="currentColor" opacity="0.15"/>
-    ${mapping["4"] ? `<text x="91" y="10" text-anchor="middle" dominant-baseline="central" font-size="4" fill="currentColor" opacity="0.5">L</text>` : ""}
-    ${mapping["5"] ? `<text x="149" y="10" text-anchor="middle" dominant-baseline="central" font-size="4" fill="currentColor" opacity="0.5">R</text>` : ""}
-  </svg>`;
-}
-
 function render({ model, el }) {
   el.classList.add("annotation-widget");
 
@@ -116,39 +65,37 @@ function render({ model, el }) {
   noteRow.appendChild(micBtn);
   noteRow.appendChild(saveBtn);
 
-  // Footer: status
-  const footer = document.createElement("div");
-  footer.className = "annotation-footer";
+  // Toggle to show/hide shortcuts
+  const shortcutsToggle = document.createElement("button");
+  shortcutsToggle.className = "annotation-shortcuts-toggle";
+  shortcutsToggle.textContent = "Show shortcuts";
+  shortcutsToggle.addEventListener("click", () => {
+    const visible = shortcutsPanel.classList.toggle("is-visible");
+    shortcutsToggle.textContent = visible ? "Hide shortcuts" : "Show shortcuts";
+  });
 
-  const statusArea = document.createElement("div");
-  statusArea.className = "annotation-status";
+  // Shortcuts panel: keyboard (left) + gamepad (right)
+  const shortcutsPanel = document.createElement("div");
+  shortcutsPanel.className = "annotation-shortcuts";
 
-  const shortcutHints = document.createElement("span");
-
-  const gamepadStatusSpan = document.createElement("span");
-  gamepadStatusSpan.style.display = "flex";
-  gamepadStatusSpan.style.alignItems = "center";
-  gamepadStatusSpan.style.gap = "4px";
+  // Top bar: gamepad status (right-aligned)
+  const topBar = document.createElement("div");
+  topBar.className = "annotation-top-bar";
   const gamepadDot = document.createElement("span");
   gamepadDot.className = "annotation-gamepad-dot";
-  const gamepadLabel = document.createTextNode("No gamepad");
-  gamepadStatusSpan.appendChild(gamepadDot);
-  gamepadStatusSpan.appendChild(gamepadLabel);
+  const gamepadLabel = document.createElement("span");
+  gamepadLabel.className = "annotation-gamepad-label";
+  gamepadLabel.textContent = "";
+  topBar.appendChild(gamepadDot);
+  topBar.appendChild(gamepadLabel);
+  topBar.style.display = "none";
 
-  statusArea.appendChild(shortcutHints);
-  statusArea.appendChild(gamepadStatusSpan);
-
-  footer.appendChild(statusArea);
-
-  // Gamepad mapping panel (hidden until connected)
-  const gamepadMap = document.createElement("div");
-  gamepadMap.className = "annotation-gamepad-map";
-
+  el.appendChild(topBar);
   el.appendChild(keyArea);
   el.appendChild(btnRow);
   el.appendChild(noteRow);
-  el.appendChild(footer);
-  el.appendChild(gamepadMap);
+  el.appendChild(shortcutsToggle);
+  el.appendChild(shortcutsPanel);
 
   // --- Button rendering (excludes "save" — that's in the footer) ---
   let buttonEls = {};
@@ -169,49 +116,44 @@ function render({ model, el }) {
     });
   }
 
-  function updateShortcutHints() {
-    const mapping = model.get("keyboard_mapping") || {};
-    const reversed = {};
-    for (const [key, action] of Object.entries(mapping)) {
-      reversed[action] = key;
-    }
-    const actions = model.get("actions") || [];
-    const hints = actions
-      .filter((a) => reversed[a])
-      .map((a) => reversed[a] + ":" + a)
-      .join("  ");
-    const micHint = reversed["mic"] ? "  " + reversed["mic"] + ":mic" : "";
-    shortcutHints.textContent = hints + micHint;
-  }
+  function updateShortcuts() {
+    // Desired action order
+    const actionOrder = ["previous", "accept", "fail", "defer", "mic", "save"];
 
-  function updateGamepadMap() {
-    const mapping = model.get("gamepad_mapping") || {};
-    if (!gamepadConnected) {
-      gamepadMap.classList.remove("is-visible");
-      return;
+    // Reverse keyboard mapping: action -> key
+    const kbMapping = model.get("keyboard_mapping") || {};
+    const kbByAction = {};
+    for (const [key, action] of Object.entries(kbMapping)) {
+      kbByAction[action] = key;
     }
-    gamepadMap.classList.add("is-visible");
-
-    // Build legend items
-    const legendItems = Object.entries(mapping)
-      .filter(([, action]) => action !== "mic")
-      .map(([idx, action]) => {
-        const colorClass = GP_BUTTON_COLORS[idx] || "";
-        return `<div class="annotation-gamepad-legend-item">
-          <span class="annotation-gamepad-legend-btn ${colorClass}">${idx}</span>
-          <span>${action}</span>
-        </div>`;
-      })
+    const kbItems = actionOrder
+      .filter((a) => kbByAction[a])
+      .map((action) => `<div class="annotation-sc-row sc-${action}"><kbd>${kbByAction[action]}</kbd><span>${action}</span></div>`)
       .join("");
 
-    gamepadMap.innerHTML = `<div class="annotation-gamepad-map-inner">
-      ${gamepadDiagram(mapping)}
-      <div class="annotation-gamepad-legend">${legendItems}</div>
-    </div>`;
+    // Gamepad: reverse mapping, same action order
+    let gpSection = "";
+    if (gamepadConnected) {
+      const gpMapping = model.get("gamepad_mapping") || {};
+      const gpByAction = {};
+      for (const [idx, action] of Object.entries(gpMapping)) {
+        gpByAction[action] = idx;
+      }
+      const gpItems = actionOrder
+        .filter((a) => gpByAction[a])
+        .map((action) => `<div class="annotation-sc-row sc-${action}" data-btn="${gpByAction[action]}"><kbd>${gpByAction[action]}</kbd><span>${action}</span></div>`)
+        .join("");
+      gpSection = `<div class="annotation-sc-header">Gamepad</div>
+        <div class="annotation-sc-grid">${gpItems}</div>`;
+    }
+
+    shortcutsPanel.innerHTML = `<div class="annotation-sc-header">Keyboard</div>
+      <div class="annotation-sc-grid">${kbItems}</div>
+      ${gpSection}`;
   }
 
   buildButtons();
-  updateShortcutHints();
+  updateShortcuts();
 
   // --- Action trigger ---
   function triggerAction(name) {
@@ -242,6 +184,7 @@ function render({ model, el }) {
     keyArea.textContent = "Click to enable keyboard shortcuts";
   });
 
+  let keyFadeTimer = null;
   keyArea.addEventListener("keydown", (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -254,6 +197,11 @@ function render({ model, el }) {
     } else {
       keyArea.textContent = "\u201C" + event.key + "\u201D not mapped";
     }
+    // Reset text after a moment
+    clearTimeout(keyFadeTimer);
+    keyFadeTimer = setTimeout(() => {
+      keyArea.textContent = "Keyboard shortcuts active \u2014 press a key";
+    }, 350);
   });
 
   // --- Note sync ---
@@ -350,16 +298,18 @@ function render({ model, el }) {
   // --- Gamepad polling ---
   const frames = window.requestAnimationFrame;
 
-  function updateGamepadStatus(connected, gamepad) {
+  function updateGamepadStatus(connected) {
     gamepadConnected = connected;
     if (connected) {
       gamepadDot.classList.add("is-connected");
       gamepadLabel.textContent = "Gamepad connected";
+      topBar.style.display = "";
     } else {
       gamepadDot.classList.remove("is-connected");
-      gamepadLabel.textContent = "No gamepad";
+      gamepadLabel.textContent = "";
+      topBar.style.display = "none";
     }
-    updateGamepadMap();
+    updateShortcuts();
   }
 
   function gamepadLoop() {
@@ -372,6 +322,13 @@ function render({ model, el }) {
       }
 
       const currentState = gamepad.buttons.map((b) => b.pressed).join("");
+
+      // Live press highlighting on the shortcuts panel
+      gamepad.buttons.forEach((button, i) => {
+        const el = shortcutsPanel.querySelector(`[data-btn="${i}"]`);
+        if (el) el.classList.toggle("is-active", button.pressed);
+      });
+
       if (currentState !== lastGamepadState) {
         const mapping = model.get("gamepad_mapping") || {};
         gamepad.buttons.forEach((button, i) => {
@@ -416,11 +373,11 @@ function render({ model, el }) {
   // --- React to model changes ---
   model.on("change:actions", () => {
     buildButtons();
-    updateShortcutHints();
+    updateShortcuts();
   });
 
-  model.on("change:keyboard_mapping", updateShortcutHints);
-  model.on("change:gamepad_mapping", updateGamepadMap);
+  model.on("change:keyboard_mapping", updateShortcuts);
+  model.on("change:gamepad_mapping", updateShortcuts);
   model.on("change:width", applyWidth);
 
   // --- Cleanup ---

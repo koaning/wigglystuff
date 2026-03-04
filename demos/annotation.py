@@ -9,11 +9,11 @@ def _():
     import marimo as mo
     from wigglystuff import AnnotationWidget
 
-    widget = mo.ui.anywidget(AnnotationWidget(width=600))
+    widget = mo.ui.anywidget(AnnotationWidget(width=800))
     return mo, widget
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     ## Annotation Widget Demo
