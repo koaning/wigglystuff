@@ -4035,7 +4035,7 @@ wheels = [
 
 [[package]]
 name = "wigglystuff"
-version = "0.2.33"
+version = "0.2.34"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
