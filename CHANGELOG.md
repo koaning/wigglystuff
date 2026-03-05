@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.36] - 2026-03-05
+
+### Fixed
+- `TangleSlider`, `TangleChoice`, and `TangleSelect` now respond to external model changes via `model.on("change:...")` handlers. Previously, setting traitlet values from Python or external frameworks (e.g., Panel) had no effect on the displayed widget.
+- `TangleChoice` ESM read `model.get("value")` instead of `model.get("choice")` at initialization, causing the initial index lookup to always fall back to 0.
+- Removed stray `console.log` from `TangleSlider` ESM.
+
 ## [0.2.35] - 2026-03-05
 
 ### Added
