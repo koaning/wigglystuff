@@ -24,7 +24,6 @@ import time
 from wigglystuff import HTMLRefreshWidget
 
 widget = HTMLRefreshWidget(html="<p>Hello!</p>")
-display(widget)
 
 # Update the widget with dynamic content
 for i in range(10):

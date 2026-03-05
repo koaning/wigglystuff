@@ -1,0 +1,1 @@
+import{i as s,p as n,u as i}from"./useEvent-WUlsM6MC.js";import{t as r}from"./invariant-awXiPaF0.js";const e=n(null);function u(){let t=i(e);return r(t,"useRequestClient() requires setting requestClientAtom."),t}function o(){let t=s.get(e);return r(t,"getRequestClient() requires requestClientAtom to be set."),t}export{e as n,u as r,o as t};

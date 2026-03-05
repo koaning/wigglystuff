@@ -30,7 +30,6 @@ def plot_data(data):
     plt.plot(np.arange(len(data)), np.cumsum(data))
 
 widget = ImageRefreshWidget(src=plot_data([1, 2, 3, 4]))
-display(widget)
 
 # Update the widget with new data
 widget.src = plot_data([1, 2, 3, 4, 5, 6])
