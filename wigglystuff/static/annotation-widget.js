@@ -155,8 +155,16 @@ function render({ model, el }) {
   buildButtons();
   updateShortcuts();
 
+  // --- Disabled state ---
+  function applyDisabled() {
+    el.classList.toggle("is-disabled", !!model.get("disabled"));
+  }
+  applyDisabled();
+  model.on("change:disabled", applyDisabled);
+
   // --- Action trigger ---
   function triggerAction(name) {
+    if (model.get("disabled") && name !== "previous" && name !== "save") return;
     if (name === "mic") {
       toggleListening();
       return;

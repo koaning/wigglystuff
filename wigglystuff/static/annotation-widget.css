@@ -401,3 +401,17 @@
 .annotation-gamepad-label {
   font-size: 11px;
 }
+
+/* Disabled state — greys out annotation controls but keeps previous/save active */
+.annotation-widget.is-disabled .annotation-btn-accept,
+.annotation-widget.is-disabled .annotation-btn-fail,
+.annotation-widget.is-disabled .annotation-btn-defer {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.annotation-widget.is-disabled .annotation-note-input,
+.annotation-widget.is-disabled .annotation-mic-btn {
+  opacity: 0.35;
+  pointer-events: none;
+}

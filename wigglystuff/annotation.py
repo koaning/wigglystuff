@@ -31,6 +31,8 @@ class AnnotationWidget(anywidget.AnyWidget):
     note = traitlets.Unicode("").tag(sync=True)
     listening = traitlets.Bool(False).tag(sync=True)
 
+    disabled = traitlets.Bool(False).tag(sync=True)
+
     # --- Configuration traitlets ---
     actions = traitlets.List(
         traitlets.Unicode(),

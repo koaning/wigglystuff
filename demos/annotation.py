@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.20.4"
-app = marimo.App(width="medium")
+app = marimo.App()
 
 
 @app.cell
@@ -15,9 +15,10 @@ def _():
 @app.cell
 def _(mo):
     mo.md(r"""
-    ## Annotation Widget Demo
+    ## Annotation Widget Internals
 
-    This widget provides a UI input surface for annotation workflows.
+    This widget provides a UI input surface for annotation workflows. It gives you *just enough* UI to do the rest with a marimo notebook.
+
     Use the buttons, keyboard shortcuts (click the capture area first), or
     a gamepad controller to trigger actions. Add notes in the text field
     or use the mic button for speech-to-text.
@@ -52,8 +53,6 @@ def _(mo, widget):
 @app.cell
 def _(mo):
     mo.md(r"""
-    ---
-
     ## Annotation Experience
 
     Below is a more realistic example: a list of text examples is presented
@@ -82,7 +81,7 @@ def _(mo):
 
 @app.cell
 def _(AnnotationWidget, mo):
-    annot_widget = mo.ui.anywidget(AnnotationWidget(width=800))
+    annot_widget = mo.ui.anywidget(AnnotationWidget(width=1000))
     return (annot_widget,)
 
 
@@ -103,8 +102,7 @@ def _(
     _annots = get_annotations()
 
     if action in ("accept", "fail", "defer"):
-        _annots[_i] = {"label": action, "note": note}
-        set_annotations(_annots)
+        set_annotations({**_annots, _i: {"label": action, "note": note}})
         if _i < len(examples) - 1:
             set_index(_i + 1)
     elif action == "previous":
@@ -114,22 +112,42 @@ def _(
 
 
 @app.cell
-def _(annot_widget, examples, get_annotations, get_index, mo):
+def _():
+    from mohtml import br, div, p
+
+    return br, p
+
+
+@app.cell
+def _(examples):
+    import time
+    from wigglystuff import ProgressBar
+
+    progress = ProgressBar(
+        value=0, 
+        max_value=len(examples), height=8, show_text=True, )
+    return (progress,)
+
+
+@app.cell
+def _(annot_widget, br, examples, get_annotations, get_index, mo, p, progress):
     _i = get_index()
     _annots = get_annotations()
     total = len(examples)
     done = len(_annots)
+    progress.value = _i + 1 if _i in _annots else _i
+    annot_widget.disabled = done >= total and _i >= total - 1
 
     prev_label = _annots.get(_i, {}).get("label", "")
     label_badge = f" — previously labeled **{prev_label}**" if prev_label else ""
+    all_done = p("All examples have been labeled!")
 
     mo.vstack([
-        mo.md(
-            f"**All {total} examples labeled!**"
-            if done >= total
-            else f"**Example {_i + 1} / {total}** ({done} labeled){label_badge}\n\n> {examples[_i]}", 
-        ), 
-        annot_widget
+        progress,
+        p("Is this positive sentiment?", style="font-weight: 600; font-size: 22px;"),
+        all_done if done >= total and _i >= total - 1 else p(f"{examples[_i]}"),
+        br(),
+        annot_widget,
     ])
     return
 
