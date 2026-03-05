@@ -1,6 +1,6 @@
 function render({model, el}) {
     const choices = model.get("choices");
-    let currentIndex = choices.indexOf(model.get("value"));
+    let currentIndex = choices.indexOf(model.get("choice"));
     if (currentIndex === -1) currentIndex = 0;
 
     const container = document.createElement('div');
@@ -31,6 +31,16 @@ function render({model, el}) {
         model.set("choice", choices[currentIndex]);
         model.save_changes();
     }
+
+    // Listen for external changes to choice
+    model.on("change:choice", () => {
+        const newChoice = model.get("choice");
+        const newIndex = choices.indexOf(newChoice);
+        if (newIndex !== -1) {
+            currentIndex = newIndex;
+            renderValue();
+        }
+    });
 
     renderValue();
     updateModel();
