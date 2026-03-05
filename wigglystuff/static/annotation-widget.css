@@ -2,7 +2,7 @@
   color-scheme: light dark;
   --ann-bg: #ffffff;
   --ann-bg-secondary: #f9fafb;
-  --ann-border: #e5e7eb;
+  --ann-border: #c5c8ce;
   --ann-text: #374151;
   --ann-text-muted: #9ca3af;
   --ann-hover: #f3f4f6;
@@ -14,6 +14,10 @@
   --ann-previous-light: #f3f4f6;
   --ann-defer: #d97706;
   --ann-defer-light: #fef3c7;
+  --ann-mic: #2563eb;
+  --ann-mic-light: #dbeafe;
+  --ann-save: #7c3aed;
+  --ann-save-light: #ede9fe;
   --ann-focus-ring: #3b82f6;
   --ann-flash: #dbeafe;
   --ann-mic-active: #dc2626;
@@ -37,7 +41,7 @@
 [data-theme="dark"] .annotation-widget {
   --ann-bg: #1e1e1e;
   --ann-bg-secondary: #2d2d2d;
-  --ann-border: #3a3a3a;
+  --ann-border: #555555;
   --ann-text: #e5e7eb;
   --ann-text-muted: #6b7280;
   --ann-hover: #333333;
@@ -49,6 +53,10 @@
   --ann-previous-light: #374151;
   --ann-defer: #fbbf24;
   --ann-defer-light: #451a03;
+  --ann-mic: #60a5fa;
+  --ann-mic-light: #1e3a5f;
+  --ann-save: #a78bfa;
+  --ann-save-light: #2e1065;
   --ann-focus-ring: #60a5fa;
   --ann-flash: #1e3a5f;
   --ann-mic-active: #f87171;
@@ -217,19 +225,25 @@
 }
 
 .annotation-mic-btn:hover {
-  background: var(--ann-hover);
-  border-color: var(--ann-text-muted);
+  background: var(--ann-mic-light);
+  border-color: var(--ann-mic);
+  color: var(--ann-mic);
 }
 
 .annotation-mic-btn.is-listening {
-  color: var(--ann-mic-active);
-  border-color: var(--ann-mic-active);
+  color: var(--ann-mic);
+  border-color: var(--ann-mic);
   animation: annotation-pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes annotation-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
+}
+
+.annotation-mic-btn.is-unavailable {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 /* Save button */
@@ -256,9 +270,9 @@
 }
 
 .annotation-save-btn:hover {
-  color: var(--ann-text);
-  border-color: var(--ann-text-muted);
-  background: var(--ann-hover);
+  color: var(--ann-save);
+  border-color: var(--ann-save);
+  background: var(--ann-save-light);
 }
 
 .annotation-save-btn.is-flash {
@@ -310,9 +324,13 @@
   gap: 4px;
 }
 
+.annotation-sc-header:not(:first-child) {
+  margin-top: 8px;
+}
+
 .annotation-sc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
   gap: 4px;
 }
 
@@ -321,21 +339,27 @@
   align-items: center;
   gap: 4px;
   padding: 2px 8px 2px 4px;
-  border: 1px solid var(--ann-border);
+  border: none;
   border-radius: 4px;
   background: var(--ann-bg-secondary);
-  transition: background 0.1s, border-color 0.1s;
+  transition: background 0.1s;
 }
 
 .annotation-sc-row.is-active {
   background: var(--ann-flash);
-  border-color: var(--ann-focus-ring);
 }
 
-.annotation-sc-row.sc-accept { background: var(--ann-accept-light); border-color: var(--ann-accept); color: var(--ann-accept); }
-.annotation-sc-row.sc-fail { background: var(--ann-fail-light); border-color: var(--ann-fail); color: var(--ann-fail); }
-.annotation-sc-row.sc-previous { background: var(--ann-previous-light); border-color: var(--ann-previous); color: var(--ann-previous); }
-.annotation-sc-row.sc-defer { background: var(--ann-defer-light); border-color: var(--ann-defer); color: var(--ann-defer); }
+.annotation-sc-row.sc-accept { background: var(--ann-accept-light); color: var(--ann-accept); }
+.annotation-sc-row.sc-fail { background: var(--ann-fail-light); color: var(--ann-fail); }
+.annotation-sc-row.sc-previous { background: var(--ann-previous-light); color: var(--ann-previous); }
+.annotation-sc-row.sc-defer { background: var(--ann-defer-light); color: var(--ann-defer); }
+.annotation-sc-row.sc-mic { background: var(--ann-mic-light); color: var(--ann-mic); }
+.annotation-sc-row.sc-save { background: var(--ann-save-light); color: var(--ann-save); }
+
+.annotation-sc-row span {
+  flex: 1;
+  text-align: center;
+}
 
 .annotation-sc-row kbd {
   display: inline-block;

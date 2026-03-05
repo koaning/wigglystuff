@@ -215,6 +215,8 @@ function render({ model, el }) {
     if (noteInput.value !== val) {
       noteInput.value = val;
     }
+    // Keep speech base text in sync so mic appends to the correct value
+    noteBeforeSpeech = val;
   });
 
   // --- Speech-to-text ---
@@ -281,12 +283,21 @@ function render({ model, el }) {
   }
 
   function toggleListening() {
-    if (!recognition) return;
+    if (!recognition) {
+      micBtn.classList.add("is-unavailable");
+      micBtn.title = "Speech recognition not supported in this browser";
+      return;
+    }
     if (model.get("listening")) {
       recognition.stop();
     } else {
       recognition.start();
     }
+  }
+
+  if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+    micBtn.classList.add("is-unavailable");
+    micBtn.title = "Speech recognition not supported in this browser";
   }
 
   micBtn.addEventListener("click", toggleListening);

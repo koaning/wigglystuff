@@ -43,7 +43,7 @@ class AnnotationWidget(anywidget.AnyWidget):
             "2": "accept",
             "3": "fail",
             "4": "defer",
-            "5": "save",
+            "s": "save",
             "m": "mic",
         },
     ).tag(sync=True)
