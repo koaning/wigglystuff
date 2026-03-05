@@ -10,12 +10,26 @@ function render({model, el}) {
     };
 
     let amount = model.get("amount");
-    console.log(amount);
-    
+
     const container = document.createElement('div');
     container.classList.add("tangle-container");
     el.style.display = "inline-flex";
     el.appendChild(container);
+
+    // Listen for external changes to all config traitlets
+    ["amount", "min_value", "max_value", "step", "prefix", "suffix", "digits", "pixels_per_step"].forEach(name => {
+        model.on(`change:${name}`, () => {
+            config.minValue = model.get("min_value");
+            config.maxValue = model.get("max_value");
+            config.stepSize = model.get("step");
+            config.prefix = model.get("prefix");
+            config.suffix = model.get("suffix");
+            config.digits = model.get("digits");
+            config.pixelsPerStep = model.get("pixels_per_step");
+            amount = model.get("amount");
+            renderValue();
+        });
+    });
 
     function renderValue() {
         container.innerHTML = '';

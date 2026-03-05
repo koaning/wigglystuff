@@ -29,6 +29,16 @@ function render({model, el}) {
         model.save_changes();
     });
     
+    // Listen for external changes to choice
+    model.on("change:choice", () => {
+        const newChoice = model.get("choice");
+        const newIndex = choices.indexOf(newChoice);
+        if (newIndex !== -1) {
+            currentIndex = newIndex;
+            select.selectedIndex = newIndex;
+        }
+    });
+
     container.appendChild(select);
 
 }
