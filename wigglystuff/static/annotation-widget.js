@@ -65,6 +65,15 @@ function render({ model, el }) {
   noteRow.appendChild(micBtn);
   noteRow.appendChild(saveBtn);
 
+  function applyShowSave() {
+    saveBtn.style.display = model.get("show_save") ? "" : "none";
+  }
+  applyShowSave();
+  model.on("change:show_save", () => {
+    applyShowSave();
+    updateShortcuts();
+  });
+
   // Toggle to show/hide shortcuts
   const shortcutsToggle = document.createElement("button");
   shortcutsToggle.className = "annotation-shortcuts-toggle";
@@ -117,8 +126,9 @@ function render({ model, el }) {
   }
 
   function updateShortcuts() {
-    // Desired action order
-    const actionOrder = ["previous", "accept", "fail", "defer", "mic", "save"];
+    // Desired action order (filter save when hidden)
+    const actionOrder = ["previous", "accept", "fail", "defer", "mic", "save"]
+      .filter((a) => a !== "save" || model.get("show_save"));
 
     // Reverse keyboard mapping: action -> key
     const kbMapping = model.get("keyboard_mapping") || {};

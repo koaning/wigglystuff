@@ -12,52 +12,13 @@ def _():
     return AnnotationWidget, mo
 
 
-@app.cell
-def _(mo):
-    mo.md(r"""
-    ## Annotation Widget Internals
-
-    This widget provides a UI input surface for annotation workflows. It gives you *just enough* UI to do the rest with a marimo notebook.
-
-    Use the buttons, keyboard shortcuts (click the capture area first), or
-    a gamepad controller to trigger actions. Add notes in the text field
-    or use the mic button for speech-to-text.
-    """)
-    return
-
-
 @app.cell(hide_code=True)
-def _(AnnotationWidget, mo):
-    widget = mo.ui.anywidget(AnnotationWidget(width=600, height=500))
-    return (widget,)
-
-
-@app.cell
-def _(widget):
-    widget
-    return
-
-
-@app.cell
-def _(mo, widget):
-    mo.md(f"""
-    **Last action:** `{widget.action or "---"}` &nbsp;&nbsp;|&nbsp;&nbsp;
-    **Timestamp:** `{widget.action_timestamp}` &nbsp;&nbsp;|&nbsp;&nbsp;
-    **Listening:** `{widget.listening}`
-
-    **Current note:** `{widget.note or "---"}`
-    """)
-    return
-
-
-@app.cell
 def _(mo):
     mo.md(r"""
     ## Annotation Experience
 
-    Below is a more realistic example: a list of text examples is presented
-    one at a time. Use the widget to label each as **accept**, **fail**, or
-    **defer**, and use **previous** to go back and correct a label.
+    Below is a demo where you can annotate examples. Use the widget to label each as **accept**, **fail**, or
+    **defer**, and use **previous** to go back and correct a label. You can also add notes to an annotation to provide context.
     """)
     return
 
@@ -81,7 +42,7 @@ def _(mo):
 
 @app.cell
 def _(AnnotationWidget, mo):
-    annot_widget = mo.ui.anywidget(AnnotationWidget(width=1000))
+    annot_widget = mo.ui.anywidget(AnnotationWidget(show_save=False, width=1200))
     return (annot_widget,)
 
 
@@ -153,6 +114,12 @@ def _(annot_widget, br, examples, get_annotations, get_index, mo, p, progress):
 
 
 @app.cell
+def _(get_annotations):
+    get_annotations()
+    return
+
+
+@app.cell
 def _(examples, get_annotations, mo):
     _annots = get_annotations()
     rows = [
@@ -168,6 +135,46 @@ def _(examples, get_annotations, mo):
         "### Annotations so far\n\n"
         + mo.as_html(mo.ui.table(rows, selection=None)).text
     )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Annotation Widget Internals
+
+    This widget provides a UI input surface for annotation workflows. It gives you *just enough* UI to do the rest with a marimo notebook.
+
+    Use the buttons, keyboard shortcuts (click the capture area first), or
+    a gamepad controller to trigger actions. Add notes in the text field
+    or use the mic button for speech-to-text.
+
+    Also note that you can turn on/off a save button as well. This way you can implement a method to sync the annotations made sofar with an external server (or disk).
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(AnnotationWidget, mo):
+    widget = mo.ui.anywidget(AnnotationWidget(width=600, height=500))
+    return (widget,)
+
+
+@app.cell
+def _(widget):
+    widget
+    return
+
+
+@app.cell
+def _(mo, widget):
+    mo.md(f"""
+    **Last action:** `{widget.action or "---"}` &nbsp;&nbsp;|&nbsp;&nbsp;
+    **Timestamp:** `{widget.action_timestamp}` &nbsp;&nbsp;|&nbsp;&nbsp;
+    **Listening:** `{widget.listening}`
+
+    **Current note:** `{widget.note or "---"}`
+    """)
     return
 
 

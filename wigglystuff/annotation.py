@@ -32,6 +32,7 @@ class AnnotationWidget(anywidget.AnyWidget):
     listening = traitlets.Bool(False).tag(sync=True)
 
     disabled = traitlets.Bool(False).tag(sync=True)
+    show_save = traitlets.Bool(True).tag(sync=True)
 
     # --- Configuration traitlets ---
     actions = traitlets.List(
