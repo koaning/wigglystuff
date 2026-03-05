@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+- `ProgressBar` redesigned with a cleaner, minimal style: flat dark background, configurable fill color, simpler border radius, and text below the bar. Removed gradient fills, box shadows, inset borders, and percentage overlay from the old design.
+- `ProgressBar` now supports `color`, `show_text`, `width`, and `height` traitlets for customization.
+- `ProgressBar` demo moved into its own standalone notebook (`demos/progressbar.py`), separated from the HTML widget demos.
+
 ## [0.2.34] - 2026-03-02
 
 ### Fixed

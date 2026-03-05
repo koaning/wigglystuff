@@ -12,7 +12,7 @@
 
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.20.4"
 app = marimo.App()
 
 
@@ -21,6 +21,7 @@ def _():
     import marimo as mo
     import polars as pl
     import numpy as np
+
     return mo, np
 
 
@@ -43,6 +44,7 @@ def _(np):
     def cumsum_linechart(data):
         y = np.cumsum(data)
         plt.plot(np.arange(len(y)), y)
+
     return (cumsum_linechart,)
 
 
@@ -175,42 +177,11 @@ def _(html_widget, time):
     return
 
 
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ## Progress bars
-
-    We also provide progress bars that can update inplace without needing any 3rd party ipywidget tools. These should still work across all notebooks. These progress bars can also be updated from another cell in marimo, which the base progress bar does not allow.
-    """)
-    return
-
-
-@app.cell
-def _():
-    from wigglystuff import ProgressBar
-
-    progress = ProgressBar(value=0, max_value=100)
-    progress
-    return (progress,)
-
-
-@app.cell
-def _(progress, random, time):
-    def slow_task():
-        """Simulated task that takes time"""
-        time.sleep(random.random() / 10)
-
-    progress.value = 0 
-    for _ in range(100):
-        slow_task()
-        progress.value += 1
-    return
-
-
 @app.cell
 def _():
     import random 
     import time 
+
     return random, time
 
 

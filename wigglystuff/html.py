@@ -30,7 +30,6 @@ class ImageRefreshWidget(anywidget.AnyWidget):
         plt.plot(np.arange(len(data)), np.cumsum(data))
 
     widget = ImageRefreshWidget(src=plot_data([1, 2, 3, 4]))
-    display(widget)
 
     # Update the widget with new data
     widget.src = plot_data([1, 2, 3, 4, 5, 6])
@@ -70,7 +69,6 @@ class HTMLRefreshWidget(anywidget.AnyWidget):
     from wigglystuff import HTMLRefreshWidget
 
     widget = HTMLRefreshWidget(html="<p>Hello!</p>")
-    display(widget)
 
     # Update the widget with dynamic content
     for i in range(10):
@@ -99,8 +97,7 @@ class ProgressBar(anywidget.AnyWidget):
     """A customizable progress bar widget for notebooks.
 
     This widget displays a visual progress bar that updates in real-time as
-    the `value` attribute changes. It shows both a graphical representation
-    and a numerical indicator (percentage and fraction).
+    the `value` attribute changes.
 
     One of the main benefits of this utility is that you have a progress bar
     that doesn't depend on ipywidgets while you still have something that
@@ -109,15 +106,18 @@ class ProgressBar(anywidget.AnyWidget):
     Attributes:
         value (int): The current progress value. Defaults to 0.
         max_value (int): The maximum value representing 100% completion. Defaults to 100.
+        color (str): The fill color of the progress bar. Defaults to '#22c55e'.
+        show_text (bool): Whether to show the progress text below the bar. Defaults to True.
+        width (str): The CSS width of the progress bar. Defaults to '100%'.
+        height (int): The height of the bar in pixels. Defaults to 24.
 
     Example:
-    
+
     ```python
     import time
     from wigglystuff import ProgressBar
 
     progress = ProgressBar(value=0, max_value=100)
-    display(progress)
 
     for i in range(101):
         progress.value = i
@@ -127,73 +127,54 @@ class ProgressBar(anywidget.AnyWidget):
 
     _esm = """
     function render({ model, el }) {
-        let getValue = () => model.get("value");
-        let getMaxValue = () => model.get("max_value");
+        const wrapper = document.createElement('div');
+        wrapper.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 
-        const container = document.createElement('div');
-        container.style.width = '100%';
-        container.style.marginBottom = '10px';
-        container.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+        const bar = document.createElement('div');
+        bar.style.borderRadius = '4px';
+        bar.style.overflow = 'hidden';
+        bar.style.backgroundColor = '#374151';
 
-        // Label
-        const label = document.createElement('div');
-        label.style.marginBottom = '8px';
-        label.style.fontSize = '13px';
-        label.style.fontWeight = '500';
-        label.style.color = '#666';
-
-        // Progress bar container
-        const barContainer = document.createElement('div');
-        barContainer.style.width = '100%';
-        barContainer.style.height = '24px';
-        barContainer.style.borderRadius = '12px';
-        barContainer.style.overflow = 'hidden';
-        barContainer.style.backgroundColor = '#e0e0e0';
-        barContainer.style.border = '1px solid #ccc';
-        barContainer.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.1)';
-
-        // Progress fill
         const fill = document.createElement('div');
         fill.style.height = '100%';
-        fill.style.transition = 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-        fill.style.display = 'flex';
-        fill.style.alignItems = 'center';
-        fill.style.justifyContent = 'center';
-        fill.style.background = 'linear-gradient(90deg, #888 0%, #777 100%)';
-        fill.style.boxShadow = '0 0 10px rgba(0,0,0,0.2)';
+        fill.style.transition = 'width 0.4s ease';
 
-        // Percentage text
-        const text = document.createElement('span');
-        text.style.fontSize = '11px';
-        text.style.fontWeight = '600';
-        text.style.color = 'white';
-        text.style.textShadow = '0 1px 2px rgba(0,0,0,0.3)';
-        text.style.letterSpacing = '0.5px';
+        const text = document.createElement('div');
+        text.style.fontSize = '12px';
+        text.style.fontWeight = '500';
+        text.style.color = '#888';
+        text.style.marginTop = '4px';
+        text.style.textAlign = 'center';
+
+        bar.appendChild(fill);
+        wrapper.appendChild(bar);
+        wrapper.appendChild(text);
 
         const updateDisplay = () => {
-            const value = getValue();
-            const max = getMaxValue();
+            const value = model.get("value");
+            const max = model.get("max_value");
             const percentage = max > 0 ? (value / max) * 100 : 0;
 
-            label.textContent = `Progress: ${value} / ${max}`;
+            wrapper.style.width = model.get("width");
+            bar.style.height = model.get("height") + 'px';
+            fill.style.backgroundColor = model.get("color");
             fill.style.width = percentage + '%';
-            text.textContent = Math.round(percentage) + '%';
 
-            // Update text visibility based on bar width
-            text.style.opacity = percentage > 10 ? '1' : '0';
+            const showText = model.get("show_text");
+            text.style.display = showText ? 'block' : 'none';
+            text.textContent = `${value} / ${max}`;
         };
-
-        fill.appendChild(text);
-        barContainer.appendChild(fill);
-        container.appendChild(label);
-        container.appendChild(barContainer);
 
         updateDisplay();
 
         model.on('change:value', updateDisplay);
         model.on('change:max_value', updateDisplay);
+        model.on('change:color', updateDisplay);
+        model.on('change:show_text', updateDisplay);
+        model.on('change:width', updateDisplay);
+        model.on('change:height', updateDisplay);
 
-        el.appendChild(container);
+        el.appendChild(wrapper);
     }
 
     export default { render };
@@ -201,3 +182,7 @@ class ProgressBar(anywidget.AnyWidget):
 
     value = traitlets.Int(0).tag(sync=True)
     max_value = traitlets.Int(100).tag(sync=True)
+    color = traitlets.Unicode('#22c55e').tag(sync=True)
+    show_text = traitlets.Bool(True).tag(sync=True)
+    width = traitlets.Unicode('100%').tag(sync=True)
+    height = traitlets.Int(24).tag(sync=True)
