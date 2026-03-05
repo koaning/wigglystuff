@@ -170,6 +170,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <a href="examples/apidoc/" class="gallery-img"><img src="assets/gallery/apidoc.png" alt="ApiDoc"></a>
 <div class="gallery-links"><a href="examples/apidoc/">Demo</a><a href="reference/api-doc/">API</a><a href="reference/api-doc.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">AnnotationWidget</div>
+<a href="examples/annotation/" class="gallery-img"><img src="assets/gallery/annotation.png" alt="AnnotationWidget"></a>
+<div class="gallery-links"><a href="examples/annotation/">Demo</a><a href="reference/annotation/">API</a><a href="reference/annotation.md">MD</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.

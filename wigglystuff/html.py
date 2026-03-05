@@ -133,7 +133,6 @@ class ProgressBar(anywidget.AnyWidget):
         const bar = document.createElement('div');
         bar.style.borderRadius = '4px';
         bar.style.overflow = 'hidden';
-        bar.style.backgroundColor = '#374151';
 
         const fill = document.createElement('div');
         fill.style.height = '100%';
@@ -142,7 +141,6 @@ class ProgressBar(anywidget.AnyWidget):
         const text = document.createElement('div');
         text.style.fontSize = '12px';
         text.style.fontWeight = '500';
-        text.style.color = '#888';
         text.style.marginTop = '4px';
         text.style.textAlign = 'center';
 
@@ -150,13 +148,20 @@ class ProgressBar(anywidget.AnyWidget):
         wrapper.appendChild(bar);
         wrapper.appendChild(text);
 
+        function isDark() {
+            return el.closest('.dark, .dark-theme, [data-theme="dark"]') !== null;
+        }
+
         const updateDisplay = () => {
             const value = model.get("value");
             const max = model.get("max_value");
             const percentage = max > 0 ? (value / max) * 100 : 0;
+            const dark = isDark();
 
             wrapper.style.width = model.get("width");
             bar.style.height = model.get("height") + 'px';
+            bar.style.backgroundColor = dark ? '#374151' : '#e5e7eb';
+            text.style.color = dark ? '#9ca3af' : '#888';
             fill.style.backgroundColor = model.get("color");
             fill.style.width = percentage + '%';
 
@@ -166,6 +171,12 @@ class ProgressBar(anywidget.AnyWidget):
         };
 
         updateDisplay();
+
+        const observer = new MutationObserver(updateDisplay);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+        if (document.body !== document.documentElement) {
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+        }
 
         model.on('change:value', updateDisplay);
         model.on('change:max_value', updateDisplay);
@@ -186,3 +197,12 @@ class ProgressBar(anywidget.AnyWidget):
     show_text = traitlets.Bool(True).tag(sync=True)
     width = traitlets.Unicode('100%').tag(sync=True)
     height = traitlets.Int(24).tag(sync=True)
+
+    def __init__(self, value: int = 0, max_value: int = 100, color: str = '#22c55e', show_text: bool = True, width: str = '100%', height: int = 24):
+        super().__init__()
+        self.value = value
+        self.max_value = max_value
+        self.color = color
+        self.show_text = show_text
+        self.width = width
+        self.height = height

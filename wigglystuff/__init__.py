@@ -2,6 +2,7 @@
 
 import importlib.metadata
 
+from .annotation import AnnotationWidget
 from .altair_widget import AltairWidget
 from .api_doc import ApiDoc
 from .cell_tour import CellTour
@@ -37,6 +38,7 @@ from .webcam_capture import WebcamCapture
 __version__ = importlib.metadata.version("wigglystuff")
 
 __all__ = [
+    "AnnotationWidget",
     "AltairWidget",
     "ApiDoc",
     "CellTour",
