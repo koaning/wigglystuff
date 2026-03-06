@@ -78,7 +78,7 @@ docs: docs-demos
 	uv run python scripts/copy_docs_md.py
 
 docs-demos:
-	uv run python scripts/export_marimo_demos.py --force
+	uv run python scripts/export_marimo_demos.py
 
 docs-serve:
 	uv run python -m http.server --directory site
