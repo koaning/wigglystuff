@@ -168,7 +168,7 @@ Untitled.ipynb
 .specstory/
 .cursorindexingignore
 **/__marimo__/**
-mkdocs/examples/
-!mkdocs/examples/.gitkeep
+mkdocs/examples/*
+!mkdocs/examples/.last-build-commit
 
 wandb/**
