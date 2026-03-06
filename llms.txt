@@ -6,7 +6,6 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 
 ## Widgets
 
-- [AnnotationWidget](https://koaning.github.io/wigglystuff/reference/annotation.md): Annotation input surface with buttons, keyboard shortcuts, gamepad, and speech-to-text
 - [Slider2D](https://koaning.github.io/wigglystuff/reference/slider2d.md): 2D slider for x/y value selection
 - [ChartPuck](https://koaning.github.io/wigglystuff/reference/chart-puck.md): Draggable puck overlay for matplotlib charts
 - [ChartMultiSelect](https://koaning.github.io/wigglystuff/reference/chart-multi-select.md): Multi-region class-labeled selection on matplotlib charts
