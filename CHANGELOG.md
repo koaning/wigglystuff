@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- `ThreeWidget` now supports per-point opacity via an optional `opacity` key in each data dict (0.0–1.0, defaults to 1.0).
+- `ThreeWidget` now accepts `xlim`, `ylim`, and `zlim` parameters to fix axis bounds instead of auto-fitting from data.
+- `ThreeWidget` now accepts `camera_azimuth` and `camera_elevation` parameters (in degrees) to control the initial viewing angle.
+
+### Fixed
+- `ThreeWidget` no longer resets the camera on data updates, so auto-rotation continues smoothly when points change.
+
 ## [0.2.36] - 2026-03-05
 
 ### Fixed
