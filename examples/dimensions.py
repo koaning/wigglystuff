@@ -77,11 +77,15 @@ def _(widget):
 
 
 @app.cell
-def _(df, opacity, pl):
+def _(df, dimensions, opacity, pl):
     from wigglystuff import ThreeWidget
 
     _points = (
-        df.rename(dict(dim_1="x", dim_2="y", dim_3="z"))
+        df.with_columns(
+            dim_2=pl.col("dim_2") if dimensions.value >= 2 else pl.lit(0),
+            dim_3=pl.col("dim_3") if dimensions.value >= 3 else pl.lit(0),
+        )
+        .rename(dict(dim_1="x", dim_2="y", dim_3="z"))
         .with_columns(
             opacity=opacity.value + (1 - opacity.value) * pl.col("inside_ball").cast(pl.Int8),
             color=pl.when(pl.col("inside_ball")).then(pl.lit("yellow")).otherwise(pl.lit("purple")),
@@ -212,7 +216,7 @@ def _(another_three_widget):
 
 @app.cell
 def _(ThreeWidget, opacity, parallel_chart, pl):
-    _df = pl.DataFrame(parallel_chart.selected_data)
+    _df = pl.DataFrame(parallel_chart.filtered_data)
 
     _points = (
         _df.rename(dict(dim_1="x", dim_2="y", dim_3="z"))
