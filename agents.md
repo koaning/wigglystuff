@@ -1,3 +1,9 @@
+# Setup
+
+This repo uses a `conductor.json` setup script (`make install`) that runs
+automatically when a Conductor workspace is created. It installs all
+dependencies so the environment is ready to use immediately.
+
 # Agents
 
 `wigglystuff` ships a small roster of AnyWidget "agents" that surface different
