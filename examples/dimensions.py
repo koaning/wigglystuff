@@ -90,7 +90,7 @@ def _(df, opacity, pl):
         .to_dicts()
     )
 
-    widget = ThreeWidget(data=_points, dark_mode=True, xlim=(0, 1), ylim=(0, 1), zlim=(0, 1))
+    widget = ThreeWidget(data=_points, dark_mode=True, xlim=(-1, 1), ylim=(-1, 1), zlim=(-1, 1))
     return (widget,)
 
 
@@ -177,12 +177,50 @@ def _(dimensions, mo, n_points, np):
     data["inside_ball"] = in_ball
 
     df = pl.DataFrame(data)
+    return df, in_ball, pl, points
 
+
+@app.cell
+def _(df, mo):
     from wigglystuff import ParallelCoordinates
 
-    parallel_chart = mo.ui.anywidget(ParallelCoordinates(df.head(500), color_by="inside_ball"))
+    parallel_chart = mo.ui.anywidget(ParallelCoordinates(df, color_by="inside_ball", height=500))
+    return ParallelCoordinates, parallel_chart
+
+
+@app.cell
+def _(dimensions, mo, n_points):
+    mo.hstack([dimensions, n_points])
+    return
+
+
+@app.cell
+def _(parallel_chart):
     parallel_chart
-    return df, in_ball, pl, points
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _(ParallelCoordinates, df, mo):
+    _parallel_chart = mo.ui.anywidget(ParallelCoordinates(df, color_by="inside_ball", height=500))
+    return
+
+
+@app.cell
+def _(mo):
+    dimensions_compare = mo.ui.slider(start=1, stop=20, step=1, value=5, label="Dimensions")
+    dimensions_compare
+    return
 
 
 if __name__ == "__main__":
