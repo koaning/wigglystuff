@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - `ParallelCoordinates` now accepts a `color_map` parameter to assign explicit CSS colors to categorical values (e.g. `color_map={"a": "red", "b": "#0000ff"}`). Any CSS color format is accepted and auto-converted.
+- `PlaySlider` widget: a range slider with a play/pause button that auto-advances the value on a configurable interval. Supports looping, step size, interval control, and light/dark themes.
 
 ### Fixed
 - `ParallelCoordinates` categorical color assignment is now deterministic regardless of data row order. Unique values are sorted before mapping to the default palette.
