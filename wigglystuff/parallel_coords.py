@@ -23,6 +23,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
             default color.
         height: Widget height in pixels.
         width: Widget width in pixels. Set to 0 for container width.
+        ignore: Column names to exclude from the plot.
 
     Examples:
         ```python
@@ -58,6 +59,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
         color_by: str = "",
         height: int = 600,
         width: int = 0,
+        ignore: list[str] | None = None,
     ) -> None:
         """Create a ParallelCoordinates widget.
 
@@ -68,8 +70,14 @@ class ParallelCoordinates(anywidget.AnyWidget):
                 color.
             height: Widget height in pixels.
             width: Widget width in pixels. Set to 0 for container width.
+            ignore: Column names to exclude from the plot.
         """
         records = _to_records(data)
+        if ignore:
+            records = [
+                {k: v for k, v in row.items() if k not in ignore}
+                for row in records
+            ]
         filtered_indices = list(range(len(records)))
         super().__init__(
             data=records,
