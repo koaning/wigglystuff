@@ -66,9 +66,11 @@ function render({ model, el }) {
   let currentPositions = null;
   let currentColors = null;
   let currentSizes = null;
+  let currentOpacities = null;
   let containerWidth = 1;
   let containerHeight = 1;
   let axisLabelsVisible = false;
+  let initialFrameDone = false;
   let axisLabels = [];
 
   const plotBounds = new Box3(new Vector3(-1, -1, -1), new Vector3(1, 1, 1));
@@ -82,7 +84,15 @@ function render({ model, el }) {
     z: new Vector3()
   };
   const labelProjector = new Vector3();
-  const cameraOffset = new Vector3(1, 1, 1).normalize();
+  function getCameraOffset() {
+    const azimuth = (model.get("camera_azimuth") * Math.PI) / 180;
+    const elevation = (model.get("camera_elevation") * Math.PI) / 180;
+    return new Vector3(
+      Math.cos(elevation) * Math.sin(azimuth),
+      Math.sin(elevation),
+      Math.cos(elevation) * Math.cos(azimuth)
+    ).normalize();
+  }
   const axisLabelElements = {
     x: null,
     y: null,
@@ -266,7 +276,7 @@ function render({ model, el }) {
     const distance = (radius / Math.sin(fov / 2)) * 1.2;
     const safeDistance = Math.max(distance, maxDim * 0.9);
 
-    camera.position.copy(plotCenter).add(cameraOffset.clone().multiplyScalar(safeDistance));
+    camera.position.copy(plotCenter).add(getCameraOffset().multiplyScalar(safeDistance));
     camera.near = Math.max(safeDistance / 100, 0.01);
     camera.far = safeDistance * 10;
     camera.updateProjectionMatrix();
@@ -300,9 +310,10 @@ function render({ model, el }) {
     currentPositions = null;
     currentColors = null;
     currentSizes = null;
+    currentOpacities = null;
   }
 
-  function applyBuffers(positionArray, colorArray, sizeArray) {
+  function applyBuffers(positionArray, colorArray, sizeArray, opacityArray) {
     if (!geometry) {
       return;
     }
@@ -333,6 +344,15 @@ function render({ model, el }) {
       sizeAttr.array.set(sizeArray);
       sizeAttr.needsUpdate = true;
     }
+
+    const opacityAttr = geometry.getAttribute("opacity");
+
+    if (!opacityAttr || opacityAttr.array.length !== opacityArray.length) {
+      geometry.setAttribute("opacity", new Float32BufferAttribute(opacityArray, 1));
+    } else {
+      opacityAttr.array.set(opacityArray);
+      opacityAttr.needsUpdate = true;
+    }
   }
 
   function updateChart() {
@@ -340,6 +360,7 @@ function render({ model, el }) {
     const positions = [];
     const colors = [];
     const sizes = [];
+    const opacities = [];
 
     let minX = Infinity;
     let minY = Infinity;
@@ -370,6 +391,7 @@ function render({ model, el }) {
       colors.push(color.r, color.g, color.b);
 
       sizes.push(point.size !== void 0 ? point.size : 0.1);
+      opacities.push(point.opacity !== void 0 ? point.opacity : 1.0);
     });
 
     if (minX === Infinity) {
@@ -379,6 +401,24 @@ function render({ model, el }) {
       maxY = 1;
       minZ = -1;
       maxZ = 1;
+    }
+
+    // Apply axis limits if provided
+    const xlim = model.get("xlim");
+    const ylim = model.get("ylim");
+    const zlim = model.get("zlim");
+
+    if (xlim && xlim.length === 2) {
+      minX = xlim[0];
+      maxX = xlim[1];
+    }
+    if (ylim && ylim.length === 2) {
+      minY = ylim[0];
+      maxY = ylim[1];
+    }
+    if (zlim && zlim.length === 2) {
+      minZ = zlim[0];
+      maxZ = zlim[1];
     }
 
     if (minX === maxX) {
@@ -408,13 +448,15 @@ function render({ model, el }) {
     updateAxes();
     updateAxisLabelPositions();
 
-    if (!userHasInteracted) {
+    if (!initialFrameDone) {
       frameCameraToBounds();
+      initialFrameDone = true;
     }
 
     const nextPositions = new Float32Array(positions);
     const nextColors = new Float32Array(colors);
     const nextSizes = new Float32Array(sizes);
+    const nextOpacities = new Float32Array(opacities);
 
     if (
       !points ||
@@ -429,16 +471,33 @@ function render({ model, el }) {
       geometry.setAttribute("position", new Float32BufferAttribute(nextPositions, 3));
       geometry.setAttribute("color", new Float32BufferAttribute(nextColors, 3));
       geometry.setAttribute("size", new Float32BufferAttribute(nextSizes, 1));
+      geometry.setAttribute("opacity", new Float32BufferAttribute(nextOpacities, 1));
 
       material = new PointsMaterial({
         vertexColors: true,
-        sizeAttenuation: true
+        sizeAttenuation: true,
+        transparent: true,
+        depthWrite: false
       });
       material.onBeforeCompile = (shader) => {
-        shader.vertexShader = shader.vertexShader.replace(
-          "uniform float size;",
-          "attribute float size;"
-        );
+        shader.vertexShader = shader.vertexShader
+          .replace(
+            "uniform float size;",
+            "attribute float size;\nattribute float opacity;\nvarying float vOpacity;"
+          )
+          .replace(
+            "void main() {",
+            "void main() {\n\tvOpacity = opacity;"
+          );
+        shader.fragmentShader = shader.fragmentShader
+          .replace(
+            "void main() {",
+            "varying float vOpacity;\nvoid main() {"
+          )
+          .replace(
+            "#include <premultiplied_alpha_fragment>",
+            "#include <premultiplied_alpha_fragment>\n\tgl_FragColor.a *= vOpacity;"
+          );
       };
 
       points = new Points(geometry, material);
@@ -448,6 +507,7 @@ function render({ model, el }) {
       currentPositions = nextPositions;
       currentColors = nextColors;
       currentSizes = nextSizes;
+      currentOpacities = nextOpacities;
 
       return;
     }
@@ -456,10 +516,11 @@ function render({ model, el }) {
     const duration = Math.max(0, model.get("animation_duration_ms") || 400);
 
     if (!shouldAnimate || duration === 0) {
-      applyBuffers(nextPositions, nextColors, nextSizes);
+      applyBuffers(nextPositions, nextColors, nextSizes, nextOpacities);
       currentPositions = nextPositions;
       currentColors = nextColors;
       currentSizes = nextSizes;
+      currentOpacities = nextOpacities;
       return;
     }
 
@@ -471,9 +532,11 @@ function render({ model, el }) {
     const startPositions = new Float32Array(geometry.getAttribute("position").array);
     const startColors = new Float32Array(geometry.getAttribute("color").array);
     const startSizes = new Float32Array(geometry.getAttribute("size").array);
+    const startOpacities = new Float32Array(geometry.getAttribute("opacity").array);
     const positionAttr = geometry.getAttribute("position");
     const colorAttr = geometry.getAttribute("color");
     const sizeAttr = geometry.getAttribute("size");
+    const opacityAttr = geometry.getAttribute("opacity");
     const startTime = performance.now();
 
     const animateUpdate = (now) => {
@@ -492,9 +555,14 @@ function render({ model, el }) {
         sizeAttr.array[i] = startSizes[i] + (nextSizes[i] - startSizes[i]) * eased;
       }
 
+      for (let i = 0; i < opacityAttr.array.length; i++) {
+        opacityAttr.array[i] = startOpacities[i] + (nextOpacities[i] - startOpacities[i]) * eased;
+      }
+
       positionAttr.needsUpdate = true;
       colorAttr.needsUpdate = true;
       sizeAttr.needsUpdate = true;
+      opacityAttr.needsUpdate = true;
 
       if (progress < 1) {
         updateAnimationId = requestAnimationFrame(animateUpdate);
@@ -503,6 +571,7 @@ function render({ model, el }) {
         currentPositions = nextPositions;
         currentColors = nextColors;
         currentSizes = nextSizes;
+        currentOpacities = nextOpacities;
       }
     };
 
@@ -523,6 +592,19 @@ function render({ model, el }) {
   model.on("change:axis_labels", () => {
     updateAxisLabels();
     updateAxisLabelPositions();
+  });
+  model.on("change:xlim", updateChart);
+  model.on("change:ylim", updateChart);
+  model.on("change:zlim", updateChart);
+  model.on("change:camera_azimuth", () => {
+    if (!userHasInteracted) {
+      frameCameraToBounds();
+    }
+  });
+  model.on("change:camera_elevation", () => {
+    if (!userHasInteracted) {
+      frameCameraToBounds();
+    }
   });
   model.on("change:auto_rotate", () => {
     const shouldRotate = model.get("auto_rotate");
