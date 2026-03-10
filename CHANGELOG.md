@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- `ParallelCoordinates` now accepts a `color_map` parameter to assign explicit CSS colors to categorical values (e.g. `color_map={"a": "red", "b": "#0000ff"}`). Any CSS color format is accepted and auto-converted.
+
+### Fixed
+- `ParallelCoordinates` categorical color assignment is now deterministic regardless of data row order. Unique values are sorted before mapping to the default palette.
+
 ## [0.2.36] - 2026-03-05
 
 ### Fixed
