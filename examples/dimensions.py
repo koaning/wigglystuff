@@ -184,13 +184,17 @@ def _(dimensions, mo, n_points, np):
 def _(df, mo):
     from wigglystuff import ParallelCoordinates
 
-    parallel_chart = mo.ui.anywidget(ParallelCoordinates(df, color_by="inside_ball", height=500))
+    parallel_chart = mo.ui.anywidget(
+        ParallelCoordinates(
+            df, color_by="inside_ball", height=500, color_map={"true": "yellow", "false": "purple"}
+        )
+    )
     return ParallelCoordinates, parallel_chart
 
 
 @app.cell
-def _(dimensions, mo, n_points):
-    mo.hstack([dimensions, n_points])
+def _(dimensions, mo, n_points, opacity):
+    mo.hstack([dimensions, n_points, opacity])
     return
 
 
@@ -203,18 +207,6 @@ def _(parallel_chart):
 @app.cell
 def _(another_three_widget):
     another_three_widget
-    return
-
-
-@app.cell
-def _(parallel_chart):
-    parallel_chart.filtered_indices
-    return
-
-
-@app.cell
-def _(df, parallel_chart):
-    df[parallel_chart.selected_indices]
     return
 
 
