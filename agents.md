@@ -47,6 +47,7 @@ syncs back to Python.
 | SplineDraw | `wigglystuff.spline_draw.SplineDraw` | `data`, `curve`, `curve_error`, `brushsize`, `n_classes`, `width`, `height` | Draw scatter points with Python-computed spline curve fitting |
 | ScatterWidget | re-exported from [`drawdata`](https://github.com/koaning/drawdata) | `data`, `brushsize`, `width`, `height`, `n_classes` | Paint multi-class 2D scatter data with brush |
 | DiffViewer | `wigglystuff.diff_viewer.DiffViewer` | `old_name`, `old_contents`, `new_name`, `new_contents`, `diff_style`, `expand_unchanged` | Rich file diff viewer with split/unified modes |
+| PlaySlider | `wigglystuff.play_slider.PlaySlider` | `value`, `min_value`, `max_value`, `step`, `interval_ms`, `playing`, `loop`, `width` | Slider with play/pause button for auto-advancing values |
 
 ## Patterns to remember
 
@@ -69,9 +70,13 @@ syncs back to Python.
   overrides that respond to `.dark`, `.dark-theme`, or `[data-theme="dark"]`
   ancestors so notebook-level theme toggles work instantly.
 - When adding a new widget, remember to update the docs gallery
-  (`mkdocs/index.md`), the README gallery (`readme.md`), and the LLM context
-  file (`mkdocs/llms.txt`). Add a screenshot to `mkdocs/assets/gallery/` and
-  reference it from the gallery locations to keep them in sync.
+  (`mkdocs/index.md`), the README gallery (`readme.md`), the LLM context
+  file (`mkdocs/llms.txt`), and the changelog (`CHANGELOG.md`). Add a
+  screenshot to `mkdocs/assets/gallery/` and reference it from the gallery
+  locations to keep them in sync.
+- New or changed features that haven't been released yet go under the
+  `## [Unreleased]` section at the top of `CHANGELOG.md`. That section gets
+  renamed to a versioned heading (e.g., `## [0.2.37]`) only at release time.
 - Each widget has a demo marimo notebook in the `demos/` folder (e.g.,
   `demos/colorpicker.py`). When adding a new widget, create a corresponding
   demo notebook. Run demos with `marimo edit demos/<widget>.py`.
@@ -82,6 +87,9 @@ syncs back to Python.
   runtime bugs.
 - **Always run `uv run marimo check demos/<notebook>.py`** after editing a demo
   notebook to verify it parses correctly and has no cell dependency issues.
+- **Always run `uv run demos/<notebook>.py`** after editing a demo notebook to
+  execute all cells and catch runtime errors. This complements `marimo check`,
+  which only validates structure.
 - Dumber is better. Prefer obvious, direct code over clever abstractions—someone
   new to the project should be able to read the code top-to-bottom and grok it
   without needing to look up framework magic or trace through indirection.
