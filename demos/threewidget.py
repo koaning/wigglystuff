@@ -30,6 +30,7 @@ def _(mo):
                 "z": b / 255.0,
                 "color": hex_value,
                 "size": random.uniform(0.08, 0.2),
+                "opacity": random.uniform(0.3, 1.0),
             }
         )
 
@@ -37,6 +38,11 @@ def _(mo):
         data=data,
         width=640,
         height=420,
+        xlim=(0, 1),
+        ylim=(0, 1),
+        zlim=(0, 1),
+        camera_azimuth=60,
+        camera_elevation=25,
         # show_grid=True,
         # show_axes=True,
         # axis_labels=["R", "G", "B"],

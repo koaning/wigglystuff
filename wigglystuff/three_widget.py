@@ -38,6 +38,11 @@ class ThreeWidget(anywidget.AnyWidget):
     animation_duration_ms = traitlets.Int(400).tag(sync=True)
     auto_rotate = traitlets.Bool(False).tag(sync=True)
     auto_rotate_speed = traitlets.Float(2.0).tag(sync=True)
+    xlim = traitlets.List(default_value=[]).tag(sync=True)
+    ylim = traitlets.List(default_value=[]).tag(sync=True)
+    zlim = traitlets.List(default_value=[]).tag(sync=True)
+    camera_azimuth = traitlets.Float(45.0).tag(sync=True)
+    camera_elevation = traitlets.Float(30.0).tag(sync=True)
 
     def __init__(
         self,
@@ -53,13 +58,18 @@ class ThreeWidget(anywidget.AnyWidget):
         animation_duration_ms: int = 400,
         auto_rotate: bool = False,
         auto_rotate_speed: float = 2.0,
+        xlim: Optional[tuple[float, float]] = None,
+        ylim: Optional[tuple[float, float]] = None,
+        zlim: Optional[tuple[float, float]] = None,
+        camera_azimuth: float = 45.0,
+        camera_elevation: float = 30.0,
         **kwargs: Any,
     ) -> None:
         """Create a ThreeWidget.
 
         Args:
             data: Iterable of dicts with ``x``, ``y``, ``z`` coordinates and
-                optional ``color``/``size`` keys.
+                optional ``color``/``size``/``opacity`` keys.
             width: Canvas width in pixels.
             height: Canvas height in pixels.
             show_grid: Whether to show a grid helper.
@@ -70,6 +80,11 @@ class ThreeWidget(anywidget.AnyWidget):
             animation_duration_ms: Animation duration in milliseconds.
             auto_rotate: Whether to start with automatic rotation enabled.
             auto_rotate_speed: Speed of automatic rotation.
+            xlim: Optional (min, max) bounds for the x axis.
+            ylim: Optional (min, max) bounds for the y axis.
+            zlim: Optional (min, max) bounds for the z axis.
+            camera_azimuth: Initial horizontal angle in degrees (default 45).
+            camera_elevation: Initial vertical angle in degrees (default 30).
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         super().__init__(
@@ -84,6 +99,11 @@ class ThreeWidget(anywidget.AnyWidget):
             animation_duration_ms=animation_duration_ms,
             auto_rotate=auto_rotate,
             auto_rotate_speed=auto_rotate_speed,
+            xlim=list(xlim) if xlim is not None else [],
+            ylim=list(ylim) if ylim is not None else [],
+            zlim=list(zlim) if zlim is not None else [],
+            camera_azimuth=camera_azimuth,
+            camera_elevation=camera_elevation,
             **kwargs,
         )
 
