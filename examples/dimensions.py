@@ -33,7 +33,7 @@ def _():
 def _(mo):
     dimensions = mo.ui.slider(start=1, stop=20, step=1, value=5, label="Dimensions")
     n_points = mo.ui.slider(
-        start=1000, stop=100000, step=1000, value=10000, label="Number of Points"
+        start=1000, stop=1000000, step=1000, value=100000, label="Number of Points"
     )
     mo.hstack([dimensions, n_points])
     return dimensions, n_points
@@ -91,7 +91,7 @@ def _(df, opacity, pl):
     )
 
     widget = ThreeWidget(data=_points, dark_mode=True, xlim=(-1, 1), ylim=(-1, 1), zlim=(-1, 1))
-    return (widget,)
+    return ThreeWidget, widget
 
 
 @app.cell
@@ -201,18 +201,48 @@ def _(parallel_chart):
 
 
 @app.cell
-def _():
+def _(another_three_widget):
+    another_three_widget
     return
 
 
 @app.cell
-def _():
+def _(parallel_chart):
+    parallel_chart.filtered_indices
     return
 
 
 @app.cell
-def _(ParallelCoordinates, df, mo):
-    _parallel_chart = mo.ui.anywidget(ParallelCoordinates(df, color_by="inside_ball", height=500))
+def _(df, parallel_chart):
+    df[parallel_chart.selected_indices]
+    return
+
+
+@app.cell
+def _(ThreeWidget, opacity, parallel_chart, pl):
+    _df = pl.DataFrame(parallel_chart.selected_data)
+
+    _points = (
+        _df.rename(dict(dim_1="x", dim_2="y", dim_3="z"))
+        .with_columns(
+            opacity=opacity.value + (1 - opacity.value) * pl.col("inside_ball").cast(pl.Int8),
+            color=pl.when(pl.col("inside_ball")).then(pl.lit("yellow")).otherwise(pl.lit("purple")),
+            size=pl.lit(0.05),
+        )
+        .to_dicts()
+    )
+
+    another_three_widget = ThreeWidget(
+        data=_points, dark_mode=True, xlim=(-1, 1), ylim=(-1, 1), zlim=(-1, 1)
+    )
+    return (another_three_widget,)
+
+
+@app.cell(hide_code=True)
+def _(ParallelCoordinates, df, dimensions_compare, mo):
+    _df = df.select([f"dim_{i}" for i in range(1, dimensions_compare.value + 1)] + ["inside_ball"])
+    _parallel_chart = mo.ui.anywidget(ParallelCoordinates(_df, color_by="inside_ball", height=500))
+    _parallel_chart
     return
 
 
@@ -220,7 +250,7 @@ def _(ParallelCoordinates, df, mo):
 def _(mo):
     dimensions_compare = mo.ui.slider(start=1, stop=20, step=1, value=5, label="Dimensions")
     dimensions_compare
-    return
+    return (dimensions_compare,)
 
 
 if __name__ == "__main__":
