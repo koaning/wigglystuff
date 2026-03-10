@@ -1,0 +1,105 @@
+.play-slider-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: light dark;
+  padding: 6px 0;
+
+  --play-slider-btn-bg: #f3f4f6;
+  --play-slider-btn-border: #d1d5db;
+  --play-slider-btn-hover: #e5e7eb;
+  --play-slider-text: #111827;
+  --play-slider-icon: #374151;
+  --play-slider-track: #d1d5db;
+  --play-slider-fill: #3b82f6;
+  --play-slider-thumb-bg: #ffffff;
+  --play-slider-thumb-border: #3b82f6;
+}
+
+.dark .play-slider-wrapper,
+.dark-theme .play-slider-wrapper,
+[data-theme="dark"] .play-slider-wrapper {
+  --play-slider-btn-bg: #1f2937;
+  --play-slider-btn-border: #475569;
+  --play-slider-btn-hover: #374151;
+  --play-slider-text: #f3f4f6;
+  --play-slider-icon: #d1d5db;
+  --play-slider-track: #475569;
+  --play-slider-fill: #5b9fad;
+  --play-slider-thumb-bg: #94a3b8;
+  --play-slider-thumb-border: #94a3b8;
+}
+
+.play-slider-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--play-slider-btn-border);
+  border-radius: 6px;
+  background: var(--play-slider-btn-bg);
+  color: var(--play-slider-icon);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.play-slider-btn:hover {
+  background: var(--play-slider-btn-hover);
+}
+
+.play-slider-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.play-slider-range {
+  flex: 1;
+  min-width: 80px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--play-slider-track);
+  outline: none;
+}
+
+.play-slider-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--play-slider-thumb-bg);
+  border: 2px solid var(--play-slider-thumb-border);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.play-slider-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--play-slider-thumb-bg);
+  border: 2px solid var(--play-slider-thumb-border);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.play-slider-range::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--play-slider-track);
+}
+
+.play-slider-label {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--play-slider-text);
+  min-width: 3ch;
+  text-align: right;
+  flex-shrink: 0;
+}

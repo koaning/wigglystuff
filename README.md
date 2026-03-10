@@ -61,6 +61,7 @@ uv pip install wigglystuff
 <tr>
 <td align="center"><b>ParallelCoordinates</b><br><a href="https://koaning.github.io/wigglystuff/examples/parallelcoords/"><img src="./mkdocs/assets/gallery/parallelcoords.png" width="330"></a><br><a href="https://koaning.github.io/wigglystuff/examples/parallelcoords/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/parallel-coords/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/parallel-coords.md">MD</a></td>
 <td align="center"><b>AnnotationWidget</b><br><a href="https://koaning.github.io/wigglystuff/examples/annotation/"><img src="./mkdocs/assets/gallery/annotation.png" width="330"></a><br><a href="https://koaning.github.io/wigglystuff/examples/annotation/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/annotation/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/annotation.md">MD</a></td>
+<td align="center"><b>PlaySlider</b><br><a href="https://koaning.github.io/wigglystuff/examples/playslider/"><img src="./mkdocs/assets/gallery/playslider.png" width="330"></a><br><a href="https://koaning.github.io/wigglystuff/examples/playslider/">Demo</a> · <a href="https://koaning.github.io/wigglystuff/reference/play-slider/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/play-slider.md">MD</a></td>
 </tr>
 </table>
 

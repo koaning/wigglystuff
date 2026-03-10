@@ -23,6 +23,7 @@ from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
 from .paint import Paint
 from .parallel_coords import ParallelCoordinates
+from .play_slider import PlaySlider
 from .pulsar_chart import PulsarChart
 from drawdata import ScatterWidget
 from .slider2d import Slider2D
@@ -58,6 +59,7 @@ __all__ = [
     "Neo4jWidget",
     "Paint",
     "ParallelCoordinates",
+    "PlaySlider",
     "PulsarChart",
     "ScatterWidget",
     "Slider2D",

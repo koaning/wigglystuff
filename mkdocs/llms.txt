@@ -35,6 +35,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [DiffViewer](https://koaning.github.io/wigglystuff/reference/diff-viewer.md): Rich file diff viewer with split/unified modes powered by @pierre/diffs
 - [SplineDraw](https://koaning.github.io/wigglystuff/reference/spline-draw.md): Draw scatter points with Python-computed spline curve fitting
 - [ApiDoc](https://koaning.github.io/wigglystuff/reference/api-doc.md): Renders API docs for Python classes and functions directly in notebooks
+- [PlaySlider](https://koaning.github.io/wigglystuff/reference/play-slider.md): Slider with play/pause button for auto-advancing values at a configurable pace
 
 ## 3rd party widgets
 
