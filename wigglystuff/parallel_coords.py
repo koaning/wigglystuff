@@ -21,6 +21,9 @@ class ParallelCoordinates(anywidget.AnyWidget):
             DataFrame. Each row becomes one polyline in the chart.
         color_by: Column name used to color lines. Leave empty for a single
             default color.
+        color_map: Mapping of categorical values to CSS colors (e.g.
+            ``{"a": "red", "b": "#0000ff"}``). Values not in the map use the
+            default palette. Colors are auto-converted to ``rgb(...)`` format.
         height: Widget height in pixels.
         width: Widget width in pixels. Set to 0 for container width.
         ignore: Column names to exclude from the plot.
@@ -35,7 +38,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
             "y": [5, 4, 3, 2, 1],
             "label": ["a", "a", "b", "b", "b"],
         })
-        widget = ParallelCoordinates(df, color_by="label")
+        widget = ParallelCoordinates(df, color_by="label", color_map={"a": "red"})
         widget
         ```
     """
@@ -45,6 +48,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
 
     data = traitlets.List([]).tag(sync=True)
     color_by = traitlets.Unicode("").tag(sync=True)
+    color_map = traitlets.Dict({}).tag(sync=True)
     height = traitlets.Int(600).tag(sync=True)
     width = traitlets.Int(0).tag(sync=True)
 
@@ -57,6 +61,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
         data=None,
         *,
         color_by: str = "",
+        color_map: dict[str, str] | None = None,
         height: int = 600,
         width: int = 0,
         ignore: list[str] | None = None,
@@ -68,6 +73,9 @@ class ParallelCoordinates(anywidget.AnyWidget):
                 DataFrame. Each dict/row is one data point.
             color_by: Column name to color lines by. Empty string for uniform
                 color.
+            color_map: Mapping of categorical values to CSS colors (e.g.
+                ``{"a": "red", "b": "#0000ff"}``). Values not in the map use
+                the default palette.
             height: Widget height in pixels.
             width: Widget width in pixels. Set to 0 for container width.
             ignore: Column names to exclude from the plot.
@@ -82,6 +90,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
         super().__init__(
             data=records,
             color_by=color_by,
+            color_map=color_map or {},
             height=height,
             width=width,
             filtered_indices=filtered_indices,

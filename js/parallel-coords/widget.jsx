@@ -18,6 +18,16 @@ const plugins = (() => {
   return p;
 })();
 
+/** Convert any CSS color string to "rgb(r, g, b)" format. */
+function toRgbString(cssColor) {
+  if (cssColor.startsWith("rgb(")) return cssColor;
+  const ctx = document.createElement("canvas").getContext("2d");
+  ctx.fillStyle = cssColor;
+  ctx.fillRect(0, 0, 1, 1);
+  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
 const CATEGORICAL_COLOR_SCHEME = [
   "rgb(31, 119, 180)",
   "rgb(255, 127, 14)",
@@ -199,7 +209,8 @@ function render({ model, el }) {
     if (colorBy) {
       exp.colorby = colorBy;
       const values = data.map((row) => row[colorBy]).filter((v) => v !== undefined && v !== null);
-      const uniqueValues = Array.from(new Set(values));
+      const uniqueValues = Array.from(new Set(values)).sort();
+      const colorMap = model.get("color_map") || {};
       const numericValues = values
         .map((v) => (typeof v === "number" ? v : parseFloat(v)))
         .filter((v) => Number.isFinite(v));
@@ -220,7 +231,11 @@ function render({ model, el }) {
       } else {
         const colors = {};
         uniqueValues.forEach((value, idx) => {
-          colors[value] = CATEGORICAL_COLOR_SCHEME[idx % CATEGORICAL_COLOR_SCHEME.length];
+          if (colorMap[value]) {
+            colors[value] = toRgbString(colorMap[value]);
+          } else {
+            colors[value] = CATEGORICAL_COLOR_SCHEME[idx % CATEGORICAL_COLOR_SCHEME.length];
+          }
         });
         exp.parameters_definition[colorBy] = {
           type: "categorical",
@@ -292,6 +307,8 @@ function render({ model, el }) {
             "_" +
             (model.get("color_by") || "") +
             "_" +
+            JSON.stringify(model.get("color_map") || {}) +
+            "_" +
             String(height) +
             "_" +
             (dark ? "dark" : "light"),
@@ -316,12 +333,14 @@ function render({ model, el }) {
   doRender();
   model.on("change:data", doRender);
   model.on("change:color_by", doRender);
+  model.on("change:color_map", doRender);
   model.on("change:height", doRender);
   model.on("change:width", doRender);
 
   return () => {
     model.off("change:data", doRender);
     model.off("change:color_by", doRender);
+    model.off("change:color_map", doRender);
     model.off("change:height", doRender);
     model.off("change:width", doRender);
     if (domObserver) {

@@ -35,7 +35,10 @@ def _(mo):
         {name: iris.data[:, i] for i, name in enumerate(iris.feature_names)}
     ).with_columns(pl.Series("target", iris.target))
 
-    widget = mo.ui.anywidget(ParallelCoordinates(df, height=300, width=700, color_by="target"))
+    widget = mo.ui.anywidget(ParallelCoordinates(
+        df, height=300, width=700, color_by="target",
+        color_map={0: "teal", 1: "orange", 2: "crimson"},
+    ))
     widget
     return ParallelCoordinates, pl, widget
 
