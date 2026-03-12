@@ -52,9 +52,16 @@ class ParallelCoordinates(anywidget.AnyWidget):
     height = traitlets.Int(600).tag(sync=True)
     width = traitlets.Int(0).tag(sync=True)
 
-    # Synced back from HiPlot via onChange callbacks
-    filtered_indices = traitlets.List(traitlets.Int(), default_value=[]).tag(sync=True)
-    selected_indices = traitlets.List(traitlets.Int(), default_value=[]).tag(sync=True)
+    # Brush extents synced from JS (compact dict describing axis brush ranges)
+    brush_extents = traitlets.Dict({}).tag(sync=True)
+
+    # UIDs synced from JS (HiPlot onChange events for Keep/Exclude/brush)
+    filtered_uids = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
+    selected_uids = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
+
+    # Derived indices (computed from UIDs)
+    filtered_indices = traitlets.List(traitlets.Int(), default_value=[])
+    selected_indices = traitlets.List(traitlets.Int(), default_value=[])
 
     def __init__(
         self,
@@ -96,6 +103,22 @@ class ParallelCoordinates(anywidget.AnyWidget):
             filtered_indices=filtered_indices,
             selected_indices=[],
         )
+
+    @traitlets.observe("filtered_uids")
+    def _on_filtered_uids(self, change: dict) -> None:
+        uids = change["new"]
+        if not uids:
+            self.filtered_indices = list(range(len(self.data)))
+        else:
+            self.filtered_indices = sorted(int(uid) for uid in uids)
+
+    @traitlets.observe("selected_uids")
+    def _on_selected_uids(self, change: dict) -> None:
+        uids = change["new"]
+        if not uids:
+            self.selected_indices = []
+        else:
+            self.selected_indices = sorted(int(uid) for uid in uids)
 
     @property
     def filtered_data(self) -> list[dict]:

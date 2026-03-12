@@ -252,25 +252,18 @@ function render({ model, el }) {
   }
 
   function buildOnChange() {
-    const toIndices = (uids) =>
-      uids.map((u) => parseInt(u, 10)).filter((n) => !isNaN(n));
-
     return {
+      brush_extents: (_type, extents) => {
+        model.set("brush_extents", extents);
+        model.save_changes();
+      },
       filtered_uids: (_type, uids) => {
-        if (Array.isArray(uids)) {
-          const indices = toIndices(uids);
-          model.set("filtered_indices", indices);
-          model.save_changes();
-        }
+        model.set("filtered_uids", uids);
+        model.save_changes();
       },
       selected_uids: (_type, uids) => {
-        if (Array.isArray(uids)) {
-          const indices = toIndices(uids);
-          // Keep filtered_indices aligned with the current brushed selection.
-          model.set("filtered_indices", indices);
-          model.set("selected_indices", indices);
-          model.save_changes();
-        }
+        model.set("selected_uids", uids);
+        model.save_changes();
       },
     };
   }

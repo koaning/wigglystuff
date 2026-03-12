@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.2.37] - 2026-03-12
 
 ### Added
 - `ThreeWidget` now supports per-point opacity via an optional `opacity` key in each data dict (0.0–1.0, defaults to 1.0).
@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - `ThreeWidget` no longer resets the camera on data updates, so auto-rotation continues smoothly when points change.
 - `ParallelCoordinates` categorical color assignment is now deterministic regardless of data row order. Unique values are sorted before mapping to the default palette.
+- `ParallelCoordinates` Keep/Exclude/Restore buttons now correctly update `filtered_indices`, `filtered_data`, and `selected_indices`. Previously only axis brush drags were tracked; the Keep/Exclude row filtering events from HiPlot were silently dropped.
 
 ## [0.2.36] - 2026-03-05
 
