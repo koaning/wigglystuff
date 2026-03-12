@@ -180,6 +180,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <a href="examples/playslider/" class="gallery-img"><img src="assets/gallery/playslider.png" alt="PlaySlider"></a>
 <div class="gallery-links"><a href="examples/playslider/">Demo</a><a href="reference/play-slider/">API</a><a href="reference/play-slider.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">TextHighlight</div>
+<a href="examples/texthighlight/" class="gallery-img"><img src="assets/gallery/texthighlight.png" alt="TextHighlight widget"></a>
+<div class="gallery-links"><a href="examples/texthighlight/">Demo</a><a href="reference/text-highlight/">API</a><a href="reference/text-highlight.md">MD</a></div>
+</div>
 </div>
 
 Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.

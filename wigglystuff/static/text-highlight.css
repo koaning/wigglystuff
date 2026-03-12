@@ -1,0 +1,193 @@
+.th-container {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color-scheme: light dark;
+    --th-bg: #ffffff;
+    --th-text: #1a1a1a;
+    --th-border: #d0d0d0;
+    --th-toolbar-bg: #f5f5f5;
+    --th-btn-bg: #e8e8e8;
+    --th-btn-hover: #d0d0d0;
+    --th-selected-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    --th-tag-text: #ffffff;
+    --th-delete-bg: rgba(0, 0, 0, 0.15);
+    --th-delete-hover: rgba(220, 38, 38, 0.8);
+    --th-status-text: #888;
+}
+
+.dark .th-container,
+.dark-theme .th-container,
+[data-theme="dark"] .th-container {
+    --th-bg: #1a1a1a;
+    --th-text: #e0e0e0;
+    --th-border: #3a3a3a;
+    --th-toolbar-bg: #252525;
+    --th-btn-bg: #333333;
+    --th-btn-hover: #444444;
+    --th-selected-shadow: 0 0 0 2px rgba(96, 165, 250, 0.6);
+    --th-tag-text: #ffffff;
+    --th-delete-bg: rgba(255, 255, 255, 0.15);
+    --th-delete-hover: rgba(239, 68, 68, 0.8);
+    --th-status-text: #666;
+}
+
+.th-container {
+    background: var(--th-bg);
+    color: var(--th-text);
+    border: 1px solid var(--th-border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.th-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--th-toolbar-bg);
+    border-bottom: 1px solid var(--th-border);
+    flex-wrap: wrap;
+}
+
+.th-toolbar-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--th-status-text);
+    margin-right: 4px;
+}
+
+.th-label-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background: var(--th-btn-bg);
+    color: var(--th-text);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.th-label-btn:hover {
+    background: var(--th-btn-hover);
+}
+
+.th-label-btn.th-label-active {
+    border-color: var(--th-label-color);
+    background: var(--th-label-color-bg);
+}
+
+.th-label-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.th-text-area {
+    padding: 16px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: text;
+    min-height: 40px;
+}
+
+.th-segment {
+    /* plain text between entities */
+}
+
+.th-entity {
+    display: inline;
+    border-radius: 3px;
+    padding: 1px 0;
+    cursor: pointer;
+    position: relative;
+    transition: box-shadow 0.15s;
+}
+
+.th-entity:hover {
+    filter: brightness(0.95);
+}
+
+.th-entity-selected {
+    box-shadow: var(--th-selected-shadow);
+}
+
+.th-entity-tag {
+    display: inline-block;
+    font-size: 0.6em;
+    font-weight: 700;
+    padding: 0 4px;
+    border-radius: 3px;
+    color: var(--th-tag-text);
+    vertical-align: super;
+    margin-left: 2px;
+    line-height: 1.4;
+}
+
+.th-delete-btn {
+    display: none;
+    width: 14px;
+    height: 14px;
+    border: none;
+    border-radius: 50%;
+    background: var(--th-delete-bg);
+    color: var(--th-text);
+    font-size: 10px;
+    line-height: 14px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 2px;
+    vertical-align: super;
+    transition: background 0.15s;
+}
+
+.th-delete-btn:hover {
+    background: var(--th-delete-hover);
+    color: #fff;
+}
+
+.th-entity-selected .th-delete-btn {
+    display: inline-block;
+}
+
+.th-status {
+    padding: 6px 12px;
+    font-size: 11px;
+    color: var(--th-status-text);
+    border-top: 1px solid var(--th-border);
+}
+
+.th-entity-underline {
+    display: inline;
+    position: relative;
+    cursor: pointer;
+}
+
+.th-entity-underline:hover {
+    filter: brightness(0.95);
+}
+
+.th-word,
+.th-char {
+    cursor: text;
+    border-radius: 2px;
+}
+
+.th-space {
+    cursor: text;
+}
+
+.th-drag-highlight {
+    background: var(--th-drag-bg, rgba(59, 130, 246, 0.2));
+    border-radius: 2px;
+}

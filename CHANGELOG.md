@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - `ThreeWidget` now accepts `camera_azimuth` and `camera_elevation` parameters (in degrees) to control the initial viewing angle.
 - `ParallelCoordinates` now accepts a `color_map` parameter to assign explicit CSS colors to categorical values (e.g. `color_map={"a": "red", "b": "#0000ff"}`). Any CSS color format is accepted and auto-converted.
 - `PlaySlider` widget: a range slider with a play/pause button that auto-advances the value on a configurable interval. Supports looping, step size, interval control, and light/dark themes.
+- `TextHighlight` widget: display text with highlighted entity spans (like NER visualization). Supports interactive add/remove of entities, token or character selection modes, overlapping entities with underlines, and customizable label colors.
 
 ### Fixed
 - `ThreeWidget` no longer resets the camera on data updates, so auto-rotation continues smoothly when points change.

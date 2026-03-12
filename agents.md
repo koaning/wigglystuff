@@ -48,6 +48,7 @@ syncs back to Python.
 | ScatterWidget | re-exported from [`drawdata`](https://github.com/koaning/drawdata) | `data`, `brushsize`, `width`, `height`, `n_classes` | Paint multi-class 2D scatter data with brush |
 | DiffViewer | `wigglystuff.diff_viewer.DiffViewer` | `old_name`, `old_contents`, `new_name`, `new_contents`, `diff_style`, `expand_unchanged` | Rich file diff viewer with split/unified modes |
 | PlaySlider | `wigglystuff.play_slider.PlaySlider` | `value`, `min_value`, `max_value`, `step`, `interval_ms`, `playing`, `loop`, `width` | Slider with play/pause button for auto-advancing values |
+| TextHighlight | `wigglystuff.text_highlight.TextHighlight` | `text`, `entities`, `labels`, `color_map`, `allow_overlap`, `selection_mode`, `editable`, `active_label`, `selected_entity` | Text display with highlighted entity spans for NER-style visualization |
 
 ## Patterns to remember
 

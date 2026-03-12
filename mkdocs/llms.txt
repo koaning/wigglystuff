@@ -36,6 +36,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [SplineDraw](https://koaning.github.io/wigglystuff/reference/spline-draw.md): Draw scatter points with Python-computed spline curve fitting
 - [ApiDoc](https://koaning.github.io/wigglystuff/reference/api-doc.md): Renders API docs for Python classes and functions directly in notebooks
 - [PlaySlider](https://koaning.github.io/wigglystuff/reference/play-slider.md): Slider with play/pause button for auto-advancing values at a configurable pace
+- [TextHighlight](https://koaning.github.io/wigglystuff/reference/text-highlight.md): Text display with highlighted entity spans for NER-style visualization with interactive editing
 
 ## 3rd party widgets
 

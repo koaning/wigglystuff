@@ -32,6 +32,7 @@ from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget
 from .tangle import TangleChoice, TangleSelect, TangleSlider
 from .text_compare import TextCompare
+from .text_highlight import TextHighlight
 from .three_widget import ThreeWidget
 from .wandb_chart import WandbChart
 from .webcam_capture import WebcamCapture
@@ -69,6 +70,7 @@ __all__ = [
     "TangleSelect",
     "TangleSlider",
     "TextCompare",
+    "TextHighlight",
     "WebkitSpeechToTextWidget",
     "ThreeWidget",
     "WandbChart",
