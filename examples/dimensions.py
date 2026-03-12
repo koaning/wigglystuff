@@ -77,6 +77,12 @@ def _(widget):
 
 
 @app.cell
+def _(df):
+    df
+    return
+
+
+@app.cell
 def _(df, dimensions, opacity, pl):
     from wigglystuff import ThreeWidget
 
@@ -85,6 +91,7 @@ def _(df, dimensions, opacity, pl):
             dim_2=pl.col("dim_2") if dimensions.value >= 2 else pl.lit(0),
             dim_3=pl.col("dim_3") if dimensions.value >= 3 else pl.lit(0),
         )
+        .with_columns(pl.col("inside_ball") == "true")
         .rename(dict(dim_1="x", dim_2="y", dim_3="z"))
         .with_columns(
             opacity=opacity.value + (1 - opacity.value) * pl.col("inside_ball").cast(pl.Int8),
@@ -180,7 +187,7 @@ def _(dimensions, mo, n_points, np):
     data = {f"dim_{i + 1}": points[:, i] for i in range(dimensions.value)}
     data["inside_ball"] = in_ball
 
-    df = pl.DataFrame(data)
+    df = pl.DataFrame(data).with_columns(inside_ball=pl.col("inside_ball").cast(pl.String()))
     return df, in_ball, pl, points
 
 
@@ -215,11 +222,18 @@ def _(another_three_widget):
 
 
 @app.cell
+def _(parallel_chart, pl):
+    pl.DataFrame(parallel_chart.filtered_data)
+    return
+
+
+@app.cell
 def _(ThreeWidget, opacity, parallel_chart, pl):
     _df = pl.DataFrame(parallel_chart.filtered_data)
 
     _points = (
         _df.rename(dict(dim_1="x", dim_2="y", dim_3="z"))
+        .with_columns(pl.col("inside_ball") == "true")
         .with_columns(
             opacity=opacity.value + (1 - opacity.value) * pl.col("inside_ball").cast(pl.Int8),
             color=pl.when(pl.col("inside_ball")).then(pl.lit("yellow")).otherwise(pl.lit("purple")),
@@ -234,19 +248,52 @@ def _(ThreeWidget, opacity, parallel_chart, pl):
     return (another_three_widget,)
 
 
+@app.cell
+def _(dimensions, n_points, np, pl):
+    samples = np.random.normal(0, 1, (n_points.value, dimensions.value))
+    normalized = samples / np.linalg.norm(samples, axis=1, keepdims=True)
+    pltr = pl.DataFrame({f"surf_{i+1}": normalized[:, i] for i in range(dimensions.value)})
+    return (pltr,)
+
+
+@app.cell
+def _(dimensions, mo, n_points, opacity):
+    mo.hstack([dimensions, n_points, opacity])
+    return
+
+
 @app.cell(hide_code=True)
-def _(ParallelCoordinates, df, dimensions_compare, mo):
-    _df = df.select([f"dim_{i}" for i in range(1, dimensions_compare.value + 1)] + ["inside_ball"])
-    _parallel_chart = mo.ui.anywidget(ParallelCoordinates(_df, color_by="inside_ball", height=500))
-    _parallel_chart
+def _(ParallelCoordinates, mo, pltr):
+    parallel_surface = mo.ui.anywidget(
+        ParallelCoordinates(
+            pltr,
+            color_by="inside_ball",
+            height=500,
+            color_map={"true": "yellow", "false": "purple"},
+        )
+    )
+    parallel_surface
+    return (parallel_surface,)
+
+
+@app.cell
+def _(surface_three):
+    surface_three
     return
 
 
 @app.cell
-def _(mo):
-    dimensions_compare = mo.ui.slider(start=1, stop=20, step=1, value=5, label="Dimensions")
-    dimensions_compare
-    return (dimensions_compare,)
+def _(ThreeWidget, parallel_surface, pl):
+    _df = pl.DataFrame(parallel_surface.filtered_data)
+
+    _points = (
+        _df.rename(dict(surf_1="x", surf_2="y", surf_3="z"))
+        .with_columns(size=pl.lit(0.05), opacity=pl.lit(0.1))
+        .to_dicts()
+    )
+
+    surface_three = ThreeWidget(data=_points, dark_mode=True)
+    return (surface_three,)
 
 
 if __name__ == "__main__":

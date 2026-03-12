@@ -3,17 +3,18 @@
 # dependencies = [
 #     "marimo",
 #     "polars",
-#     "numpy==2.4.2",
-#     "scikit-learn",
+#     "numpy==2.4.3",
+#     "scikit-learn==1.8.0",
 #     "wigglystuff",
 #     "matplotlib==3.10.8",
 #     "pandas==3.0.1",
+#     "umap-learn==0.5.11",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.20.2"
+__generated_with = "0.20.4"
 app = marimo.App(width="medium")
 
 
@@ -24,10 +25,11 @@ def _():
     import polars as pl
     from sklearn.datasets import fetch_openml
     from sklearn.decomposition import PCA
+    from umap import UMAP
     from wigglystuff import ParallelCoordinates
     import matplotlib.pyplot as plt
 
-    return PCA, ParallelCoordinates, fetch_openml, mo, np, pl, plt
+    return PCA, ParallelCoordinates, UMAP, fetch_openml, mo, np, pl, plt
 
 
 @app.cell(hide_code=True)
@@ -65,18 +67,10 @@ def _(fetch_openml, np):
 
 
 @app.cell
-def _(mo):
-    n_samples_slider = mo.ui.slider(
-        start=500, stop=5000, step=500, value=2000, label="Number of samples"
-    )
-    n_components_slider = mo.ui.slider(start=3, stop=15, step=1, value=8, label="PCA components")
-    mo.hstack([n_samples_slider, n_components_slider])
-    return n_components_slider, n_samples_slider
-
-
-@app.cell
 def _(
     PCA,
+    UMAP,
+    checkbox,
     images,
     label_names,
     labels,
@@ -88,7 +82,11 @@ def _(
     rng = np.random.default_rng(42)
     idx = rng.choice(len(images), size=n_samples_slider.value, replace=False)
 
-    pca = PCA(n_components=n_components_slider.value)
+    if checkbox.value:
+        pca = UMAP(n_components=n_components_slider.value)
+    else:
+        pca = PCA(n_components=n_components_slider.value)
+
     components = pca.fit_transform(images[idx])
 
     df = pl.DataFrame(
@@ -97,14 +95,25 @@ def _(
     return df, idx
 
 
-@app.cell
+@app.cell(hide_code=True)
+def _(mo):
+    n_samples_slider = mo.ui.slider(
+        start=500, stop=5000, step=500, value=2000, label="Number of samples"
+    )
+    n_components_slider = mo.ui.slider(start=3, stop=15, step=1, value=8, label="Components")
+    checkbox = mo.ui.checkbox(label="UMAP")
+    [n_samples_slider, n_components_slider, checkbox]
+    return checkbox, n_components_slider, n_samples_slider
+
+
+@app.cell(hide_code=True)
 def _(ParallelCoordinates, df, mo):
-    widget = mo.ui.anywidget(ParallelCoordinates(df, color_by="label"))
+    widget = mo.ui.anywidget(ParallelCoordinates(df, height=500, color_by="label"))
     widget
     return (widget,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(idx, images, label_names, labels, np, plt, widget):
     filtered = widget.widget.filtered_indices
     sample_idx = np.array(filtered[:10]) if len(filtered) >= 10 else np.array(filtered)

@@ -52,10 +52,14 @@ class ParallelCoordinates(anywidget.AnyWidget):
     height = traitlets.Int(600).tag(sync=True)
     width = traitlets.Int(0).tag(sync=True)
 
-    # Brush extents synced from JS (compact dict, works at any dataset size)
+    # Brush extents synced from JS (compact dict describing axis brush ranges)
     brush_extents = traitlets.Dict({}).tag(sync=True)
 
-    # Computed Python-side from brush_extents (no longer synced from JS)
+    # UIDs synced from JS (HiPlot onChange events for Keep/Exclude/brush)
+    filtered_uids = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
+    selected_uids = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
+
+    # Derived indices (computed from UIDs)
     filtered_indices = traitlets.List(traitlets.Int(), default_value=[])
     selected_indices = traitlets.List(traitlets.Int(), default_value=[])
 
@@ -100,18 +104,21 @@ class ParallelCoordinates(anywidget.AnyWidget):
             selected_indices=[],
         )
 
-    @traitlets.observe("brush_extents")
-    def _recompute_indices(self, change: dict) -> None:
-        extents = change["new"]
-        if not extents:
-            indices = list(range(len(self.data)))
+    @traitlets.observe("filtered_uids")
+    def _on_filtered_uids(self, change: dict) -> None:
+        uids = change["new"]
+        if not uids:
+            self.filtered_indices = list(range(len(self.data)))
         else:
-            indices = []
-            for i, row in enumerate(self.data):
-                if _row_passes(row, extents):
-                    indices.append(i)
-        self.filtered_indices = indices
-        self.selected_indices = indices
+            self.filtered_indices = sorted(int(uid) for uid in uids)
+
+    @traitlets.observe("selected_uids")
+    def _on_selected_uids(self, change: dict) -> None:
+        uids = change["new"]
+        if not uids:
+            self.selected_indices = []
+        else:
+            self.selected_indices = sorted(int(uid) for uid in uids)
 
     @property
     def filtered_data(self) -> list[dict]:
@@ -136,28 +143,6 @@ class ParallelCoordinates(anywidget.AnyWidget):
     def selected_data(self) -> list[dict]:
         """Return the subset of data rows that are selected."""
         return [self.data[i] for i in self.selected_indices]
-
-
-def _row_passes(row: dict, extents: dict) -> bool:
-    """Return True if *row* satisfies every brush extent (AND logic)."""
-    for col, ext in extents.items():
-        value = row.get(col)
-        if value is None:
-            return False
-        ext_type = ext.get("type", "")
-        if ext_type == "categorical":
-            if str(value) not in ext.get("values", []):
-                return False
-        elif ext_type in ("numeric", "numericlog", "numericpercentile"):
-            rng = ext.get("range", [])
-            if len(rng) == 2:
-                lo, hi = min(rng), max(rng)
-                try:
-                    if not (lo <= float(value) <= hi):
-                        return False
-                except (ValueError, TypeError):
-                    return False
-    return True
 
 
 def _to_records(data: Any) -> list[dict]:

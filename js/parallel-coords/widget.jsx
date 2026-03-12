@@ -257,6 +257,14 @@ function render({ model, el }) {
         model.set("brush_extents", extents);
         model.save_changes();
       },
+      filtered_uids: (_type, uids) => {
+        model.set("filtered_uids", uids);
+        model.save_changes();
+      },
+      selected_uids: (_type, uids) => {
+        model.set("selected_uids", uids);
+        model.save_changes();
+      },
     };
   }
 
