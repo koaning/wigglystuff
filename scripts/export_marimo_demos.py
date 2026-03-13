@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -11,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEMOS_DIR = ROOT / "demos"
 DOCS_EXAMPLES_DIR = ROOT / "mkdocs" / "examples"
-LAST_BUILD_COMMIT = DOCS_EXAMPLES_DIR / ".last-build-commit"
+DEMO_HASHES_FILE = DOCS_EXAMPLES_DIR / ".demo-hashes.json"
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -24,23 +26,18 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def get_head_commit() -> str:
-    return subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-    ).strip()
+def hash_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def get_changed_demos(since_commit: str) -> set[str]:
-    """Return basenames of demos/*.py files changed since the given commit."""
-    result = subprocess.run(
-        ["git", "diff", "--name-only", since_commit, "HEAD", "--", "demos/"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-    )
-    if result.returncode != 0:
-        return set()
-    return {Path(line).name for line in result.stdout.splitlines() if line.strip()}
+def load_hashes(path: Path) -> dict[str, str]:
+    if not path.exists():
+        return {}
+    return json.loads(path.read_text())
+
+
+def save_hashes(path: Path, hashes: dict[str, str]) -> None:
+    path.write_text(json.dumps(hashes, sort_keys=True, indent=2) + "\n")
 
 
 def export_notebook(path: Path) -> None:
@@ -72,13 +69,18 @@ def export_all(*, force: bool = False) -> int:
         print("[docs] no demos/*.py files found", file=sys.stderr)
         return 1
 
-    if force or not LAST_BUILD_COMMIT.exists():
+    current_hashes = {d.name: hash_file(d) for d in demos}
+    stored_hashes = load_hashes(DEMO_HASHES_FILE)
+
+    if force or not DEMO_HASHES_FILE.exists():
         if not force:
-            print("[docs] no previous build marker found, exporting all demos")
+            print("[docs] no previous hash file found, exporting all demos")
         to_export = {d.name for d in demos}
     else:
-        since = LAST_BUILD_COMMIT.read_text().strip()
-        to_export = get_changed_demos(since)
+        to_export = {
+            name for name, digest in current_hashes.items()
+            if stored_hashes.get(name) != digest
+        }
 
     for demo in demos:
         if demo.name in to_export:
@@ -86,7 +88,7 @@ def export_all(*, force: bool = False) -> int:
         else:
             print(f"[docs] skipping {demo.relative_to(ROOT)} (unchanged)", file=sys.stderr)
 
-    LAST_BUILD_COMMIT.write_text(get_head_commit() + "\n")
+    save_hashes(DEMO_HASHES_FILE, current_hashes)
     return 0
 
 
