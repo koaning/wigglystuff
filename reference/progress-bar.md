@@ -38,6 +38,19 @@ for i in range(101):
     time.sleep(0.1)
 ```
 
+ Source code in `wigglystuff/html.py`
+
+```
+def __init__(self, value: int = 0, max_value: int = 100, color: str = '#22c55e', show_text: bool = True, width: str = '100%', height: int = 24):
+    super().__init__()
+    self.value = value
+    self.max_value = max_value
+    self.color = color
+    self.show_text = show_text
+    self.width = width
+    self.height = height
+```
+
 
 ### Synced traitlets
 

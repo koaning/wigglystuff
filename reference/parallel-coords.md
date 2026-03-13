@@ -23,7 +23,7 @@ df = pl.DataFrame({
     "y": [5, 4, 3, 2, 1],
     "label": ["a", "a", "b", "b", "b"],
 })
-widget = ParallelCoordinates(df, color_by="label")
+widget = ParallelCoordinates(df, color_by="label", color_map={"a": "red"})
 widget
 ```
 
@@ -39,8 +39,10 @@ def __init__(
     data=None,
     *,
     color_by: str = "",
+    color_map: dict[str, str] | None = None,
     height: int = 600,
     width: int = 0,
+    ignore: list[str] | None = None,
 ) -> None:
     """Create a ParallelCoordinates widget.
 
@@ -49,14 +51,24 @@ def __init__(
             DataFrame. Each dict/row is one data point.
         color_by: Column name to color lines by. Empty string for uniform
             color.
+        color_map: Mapping of categorical values to CSS colors (e.g.
+            ``{"a": "red", "b": "#0000ff"}``). Values not in the map use
+            the default palette.
         height: Widget height in pixels.
         width: Widget width in pixels. Set to 0 for container width.
+        ignore: Column names to exclude from the plot.
     """
     records = _to_records(data)
+    if ignore:
+        records = [
+            {k: v for k, v in row.items() if k not in ignore}
+            for row in records
+        ]
     filtered_indices = list(range(len(records)))
     super().__init__(
         data=records,
         color_by=color_by,
+        color_map=color_map or {},
         height=height,
         width=width,
         filtered_indices=filtered_indices,
@@ -116,6 +128,8 @@ Return the subset of data rows that are selected.
 | --- | --- | --- |
 | `data` | `list[dict]` | Input rows rendered as polylines. |
 | `color_by` | `str` | Column used for line coloring. |
+| `color_map` | `dict` | Map of categorical values to CSS colors (e.g. `{"a": "red", "b": "#00f"}`). Unmapped values use the default palette. |
 | `height` | `int` | Plot height in pixels. |
+| `width` | `int` | Plot width in pixels. Set to 0 for container width. |
 | `filtered_indices` | `list[int]` | Indices currently passing filters/selection. |
 | `selected_indices` | `list[int]` | Indices currently selected in the active brush. |
