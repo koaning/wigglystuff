@@ -72,8 +72,16 @@ def __init__(
         camera_elevation: Initial vertical angle in degrees (default 30).
         **kwargs: Forwarded to ``anywidget.AnyWidget``.
     """
+    filtered = list(data) if data is not None else []
+    if xlim is not None:
+        filtered = [p for p in filtered if xlim[0] <= p.get("x", 0) <= xlim[1]]
+    if ylim is not None:
+        filtered = [p for p in filtered if ylim[0] <= p.get("y", 0) <= ylim[1]]
+    if zlim is not None:
+        filtered = [p for p in filtered if zlim[0] <= p.get("z", 0) <= zlim[1]]
+
     super().__init__(
-        data=list(data) if data is not None else [],
+        data=filtered,
         width=width,
         height=height,
         show_grid=show_grid,

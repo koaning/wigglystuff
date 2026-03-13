@@ -10,29 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://wigglystuff.dev/">
+        <link rel="canonical" href="https://wigglystuff.dev/reference/play-slider/">
       
       
+        <link rel="prev" href="../api-doc/">
       
-        <link rel="next" href="reference/">
+      
+        <link rel="next" href="../utils/">
       
       
         
       
       
-      <link rel="icon" href="assets/logo.png">
+      <link rel="icon" href="../../assets/logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
-        <title>wigglystuff - wigglystuff</title>
+        <title>PlaySlider - wigglystuff</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,11 +53,11 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="assets/stylesheets/extra.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -85,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#wiggly-notebooks-zero-friction" class="md-skip">
+        <a href="#playslider-api" class="md-skip">
           Skip to content
         </a>
       
@@ -99,9 +101,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="wigglystuff" class="md-header__button md-logo" aria-label="wigglystuff" data-md-component="logo">
+    <a href="../.." title="wigglystuff" class="md-header__button md-logo" aria-label="wigglystuff" data-md-component="logo">
       
-  <img src="assets/logo.png" alt="logo">
+  <img src="../../assets/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -118,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              wigglystuff
+              PlaySlider
             
           </span>
         </div>
@@ -203,11 +205,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -224,11 +224,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="reference/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -251,8 +253,6 @@
           
             
               
-                
-              
               <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -264,9 +264,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="wigglystuff" class="md-nav__button md-logo" aria-label="wigglystuff" data-md-component="logo">
+    <a href="../.." title="wigglystuff" class="md-nav__button md-logo" aria-label="wigglystuff" data-md-component="logo">
       
-  <img src="assets/logo.png" alt="logo">
+  <img src="../../assets/logo.png" alt="logo">
 
     </a>
     wigglystuff
@@ -290,37 +290,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -336,70 +309,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#these-docs-are-special" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        These docs are special
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#install-wigglystuff" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Install wigglystuff
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-you-can-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What you can build
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3rd-party-widgets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3rd party widgets
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -408,28 +317,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -447,7 +359,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -465,7 +377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -493,7 +405,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/slider2d/" class="md-nav__link">
+      <a href="../slider2d/" class="md-nav__link">
         
   
   
@@ -521,7 +433,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/chart-puck/" class="md-nav__link">
+      <a href="../chart-puck/" class="md-nav__link">
         
   
   
@@ -549,7 +461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/chart-multi-select/" class="md-nav__link">
+      <a href="../chart-multi-select/" class="md-nav__link">
         
   
   
@@ -577,7 +489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/chart-select/" class="md-nav__link">
+      <a href="../chart-select/" class="md-nav__link">
         
   
   
@@ -605,7 +517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/parallel-coords/" class="md-nav__link">
+      <a href="../parallel-coords/" class="md-nav__link">
         
   
   
@@ -633,7 +545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/matrix/" class="md-nav__link">
+      <a href="../matrix/" class="md-nav__link">
         
   
   
@@ -661,7 +573,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/sortable-list/" class="md-nav__link">
+      <a href="../sortable-list/" class="md-nav__link">
         
   
   
@@ -689,7 +601,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/paint/" class="md-nav__link">
+      <a href="../paint/" class="md-nav__link">
         
   
   
@@ -717,7 +629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/three-widget/" class="md-nav__link">
+      <a href="../three-widget/" class="md-nav__link">
         
   
   
@@ -745,7 +657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/edge-draw/" class="md-nav__link">
+      <a href="../edge-draw/" class="md-nav__link">
         
   
   
@@ -773,7 +685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/keystroke/" class="md-nav__link">
+      <a href="../keystroke/" class="md-nav__link">
         
   
   
@@ -801,7 +713,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/talk/" class="md-nav__link">
+      <a href="../talk/" class="md-nav__link">
         
   
   
@@ -829,7 +741,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/color-picker/" class="md-nav__link">
+      <a href="../color-picker/" class="md-nav__link">
         
   
   
@@ -857,7 +769,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/copy-to-clipboard/" class="md-nav__link">
+      <a href="../copy-to-clipboard/" class="md-nav__link">
         
   
   
@@ -885,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/tangle/" class="md-nav__link">
+      <a href="../tangle/" class="md-nav__link">
         
   
   
@@ -913,7 +825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/gamepad/" class="md-nav__link">
+      <a href="../gamepad/" class="md-nav__link">
         
   
   
@@ -941,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/webcam-capture/" class="md-nav__link">
+      <a href="../webcam-capture/" class="md-nav__link">
         
   
   
@@ -969,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/cell-tour/" class="md-nav__link">
+      <a href="../cell-tour/" class="md-nav__link">
         
   
   
@@ -997,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/image-refresh/" class="md-nav__link">
+      <a href="../image-refresh/" class="md-nav__link">
         
   
   
@@ -1025,7 +937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/html-refresh/" class="md-nav__link">
+      <a href="../html-refresh/" class="md-nav__link">
         
   
   
@@ -1053,7 +965,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/progress-bar/" class="md-nav__link">
+      <a href="../progress-bar/" class="md-nav__link">
         
   
   
@@ -1081,7 +993,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/pulsar-chart/" class="md-nav__link">
+      <a href="../pulsar-chart/" class="md-nav__link">
         
   
   
@@ -1109,7 +1021,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/module-tree/" class="md-nav__link">
+      <a href="../module-tree/" class="md-nav__link">
         
   
   
@@ -1137,7 +1049,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/wandb-chart/" class="md-nav__link">
+      <a href="../wandb-chart/" class="md-nav__link">
         
   
   
@@ -1165,7 +1077,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/neo4j-widget/" class="md-nav__link">
+      <a href="../neo4j-widget/" class="md-nav__link">
         
   
   
@@ -1193,7 +1105,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/scatter-widget/" class="md-nav__link">
+      <a href="../scatter-widget/" class="md-nav__link">
         
   
   
@@ -1221,7 +1133,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/diff-viewer/" class="md-nav__link">
+      <a href="../diff-viewer/" class="md-nav__link">
         
   
   
@@ -1249,7 +1161,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/spline-draw/" class="md-nav__link">
+      <a href="../spline-draw/" class="md-nav__link">
         
   
   
@@ -1277,7 +1189,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/text-compare/" class="md-nav__link">
+      <a href="../text-compare/" class="md-nav__link">
         
   
   
@@ -1305,7 +1217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/env-config/" class="md-nav__link">
+      <a href="../env-config/" class="md-nav__link">
         
   
   
@@ -1333,7 +1245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/altair-widget/" class="md-nav__link">
+      <a href="../altair-widget/" class="md-nav__link">
         
   
   
@@ -1361,7 +1273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/api-doc/" class="md-nav__link">
+      <a href="../api-doc/" class="md-nav__link">
         
   
   
@@ -1386,10 +1298,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="reference/play-slider/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PlaySlider
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1405,6 +1344,48 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#wigglystuff.play_slider.PlaySlider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PlaySlider
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synced-traitlets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synced traitlets
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1417,7 +1398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/utils/" class="md-nav__link">
+      <a href="../utils/" class="md-nav__link">
         
   
   
@@ -1453,9 +1434,7 @@
             
             
               
-                
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -1474,10 +1453,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#these-docs-are-special" class="md-nav__link">
+  <a href="#wigglystuff.play_slider.PlaySlider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        These docs are special
+        PlaySlider
       
     </span>
   </a>
@@ -1485,32 +1464,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#install-wigglystuff" class="md-nav__link">
+  <a href="#synced-traitlets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install wigglystuff
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-you-can-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What you can build
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3rd-party-widgets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3rd party widgets
+        Synced traitlets
       
     </span>
   </a>
@@ -1530,223 +1487,227 @@
               
                 
 
+
+
   
 
 
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Overview
+  </span>
 
+      </a>
+    </li>
   
 
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Reference
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
 
               
               <article class="md-content__inner md-typeset">
                 
                   
-  
-
 
 
   
   
 
 
-<h1 id="wiggly-notebooks-zero-friction">Wiggly notebooks, zero friction<a class="headerlink" href="#wiggly-notebooks-zero-friction" title="Permanent link">#</a></h1>
-<blockquote>
-<p>"A collection of creative AnyWidgets for Python notebook environments."</p>
-</blockquote>
-<h2 id="these-docs-are-special">These docs are special<a class="headerlink" href="#these-docs-are-special" title="Permanent link">#</a></h2>
-<p>The documentation for wigglystuff is designed for humans (via hosted marimo notebooks) and robots (via markdown pages to quickly paste into prompts). The reasoning behind this is explained in more detail in <a href="https://youtu.be/IgyRh2FuoAk">this YT video</a>. Follow the links in each example below to find the resources that you're looking for. </p>
-<h2 id="install-wigglystuff">Install wigglystuff<a class="headerlink" href="#install-wigglystuff" title="Permanent link">#</a></h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">uv</label><label for="__tabbed_1_2">pip</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>wigglystuff
+<h1 id="playslider-api">PlaySlider API<a class="headerlink" href="#playslider-api" title="Permanent link">#</a></h1>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="wigglystuff.play_slider.PlaySlider"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="anywidget.AnyWidget">AnyWidget</span></code></p>
+
+
+
+        <p>Slider with a play/pause button that auto-advances at a configurable pace.</p>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">slider</span> <span class="o">=</span> <span class="n">PlaySlider</span><span class="p">(</span><span class="n">min_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">interval_ms</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">slider</span>
 </code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>wigglystuff
-</code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="what-you-can-build">What you can build<a class="headerlink" href="#what-you-can-build" title="Permanent link">#</a></h2>
-<div class="widget-gallery">
-<div class="gallery-item">
-<div class="gallery-title">Slider2D</div>
-<a href="examples/slider2d/" class="gallery-img"><img src="assets/gallery/slider2d.png" alt="Slider2D widget"></a>
-<div class="gallery-links"><a href="examples/slider2d/">Demo</a><a href="reference/slider2d/">API</a><a href="reference/slider2d.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">Matrix</div>
-<a href="examples/matrix/" class="gallery-img"><img src="assets/gallery/matrix.png" alt="Matrix widget"></a>
-<div class="gallery-links"><a href="examples/matrix/">Demo</a><a href="reference/matrix/">API</a><a href="reference/matrix.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">Paint</div>
-<a href="examples/paint/" class="gallery-img"><img src="assets/gallery/paint.png" alt="Paint widget"></a>
-<div class="gallery-links"><a href="examples/paint/">Demo</a><a href="reference/paint/">API</a><a href="reference/paint.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ThreeWidget</div>
-<a href="examples/threewidget/" class="gallery-img"><img src="assets/gallery/threewidget.png" alt="ThreeWidget widget"></a>
-<div class="gallery-links"><a href="examples/threewidget/">Demo</a><a href="reference/three-widget/">API</a><a href="reference/three-widget.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">EdgeDraw</div>
-<a href="examples/edgedraw/" class="gallery-img"><img src="assets/gallery/edgedraw.png" alt="EdgeDraw widget"></a>
-<div class="gallery-links"><a href="examples/edgedraw/">Demo</a><a href="reference/edge-draw/">API</a><a href="reference/edge-draw.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">SortableList</div>
-<a href="examples/sortlist/" class="gallery-img"><img src="assets/gallery/sortablelist.png" alt="SortableList widget"></a>
-<div class="gallery-links"><a href="examples/sortlist/">Demo</a><a href="reference/sortable-list/">API</a><a href="reference/sortable-list.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ColorPicker</div>
-<a href="examples/colorpicker/" class="gallery-img"><img src="assets/gallery/colorpicker.png" alt="ColorPicker widget"></a>
-<div class="gallery-links"><a href="examples/colorpicker/">Demo</a><a href="reference/color-picker/">API</a><a href="reference/color-picker.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">GamepadWidget</div>
-<a href="examples/gamepad/" class="gallery-img"><img src="assets/gallery/gamepad.png" alt="GamepadWidget"></a>
-<div class="gallery-links"><a href="examples/gamepad/">Demo</a><a href="reference/gamepad/">API</a><a href="reference/gamepad.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">KeystrokeWidget</div>
-<a href="examples/keystroke/" class="gallery-img"><img src="assets/gallery/keystroke.png" alt="KeystrokeWidget"></a>
-<div class="gallery-links"><a href="examples/keystroke/">Demo</a><a href="reference/keystroke/">API</a><a href="reference/keystroke.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">SpeechToText</div>
-<a href="examples/talk/" class="gallery-img"><img src="assets/gallery/speechtotext.png" alt="WebkitSpeechToText widget"></a>
-<div class="gallery-links"><a href="examples/talk/">Demo</a><a href="reference/talk/">API</a><a href="reference/talk.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">CopyToClipboard</div>
-<a href="examples/copytoclipboard/" class="gallery-img"><img src="assets/gallery/copytoclipboard.png" alt="CopyToClipboard widget"></a>
-<div class="gallery-links"><a href="examples/copytoclipboard/">Demo</a><a href="reference/copy-to-clipboard/">API</a><a href="reference/copy-to-clipboard.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">CellTour</div>
-<a href="examples/celltour/" class="gallery-img"><img src="assets/gallery/celltour.png" alt="CellTour widget"></a>
-<div class="gallery-links"><a href="examples/celltour/">Demo</a><a href="reference/cell-tour/">API</a><a href="reference/cell-tour.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">WebcamCapture</div>
-<a href="examples/webcam-capture/" class="gallery-img"><img src="assets/gallery/webcam-capture.png" alt="WebcamCapture widget"></a>
-<div class="gallery-links"><a href="examples/webcam-capture/">Demo</a><a href="reference/webcam-capture/">API</a><a href="reference/webcam-capture.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ImageRefreshWidget</div>
-<a href="examples/htmlwidget/" class="gallery-img"><img src="assets/gallery/imagerefresh.png" alt="ImageRefreshWidget"></a>
-<div class="gallery-links"><a href="examples/htmlwidget/">Demo</a><a href="reference/image-refresh/">API</a><a href="reference/image-refresh.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">HTMLRefreshWidget</div>
-<a href="examples/htmlwidget/" class="gallery-img"><img src="assets/gallery/htmlwidget.png" alt="HTMLRefreshWidget"></a>
-<div class="gallery-links"><a href="examples/htmlwidget/">Demo</a><a href="reference/html-refresh/">API</a><a href="reference/html-refresh.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ProgressBar</div>
-<a href="examples/htmlwidget/" class="gallery-img"><img src="assets/gallery/progressbar.png" alt="ProgressBar widget"></a>
-<div class="gallery-links"><a href="examples/htmlwidget/">Demo</a><a href="reference/progress-bar/">API</a><a href="reference/progress-bar.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">PulsarChart</div>
-<a href="examples/pulsarchart/" class="gallery-img"><img src="assets/gallery/pulsarchart.png" alt="PulsarChart widget"></a>
-<div class="gallery-links"><a href="examples/pulsarchart/">Demo</a><a href="reference/pulsar-chart/">API</a><a href="reference/pulsar-chart.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">TextCompare</div>
-<a href="examples/textcompare/" class="gallery-img"><img src="assets/gallery/textcompare.png" alt="TextCompare widget"></a>
-<div class="gallery-links"><a href="examples/textcompare/">Demo</a><a href="reference/text-compare/">API</a><a href="reference/text-compare.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">EnvConfig</div>
-<a href="examples/envconfig/" class="gallery-img"><img src="assets/gallery/envconfig.png" alt="EnvConfig widget"></a>
-<div class="gallery-links"><a href="examples/envconfig/">Demo</a><a href="reference/env-config/">API</a><a href="reference/env-config.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">Tangle</div>
-<a href="examples/tangle/" class="gallery-img"><img src="assets/gallery/tangle.png" alt="Tangle widgets"></a>
-<div class="gallery-links"><a href="examples/tangle/">Demo</a><a href="reference/tangle/">API</a><a href="reference/tangle.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ChartPuck</div>
-<a href="examples/chartpuck/" class="gallery-img"><img src="assets/gallery/chartpuck.png" alt="ChartPuck widget"></a>
-<div class="gallery-links"><a href="examples/chartpuck/">Demo</a><a href="reference/chart-puck/">API</a><a href="reference/chart-puck.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ChartMultiSelect</div>
-<a href="examples/chartmultiselect/" class="gallery-img"><img src="assets/gallery/chartmultiselect.png" alt="ChartMultiSelect widget"></a>
-<div class="gallery-links"><a href="examples/chartmultiselect/">Demo</a><a href="reference/chart-multi-select/">API</a><a href="reference/chart-multi-select.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ChartSelect</div>
-<a href="examples/chartselect/" class="gallery-img"><img src="assets/gallery/chartselect.png" alt="ChartSelect widget"></a>
-<div class="gallery-links"><a href="examples/chartselect/">Demo</a><a href="reference/chart-select/">API</a><a href="reference/chart-select.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ParallelCoordinates</div>
-<a href="examples/parallelcoords/" class="gallery-img"><img src="assets/gallery/parallelcoords.png" alt="ParallelCoordinates"></a>
-<div class="gallery-links"><a href="examples/parallelcoords/">Demo</a><a href="reference/parallel-coords/">API</a><a href="reference/parallel-coords.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ScatterWidget</div>
-<a href="examples/scatterwidget/" class="gallery-img"><img src="assets/gallery/scatterwidget.png" alt="ScatterWidget"></a>
-<div class="gallery-links"><a href="examples/scatterwidget/">Demo</a><a href="reference/scatter-widget/">API</a><a href="reference/scatter-widget.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">DiffViewer</div>
-<a href="examples/diffviewer/" class="gallery-img"><img src="assets/gallery/diffviewer.png" alt="DiffViewer"></a>
-<div class="gallery-links"><a href="examples/diffviewer/">Demo</a><a href="reference/diff-viewer/">API</a><a href="reference/diff-viewer.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">SplineDraw</div>
-<a href="examples/splinedraw/" class="gallery-img"><img src="assets/gallery/splinedraw.png" alt="SplineDraw"></a>
-<div class="gallery-links"><a href="examples/splinedraw/">Demo</a><a href="reference/spline-draw/">API</a><a href="reference/spline-draw.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">ApiDoc</div>
-<a href="examples/apidoc/" class="gallery-img"><img src="assets/gallery/apidoc.png" alt="ApiDoc"></a>
-<div class="gallery-links"><a href="examples/apidoc/">Demo</a><a href="reference/api-doc/">API</a><a href="reference/api-doc.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">AnnotationWidget</div>
-<a href="examples/annotation/" class="gallery-img"><img src="assets/gallery/annotation.png" alt="AnnotationWidget"></a>
-<div class="gallery-links"><a href="examples/annotation/">Demo</a><a href="reference/annotation/">API</a><a href="reference/annotation.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">PlaySlider</div>
-<a href="examples/playslider/" class="gallery-img"><img src="assets/gallery/playslider.png" alt="PlaySlider"></a>
-<div class="gallery-links"><a href="examples/playslider/">Demo</a><a href="reference/play-slider/">API</a><a href="reference/play-slider.md">MD</a></div>
-</div>
-</div>
 
-<p>Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original <code>.py</code> file and rerun it locally.</p>
-<h2 id="3rd-party-widgets">3rd party widgets<a class="headerlink" href="#3rd-party-widgets" title="Permanent link">#</a></h2>
-<p>These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on <a href="https://molab.marimo.io">molab</a> because many of the dependencies are not compatible with WASM.</p>
-<div class="widget-gallery">
-<div class="gallery-item">
-<div class="gallery-title">ModuleTreeWidget</div>
-<a href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi" class="gallery-img"><img src="assets/gallery/moduletree.png" alt="ModuleTreeWidget"></a>
-<div class="gallery-links"><a href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi">Demo</a><a href="reference/module-tree/">API</a><a href="reference/module-tree.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">WandbChart</div>
-<a href="https://molab.marimo.io/notebooks/nb_pbN8i6DyggB26Xrzw9Bztw" class="gallery-img"><img src="assets/gallery/wandbchart.png" alt="WandbChart widget"></a>
-<div class="gallery-links"><a href="https://molab.marimo.io/notebooks/nb_pbN8i6DyggB26Xrzw9Bztw">Demo</a><a href="reference/wandb-chart/">API</a><a href="reference/wandb-chart.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">Neo4jWidget</div>
-<a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU" class="gallery-img"><img src="assets/gallery/neo4j-widget.png" alt="Neo4jWidget"></a>
-<div class="gallery-links"><a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU">Demo</a><a href="reference/neo4j-widget/">API</a><a href="reference/neo4j-widget.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">AltairWidget</div>
-<a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py" class="gallery-img"><img src="assets/gallery/altairwidget.png" alt="AltairWidget"></a>
-<div class="gallery-links"><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py">Demo</a><a href="reference/altair-widget/">API</a><a href="reference/altair-widget.md">MD</a></div>
-</div>
-</div>
+        <p>Create a PlaySlider.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>value</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="float">float</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Starting position; defaults to <em>min_value</em>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>min_value</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Lower bound.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_value</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Upper bound.</p>
+              </div>
+            </td>
+            <td>
+                  <code>100.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>step</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Increment per tick.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>interval_ms</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Milliseconds between auto-advance ticks.</p>
+              </div>
+            </td>
+            <td>
+                  <code>200</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>loop</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Wrap to <em>min_value</em> when reaching the end instead of stopping.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>width</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Widget width in pixels.</p>
+              </div>
+            </td>
+            <td>
+                  <code>400</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+                  <code><span title="typing.Any">Any</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Forwarded to <code>anywidget.AnyWidget</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
 
@@ -1754,13 +1715,169 @@
 
 
 
-  
-  
+
+                  <details class="mkdocstrings-source">
+                    <summary>Source code in <code>wigglystuff/play_slider.py</code></summary>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span>
+<span class="normal"><a href="#__codelineno-0-60">60</a></span>
+<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>    <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a>    <span class="n">min_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a>    <span class="n">max_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">100.0</span><span class="p">,</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="n">step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a>    <span class="n">interval_ms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>    <span class="n">loop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a PlaySlider.</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">        value: Starting position; defaults to *min_value*.</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        min_value: Lower bound.</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">        max_value: Upper bound.</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        step: Increment per tick.</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="sd">        interval_ms: Milliseconds between auto-advance ticks.</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">        loop: Wrap to *min_value* when reaching the end instead of stopping.</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">        width: Widget width in pixels.</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="k">if</span> <span class="n">min_value</span> <span class="o">&gt;=</span> <span class="n">max_value</span><span class="p">:</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;min_value must be less than max_value.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;step must be positive.&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="n">value</span> <span class="o">=</span> <span class="n">min_value</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="n">max_value</span><span class="o">=</span><span class="n">max_value</span><span class="p">,</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="n">interval_ms</span><span class="o">=</span><span class="n">interval_ms</span><span class="p">,</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">,</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+                  </details>
+
+
+
+<div class="doc doc-children">
 
 
 
 
-  
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="synced-traitlets">Synced traitlets<a class="headerlink" href="#synced-traitlets" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traitlet</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>value</code></td>
+<td><code>int</code></td>
+<td>Current slider value.</td>
+</tr>
+<tr>
+<td><code>min_value</code></td>
+<td><code>int</code></td>
+<td>Minimum value.</td>
+</tr>
+<tr>
+<td><code>max_value</code></td>
+<td><code>int</code></td>
+<td>Maximum value.</td>
+</tr>
+<tr>
+<td><code>step</code></td>
+<td><code>int</code></td>
+<td>Step size per tick.</td>
+</tr>
+<tr>
+<td><code>interval_ms</code></td>
+<td><code>int</code></td>
+<td>Milliseconds between auto-advance ticks.</td>
+</tr>
+<tr>
+<td><code>playing</code></td>
+<td><code>bool</code></td>
+<td>Whether the slider is currently auto-advancing.</td>
+</tr>
+<tr>
+<td><code>loop</code></td>
+<td><code>bool</code></td>
+<td>Whether to loop back to <code>min_value</code> after reaching <code>max_value</code>.</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td><code>int</code></td>
+<td>Widget width in pixels.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1824,10 +1941,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.path", "toc.follow", "content.tabs.link", "content.code.annotate", "search.suggest", "search.highlight", "navigation.instant"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.path", "toc.follow", "content.tabs.link", "content.code.annotate", "search.suggest", "search.highlight", "navigation.instant"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

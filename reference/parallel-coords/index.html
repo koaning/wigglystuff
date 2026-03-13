@@ -1414,6 +1414,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../play-slider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PlaySlider
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../utils/" class="md-nav__link">
         
   
@@ -1874,85 +1902,85 @@ the default palette.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/parallel_coords.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
-<span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span>
-<span class="normal"><a href="#__codelineno-0-64">64</a></span>
-<span class="normal"><a href="#__codelineno-0-65">65</a></span>
-<span class="normal"><a href="#__codelineno-0-66">66</a></span>
-<span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span>
-<span class="normal"><a href="#__codelineno-0-70">70</a></span>
-<span class="normal"><a href="#__codelineno-0-71">71</a></span>
-<span class="normal"><a href="#__codelineno-0-72">72</a></span>
-<span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span>
-<span class="normal"><a href="#__codelineno-0-75">75</a></span>
-<span class="normal"><a href="#__codelineno-0-76">76</a></span>
-<span class="normal"><a href="#__codelineno-0-77">77</a></span>
-<span class="normal"><a href="#__codelineno-0-78">78</a></span>
-<span class="normal"><a href="#__codelineno-0-79">79</a></span>
-<span class="normal"><a href="#__codelineno-0-80">80</a></span>
-<span class="normal"><a href="#__codelineno-0-81">81</a></span>
-<span class="normal"><a href="#__codelineno-0-82">82</a></span>
-<span class="normal"><a href="#__codelineno-0-83">83</a></span>
-<span class="normal"><a href="#__codelineno-0-84">84</a></span>
-<span class="normal"><a href="#__codelineno-0-85">85</a></span>
-<span class="normal"><a href="#__codelineno-0-86">86</a></span>
-<span class="normal"><a href="#__codelineno-0-87">87</a></span>
-<span class="normal"><a href="#__codelineno-0-88">88</a></span>
-<span class="normal"><a href="#__codelineno-0-89">89</a></span>
-<span class="normal"><a href="#__codelineno-0-90">90</a></span>
-<span class="normal"><a href="#__codelineno-0-91">91</a></span>
-<span class="normal"><a href="#__codelineno-0-92">92</a></span>
-<span class="normal"><a href="#__codelineno-0-93">93</a></span>
-<span class="normal"><a href="#__codelineno-0-94">94</a></span>
-<span class="normal"><a href="#__codelineno-0-95">95</a></span>
-<span class="normal"><a href="#__codelineno-0-96">96</a></span>
-<span class="normal"><a href="#__codelineno-0-97">97</a></span>
-<span class="normal"><a href="#__codelineno-0-98">98</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="n">color_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="n">color_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a>    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="n">ignore</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a ParallelCoordinates widget.</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">        data: Dataset as a list of dicts, pandas DataFrame, or polars</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">            DataFrame. Each dict/row is one data point.</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">        color_by: Column name to color lines by. Empty string for uniform</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">            color.</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">        color_map: Mapping of categorical values to CSS colors (e.g.</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">            ``{&quot;a&quot;: &quot;red&quot;, &quot;b&quot;: &quot;#0000ff&quot;}``). Values not in the map use</span>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">            the default palette.</span>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="sd">        height: Widget height in pixels.</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">        width: Widget width in pixels. Set to 0 for container width.</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">        ignore: Column names to exclude from the plot.</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="n">records</span> <span class="o">=</span> <span class="n">_to_records</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="k">if</span> <span class="n">ignore</span><span class="p">:</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">}</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">records</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a>        <span class="p">]</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="n">filtered_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)))</span>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-91" name="__codelineno-0-91"></a>        <span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">,</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a>        <span class="n">color_by</span><span class="o">=</span><span class="n">color_by</span><span class="p">,</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="n">color_map</span><span class="o">=</span><span class="n">color_map</span> <span class="ow">or</span> <span class="p">{},</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">filtered_indices</span><span class="o">=</span><span class="n">filtered_indices</span><span class="p">,</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="n">selected_indices</span><span class="o">=</span><span class="p">[],</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="p">)</span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-66"> 66</a></span>
+<span class="normal"><a href="#__codelineno-0-67"> 67</a></span>
+<span class="normal"><a href="#__codelineno-0-68"> 68</a></span>
+<span class="normal"><a href="#__codelineno-0-69"> 69</a></span>
+<span class="normal"><a href="#__codelineno-0-70"> 70</a></span>
+<span class="normal"><a href="#__codelineno-0-71"> 71</a></span>
+<span class="normal"><a href="#__codelineno-0-72"> 72</a></span>
+<span class="normal"><a href="#__codelineno-0-73"> 73</a></span>
+<span class="normal"><a href="#__codelineno-0-74"> 74</a></span>
+<span class="normal"><a href="#__codelineno-0-75"> 75</a></span>
+<span class="normal"><a href="#__codelineno-0-76"> 76</a></span>
+<span class="normal"><a href="#__codelineno-0-77"> 77</a></span>
+<span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
+<span class="normal"><a href="#__codelineno-0-79"> 79</a></span>
+<span class="normal"><a href="#__codelineno-0-80"> 80</a></span>
+<span class="normal"><a href="#__codelineno-0-81"> 81</a></span>
+<span class="normal"><a href="#__codelineno-0-82"> 82</a></span>
+<span class="normal"><a href="#__codelineno-0-83"> 83</a></span>
+<span class="normal"><a href="#__codelineno-0-84"> 84</a></span>
+<span class="normal"><a href="#__codelineno-0-85"> 85</a></span>
+<span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
+<span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
+<span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
+<span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
+<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
+<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
+<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
+<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
+<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
+<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
+<span class="normal"><a href="#__codelineno-0-100">100</a></span>
+<span class="normal"><a href="#__codelineno-0-101">101</a></span>
+<span class="normal"><a href="#__codelineno-0-102">102</a></span>
+<span class="normal"><a href="#__codelineno-0-103">103</a></span>
+<span class="normal"><a href="#__codelineno-0-104">104</a></span>
+<span class="normal"><a href="#__codelineno-0-105">105</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="n">color_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>    <span class="n">color_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="n">ignore</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a ParallelCoordinates widget.</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="sd">        data: Dataset as a list of dicts, pandas DataFrame, or polars</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">            DataFrame. Each dict/row is one data point.</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">        color_by: Column name to color lines by. Empty string for uniform</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="sd">            color.</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="sd">        color_map: Mapping of categorical values to CSS colors (e.g.</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">            ``{&quot;a&quot;: &quot;red&quot;, &quot;b&quot;: &quot;#0000ff&quot;}``). Values not in the map use</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">            the default palette.</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a><span class="sd">        height: Widget height in pixels.</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="sd">        width: Widget width in pixels. Set to 0 for container width.</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="sd">        ignore: Column names to exclude from the plot.</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="n">records</span> <span class="o">=</span> <span class="n">_to_records</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="k">if</span> <span class="n">ignore</span><span class="p">:</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a>        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a>            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">}</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a>            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">records</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="p">]</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="n">filtered_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)))</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">,</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="n">color_by</span><span class="o">=</span><span class="n">color_by</span><span class="p">,</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="n">color_map</span><span class="o">=</span><span class="n">color_map</span> <span class="ow">or</span> <span class="p">{},</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a>        <span class="n">filtered_indices</span><span class="o">=</span><span class="n">filtered_indices</span><span class="p">,</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="n">selected_indices</span><span class="o">=</span><span class="p">[],</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
