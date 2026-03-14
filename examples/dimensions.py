@@ -2,8 +2,8 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "marimo",
-#     "numpy>=2.0.0",
-#     "matplotlib",
+#     "numpy==2.4.3",
+#     "matplotlib==3.10.8",
 #     "wigglystuff==0.2.36",
 #     "polars==1.38.1",
 # ]
@@ -262,7 +262,7 @@ def _(dimensions, mo, n_points, opacity):
     return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(ParallelCoordinates, mo, pltr):
     parallel_surface = mo.ui.anywidget(
         ParallelCoordinates(
@@ -284,7 +284,7 @@ def _(surface_three):
 
 @app.cell
 def _(ThreeWidget, parallel_surface, pl):
-    _df = pl.DataFrame(parallel_surface.filtered_data)
+    _df = pl.DataFrame(parallel_surface.selected_data)
 
     _points = (
         _df.rename(dict(surf_1="x", surf_2="y", surf_3="z"))
@@ -294,6 +294,11 @@ def _(ThreeWidget, parallel_surface, pl):
 
     surface_three = ThreeWidget(data=_points, dark_mode=True)
     return (surface_three,)
+
+
+@app.cell
+def _():
+    return
 
 
 if __name__ == "__main__":
