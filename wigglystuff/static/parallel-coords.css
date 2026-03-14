@@ -164,13 +164,14 @@
     border-radius: 4px;
     color: var(--pc-text) !important;
     display: inline-block;
+    font-size: 11px !important;
     margin-top: -14px;
-    padding: 1px 6px;
+    padding: 1px 6px 3px;
     position: relative;
     rotate: 0deg !important;
     text-shadow: none !important;
-    top: -4px;
-    transform: none !important;
+    top: -18px;
+    transform: translateX(-50%) !important;
     transform-origin: center center !important;
     z-index: 8;
 }

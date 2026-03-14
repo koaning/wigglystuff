@@ -169,6 +169,6 @@ Untitled.ipynb
 .cursorindexingignore
 **/__marimo__/**
 mkdocs/examples/*
-!mkdocs/examples/.last-build-commit
+!mkdocs/examples/.demo-hashes.json
 
 wandb/**
