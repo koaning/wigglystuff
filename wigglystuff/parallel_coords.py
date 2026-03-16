@@ -49,7 +49,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
     data = traitlets.List([]).tag(sync=True)
     color_by = traitlets.Unicode("").tag(sync=True)
     color_map = traitlets.Dict({}).tag(sync=True)
-    height = traitlets.Int(600).tag(sync=True)
+    height = traitlets.Int(500).tag(sync=True)
     width = traitlets.Int(0).tag(sync=True)
 
     # Brush extents synced from JS (compact dict describing axis brush ranges)
@@ -69,7 +69,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
         *,
         color_by: str = "",
         color_map: dict[str, str] | None = None,
-        height: int = 600,
+        height: int = 500,
         width: int = 0,
         ignore: list[str] | None = None,
     ) -> None:

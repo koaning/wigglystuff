@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+- `ParallelCoordinates` default height reduced from 600px to 500px so the widget fits within marimo's default output clip without scrolling.
+
 ## [0.2.37] - 2026-03-12
 
 ### Added
