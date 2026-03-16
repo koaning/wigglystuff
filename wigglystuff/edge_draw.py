@@ -11,6 +11,8 @@ class EdgeDraw(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import EdgeDraw
+
         graph = EdgeDraw(names=["A", "B", "C", "D"])
         graph
         ```

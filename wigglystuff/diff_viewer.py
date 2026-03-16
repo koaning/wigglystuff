@@ -15,6 +15,8 @@ class DiffViewer(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import DiffViewer
+
         diff = DiffViewer(
             old_name="example.py",
             old_contents="print('hello')",

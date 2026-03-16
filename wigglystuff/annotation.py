@@ -17,6 +17,8 @@ class AnnotationWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import AnnotationWidget
+
         widget = AnnotationWidget()
         widget
         ```

@@ -83,6 +83,8 @@ class Paint(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import Paint
+
         paint = Paint(width=400, height=300)
         paint
         ```

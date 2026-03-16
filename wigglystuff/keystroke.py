@@ -16,6 +16,8 @@ class KeystrokeWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import KeystrokeWidget
+
         keystroke = KeystrokeWidget()
         keystroke
         ```
