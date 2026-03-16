@@ -10,6 +10,8 @@ class PlaySlider(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import PlaySlider
+
         slider = PlaySlider(min_value=0, max_value=50, step=1, interval_ms=300)
         slider
         ```

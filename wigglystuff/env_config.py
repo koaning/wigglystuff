@@ -21,6 +21,8 @@ class EnvConfig(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import EnvConfig
+
         # Simple usage - just check vars exist
         config = EnvConfig(["OPENAI_API_KEY", "ANTHROPIC_API_KEY"])
         config

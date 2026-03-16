@@ -10,6 +10,8 @@ class ColorPicker(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import ColorPicker
+
         picker = ColorPicker(color="#ff5733")
         picker
         ```

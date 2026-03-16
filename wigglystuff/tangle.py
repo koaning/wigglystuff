@@ -10,6 +10,8 @@ class TangleSlider(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import TangleSlider
+
         slider = TangleSlider(amount=50, min_value=0, max_value=100)
         slider
         ```
@@ -70,6 +72,8 @@ class TangleChoice(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import TangleChoice
+
         choice = TangleChoice(choices=["small", "medium", "large"])
         choice
         ```
@@ -96,6 +100,8 @@ class TangleSelect(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import TangleSelect
+
         select = TangleSelect(choices=["red", "green", "blue"])
         select
         ```

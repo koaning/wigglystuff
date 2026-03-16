@@ -20,6 +20,8 @@ class WebcamCapture(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import WebcamCapture
+
         cam = WebcamCapture(interval_ms=1000)
         cam
         ```

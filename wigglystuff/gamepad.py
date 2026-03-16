@@ -12,6 +12,8 @@ class GamepadWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import GamepadWidget
+
         gamepad = GamepadWidget()
         gamepad
         ```

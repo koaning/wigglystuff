@@ -10,6 +10,8 @@ class SortableList(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import SortableList
+
         sortable = SortableList(value=["apple", "banana", "cherry"], removable=True)
         sortable
         ```

@@ -12,6 +12,8 @@ class WebkitSpeechToTextWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        from wigglystuff import WebkitSpeechToTextWidget
+
         speech = WebkitSpeechToTextWidget()
         speech
         ```
