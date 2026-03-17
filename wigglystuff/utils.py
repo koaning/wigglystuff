@@ -1,10 +1,11 @@
 import base64
-import io 
+import io
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any, Callable
 
 
-def altair2svg(chart):
+def altair2svg(chart: Any) -> str:
     """Convert an Altair chart to SVG format.
 
     Args:
@@ -23,7 +24,7 @@ def altair2svg(chart):
         chart.save(Path(tmp_dir) / "example.svg")
         return (Path(tmp_dir) / "example.svg").read_text()
 
-def refresh_matplotlib(func):
+def refresh_matplotlib(func: Callable[..., Any]) -> Callable[..., str]:
     """Decorator to convert matplotlib plotting functions to base64-encoded images.
 
     This decorator wraps a matplotlib plotting function and returns a base64-encoded
@@ -69,7 +70,7 @@ def refresh_matplotlib(func):
     return wrapper
 
 
-def refresh_altair(func):
+def refresh_altair(func: Callable[..., Any]) -> Callable[..., str]:
     """Decorator to convert Altair chart functions to SVG strings.
 
     This decorator wraps a function that returns an Altair chart and converts

@@ -1,4 +1,4 @@
-.PHONY: js docs test docs-demos docs-serve docs-build docs-llm docs-gh marimo-notebook
+.PHONY: js docs test docs-serve docs-build docs-llm docs-gh marimo-notebook
 
 install:
 	# install the build tool for JS written in Golang
@@ -73,17 +73,14 @@ js-parallel-coords:
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
-docs: docs-demos
+docs:
 	mkdocs build -f mkdocs.yml
 	uv run python scripts/copy_docs_md.py
-
-docs-demos:
-	uv run python scripts/export_marimo_demos.py
 
 docs-serve:
 	uv run python -m http.server --directory site
 
-docs-build: docs-demos
+docs-build:
 	uv run mkdocs build -f mkdocs.yml
 	uv run python scripts/copy_docs_md.py
 

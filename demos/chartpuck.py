@@ -6,7 +6,7 @@
 #     "numpy",
 #     "scikit-learn",
 #     "scipy",
-#     "wigglystuff==0.2.17",
+#     "wigglystuff==0.2.37",
 # ]
 # ///
 

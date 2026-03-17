@@ -51,8 +51,18 @@ class WandbChart(anywidget.AnyWidget):
 
     def __init__(
         self,
-        *args: Any,
+        *,
+        api_key: str = "",
+        entity: str = "",
+        project: str = "",
         runs: Optional[Sequence[Any]] = None,
+        key: str = "",
+        poll_seconds: Optional[int] = 5,
+        smoothing_kind: str = "gaussian",
+        smoothing_param: Optional[float] = None,
+        show_slider: bool = True,
+        width: int = 700,
+        height: int = 300,
         **kwargs: Any,
     ) -> None:
         """Create a WandbChart widget.
@@ -66,7 +76,7 @@ class WandbChart(anywidget.AnyWidget):
             poll_seconds: Seconds between polling updates, or ``None`` to
                 disable auto-polling and show a manual refresh button instead.
             smoothing_kind: Type of smoothing: ``"rolling"``, ``"exponential"``,
-                or ``"gaussian"``. Defaults to ``"rolling"``.
+                or ``"gaussian"``. Defaults to ``"gaussian"``.
             smoothing_param: Smoothing parameter, or ``None`` for no smoothing.
                 For ``"rolling"``: integer window size ``>= 2``.
                 For ``"exponential"``: EMA weight on previous value, ``0 < alpha < 1``.
@@ -81,7 +91,19 @@ class WandbChart(anywidget.AnyWidget):
                 {"id": r.id, "label": r.name} if hasattr(r, "id") else r
                 for r in runs
             ]
-        super().__init__(*args, **kwargs)
+        super().__init__(
+            api_key=api_key,
+            entity=entity,
+            project=project,
+            key=key,
+            poll_seconds=poll_seconds,
+            smoothing_kind=smoothing_kind,
+            smoothing_param=smoothing_param,
+            show_slider=show_slider,
+            width=width,
+            height=height,
+            **kwargs,
+        )
 
     @traitlets.validate("smoothing_kind")
     def _validate_smoothing_kind(self, proposal: dict[str, Any]) -> str:

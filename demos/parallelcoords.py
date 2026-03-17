@@ -1,3 +1,13 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "marimo",
+#     "numpy",
+#     "polars",
+#     "scikit-learn",
+#     "wigglystuff==0.2.37",
+# ]
+# ///
 import marimo
 
 __generated_with = "0.20.2"

@@ -2,7 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo>=0.19.7",
-#     "wigglystuff==0.2.23",
+#     "wigglystuff==0.2.37",
 # ]
 # ///
 

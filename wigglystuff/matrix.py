@@ -40,6 +40,9 @@ class Matrix(anywidget.AnyWidget):
         cols: int = 3,
         min_value: float = -100,
         max_value: float = 100,
+        step: float = 1.0,
+        digits: int = 1,
+        mirror: bool = False,
         triangular: bool = False,
         row_names: Optional[List[str]] = None,
         col_names: Optional[List[str]] = None,
@@ -60,9 +63,9 @@ class Matrix(anywidget.AnyWidget):
             col_names: Custom labels for columns.
             static: Disable editing when ``True``.
             flexible_cols: Allow column count changes interactively.
-            step: Increment step size for cell value adjustments (via ``**kwargs``).
-            digits: Number of decimal digits to display (via ``**kwargs``).
-            mirror: If ``True``, mirror edits symmetrically across the diagonal (via ``**kwargs``).
+            step: Increment step size for cell value adjustments.
+            digits: Number of decimal digits to display.
+            mirror: If ``True``, mirror edits symmetrically across the diagonal.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         if matrix is not None:
@@ -103,6 +106,9 @@ class Matrix(anywidget.AnyWidget):
             cols=cols,
             min_value=min_value,
             max_value=max_value,
+            step=step,
+            digits=digits,
+            mirror=mirror,
             triangular=triangular,
             row_names=row_names,
             col_names=col_names,
