@@ -83,7 +83,7 @@ function render({ model, el }) {
     container.style.minHeight = model.get("height") + "px";
   }
 
-  async function fullEmbed(cleanSpec, dataMap) {
+  async function fullEmbed(rawSpec, cleanSpec) {
     if (currentView) {
       currentView.finalize();
       currentView = null;
@@ -91,21 +91,18 @@ function render({ model, el }) {
     container.innerHTML = "";
     currentCleanSpec = null;
 
-    const { vegaEmbed, vega } = await loadVega();
+    const { vegaEmbed } = await loadVega();
 
     try {
-      const result = await vegaEmbed(container, cleanSpec, {
+      // Embed the full spec (with data) so the initial render is always
+      // correct.  We store the data-free cleanSpec for future comparisons
+      // so that subsequent data-only changes can be patched in-place.
+      const result = await vegaEmbed(container, rawSpec, {
         actions: false,
         renderer: "svg",
       });
       currentView = result.view;
       currentCleanSpec = cleanSpec;
-
-      // Push data into every named source
-      for (const [name, rows] of Object.entries(dataMap)) {
-        currentView.change(name, vega.changeset().insert(rows));
-      }
-      currentView.run();
     } catch (err) {
       container.textContent = "Vega-Lite render error: " + err.message;
     }
@@ -125,9 +122,9 @@ function render({ model, el }) {
 
     const { cleanSpec, dataMap } = prepareSpec(rawSpec);
 
-    // First render — or structural change
+    // First render — or structural change: embed the full spec with data
     if (!currentView || !currentCleanSpec || !specStructureEqual(currentCleanSpec, cleanSpec)) {
-      await fullEmbed(cleanSpec, dataMap);
+      await fullEmbed(rawSpec, cleanSpec);
       return;
     }
 

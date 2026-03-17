@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.39] - 2026-03-17
+
+### Changed
+- `forecast_chart` demo now uses `AltairWidget` for flicker-free updates in marimo wasm mode.
+
+### Fixed
+- `AltairWidget` now embeds the full spec (with data) on initial render, fixing blank charts for layered specs with named datasets.
+
 ## [0.2.38] - 2026-03-17
 
 ### Added
