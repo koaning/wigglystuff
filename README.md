@@ -77,5 +77,6 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 </tr>
 <tr>
 <td align="center"><b>AltairWidget</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py"><img src="./mkdocs/assets/gallery/altairwidget.png" width="200"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/altair-widget/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/altair-widget.md">MD</a></td>
+<td align="center"><b>forecast_chart</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py"><img src="./mkdocs/assets/gallery/forecast-chart.png" width="330"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/utils/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/utils.md">MD</a></td>
 </tr>
 </table>

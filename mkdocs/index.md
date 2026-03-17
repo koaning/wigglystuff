@@ -240,4 +240,9 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/examples/pair-up.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/examples/pair-up.py">Source</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">forecast_chart</div>
+<a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py" class="gallery-img"><img src="assets/gallery/forecast-chart.png" alt="forecast_chart"></a>
+<div class="gallery-links"><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py">Demo</a><a href="reference/utils/">API</a><a href="reference/utils.md">MD</a></div>
+</div>
 </div>
