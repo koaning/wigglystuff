@@ -34,7 +34,8 @@ jobs:
           UV_SYSTEM_PYTHON: "1"
         run: |
           uv pip install -e ".[docs]"
-          make marimo-sessions
+          uv run marimo export session --force-overwrite demos/
+          uv run marimo export session --force-overwrite examples/
           git diff --stat --exit-code demos/__marimo__ examples/__marimo__ || {
             echo "::error::Session files are stale. Run 'make marimo-sessions' and commit the results."
             exit 1
