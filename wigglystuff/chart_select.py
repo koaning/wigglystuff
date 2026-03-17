@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any, Callable
+
+if TYPE_CHECKING:
+    import numpy as np
 
 from anywidget import AnyWidget
 import traitlets
@@ -96,7 +99,7 @@ class ChartSelect(AnyWidget):
 
     def __init__(
         self,
-        fig,
+        fig: Any,
         mode: str = "box",
         modes: list[str] | None = None,
         selection_color: str = "#3b82f6",
@@ -254,7 +257,7 @@ class ChartSelect(AnyWidget):
             path = MplPath(vertices)
             return path.contains_point((xd, yd))
 
-    def get_mask(self, x_arr, y_arr):
+    def get_mask(self, x_arr: Any, y_arr: Any) -> "np.ndarray":
         """Return boolean mask for points inside the selection.
 
         Args:
@@ -294,7 +297,7 @@ class ChartSelect(AnyWidget):
             points = np.column_stack([x_d, y_d])
             return path.contains_points(points)
 
-    def get_indices(self, x_arr, y_arr):
+    def get_indices(self, x_arr: Any, y_arr: Any) -> "np.ndarray":
         """Return indices of points inside the selection.
 
         Useful for filtering dataframes with ``df.iloc[indices]``.
@@ -313,7 +316,7 @@ class ChartSelect(AnyWidget):
     @classmethod
     def from_callback(
         cls,
-        draw_fn,
+        draw_fn: Callable[..., Any],
         x_bounds: tuple[float, float],
         y_bounds: tuple[float, float],
         figsize: tuple[float, float] = (6, 6),

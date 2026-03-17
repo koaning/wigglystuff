@@ -123,5 +123,3 @@ extra:
 watch:
   - mkdocs.yml
   - mkdocs
-  - demos
-exclude_docs: examples/**/CLAUDE.md

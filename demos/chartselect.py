@@ -4,7 +4,7 @@
 #     "marimo",
 #     "matplotlib",
 #     "numpy",
-#     "wigglystuff==0.2.18",
+#     "wigglystuff==0.2.37",
 # ]
 # ///
 

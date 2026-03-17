@@ -5,7 +5,7 @@
 #     "matplotlib",
 #     "numpy",
 #     "scikit-learn",
-#     "wigglystuff==0.2.31",
+#     "wigglystuff==0.2.37",
 # ]
 # ///
 

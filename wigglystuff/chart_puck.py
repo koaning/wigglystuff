@@ -5,7 +5,7 @@ from __future__ import annotations
 import base64
 from io import BytesIO
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import anywidget
 import traitlets
@@ -130,7 +130,7 @@ class ChartPuck(anywidget.AnyWidget):
 
     def __init__(
         self,
-        fig,
+        fig: Any,
         x: float | list[float] | None = None,
         y: float | list[float] | None = None,
         puck_radius: int = 10,
@@ -143,10 +143,10 @@ class ChartPuck(anywidget.AnyWidget):
 
         Args:
             fig: A matplotlib figure to overlay the puck on.
-            x: Initial x coordinate(s) in data space. Can be a single value or
-               a list for multiple pucks. Defaults to center of x_bounds.
-            y: Initial y coordinate(s) in data space. Can be a single value or
-               a list for multiple pucks. Defaults to center of y_bounds.
+            x: Initial x coordinate(s) in data space. Can be a single value
+                or a list for multiple pucks. Defaults to center of x_bounds.
+            y: Initial y coordinate(s) in data space. Can be a single value
+                or a list for multiple pucks. Defaults to center of y_bounds.
             puck_radius: Radius of the puck(s) in pixels.
             puck_color: Color of the puck(s). A single CSS color string applies
                 to all pucks. A list of CSS colors assigns one color per puck
@@ -210,7 +210,7 @@ class ChartPuck(anywidget.AnyWidget):
     @classmethod
     def from_callback(
         cls,
-        draw_fn,
+        draw_fn: Callable[..., Any],
         x_bounds: tuple[float, float],
         y_bounds: tuple[float, float],
         figsize: tuple[float, float] = (6, 6),
@@ -338,7 +338,7 @@ class ChartPuck(anywidget.AnyWidget):
         if hasattr(self, "_render"):
             self.chart_base64 = self._render()
 
-    def export_kmeans(self, n_init: int = 1, max_iter: int = 300, **kwargs):
+    def export_kmeans(self, n_init: int = 1, max_iter: int = 300, **kwargs: Any) -> Any:
         """Export puck positions as a KMeans estimator with pucks as initial centroids.
 
         Creates a scikit-learn KMeans instance configured to use the current puck

@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any, Callable
+
+if TYPE_CHECKING:
+    import numpy as np
 
 from anywidget import AnyWidget
 import traitlets
@@ -97,7 +100,7 @@ class ChartMultiSelect(AnyWidget):
 
     def __init__(
         self,
-        fig,
+        fig: Any,
         n_classes: int = 2,
         mode: str = "box",
         modes: list[str] | None = None,
@@ -201,7 +204,7 @@ class ChartMultiSelect(AnyWidget):
         path = MplPath(vertices)
         return path.contains_points(np.column_stack([x_d, y_d]))
 
-    def get_labels(self, x_arr, y_arr):
+    def get_labels(self, x_arr: Any, y_arr: Any) -> "np.ndarray":
         """Return integer class labels for each point.
 
         Points not covered by any selection get ``-1``.  When selections
@@ -229,7 +232,7 @@ class ChartMultiSelect(AnyWidget):
 
         return labels
 
-    def get_mask(self, x_arr, y_arr, class_id=None):
+    def get_mask(self, x_arr: Any, y_arr: Any, class_id: int | None = None) -> "np.ndarray":
         """Boolean mask for classified points.
 
         Args:
@@ -246,7 +249,7 @@ class ChartMultiSelect(AnyWidget):
             return labels >= 0
         return labels == class_id
 
-    def get_indices(self, x_arr, y_arr, class_id=None):
+    def get_indices(self, x_arr: Any, y_arr: Any, class_id: int | None = None) -> "np.ndarray":
         """Indices of classified points.
 
         Args:
@@ -268,7 +271,7 @@ class ChartMultiSelect(AnyWidget):
     @classmethod
     def from_callback(
         cls,
-        draw_fn,
+        draw_fn: Callable[..., Any],
         x_bounds: tuple[float, float],
         y_bounds: tuple[float, float],
         figsize: tuple[float, float] = (6, 6),

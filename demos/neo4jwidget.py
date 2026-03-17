@@ -3,7 +3,7 @@
 # dependencies = [
 #     "marimo>=0.19.7",
 #     "neo4j>=5.0.0",
-#     "wigglystuff==0.2.24",
+#     "wigglystuff==0.2.37",
 # ]
 # ///
 

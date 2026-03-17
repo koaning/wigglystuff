@@ -1,6 +1,7 @@
 """ModuleTreeWidget for visualising PyTorch nn.Module architecture."""
 
 from pathlib import Path
+from typing import Any
 
 import anywidget
 import traitlets
@@ -158,7 +159,7 @@ class ModuleTreeWidget(anywidget.AnyWidget):
 
     def __init__(
         self,
-        module=None,
+        module: Any = None,
         *,
         initial_expand_depth: int = 1,
     ):

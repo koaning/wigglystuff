@@ -65,7 +65,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
 
     def __init__(
         self,
-        data=None,
+        data: Any = None,
         *,
         color_by: str = "",
         color_map: dict[str, str] | None = None,

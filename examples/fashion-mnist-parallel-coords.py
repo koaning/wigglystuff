@@ -5,7 +5,7 @@
 #     "polars",
 #     "numpy==2.4.3",
 #     "scikit-learn==1.8.0",
-#     "wigglystuff",
+#     "wigglystuff==0.2.37",
 #     "matplotlib==3.10.8",
 #     "pandas==3.0.1",
 #     "umap-learn==0.5.11",

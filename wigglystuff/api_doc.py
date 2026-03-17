@@ -2,6 +2,7 @@
 
 import inspect
 from pathlib import Path
+from typing import Any
 
 import anywidget
 import traitlets
@@ -164,7 +165,7 @@ class ApiDoc(anywidget.AnyWidget):
     width = traitlets.Int(default_value=700).tag(sync=True)
     show_private = traitlets.Bool(default_value=False).tag(sync=True)
 
-    def __init__(self, obj=None, *, width=700, show_private=False):
+    def __init__(self, obj: Any = None, *, width: int = 700, show_private: bool = False):
         """Create an ApiDoc widget.
 
         Args:

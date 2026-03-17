@@ -6,7 +6,7 @@
 #     "numpy==2.4.2",
 #     "polars==1.30.0",
 #     "scikit-learn==1.8.0",
-#     "wigglystuff",
+#     "wigglystuff==0.2.37",
 # ]
 # ///
 
