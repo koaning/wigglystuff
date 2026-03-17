@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.38] - 2026-03-17
+
+### Added
+- `forecast_chart` utility function that creates a time series Altair chart with a robust exponential forecast.
+
 ### Changed
 - `ParallelCoordinates` default height reduced from 600px to 500px so the widget fits within marimo's default output clip without scrolling.
 
