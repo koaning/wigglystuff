@@ -36,11 +36,11 @@ Create a ParallelCoordinates widget.
 ```
 def __init__(
     self,
-    data=None,
+    data: Any = None,
     *,
     color_by: str = "",
     color_map: dict[str, str] | None = None,
-    height: int = 600,
+    height: int = 500,
     width: int = 0,
     ignore: list[str] | None = None,
 ) -> None:

@@ -1,6 +1,14 @@
 :root {
-  --wiggly-demo-border: color-mix(in srgb, var(--md-sys-color-outline) 70%, transparent);
-  --wiggly-button-border: color-mix(in srgb, var(--md-sys-color-outline) 85%, transparent);
+  --wiggly-border: color-mix(in srgb, var(--md-sys-color-outline) 50%, transparent);
+  --wiggly-border-hover: color-mix(in srgb, var(--md-sys-color-outline) 90%, transparent);
+  --wiggly-card-bg: #ffffff;
+  --wiggly-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --wiggly-card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --wiggly-muted: color-mix(in srgb, var(--md-primary-fg-color) 55%, transparent);
+  --wiggly-molab: #2e9e5a;
+  --wiggly-molab-hover: #257d48;
+  --wiggly-btn-bg: #f5f5f5;
+  --wiggly-btn-bg-hover: #eaeaea;
 }
 
 [data-md-color-scheme="default"] {
@@ -13,13 +21,21 @@
   --md-primary-fg-color: #f4f4f4;
   --md-accent-fg-color: #aeb0b5;
   --md-default-bg-color: #121212;
+  --wiggly-card-bg: #1e1e1e;
+  --wiggly-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --wiggly-card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --wiggly-molab: #3db76b;
+  --wiggly-molab-hover: #34a05d;
+  --wiggly-btn-bg: #2a2a2a;
+  --wiggly-btn-bg-hover: #333333;
 }
 
+/* Demo frame (individual widget pages) */
 .demo-frame {
   width: 100%;
   min-height: 520px;
-  border: 1px solid var(--wiggly-demo-border);
-  border-radius: 0.75rem;
+  border: 1px solid var(--wiggly-border);
+  border-radius: 0.375rem;
   margin-block: 1rem;
   background: var(--md-sys-color-surface);
 }
@@ -34,40 +50,122 @@
   text-decoration: none;
 }
 
+/* Standalone page buttons */
 .md-typeset .md-button {
-  border-radius: 999px;
-  border: 1px solid var(--wiggly-button-border);
-  background-color: color-mix(in srgb, var(--md-default-bg-color) 70%, transparent);
+  border-radius: 0.25rem;
+  border: 1px solid var(--wiggly-border);
+  background-color: var(--wiggly-btn-bg);
   color: var(--md-primary-fg-color);
   padding-inline: 1.25rem;
   font-weight: 600;
   text-transform: none;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .md-typeset .md-button:hover {
-  border-color: color-mix(in srgb, var(--md-accent-fg-color) 70%, transparent);
-  background-color: color-mix(in srgb, var(--md-accent-fg-color) 15%, var(--md-default-bg-color));
+  border-color: var(--wiggly-border-hover);
+  background-color: var(--wiggly-btn-bg-hover);
 }
 
 [data-md-color-scheme="slate"] .md-typeset .md-button {
-  color: var(--md-accent-fg-color);
-  background-color: color-mix(in srgb, #1e1f20 85%, transparent);
+  color: var(--md-primary-fg-color);
 }
 
-[data-md-color-scheme="slate"] .md-typeset .md-button:hover {
-  border-color: color-mix(in srgb, var(--md-accent-fg-color) 60%, transparent);
-  background-color: color-mix(in srgb, var(--md-accent-fg-color) 10%, #1e1f20);
-}
 [data-md-component="header"] .md-header__button.md-logo img {
   filter: brightness(0) invert(1);
 }
 
-/* Widget Gallery */
+/* ——————————————————————————————————————————
+   Shared card styles (widget + example gallery)
+   —————————————————————————————————————————— */
+
+.gallery-item,
+.example-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--wiggly-border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: var(--wiggly-card-bg);
+  box-shadow: var(--wiggly-card-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.gallery-item:hover,
+.example-item:hover {
+  box-shadow: var(--wiggly-card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Gallery link buttons (shared) */
+.gallery-links {
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  justify-content: center;
+  margin-top: auto;
+  border-top: 1px solid var(--wiggly-border);
+}
+
+.gallery-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.15s ease;
+}
+
+/* Default button style: neutral */
+.gallery-links a {
+  background: var(--wiggly-btn-bg);
+  color: var(--md-primary-fg-color);
+  border: none;
+}
+
+.gallery-links a:hover {
+  background: var(--wiggly-btn-bg-hover);
+}
+
+/* External link icon for links that leave the site */
+.gallery-links a[href^="http"]::after {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-left: 0.3em;
+  background: currentColor;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.75 2a.75.75 0 0 0 0 1.5h6.69L2.72 11.22a.75.75 0 1 0 1.06 1.06L11.5 4.56v6.69a.75.75 0 0 0 1.5 0V2.75a.75.75 0 0 0-.75-.75H3.75z'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.75 2a.75.75 0 0 0 0 1.5h6.69L2.72 11.22a.75.75 0 1 0 1.06 1.06L11.5 4.56v6.69a.75.75 0 0 0 1.5 0V2.75a.75.75 0 0 0-.75-.75H3.75z'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+}
+
+/* "Open in molab" — green accent button */
+.gallery-links a[href*="molab"] {
+  background: var(--wiggly-molab);
+  color: #ffffff;
+}
+
+.gallery-links a[href*="molab"]:hover {
+  background: var(--wiggly-molab-hover);
+}
+
+/* ——————————————————————————————————————————
+   Widget Gallery (4-col grid of demo cards)
+   —————————————————————————————————————————— */
 .widget-gallery {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 1.25rem;
   margin-block: 1.5rem;
 }
 
@@ -83,31 +181,11 @@
   }
 }
 
-.gallery-item {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--wiggly-demo-border);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  background: var(--md-default-bg-color);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.gallery-item:hover {
-  border-color: var(--md-accent-fg-color);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-[data-md-color-scheme="slate"] .gallery-item:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
 .gallery-item .gallery-title {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: var(--md-primary-fg-color);
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--wiggly-demo-border);
+  padding: 0.6rem 0.75rem 0.4rem;
 }
 
 .gallery-item .gallery-img {
@@ -119,36 +197,62 @@
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-bottom: 1px solid var(--wiggly-demo-border);
 }
 
-.gallery-links {
-  padding: 0.5rem 0.75rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  border-top: 1px solid var(--wiggly-demo-border);
+/* ——————————————————————————————————————————
+   Example Gallery (3-col grid, cards with descriptions)
+   —————————————————————————————————————————— */
+.example-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-block: 1.5rem;
 }
 
-.gallery-links a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  white-space: nowrap;
+@media (max-width: 900px) {
+  .example-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .example-gallery {
+    grid-template-columns: 1fr;
+  }
+}
+
+.example-item .example-img {
+  display: block;
+  line-height: 0;
+}
+
+.example-item .example-img img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.example-item .example-content {
+  padding: 0.75rem;
+  flex: 1;
+}
+
+.example-item .example-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--md-primary-fg-color);
+  margin-bottom: 0.25rem;
+}
+
+.example-item .example-desc {
   font-size: 0.75rem;
-  color: var(--md-accent-fg-color);
-  text-decoration: none;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid var(--wiggly-button-border);
-  border-radius: 999px;
-  transition: background-color 0.2s ease;
+  color: var(--wiggly-muted);
+  line-height: 1.45;
 }
 
-.gallery-links a:hover {
-  background-color: color-mix(in srgb, var(--md-accent-fg-color) 15%, transparent);
-}
-
+/* ——————————————————————————————————————————
+   Small-screen adjustments
+   —————————————————————————————————————————— */
 @media (max-width: 600px) {
   .gallery-links {
     gap: 0.375rem;
@@ -156,7 +260,7 @@
   }
 
   .gallery-links a {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.4rem;
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
   }
 }

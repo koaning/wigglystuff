@@ -1584,6 +1584,7 @@
                 <code>obj</code>
             </td>
             <td>
+                  <code><span title="typing.Any">Any</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1599,6 +1600,7 @@
                 <code>width</code>
             </td>
             <td>
+                  <code><span title="int">int</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1614,6 +1616,7 @@
                 <code>show_private</code>
             </td>
             <td>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1636,8 +1639,7 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/api_doc.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-167">167</a></span>
-<span class="normal"><a href="#__codelineno-0-168">168</a></span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-168">168</a></span>
 <span class="normal"><a href="#__codelineno-0-169">169</a></span>
 <span class="normal"><a href="#__codelineno-0-170">170</a></span>
 <span class="normal"><a href="#__codelineno-0-171">171</a></span>
@@ -1647,18 +1649,19 @@
 <span class="normal"><a href="#__codelineno-0-175">175</a></span>
 <span class="normal"><a href="#__codelineno-0-176">176</a></span>
 <span class="normal"><a href="#__codelineno-0-177">177</a></span>
-<span class="normal"><a href="#__codelineno-0-178">178</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">700</span><span class="p">,</span> <span class="n">show_private</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an ApiDoc widget.</span>
-<a id="__codelineno-0-169" name="__codelineno-0-169"></a>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">        obj: A Python class or function to document.</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">        width: Maximum pixel width for the widget.</span>
-<a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">        show_private: Whether to include _-prefixed methods.</span>
-<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-175" name="__codelineno-0-175"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span> <span class="o">=</span> <span class="n">obj</span>
-<a id="__codelineno-0-176" name="__codelineno-0-176"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">show_private</span><span class="o">=</span><span class="n">show_private</span><span class="p">)</span>
-<a id="__codelineno-0-177" name="__codelineno-0-177"></a>    <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-178" name="__codelineno-0-178"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">_extract_doc</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">show_private</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-178">178</a></span>
+<span class="normal"><a href="#__codelineno-0-179">179</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">700</span><span class="p">,</span> <span class="n">show_private</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an ApiDoc widget.</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">        obj: A Python class or function to document.</span>
+<a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">        width: Maximum pixel width for the widget.</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">        show_private: Whether to include _-prefixed methods.</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-176" name="__codelineno-0-176"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span> <span class="o">=</span> <span class="n">obj</span>
+<a id="__codelineno-0-177" name="__codelineno-0-177"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">show_private</span><span class="o">=</span><span class="n">show_private</span><span class="p">)</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a>    <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-179" name="__codelineno-0-179"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">_extract_doc</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">show_private</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 

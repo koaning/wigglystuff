@@ -55,7 +55,7 @@ Create a ChartSelect widget from a matplotlib figure.
 ```
 def __init__(
     self,
-    fig,
+    fig: Any,
     mode: str = "box",
     modes: list[str] | None = None,
     selection_color: str = "#3b82f6",
@@ -189,7 +189,7 @@ def contains_point(self, x: float, y: float) -> bool:
 
 ```
 from_callback(
-    draw_fn,
+    draw_fn: Callable[..., Any],
     x_bounds: tuple[float, float],
     y_bounds: tuple[float, float],
     figsize: tuple[float, float] = (6, 6),
@@ -236,7 +236,7 @@ select = ChartSelect.from_callback(
 @classmethod
 def from_callback(
     cls,
-    draw_fn,
+    draw_fn: Callable[..., Any],
     x_bounds: tuple[float, float],
     y_bounds: tuple[float, float],
     figsize: tuple[float, float] = (6, 6),
@@ -391,7 +391,7 @@ def get_bounds(self) -> tuple[float, float, float, float] | None:
 
 
 ```
-get_indices(x_arr, y_arr)
+get_indices(x_arr: Any, y_arr: Any) -> 'np.ndarray'
 ```
 
 
@@ -405,12 +405,12 @@ Useful for filtering dataframes with `df.iloc[indices]`.
 
 | Type | Description |
 | --- | --- |
-|  | Numpy array of integer indices for points inside the selection. |
+| `'np.ndarray'` | Numpy array of integer indices for points inside the selection. |
 
  Source code in `wigglystuff/chart_select.py`
 
 ```
-def get_indices(self, x_arr, y_arr):
+def get_indices(self, x_arr: Any, y_arr: Any) -> "np.ndarray":
     """Return indices of points inside the selection.
 
     Useful for filtering dataframes with ``df.iloc[indices]``.
@@ -432,7 +432,7 @@ def get_indices(self, x_arr, y_arr):
 
 
 ```
-get_mask(x_arr, y_arr)
+get_mask(x_arr: Any, y_arr: Any) -> 'np.ndarray'
 ```
 
 
@@ -443,12 +443,12 @@ Return boolean mask for points inside the selection.
 
 | Type | Description |
 | --- | --- |
-|  | Boolean numpy array where True means point is inside selection. |
+| `'np.ndarray'` | Boolean numpy array where True means point is inside selection. |
 
  Source code in `wigglystuff/chart_select.py`
 
 ```
-def get_mask(self, x_arr, y_arr):
+def get_mask(self, x_arr: Any, y_arr: Any) -> "np.ndarray":
     """Return boolean mask for points inside the selection.
 
     Args:

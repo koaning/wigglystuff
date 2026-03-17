@@ -11,6 +11,8 @@ Button widget that copies the provided `text_to_copy` payload.
 ```
 from wigglystuff import CopyToClipboard
 
+from wigglystuff import CopyToClipboard
+
 button = CopyToClipboard(text_to_copy="Hello, world!")
 button
 ```

@@ -1626,8 +1626,10 @@
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">graph</span> <span class="o">=</span> <span class="n">EdgeDraw</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">])</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">graph</span>
+    <div class="language-python highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">wigglystuff</span><span class="w"> </span><span class="kn">import</span> <span class="n">EdgeDraw</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">graph</span> <span class="o">=</span> <span class="n">EdgeDraw</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">graph</span>
 </code></pre></div>
 
         <p>Create an EdgeDraw widget.</p>
@@ -1736,9 +1738,7 @@
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/edge_draw.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-56">56</a></span>
 <span class="normal"><a href="#__codelineno-0-57">57</a></span>
 <span class="normal"><a href="#__codelineno-0-58">58</a></span>
 <span class="normal"><a href="#__codelineno-0-59">59</a></span>
@@ -1759,30 +1759,32 @@
 <span class="normal"><a href="#__codelineno-0-74">74</a></span>
 <span class="normal"><a href="#__codelineno-0-75">75</a></span>
 <span class="normal"><a href="#__codelineno-0-76">76</a></span>
-<span class="normal"><a href="#__codelineno-0-77">77</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="n">directed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="n">links</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an EdgeDraw widget.</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">        names: Ordered list of node labels.</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        height: Canvas height in pixels.</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">        width: Canvas width in pixels.</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        directed: Whether to draw directed edges with arrowheads.</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">        links: Optional list of (source, target) pairs to seed the widget.</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a>        <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">,</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="n">links</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_coerce_links</span><span class="p">(</span><span class="n">links</span><span class="p">),</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span>
+<span class="normal"><a href="#__codelineno-0-78">78</a></span>
+<span class="normal"><a href="#__codelineno-0-79">79</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="n">names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="n">directed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="n">links</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an EdgeDraw widget.</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">        names: Ordered list of node labels.</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        height: Canvas height in pixels.</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">        width: Canvas width in pixels.</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">        directed: Whether to draw directed edges with arrowheads.</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">        links: Optional list of (source, target) pairs to seed the widget.</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">,</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a>        <span class="n">links</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_coerce_links</span><span class="p">(</span><span class="n">links</span><span class="p">),</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -1817,9 +1819,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>wigglystuff/edge_draw.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-79">79</a></span>
-<span class="normal"><a href="#__codelineno-0-80">80</a></span>
-<span class="normal"><a href="#__codelineno-0-81">81</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-81">81</a></span>
 <span class="normal"><a href="#__codelineno-0-82">82</a></span>
 <span class="normal"><a href="#__codelineno-0-83">83</a></span>
 <span class="normal"><a href="#__codelineno-0-84">84</a></span>
@@ -1827,17 +1827,19 @@
 <span class="normal"><a href="#__codelineno-0-86">86</a></span>
 <span class="normal"><a href="#__codelineno-0-87">87</a></span>
 <span class="normal"><a href="#__codelineno-0-88">88</a></span>
-<span class="normal"><a href="#__codelineno-0-89">89</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_adjacency_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an adjacency matrix from links and node names.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>    <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">num_nodes</span><span class="p">))</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_coerce_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">)):</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>        <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="n">dst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>        <span class="n">matrix</span><span class="p">[</span><span class="n">src</span><span class="p">][</span><span class="n">dst</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">directed</span><span class="p">:</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a>            <span class="n">matrix</span><span class="p">[</span><span class="n">dst</span><span class="p">][</span><span class="n">src</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="k">return</span> <span class="n">matrix</span>
+<span class="normal"><a href="#__codelineno-0-89">89</a></span>
+<span class="normal"><a href="#__codelineno-0-90">90</a></span>
+<span class="normal"><a href="#__codelineno-0-91">91</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_adjacency_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an adjacency matrix from links and node names.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">num_nodes</span><span class="p">))</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>    <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_coerce_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">)):</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>        <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a>        <span class="n">dst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a>        <span class="n">matrix</span><span class="p">[</span><span class="n">src</span><span class="p">][</span><span class="n">dst</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">directed</span><span class="p">:</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a>            <span class="n">matrix</span><span class="p">[</span><span class="n">dst</span><span class="p">][</span><span class="n">src</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="k">return</span> <span class="n">matrix</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1864,23 +1866,23 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>wigglystuff/edge_draw.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-91">91</a></span>
-<span class="normal"><a href="#__codelineno-0-92">92</a></span>
-<span class="normal"><a href="#__codelineno-0-93">93</a></span>
-<span class="normal"><a href="#__codelineno-0-94">94</a></span>
-<span class="normal"><a href="#__codelineno-0-95">95</a></span>
-<span class="normal"><a href="#__codelineno-0-96">96</a></span>
-<span class="normal"><a href="#__codelineno-0-97">97</a></span>
-<span class="normal"><a href="#__codelineno-0-98">98</a></span>
-<span class="normal"><a href="#__codelineno-0-99">99</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">directed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return neighbors of a node.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>    <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_coerce_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">)):</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="n">node_name</span><span class="p">:</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>            <span class="n">neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">directed</span> <span class="ow">and</span> <span class="n">target</span> <span class="o">==</span> <span class="n">node_name</span><span class="p">:</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>            <span class="n">neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">return</span> <span class="n">neighbors</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
+<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
+<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
+<span class="normal"><a href="#__codelineno-0-100">100</a></span>
+<span class="normal"><a href="#__codelineno-0-101">101</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">directed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return neighbors of a node.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>    <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iter_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_coerce_links</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">)):</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="n">node_name</span><span class="p">:</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>            <span class="n">neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">directed</span> <span class="ow">and</span> <span class="n">target</span> <span class="o">==</span> <span class="n">node_name</span><span class="p">:</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a>            <span class="n">neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>    <span class="k">return</span> <span class="n">neighbors</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1905,15 +1907,15 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>wigglystuff/edge_draw.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-101">101</a></span>
-<span class="normal"><a href="#__codelineno-0-102">102</a></span>
-<span class="normal"><a href="#__codelineno-0-103">103</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-103">103</a></span>
 <span class="normal"><a href="#__codelineno-0-104">104</a></span>
-<span class="normal"><a href="#__codelineno-0-105">105</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="k">def</span><span class="w"> </span><span class="nf">has_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the graph contains cycles.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a>    <span class="k">if</span> <span class="n">directed</span><span class="p">:</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_cycle_directed</span><span class="p">()</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_cycle_undirected</span><span class="p">()</span>
+<span class="normal"><a href="#__codelineno-0-105">105</a></span>
+<span class="normal"><a href="#__codelineno-0-106">106</a></span>
+<span class="normal"><a href="#__codelineno-0-107">107</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="k">def</span><span class="w"> </span><span class="nf">has_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the graph contains cycles.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="k">if</span> <span class="n">directed</span><span class="p">:</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_cycle_directed</span><span class="p">()</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_cycle_undirected</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

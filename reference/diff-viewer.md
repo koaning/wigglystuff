@@ -14,6 +14,8 @@ Displays a side-by-side or unified diff between two file contents, with syntax-a
 ```
 from wigglystuff import DiffViewer
 
+from wigglystuff import DiffViewer
+
 diff = DiffViewer(
     old_name="example.py",
     old_contents="print('hello')",

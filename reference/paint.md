@@ -11,6 +11,8 @@ Notebook-friendly paint widget with MS Paint style tools and PIL helpers.
 ```
 from wigglystuff import Paint
 
+from wigglystuff import Paint
+
 paint = Paint(width=400, height=300)
 paint
 ```

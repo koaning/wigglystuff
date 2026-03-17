@@ -11,6 +11,8 @@ Sketch node/link diagrams and sync edges as adjacency-friendly data.
 ```
 from wigglystuff import EdgeDraw
 
+from wigglystuff import EdgeDraw
+
 graph = EdgeDraw(names=["A", "B", "C", "D"])
 graph
 ```

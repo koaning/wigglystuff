@@ -1600,6 +1600,7 @@ with raw data shown behind the smoothed line.</p>
                 <code>api_key</code>
             </td>
             <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1607,7 +1608,7 @@ with raw data shown behind the smoothed line.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>&#39;&#39;</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1615,6 +1616,7 @@ with raw data shown behind the smoothed line.</p>
                 <code>entity</code>
             </td>
             <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1622,7 +1624,7 @@ with raw data shown behind the smoothed line.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>&#39;&#39;</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1630,6 +1632,7 @@ with raw data shown behind the smoothed line.</p>
                 <code>project</code>
             </td>
             <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1637,7 +1640,7 @@ with raw data shown behind the smoothed line.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>&#39;&#39;</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1661,6 +1664,7 @@ with raw data shown behind the smoothed line.</p>
                 <code>key</code>
             </td>
             <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1668,7 +1672,7 @@ with raw data shown behind the smoothed line.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>&#39;&#39;</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1676,6 +1680,7 @@ with raw data shown behind the smoothed line.</p>
                 <code>poll_seconds</code>
             </td>
             <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="int">int</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1684,7 +1689,7 @@ disable auto-polling and show a manual refresh button instead.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>5</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1692,15 +1697,16 @@ disable auto-polling and show a manual refresh button instead.</p>
                 <code>smoothing_kind</code>
             </td>
             <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
                 <p>Type of smoothing: <code>"rolling"</code>, <code>"exponential"</code>,
-or <code>"gaussian"</code>. Defaults to <code>"rolling"</code>.</p>
+or <code>"gaussian"</code>. Defaults to <code>"gaussian"</code>.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>&#39;gaussian&#39;</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1708,6 +1714,7 @@ or <code>"gaussian"</code>. Defaults to <code>"rolling"</code>.</p>
                 <code>smoothing_param</code>
             </td>
             <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="float">float</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1718,7 +1725,7 @@ For <code>"gaussian"</code>: standard deviation (sigma) <code>&gt; 0</code>.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1726,6 +1733,7 @@ For <code>"gaussian"</code>: standard deviation (sigma) <code>&gt; 0</code>.</p>
                 <code>show_slider</code>
             </td>
             <td>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1733,7 +1741,7 @@ For <code>"gaussian"</code>: standard deviation (sigma) <code>&gt; 0</code>.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>True</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1741,6 +1749,7 @@ For <code>"gaussian"</code>: standard deviation (sigma) <code>&gt; 0</code>.</p>
                 <code>width</code>
             </td>
             <td>
+                  <code><span title="int">int</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1748,7 +1757,7 @@ For <code>"gaussian"</code>: standard deviation (sigma) <code>&gt; 0</code>.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>700</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1756,6 +1765,7 @@ For <code>"gaussian"</code>: standard deviation (sigma) <code>&gt; 0</code>.</p>
                 <code>height</code>
             </td>
             <td>
+                  <code><span title="int">int</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1763,7 +1773,7 @@ For <code>"gaussian"</code>: standard deviation (sigma) <code>&gt; 0</code>.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>300</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -1794,71 +1804,115 @@ For <code>"gaussian"</code>: standard deviation (sigma) <code>&gt; 0</code>.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/wandb_chart.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-52">52</a></span>
-<span class="normal"><a href="#__codelineno-0-53">53</a></span>
-<span class="normal"><a href="#__codelineno-0-54">54</a></span>
-<span class="normal"><a href="#__codelineno-0-55">55</a></span>
-<span class="normal"><a href="#__codelineno-0-56">56</a></span>
-<span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
-<span class="normal"><a href="#__codelineno-0-62">62</a></span>
-<span class="normal"><a href="#__codelineno-0-63">63</a></span>
-<span class="normal"><a href="#__codelineno-0-64">64</a></span>
-<span class="normal"><a href="#__codelineno-0-65">65</a></span>
-<span class="normal"><a href="#__codelineno-0-66">66</a></span>
-<span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span>
-<span class="normal"><a href="#__codelineno-0-70">70</a></span>
-<span class="normal"><a href="#__codelineno-0-71">71</a></span>
-<span class="normal"><a href="#__codelineno-0-72">72</a></span>
-<span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span>
-<span class="normal"><a href="#__codelineno-0-75">75</a></span>
-<span class="normal"><a href="#__codelineno-0-76">76</a></span>
-<span class="normal"><a href="#__codelineno-0-77">77</a></span>
-<span class="normal"><a href="#__codelineno-0-78">78</a></span>
-<span class="normal"><a href="#__codelineno-0-79">79</a></span>
-<span class="normal"><a href="#__codelineno-0-80">80</a></span>
-<span class="normal"><a href="#__codelineno-0-81">81</a></span>
-<span class="normal"><a href="#__codelineno-0-82">82</a></span>
-<span class="normal"><a href="#__codelineno-0-83">83</a></span>
-<span class="normal"><a href="#__codelineno-0-84">84</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-52"> 52</a></span>
+<span class="normal"><a href="#__codelineno-0-53"> 53</a></span>
+<span class="normal"><a href="#__codelineno-0-54"> 54</a></span>
+<span class="normal"><a href="#__codelineno-0-55"> 55</a></span>
+<span class="normal"><a href="#__codelineno-0-56"> 56</a></span>
+<span class="normal"><a href="#__codelineno-0-57"> 57</a></span>
+<span class="normal"><a href="#__codelineno-0-58"> 58</a></span>
+<span class="normal"><a href="#__codelineno-0-59"> 59</a></span>
+<span class="normal"><a href="#__codelineno-0-60"> 60</a></span>
+<span class="normal"><a href="#__codelineno-0-61"> 61</a></span>
+<span class="normal"><a href="#__codelineno-0-62"> 62</a></span>
+<span class="normal"><a href="#__codelineno-0-63"> 63</a></span>
+<span class="normal"><a href="#__codelineno-0-64"> 64</a></span>
+<span class="normal"><a href="#__codelineno-0-65"> 65</a></span>
+<span class="normal"><a href="#__codelineno-0-66"> 66</a></span>
+<span class="normal"><a href="#__codelineno-0-67"> 67</a></span>
+<span class="normal"><a href="#__codelineno-0-68"> 68</a></span>
+<span class="normal"><a href="#__codelineno-0-69"> 69</a></span>
+<span class="normal"><a href="#__codelineno-0-70"> 70</a></span>
+<span class="normal"><a href="#__codelineno-0-71"> 71</a></span>
+<span class="normal"><a href="#__codelineno-0-72"> 72</a></span>
+<span class="normal"><a href="#__codelineno-0-73"> 73</a></span>
+<span class="normal"><a href="#__codelineno-0-74"> 74</a></span>
+<span class="normal"><a href="#__codelineno-0-75"> 75</a></span>
+<span class="normal"><a href="#__codelineno-0-76"> 76</a></span>
+<span class="normal"><a href="#__codelineno-0-77"> 77</a></span>
+<span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
+<span class="normal"><a href="#__codelineno-0-79"> 79</a></span>
+<span class="normal"><a href="#__codelineno-0-80"> 80</a></span>
+<span class="normal"><a href="#__codelineno-0-81"> 81</a></span>
+<span class="normal"><a href="#__codelineno-0-82"> 82</a></span>
+<span class="normal"><a href="#__codelineno-0-83"> 83</a></span>
+<span class="normal"><a href="#__codelineno-0-84"> 84</a></span>
+<span class="normal"><a href="#__codelineno-0-85"> 85</a></span>
+<span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
+<span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
+<span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
+<span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
+<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
+<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
+<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
+<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
+<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
+<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
+<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
+<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
+<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
+<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
+<span class="normal"><a href="#__codelineno-0-100">100</a></span>
+<span class="normal"><a href="#__codelineno-0-101">101</a></span>
+<span class="normal"><a href="#__codelineno-0-102">102</a></span>
+<span class="normal"><a href="#__codelineno-0-103">103</a></span>
+<span class="normal"><a href="#__codelineno-0-104">104</a></span>
+<span class="normal"><a href="#__codelineno-0-105">105</a></span>
+<span class="normal"><a href="#__codelineno-0-106">106</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">runs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a WandbChart widget.</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="sd">        api_key: Your wandb API key.</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">        entity: The wandb entity (user or team).</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">        project: The wandb project name.</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">        runs: A list of wandb Run objects or dicts with ``id`` and ``label`` keys.</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">        key: The metric key to chart (e.g. ``&quot;loss&quot;``).</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        poll_seconds: Seconds between polling updates, or ``None`` to</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">            disable auto-polling and show a manual refresh button instead.</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        smoothing_kind: Type of smoothing: ``&quot;rolling&quot;``, ``&quot;exponential&quot;``,</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">            or ``&quot;gaussian&quot;``. Defaults to ``&quot;rolling&quot;``.</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">        smoothing_param: Smoothing parameter, or ``None`` for no smoothing.</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">            For ``&quot;rolling&quot;``: integer window size ``&gt;= 2``.</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">            For ``&quot;exponential&quot;``: EMA weight on previous value, ``0 &lt; alpha &lt; 1``.</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">            For ``&quot;gaussian&quot;``: standard deviation (sigma) ``&gt; 0``.</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">        show_slider: Whether to show the smoothing slider in the UI.</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">        width: Chart width in pixels.</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">        height: Chart height in pixels.</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="k">if</span> <span class="n">runs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;_runs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">}</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">r</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a>            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">runs</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>        <span class="p">]</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="n">project</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="n">runs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="n">poll_seconds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="n">smoothing_kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="n">smoothing_param</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="n">show_slider</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">700</span><span class="p">,</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a WandbChart widget.</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">        api_key: Your wandb API key.</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">        entity: The wandb entity (user or team).</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">        project: The wandb project name.</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">        runs: A list of wandb Run objects or dicts with ``id`` and ``label`` keys.</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">        key: The metric key to chart (e.g. ``&quot;loss&quot;``).</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">        poll_seconds: Seconds between polling updates, or ``None`` to</span>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">            disable auto-polling and show a manual refresh button instead.</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">        smoothing_kind: Type of smoothing: ``&quot;rolling&quot;``, ``&quot;exponential&quot;``,</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="sd">            or ``&quot;gaussian&quot;``. Defaults to ``&quot;gaussian&quot;``.</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">        smoothing_param: Smoothing parameter, or ``None`` for no smoothing.</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">            For ``&quot;rolling&quot;``: integer window size ``&gt;= 2``.</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="sd">            For ``&quot;exponential&quot;``: EMA weight on previous value, ``0 &lt; alpha &lt; 1``.</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="sd">            For ``&quot;gaussian&quot;``: standard deviation (sigma) ``&gt; 0``.</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">        show_slider: Whether to show the smoothing slider in the UI.</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">        width: Chart width in pixels.</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a><span class="sd">        height: Chart height in pixels.</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="sd">        **kwargs: Forwarded to ``anywidget.AnyWidget``.</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="k">if</span> <span class="n">runs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a>        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;_runs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a>            <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span><span class="p">}</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">r</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a>            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">runs</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="p">]</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">entity</span><span class="o">=</span><span class="n">entity</span><span class="p">,</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="n">poll_seconds</span><span class="o">=</span><span class="n">poll_seconds</span><span class="p">,</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="n">smoothing_kind</span><span class="o">=</span><span class="n">smoothing_kind</span><span class="p">,</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="n">smoothing_param</span><span class="o">=</span><span class="n">smoothing_param</span><span class="p">,</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="n">show_slider</span><span class="o">=</span><span class="n">show_slider</span><span class="p">,</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a>        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 

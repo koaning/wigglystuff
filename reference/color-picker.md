@@ -11,6 +11,8 @@ Simple color picker syncing a `#RRGGBB` hex value back to Python.
 ```
 from wigglystuff import ColorPicker
 
+from wigglystuff import ColorPicker
+
 picker = ColorPicker(color="#ff5733")
 picker
 ```

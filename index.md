@@ -26,9 +26,9 @@ pip install wigglystuff
 
 ## What you can build
 
-  Slider2D DemoAPIMD  Matrix DemoAPIMD  Paint DemoAPIMD  ThreeWidget DemoAPIMD  EdgeDraw DemoAPIMD  SortableList DemoAPIMD  ColorPicker DemoAPIMD  GamepadWidget DemoAPIMD  KeystrokeWidget DemoAPIMD  SpeechToText DemoAPIMD  CopyToClipboard DemoAPIMD  CellTour DemoAPIMD  WebcamCapture DemoAPIMD  ImageRefreshWidget DemoAPIMD  HTMLRefreshWidget DemoAPIMD  ProgressBar DemoAPIMD  PulsarChart DemoAPIMD  TextCompare DemoAPIMD  EnvConfig DemoAPIMD  Tangle DemoAPIMD  ChartPuck DemoAPIMD  ChartMultiSelect DemoAPIMD  ChartSelect DemoAPIMD  ParallelCoordinates DemoAPIMD  ScatterWidget DemoAPIMD  DiffViewer DemoAPIMD  SplineDraw DemoAPIMD  ApiDoc DemoAPIMD  AnnotationWidget DemoAPIMD  PlaySlider DemoAPIMD
+  Slider2D molabAPIMD  Matrix molabAPIMD  Paint molabAPIMD  ThreeWidget molabAPIMD  EdgeDraw molabAPIMD  SortableList molabAPIMD  ColorPicker molabAPIMD  GamepadWidget molabAPIMD  KeystrokeWidget molabAPIMD  SpeechToText molabAPIMD  CopyToClipboard molabAPIMD  CellTour molabAPIMD  WebcamCapture molabAPIMD  ImageRefreshWidget molabAPIMD  HTMLRefreshWidget molabAPIMD  ProgressBar molabAPIMD  PulsarChart molabAPIMD  TextCompare molabAPIMD  EnvConfig molabAPIMD  Tangle molabAPIMD  ChartPuck molabAPIMD  ChartMultiSelect molabAPIMD  ChartSelect molabAPIMD  ParallelCoordinates molabAPIMD  ScatterWidget molabAPIMD  DiffViewer molabAPIMD  SplineDraw molabAPIMD  ApiDoc molabAPIMD  AnnotationWidget molabAPIMD  PlaySlider molabAPIMD  ForecastChart molabAPIMD
 
-Each widget page embeds a marimo-powered html-wasm export and links back to the exact notebook that generated the demo, so you can open the original `.py` file and rerun it locally.
+Each widget links to a live demo on molab where you can interact with and edit the notebook directly in your browser.
 
 
 ## 3rd party widgets
@@ -36,4 +36,11 @@ Each widget page embeds a marimo-powered html-wasm export and links back to the 
 
 These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on molab because many of the dependencies are not compatible with WASM.
 
-  ModuleTreeWidget DemoAPIMD  WandbChart DemoAPIMD  Neo4jWidget DemoAPIMD  AltairWidget DemoAPIMD
+  ModuleTreeWidget molabAPIMD  WandbChart molabAPIMD  Neo4jWidget molabAPIMD  AltairWidget molabAPIMD
+
+## Examples
+
+
+These notebooks show how to combine multiple widgets for more complex workflows.
+
+   Dimensions Explore high-dimensional data with parallel coordinates and interactive scatter plots. molabSource   Fashion MNIST Visualize Fashion MNIST embeddings with parallel coordinates filtering. molabSource

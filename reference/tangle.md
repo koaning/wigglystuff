@@ -14,6 +14,8 @@ Inline slider inspired by Bret Victor's Tangle UI.
 ```
 from wigglystuff import Tangle Widgets
 
+from wigglystuff import TangleSlider
+
 slider = TangleSlider(amount=50, min_value=0, max_value=100)
 slider
 ```
@@ -94,6 +96,8 @@ Inline choice widget that cycles through labeled options.
 ```
 from wigglystuff import Tangle Widgets
 
+from wigglystuff import TangleChoice
+
 choice = TangleChoice(choices=["small", "medium", "large"])
 choice
 ```
@@ -139,6 +143,8 @@ Dropdown-based take on the Tangle choice pattern.
 
 ```
 from wigglystuff import Tangle Widgets
+
+from wigglystuff import TangleSelect
 
 select = TangleSelect(choices=["red", "green", "blue"])
 select

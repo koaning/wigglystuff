@@ -14,6 +14,8 @@ This widget does not require any initialization arguments; all state is mirrored
 ```
 from wigglystuff import GamepadWidget
 
+from wigglystuff import GamepadWidget
+
 gamepad = GamepadWidget()
 gamepad
 ```

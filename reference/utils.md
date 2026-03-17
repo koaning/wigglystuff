@@ -11,7 +11,7 @@ Convert an Altair chart to SVG format.
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `str` |  | The SVG representation of the chart as a string. |
+| `str` | `str` | The SVG representation of the chart as a string. |
 
  Note
 
@@ -20,7 +20,7 @@ This function writes to disk temporarily as Altair doesn't provide an in-memory 
   Source code in `wigglystuff/utils.py`
 
 ```
-def altair2svg(chart):
+def altair2svg(chart: Any) -> str:
     """Convert an Altair chart to SVG format.
 
     Args:
@@ -54,7 +54,7 @@ This decorator wraps a matplotlib plotting function and returns a base64-encoded
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `callable` |  | A wrapper function that returns a base64-encoded JPEG data URI. |
+| `callable` | `Callable[..., str]` | A wrapper function that returns a base64-encoded JPEG data URI. |
 
  Example
 
@@ -63,7 +63,7 @@ This decorator wraps a matplotlib plotting function and returns a base64-encoded
    Source code in `wigglystuff/utils.py`
 
 ```
-def refresh_matplotlib(func):
+def refresh_matplotlib(func: Callable[..., Any]) -> Callable[..., str]:
     """Decorator to convert matplotlib plotting functions to base64-encoded images.
 
     This decorator wraps a matplotlib plotting function and returns a base64-encoded
@@ -123,7 +123,7 @@ This decorator wraps a function that returns an Altair chart and converts the ch
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `callable` |  | A wrapper function that returns an SVG string representation of the chart. |
+| `callable` | `Callable[..., str]` | A wrapper function that returns an SVG string representation of the chart. |
 
  Example
 
@@ -132,7 +132,7 @@ This decorator wraps a function that returns an Altair chart and converts the ch
    Source code in `wigglystuff/utils.py`
 
 ```
-def refresh_altair(func):
+def refresh_altair(func: Callable[..., Any]) -> Callable[..., str]:
     """Decorator to convert Altair chart functions to SVG strings.
 
     This decorator wraps a function that returns an Altair chart and converts

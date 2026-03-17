@@ -1658,6 +1658,7 @@ trainable/frozen/buffer badges, and a density indicator.</p>
                 <code>module</code>
             </td>
             <td>
+                  <code><span title="typing.Any">Any</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1696,8 +1697,7 @@ trainable/frozen/buffer badges, and a density indicator.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/module_tree.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-159">159</a></span>
-<span class="normal"><a href="#__codelineno-0-160">160</a></span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-160">160</a></span>
 <span class="normal"><a href="#__codelineno-0-161">161</a></span>
 <span class="normal"><a href="#__codelineno-0-162">162</a></span>
 <span class="normal"><a href="#__codelineno-0-163">163</a></span>
@@ -1710,21 +1710,22 @@ trainable/frozen/buffer badges, and a density indicator.</p>
 <span class="normal"><a href="#__codelineno-0-170">170</a></span>
 <span class="normal"><a href="#__codelineno-0-171">171</a></span>
 <span class="normal"><a href="#__codelineno-0-172">172</a></span>
-<span class="normal"><a href="#__codelineno-0-173">173</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-159" name="__codelineno-0-159"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="n">module</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a>    <span class="n">initial_expand_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="p">):</span>
-<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a ModuleTreeWidget.</span>
-<a id="__codelineno-0-166" name="__codelineno-0-166"></a>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">        module: A PyTorch ``nn.Module`` to visualise.</span>
-<a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">        initial_expand_depth: Number of tree levels to expand initially.</span>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">initial_expand_depth</span><span class="o">=</span><span class="n">initial_expand_depth</span><span class="p">)</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="k">if</span> <span class="n">module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-173" name="__codelineno-0-173"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">_extract_tree</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-173">173</a></span>
+<span class="normal"><a href="#__codelineno-0-174">174</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="n">module</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a>    <span class="n">initial_expand_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="p">):</span>
+<a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a ModuleTreeWidget.</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">        module: A PyTorch ``nn.Module`` to visualise.</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">        initial_expand_depth: Number of tree levels to expand initially.</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">initial_expand_depth</span><span class="o">=</span><span class="n">initial_expand_depth</span><span class="p">)</span>
+<a id="__codelineno-0-173" name="__codelineno-0-173"></a>    <span class="k">if</span> <span class="n">module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">_extract_tree</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 

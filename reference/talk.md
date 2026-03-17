@@ -14,6 +14,8 @@ The widget exposes the `transcript` text along with the `listening` and `trigger
 ```
 from wigglystuff import WebkitSpeechToTextWidget
 
+from wigglystuff import WebkitSpeechToTextWidget
+
 speech = WebkitSpeechToTextWidget()
 speech
 ```

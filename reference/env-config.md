@@ -17,6 +17,8 @@ Values are stored internally and never written back to os.environ.
 ```
 from wigglystuff import EnvConfig
 
+from wigglystuff import EnvConfig
+
 # Simple usage - just check vars exist
 config = EnvConfig(["OPENAI_API_KEY", "ANTHROPIC_API_KEY"])
 config

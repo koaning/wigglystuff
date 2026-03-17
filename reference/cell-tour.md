@@ -17,6 +17,8 @@ Using cell indices:
 ```
 from wigglystuff import CellTour
 
+from wigglystuff import CellTour
+
 tour = CellTour(steps=[
     {"cell": 0, "title": "Imports", "description": "Load libraries"},
     {"cell": 2, "title": "Processing", "description": "Data transformation"},
@@ -29,6 +31,8 @@ Using cell names (requires naming cells in marimo):
 
 
 ```
+from wigglystuff import CellTour
+
 tour = CellTour(steps=[
     {"cell_name": "imports", "title": "Imports", "description": "Load libraries"},
     {"cell_name": "process", "title": "Processing", "description": "Transform data"},

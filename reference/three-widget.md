@@ -14,6 +14,8 @@ The widget renders a collection of 3D points with per-point color and size attri
 ```
 from wigglystuff import ThreeWidget
 
+from wigglystuff import ThreeWidget
+
 data = [
     {"x": 1.0, "y": 2.0, "z": 3.0, "color": "tomato", "size": 0.2},
     {"x": -1.0, "y": 0.5, "z": -2.0, "color": "#22c55e", "size": 0.15},

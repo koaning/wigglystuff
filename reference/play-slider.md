@@ -11,6 +11,8 @@ Slider with a play/pause button that auto-advances at a configurable pace.
 ```
 from wigglystuff import PlaySlider
 
+from wigglystuff import PlaySlider
+
 slider = PlaySlider(min_value=0, max_value=50, step=1, interval_ms=300)
 slider
 ```

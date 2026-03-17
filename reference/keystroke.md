@@ -17,6 +17,8 @@ The `last_key` payload mirrors browser `KeyboardEvent` data with: `key`, `code`,
 ```
 from wigglystuff import KeystrokeWidget
 
+from wigglystuff import KeystrokeWidget
+
 keystroke = KeystrokeWidget()
 keystroke
 ```

@@ -11,6 +11,8 @@ Drag-and-drop list widget with optional add/remove/edit affordances.
 ```
 from wigglystuff import SortableList
 
+from wigglystuff import SortableList
+
 sortable = SortableList(value=["apple", "banana", "cherry"], removable=True)
 sortable
 ```

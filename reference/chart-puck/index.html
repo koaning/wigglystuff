@@ -1663,6 +1663,7 @@ coordinates.</p>
                 <code>fig</code>
             </td>
             <td>
+                  <code><span title="typing.Any">Any</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -1682,8 +1683,8 @@ coordinates.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Initial x coordinate(s) in data space. Can be a single value or
-a list for multiple pucks. Defaults to center of x_bounds.</p>
+                <p>Initial x coordinate(s) in data space. Can be a single value
+or a list for multiple pucks. Defaults to center of x_bounds.</p>
               </div>
             </td>
             <td>
@@ -1699,8 +1700,8 @@ a list for multiple pucks. Defaults to center of x_bounds.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Initial y coordinate(s) in data space. Can be a single value or
-a list for multiple pucks. Defaults to center of y_bounds.</p>
+                <p>Initial y coordinate(s) in data space. Can be a single value
+or a list for multiple pucks. Defaults to center of y_bounds.</p>
               </div>
             </td>
             <td>
@@ -1885,7 +1886,7 @@ only when the user releases the puck.</p>
 <span class="normal"><a href="#__codelineno-0-207">207</a></span>
 <span class="normal"><a href="#__codelineno-0-208">208</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-131" name="__codelineno-0-131"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-133" name="__codelineno-0-133"></a>    <span class="n">fig</span><span class="p">,</span>
+<a id="__codelineno-0-133" name="__codelineno-0-133"></a>    <span class="n">fig</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <a id="__codelineno-0-134" name="__codelineno-0-134"></a>    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-135" name="__codelineno-0-135"></a>    <span class="n">y</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-136" name="__codelineno-0-136"></a>    <span class="n">puck_radius</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
@@ -1898,10 +1899,10 @@ only when the user releases the puck.</p>
 <a id="__codelineno-0-143" name="__codelineno-0-143"></a>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">        fig: A matplotlib figure to overlay the puck on.</span>
-<a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">        x: Initial x coordinate(s) in data space. Can be a single value or</span>
-<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">           a list for multiple pucks. Defaults to center of x_bounds.</span>
-<a id="__codelineno-0-148" name="__codelineno-0-148"></a><span class="sd">        y: Initial y coordinate(s) in data space. Can be a single value or</span>
-<a id="__codelineno-0-149" name="__codelineno-0-149"></a><span class="sd">           a list for multiple pucks. Defaults to center of y_bounds.</span>
+<a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">        x: Initial x coordinate(s) in data space. Can be a single value</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">            or a list for multiple pucks. Defaults to center of x_bounds.</span>
+<a id="__codelineno-0-148" name="__codelineno-0-148"></a><span class="sd">        y: Initial y coordinate(s) in data space. Can be a single value</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149"></a><span class="sd">            or a list for multiple pucks. Defaults to center of y_bounds.</span>
 <a id="__codelineno-0-150" name="__codelineno-0-150"></a><span class="sd">        puck_radius: Radius of the puck(s) in pixels.</span>
 <a id="__codelineno-0-151" name="__codelineno-0-151"></a><span class="sd">        puck_color: Color of the puck(s). A single CSS color string applies</span>
 <a id="__codelineno-0-152" name="__codelineno-0-152"></a><span class="sd">            to all pucks. A list of CSS colors assigns one color per puck</span>
@@ -1986,8 +1987,8 @@ only when the user releases the puck.</p>
 
 <a href="#wigglystuff.chart_puck.ChartPuck.export_kmeans" class="headerlink" title="Permanent link">#</a></h2>
 <div class="language-python doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">export_kmeans</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">n_init</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">n_init</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n"><span title="typing.Any">Any</span></span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Any">Any</span></span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -2047,6 +2048,7 @@ where you manually position pucks to define cluster centers.</p>
                 <code>**kwargs</code>
             </td>
             <td>
+                  <code><span title="typing.Any">Any</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2072,6 +2074,7 @@ where you manually position pucks to define cluster centers.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
+                  <code><span title="typing.Any">Any</span></code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2129,7 +2132,7 @@ where you manually position pucks to define cluster centers.</p>
 <span class="normal"><a href="#__codelineno-0-373">373</a></span>
 <span class="normal"><a href="#__codelineno-0-374">374</a></span>
 <span class="normal"><a href="#__codelineno-0-375">375</a></span>
-<span class="normal"><a href="#__codelineno-0-376">376</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-341" name="__codelineno-0-341"></a><span class="k">def</span><span class="w"> </span><span class="nf">export_kmeans</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_init</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="normal"><a href="#__codelineno-0-376">376</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-341" name="__codelineno-0-341"></a><span class="k">def</span><span class="w"> </span><span class="nf">export_kmeans</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_init</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <a id="__codelineno-0-342" name="__codelineno-0-342"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Export puck positions as a KMeans estimator with pucks as initial centroids.</span>
 <a id="__codelineno-0-343" name="__codelineno-0-343"></a>
 <a id="__codelineno-0-344" name="__codelineno-0-344"></a><span class="sd">    Creates a scikit-learn KMeans instance configured to use the current puck</span>
@@ -2184,7 +2187,7 @@ where you manually position pucks to define cluster centers.</p>
 
 <a href="#wigglystuff.chart_puck.ChartPuck.from_callback" class="headerlink" title="Permanent link">#</a></h2>
 <div class="language-python doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">from_callback</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">draw_fn</span><span class="p">,</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">draw_fn</span><span class="p">:</span> <span class="n"><span title="typing.Callable">Callable</span></span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">],</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">x_bounds</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">],</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">y_bounds</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">],</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">figsize</span><span class="p">:</span> <span class="n"><span title="tuple">tuple</span></span><span class="p">[</span><span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="n"><span title="float">float</span></span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
@@ -2221,6 +2224,7 @@ to manually trigger a re-render (e.g., when external state changes).</p>
                 <code>draw_fn</code>
             </td>
             <td>
+                  <code><span title="typing.Callable">Callable</span>[..., <span title="typing.Any">Any</span>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -2533,7 +2537,7 @@ to manually trigger a re-render (e.g., when external state changes).</p>
 <span class="normal"><a href="#__codelineno-0-329">329</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="nd">@classmethod</span>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="k">def</span><span class="w"> </span><span class="nf">from_callback</span><span class="p">(</span>
 <a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="bp">cls</span><span class="p">,</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a>    <span class="n">draw_fn</span><span class="p">,</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a>    <span class="n">draw_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a>    <span class="n">x_bounds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a>    <span class="n">y_bounds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="n">figsize</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>

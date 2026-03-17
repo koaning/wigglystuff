@@ -23,7 +23,7 @@ Create an ApiDoc widget.
   Source code in `wigglystuff/api_doc.py`
 
 ```
-def __init__(self, obj=None, *, width=700, show_private=False):
+def __init__(self, obj: Any = None, *, width: int = 700, show_private: bool = False):
     """Create an ApiDoc widget.
 
     Args:

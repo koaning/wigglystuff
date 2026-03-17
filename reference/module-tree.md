@@ -34,7 +34,7 @@ Create a ModuleTreeWidget.
 ```
 def __init__(
     self,
-    module=None,
+    module: Any = None,
     *,
     initial_expand_depth: int = 1,
 ):

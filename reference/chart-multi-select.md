@@ -46,7 +46,7 @@ Create a ChartMultiSelect widget from a matplotlib figure.
 ```
 def __init__(
     self,
-    fig,
+    fig: Any,
     n_classes: int = 2,
     mode: str = "box",
     modes: list[str] | None = None,
@@ -120,7 +120,7 @@ def clear(self) -> None:
 
 ```
 from_callback(
-    draw_fn,
+    draw_fn: Callable[..., Any],
     x_bounds: tuple[float, float],
     y_bounds: tuple[float, float],
     figsize: tuple[float, float] = (6, 6),
@@ -147,7 +147,7 @@ Create a ChartMultiSelect that re-renders when selections change.
 @classmethod
 def from_callback(
     cls,
-    draw_fn,
+    draw_fn: Callable[..., Any],
     x_bounds: tuple[float, float],
     y_bounds: tuple[float, float],
     figsize: tuple[float, float] = (6, 6),
@@ -225,7 +225,9 @@ def from_callback(
 
 
 ```
-get_indices(x_arr, y_arr, class_id=None)
+get_indices(
+    x_arr: Any, y_arr: Any, class_id: int | None = None
+) -> "np.ndarray"
 ```
 
 
@@ -236,12 +238,12 @@ Indices of classified points.
 
 | Type | Description |
 | --- | --- |
-|  | Numpy integer array of indices. |
+| `'np.ndarray'` | Numpy integer array of indices. |
 
  Source code in `wigglystuff/chart_multi_select.py`
 
 ```
-def get_indices(self, x_arr, y_arr, class_id=None):
+def get_indices(self, x_arr: Any, y_arr: Any, class_id: int | None = None) -> "np.ndarray":
     """Indices of classified points.
 
     Args:
@@ -262,7 +264,7 @@ def get_indices(self, x_arr, y_arr, class_id=None):
 
 
 ```
-get_labels(x_arr, y_arr)
+get_labels(x_arr: Any, y_arr: Any) -> 'np.ndarray'
 ```
 
 
@@ -276,12 +278,12 @@ Points not covered by any selection get `-1`. When selections overlap the last-d
 
 | Type | Description |
 | --- | --- |
-|  | Numpy integer array of length `len(x_arr)`. |
+| `'np.ndarray'` | Numpy integer array of length `len(x_arr)`. |
 
  Source code in `wigglystuff/chart_multi_select.py`
 
 ```
-def get_labels(self, x_arr, y_arr):
+def get_labels(self, x_arr: Any, y_arr: Any) -> "np.ndarray":
     """Return integer class labels for each point.
 
     Points not covered by any selection get ``-1``.  When selections
@@ -315,7 +317,9 @@ def get_labels(self, x_arr, y_arr):
 
 
 ```
-get_mask(x_arr, y_arr, class_id=None)
+get_mask(
+    x_arr: Any, y_arr: Any, class_id: int | None = None
+) -> "np.ndarray"
 ```
 
 
@@ -326,12 +330,12 @@ Boolean mask for classified points.
 
 | Type | Description |
 | --- | --- |
-|  | Boolean numpy array. |
+| `'np.ndarray'` | Boolean numpy array. |
 
  Source code in `wigglystuff/chart_multi_select.py`
 
 ```
-def get_mask(self, x_arr, y_arr, class_id=None):
+def get_mask(self, x_arr: Any, y_arr: Any, class_id: int | None = None) -> "np.ndarray":
     """Boolean mask for classified points.
 
     Args:

@@ -14,6 +14,8 @@ Compares two texts and highlights matching word sequences, useful for plagiarism
 ```
 from wigglystuff import TextCompare
 
+from wigglystuff import TextCompare
+
 compare = TextCompare(
     text_a="The quick brown fox jumps over the lazy dog.",
     text_b="A quick brown fox leaps over a lazy dog."

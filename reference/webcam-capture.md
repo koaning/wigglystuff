@@ -14,6 +14,8 @@ The widget shows a live webcam preview plus a capture button and an auto-capture
 ```
 from wigglystuff import WebcamCapture
 
+from wigglystuff import WebcamCapture
+
 cam = WebcamCapture(interval_ms=1000)
 cam
 ```

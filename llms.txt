@@ -36,6 +36,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [SplineDraw](https://koaning.github.io/wigglystuff/reference/spline-draw.md): Draw scatter points with Python-computed spline curve fitting
 - [ApiDoc](https://koaning.github.io/wigglystuff/reference/api-doc.md): Renders API docs for Python classes and functions directly in notebooks
 - [PlaySlider](https://koaning.github.io/wigglystuff/reference/play-slider.md): Slider with play/pause button for auto-advancing values at a configurable pace
+- [ForecastChart](https://koaning.github.io/wigglystuff/reference/utils.md): Time series chart with robust exponential forecast via log-linear regression
 
 ## 3rd party widgets
 
@@ -45,7 +46,3 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 - [ModuleTreeWidget](https://koaning.github.io/wigglystuff/reference/module-tree.md): Interactive tree viewer for PyTorch nn.Module architecture
 - [WandbChart](https://koaning.github.io/wigglystuff/reference/wandb-chart.md): Live line chart that polls wandb for metric data with configurable smoothing
 - [Neo4jWidget](https://koaning.github.io/wigglystuff/reference/neo4j-widget.md): Interactive Neo4j graph explorer with Cypher query input, autocomplete, and lasso selection
-
-## Optional
-
-- [Utils](https://koaning.github.io/wigglystuff/reference/utils.md): Utility functions

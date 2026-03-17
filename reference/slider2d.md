@@ -14,6 +14,8 @@ Emits synchronized `x`/`y` floats that stay within configurable bounds while ren
 ```
 from wigglystuff import Slider2D
 
+from wigglystuff import Slider2D
+
 slider = Slider2D(x=0.5, y=0.5, x_bounds=(0.0, 1.0), y_bounds=(0.0, 1.0))
 slider
 ```
