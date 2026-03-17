@@ -1,0 +1,114 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.21.0",
+    "script_metadata_hash": "da873d5d09e69dbc37de3cbfd95dec06"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "7595af71412ee4961c6f97af9520c7c1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"progressbar\">ProgressBar</h2>\n<span class=\"paragraph\">The <code>ProgressBar</code> widget gives you a progress bar that works across notebook runtimes without needing ipywidgets. You can update it from another cell in marimo, which the built-in progress bar does not allow.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "0c9ddf0d9feb1e03dec08d958dc63ade",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "4471442e1bf076bdb3c661651b02c5ce",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='vblA-0' random-id='45f6bef8-9107-ae4e-7393-c35121fd92b1'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;9af9f644e75c41d8a8f9a92e144553fc&quot;}' data-label='null' data-js-url='&quot;data:text/javascript;base64,CiAgICBmdW5jdGlvbiByZW5kZXIoeyBtb2RlbCwgZWwgfSkgewogICAgICAgIGNvbnN0IHdyYXBwZXIgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICAgICAgICB3cmFwcGVyLnN0eWxlLmZvbnRGYW1pbHkgPSAnLWFwcGxlLXN5c3RlbSwgQmxpbmtNYWNTeXN0ZW1Gb250LCAiU2Vnb2UgVUkiLCBSb2JvdG8sICJIZWx2ZXRpY2EgTmV1ZSIsIEFyaWFsLCBzYW5zLXNlcmlmJzsKCiAgICAgICAgY29uc3QgYmFyID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAgICAgICAgYmFyLnN0eWxlLmJvcmRlclJhZGl1cyA9ICc0cHgnOwogICAgICAgIGJhci5zdHlsZS5vdmVyZmxvdyA9ICdoaWRkZW4nOwoKICAgICAgICBjb25zdCBmaWxsID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAgICAgICAgZmlsbC5zdHlsZS5oZWlnaHQgPSAnMTAwJSc7CiAgICAgICAgZmlsbC5zdHlsZS50cmFuc2l0aW9uID0gJ3dpZHRoIDAuNHMgZWFzZSc7CgogICAgICAgIGNvbnN0IHRleHQgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICAgICAgICB0ZXh0LnN0eWxlLmZvbnRTaXplID0gJzEycHgnOwogICAgICAgIHRleHQuc3R5bGUuZm9udFdlaWdodCA9ICc1MDAnOwogICAgICAgIHRleHQuc3R5bGUubWFyZ2luVG9wID0gJzRweCc7CiAgICAgICAgdGV4dC5zdHlsZS50ZXh0QWxpZ24gPSAnY2VudGVyJzsKCiAgICAgICAgYmFyLmFwcGVuZENoaWxkKGZpbGwpOwogICAgICAgIHdyYXBwZXIuYXBwZW5kQ2hpbGQoYmFyKTsKICAgICAgICB3cmFwcGVyLmFwcGVuZENoaWxkKHRleHQpOwoKICAgICAgICBmdW5jdGlvbiBpc0RhcmsoKSB7CiAgICAgICAgICAgIHJldHVybiBlbC5jbG9zZXN0KCcuZGFyaywgLmRhcmstdGhlbWUsIFtkYXRhLXRoZW1lPSJkYXJrIl0nKSAhPT0gbnVsbDsKICAgICAgICB9CgogICAgICAgIGNvbnN0IHVwZGF0ZURpc3BsYXkgPSAoKSA9PiB7CiAgICAgICAgICAgIGNvbnN0IHZhbHVlID0gbW9kZWwuZ2V0KCJ2YWx1ZSIpOwogICAgICAgICAgICBjb25zdCBtYXggPSBtb2RlbC5nZXQoIm1heF92YWx1ZSIpOwogICAgICAgICAgICBjb25zdCBwZXJjZW50YWdlID0gbWF4ID4gMCA/ICh2YWx1ZSAvIG1heCkgKiAxMDAgOiAwOwogICAgICAgICAgICBjb25zdCBkYXJrID0gaXNEYXJrKCk7CgogICAgICAgICAgICB3cmFwcGVyLnN0eWxlLndpZHRoID0gbW9kZWwuZ2V0KCJ3aWR0aCIpOwogICAgICAgICAgICBiYXIuc3R5bGUuaGVpZ2h0ID0gbW9kZWwuZ2V0KCJoZWlnaHQiKSArICdweCc7CiAgICAgICAgICAgIGJhci5zdHlsZS5iYWNrZ3JvdW5kQ29sb3IgPSBkYXJrID8gJyMzNzQxNTEnIDogJyNlNWU3ZWInOwogICAgICAgICAgICB0ZXh0LnN0eWxlLmNvbG9yID0gZGFyayA/ICcjOWNhM2FmJyA6ICcjODg4JzsKICAgICAgICAgICAgZmlsbC5zdHlsZS5iYWNrZ3JvdW5kQ29sb3IgPSBtb2RlbC5nZXQoImNvbG9yIik7CiAgICAgICAgICAgIGZpbGwuc3R5bGUud2lkdGggPSBwZXJjZW50YWdlICsgJyUnOwoKICAgICAgICAgICAgY29uc3Qgc2hvd1RleHQgPSBtb2RlbC5nZXQoInNob3dfdGV4dCIpOwogICAgICAgICAgICB0ZXh0LnN0eWxlLmRpc3BsYXkgPSBzaG93VGV4dCA/ICdibG9jaycgOiAnbm9uZSc7CiAgICAgICAgICAgIHRleHQudGV4dENvbnRlbnQgPSBgJHt2YWx1ZX0gLyAke21heH1gOwogICAgICAgIH07CgogICAgICAgIHVwZGF0ZURpc3BsYXkoKTsKCiAgICAgICAgY29uc3Qgb2JzZXJ2ZXIgPSBuZXcgTXV0YXRpb25PYnNlcnZlcih1cGRhdGVEaXNwbGF5KTsKICAgICAgICBvYnNlcnZlci5vYnNlcnZlKGRvY3VtZW50LmRvY3VtZW50RWxlbWVudCwgeyBhdHRyaWJ1dGVzOiB0cnVlLCBhdHRyaWJ1dGVGaWx0ZXI6IFsnY2xhc3MnLCAnZGF0YS10aGVtZSddIH0pOwogICAgICAgIGlmIChkb2N1bWVudC5ib2R5ICE9PSBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQpIHsKICAgICAgICAgICAgb2JzZXJ2ZXIub2JzZXJ2ZShkb2N1bWVudC5ib2R5LCB7IGF0dHJpYnV0ZXM6IHRydWUsIGF0dHJpYnV0ZUZpbHRlcjogWydjbGFzcycsICdkYXRhLXRoZW1lJ10gfSk7CiAgICAgICAgfQoKICAgICAgICBtb2RlbC5vbignY2hhbmdlOnZhbHVlJywgdXBkYXRlRGlzcGxheSk7CiAgICAgICAgbW9kZWwub24oJ2NoYW5nZTptYXhfdmFsdWUnLCB1cGRhdGVEaXNwbGF5KTsKICAgICAgICBtb2RlbC5vbignY2hhbmdlOmNvbG9yJywgdXBkYXRlRGlzcGxheSk7CiAgICAgICAgbW9kZWwub24oJ2NoYW5nZTpzaG93X3RleHQnLCB1cGRhdGVEaXNwbGF5KTsKICAgICAgICBtb2RlbC5vbignY2hhbmdlOndpZHRoJywgdXBkYXRlRGlzcGxheSk7CiAgICAgICAgbW9kZWwub24oJ2NoYW5nZTpoZWlnaHQnLCB1cGRhdGVEaXNwbGF5KTsKCiAgICAgICAgZWwuYXBwZW5kQ2hpbGQod3JhcHBlcik7CiAgICB9CgogICAgZXhwb3J0IGRlZmF1bHQgeyByZW5kZXIgfTsKICAgIA==&quot;' data-js-hash='&quot;12de45650d09f841c93f85c8aa479dd9&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "7fc2128f4d4449ea6c328fd566de8186",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "unsupported operand type(s) for +=: 'dict' and 'int'",
+          "traceback": []
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/var/folders/yd/mbxgnfd13qgdzmc7b97h6bfm0000gn/T/marimo_59681/__marimo__cell_bkHC_.py&quot;</span>, line <span class=\"m\">4</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"n\">progress</span><span class=\"o\">.</span><span class=\"n\">value</span> <span class=\"o\">+=</span> <span class=\"mi\">1</span>\n<span class=\"gr\">TypeError</span>: <span class=\"n\">unsupported operand type(s) for +=: &#39;dict&#39; and &#39;int&#39;</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "1e82fb76197f9b42a72aff5d196b1bc1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"customization\">Customization</h3>\n<span class=\"paragraph\">You can change the color, height, and hide the text label.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "143663bad78d0b23b9317261f29c6097",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='PKri-0' random-id='80f6f2f6-87ab-8ea4-e3f9-8f4a2fbce475'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;bc6dc371116943db94bb4bf0e6b46fbf&quot;}' data-label='null' data-js-url='&quot;data:text/javascript;base64,CiAgICBmdW5jdGlvbiByZW5kZXIoeyBtb2RlbCwgZWwgfSkgewogICAgICAgIGNvbnN0IHdyYXBwZXIgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICAgICAgICB3cmFwcGVyLnN0eWxlLmZvbnRGYW1pbHkgPSAnLWFwcGxlLXN5c3RlbSwgQmxpbmtNYWNTeXN0ZW1Gb250LCAiU2Vnb2UgVUkiLCBSb2JvdG8sICJIZWx2ZXRpY2EgTmV1ZSIsIEFyaWFsLCBzYW5zLXNlcmlmJzsKCiAgICAgICAgY29uc3QgYmFyID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAgICAgICAgYmFyLnN0eWxlLmJvcmRlclJhZGl1cyA9ICc0cHgnOwogICAgICAgIGJhci5zdHlsZS5vdmVyZmxvdyA9ICdoaWRkZW4nOwoKICAgICAgICBjb25zdCBmaWxsID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAgICAgICAgZmlsbC5zdHlsZS5oZWlnaHQgPSAnMTAwJSc7CiAgICAgICAgZmlsbC5zdHlsZS50cmFuc2l0aW9uID0gJ3dpZHRoIDAuNHMgZWFzZSc7CgogICAgICAgIGNvbnN0IHRleHQgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICAgICAgICB0ZXh0LnN0eWxlLmZvbnRTaXplID0gJzEycHgnOwogICAgICAgIHRleHQuc3R5bGUuZm9udFdlaWdodCA9ICc1MDAnOwogICAgICAgIHRleHQuc3R5bGUubWFyZ2luVG9wID0gJzRweCc7CiAgICAgICAgdGV4dC5zdHlsZS50ZXh0QWxpZ24gPSAnY2VudGVyJzsKCiAgICAgICAgYmFyLmFwcGVuZENoaWxkKGZpbGwpOwogICAgICAgIHdyYXBwZXIuYXBwZW5kQ2hpbGQoYmFyKTsKICAgICAgICB3cmFwcGVyLmFwcGVuZENoaWxkKHRleHQpOwoKICAgICAgICBmdW5jdGlvbiBpc0RhcmsoKSB7CiAgICAgICAgICAgIHJldHVybiBlbC5jbG9zZXN0KCcuZGFyaywgLmRhcmstdGhlbWUsIFtkYXRhLXRoZW1lPSJkYXJrIl0nKSAhPT0gbnVsbDsKICAgICAgICB9CgogICAgICAgIGNvbnN0IHVwZGF0ZURpc3BsYXkgPSAoKSA9PiB7CiAgICAgICAgICAgIGNvbnN0IHZhbHVlID0gbW9kZWwuZ2V0KCJ2YWx1ZSIpOwogICAgICAgICAgICBjb25zdCBtYXggPSBtb2RlbC5nZXQoIm1heF92YWx1ZSIpOwogICAgICAgICAgICBjb25zdCBwZXJjZW50YWdlID0gbWF4ID4gMCA/ICh2YWx1ZSAvIG1heCkgKiAxMDAgOiAwOwogICAgICAgICAgICBjb25zdCBkYXJrID0gaXNEYXJrKCk7CgogICAgICAgICAgICB3cmFwcGVyLnN0eWxlLndpZHRoID0gbW9kZWwuZ2V0KCJ3aWR0aCIpOwogICAgICAgICAgICBiYXIuc3R5bGUuaGVpZ2h0ID0gbW9kZWwuZ2V0KCJoZWlnaHQiKSArICdweCc7CiAgICAgICAgICAgIGJhci5zdHlsZS5iYWNrZ3JvdW5kQ29sb3IgPSBkYXJrID8gJyMzNzQxNTEnIDogJyNlNWU3ZWInOwogICAgICAgICAgICB0ZXh0LnN0eWxlLmNvbG9yID0gZGFyayA/ICcjOWNhM2FmJyA6ICcjODg4JzsKICAgICAgICAgICAgZmlsbC5zdHlsZS5iYWNrZ3JvdW5kQ29sb3IgPSBtb2RlbC5nZXQoImNvbG9yIik7CiAgICAgICAgICAgIGZpbGwuc3R5bGUud2lkdGggPSBwZXJjZW50YWdlICsgJyUnOwoKICAgICAgICAgICAgY29uc3Qgc2hvd1RleHQgPSBtb2RlbC5nZXQoInNob3dfdGV4dCIpOwogICAgICAgICAgICB0ZXh0LnN0eWxlLmRpc3BsYXkgPSBzaG93VGV4dCA/ICdibG9jaycgOiAnbm9uZSc7CiAgICAgICAgICAgIHRleHQudGV4dENvbnRlbnQgPSBgJHt2YWx1ZX0gLyAke21heH1gOwogICAgICAgIH07CgogICAgICAgIHVwZGF0ZURpc3BsYXkoKTsKCiAgICAgICAgY29uc3Qgb2JzZXJ2ZXIgPSBuZXcgTXV0YXRpb25PYnNlcnZlcih1cGRhdGVEaXNwbGF5KTsKICAgICAgICBvYnNlcnZlci5vYnNlcnZlKGRvY3VtZW50LmRvY3VtZW50RWxlbWVudCwgeyBhdHRyaWJ1dGVzOiB0cnVlLCBhdHRyaWJ1dGVGaWx0ZXI6IFsnY2xhc3MnLCAnZGF0YS10aGVtZSddIH0pOwogICAgICAgIGlmIChkb2N1bWVudC5ib2R5ICE9PSBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQpIHsKICAgICAgICAgICAgb2JzZXJ2ZXIub2JzZXJ2ZShkb2N1bWVudC5ib2R5LCB7IGF0dHJpYnV0ZXM6IHRydWUsIGF0dHJpYnV0ZUZpbHRlcjogWydjbGFzcycsICdkYXRhLXRoZW1lJ10gfSk7CiAgICAgICAgfQoKICAgICAgICBtb2RlbC5vbignY2hhbmdlOnZhbHVlJywgdXBkYXRlRGlzcGxheSk7CiAgICAgICAgbW9kZWwub24oJ2NoYW5nZTptYXhfdmFsdWUnLCB1cGRhdGVEaXNwbGF5KTsKICAgICAgICBtb2RlbC5vbignY2hhbmdlOmNvbG9yJywgdXBkYXRlRGlzcGxheSk7CiAgICAgICAgbW9kZWwub24oJ2NoYW5nZTpzaG93X3RleHQnLCB1cGRhdGVEaXNwbGF5KTsKICAgICAgICBtb2RlbC5vbignY2hhbmdlOndpZHRoJywgdXBkYXRlRGlzcGxheSk7CiAgICAgICAgbW9kZWwub24oJ2NoYW5nZTpoZWlnaHQnLCB1cGRhdGVEaXNwbGF5KTsKCiAgICAgICAgZWwuYXBwZW5kQ2hpbGQod3JhcHBlcik7CiAgICB9CgogICAgZXhwb3J0IGRlZmF1bHQgeyByZW5kZXIgfTsKICAgIA==&quot;' data-js-hash='&quot;12de45650d09f841c93f85c8aa479dd9&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "99df94c085279650367b889d57700d86",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "unsupported operand type(s) for +=: 'dict' and 'int'",
+          "traceback": []
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/var/folders/yd/mbxgnfd13qgdzmc7b97h6bfm0000gn/T/marimo_59681/__marimo__cell_Xref_.py&quot;</span>, line <span class=\"m\">4</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"n\">slim_bar</span><span class=\"o\">.</span><span class=\"n\">value</span> <span class=\"o\">+=</span> <span class=\"mi\">1</span>\n<span class=\"gr\">TypeError</span>: <span class=\"n\">unsupported operand type(s) for +=: &#39;dict&#39; and &#39;int&#39;</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    }
+  ]
+}

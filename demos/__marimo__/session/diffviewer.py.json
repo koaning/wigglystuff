@@ -1,0 +1,100 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.21.0",
+    "script_metadata_hash": "2b6f6e5ac53e161059ed8432dfa8ffce"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "0f95428fb1ab43f76d72e51db5134dd2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"diffviewer\">DiffViewer</h2>\n<span class=\"paragraph\">A rich file diff viewer powered by <code>@pierre/diffs</code>. Supports split and unified diff styles with syntax highlighting.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "bad059c87a8bf521ef64decad63dc290",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "3c11aba16be6198f5c21f64bbbe1833f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-callout-output data-html='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;&lt;span class=&#92;&quot;text-error&#92;&quot;&gt;&lt;strong&gt;Your output is too large&lt;/strong&gt;&lt;/span&gt;&lt;/span&gt;&#92;n&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Your output is too large for marimo to show. It has a size&#92;nof 12992791 bytes. Did you output this object by accident?&lt;/span&gt;&#92;n&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;If this limitation is a problem for you, you can configure&#92;nthe max output size by adding (eg)&lt;/span&gt;&#92;n&lt;div class=&#92;&quot;language-ini codehilite&#92;&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class=&#92;&quot;k&#92;&quot;&gt;[tool.marimo.runtime]&lt;/span&gt;&#92;n&lt;span class=&#92;&quot;na&#92;&quot;&gt;output_max_bytes&lt;/span&gt;&lt;span class=&#92;&quot;w&#92;&quot;&gt; &lt;/span&gt;&lt;span class=&#92;&quot;o&#92;&quot;&gt;=&lt;/span&gt;&lt;span class=&#92;&quot;w&#92;&quot;&gt; &lt;/span&gt;&lt;span class=&#92;&quot;s&#92;&quot;&gt;10_000_000&lt;/span&gt;&#92;n&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#92;n&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;to your pyproject.toml, or with the environment variable&#92;n&lt;code&gt;MARIMO_OUTPUT_MAX_BYTES&lt;/code&gt;:&lt;/span&gt;&#92;n&lt;div class=&#92;&quot;language-gdscript codehilite&#92;&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class=&#92;&quot;k&#92;&quot;&gt;export&lt;/span&gt;&lt;span class=&#92;&quot;w&#92;&quot;&gt; &lt;/span&gt;&lt;span class=&#92;&quot;n&#92;&quot;&gt;MARIMO_OUTPUT_MAX_BYTES&lt;/span&gt;&lt;span class=&#92;&quot;o&#92;&quot;&gt;=&lt;/span&gt;&lt;span class=&#92;&quot;mi&#92;&quot;&gt;10&lt;/span&gt;&lt;span class=&#92;&quot;n&#92;&quot;&gt;_000_000&lt;/span&gt;&#92;n&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#92;n&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Increasing the max output size may cause performance issues.&#92;nIf you run into problems, please reach out&#92;nto us on &lt;a href=&#92;&quot;https://marimo.io/discord?ref=app&#92;&quot; rel=&#92;&quot;noopener noreferrer&#92;&quot; target=&#92;&quot;_blank&#92;&quot;&gt;Discord&lt;/a&gt; or&#92;n&lt;a href=&#92;&quot;https://github.com/marimo-team/marimo/issues&#92;&quot; rel=&#92;&quot;noopener noreferrer&#92;&quot; target=&#92;&quot;_blank&#92;&quot;&gt;GitHub&lt;/a&gt;.&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;warn&quot;'></marimo-callout-output>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "082d75240f095b8d080ecf398cce2c95",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"unified-view\">Unified View</h2>\n<span class=\"paragraph\">Set <code>diff_style=\"unified\"</code> for a single-column view.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "e828940e892dc6aeaa0c6ab068406ba2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-callout-output data-html='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;&lt;span class=&#92;&quot;text-error&#92;&quot;&gt;&lt;strong&gt;Your output is too large&lt;/strong&gt;&lt;/span&gt;&lt;/span&gt;&#92;n&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Your output is too large for marimo to show. It has a size&#92;nof 12992791 bytes. Did you output this object by accident?&lt;/span&gt;&#92;n&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;If this limitation is a problem for you, you can configure&#92;nthe max output size by adding (eg)&lt;/span&gt;&#92;n&lt;div class=&#92;&quot;language-ini codehilite&#92;&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class=&#92;&quot;k&#92;&quot;&gt;[tool.marimo.runtime]&lt;/span&gt;&#92;n&lt;span class=&#92;&quot;na&#92;&quot;&gt;output_max_bytes&lt;/span&gt;&lt;span class=&#92;&quot;w&#92;&quot;&gt; &lt;/span&gt;&lt;span class=&#92;&quot;o&#92;&quot;&gt;=&lt;/span&gt;&lt;span class=&#92;&quot;w&#92;&quot;&gt; &lt;/span&gt;&lt;span class=&#92;&quot;s&#92;&quot;&gt;10_000_000&lt;/span&gt;&#92;n&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#92;n&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;to your pyproject.toml, or with the environment variable&#92;n&lt;code&gt;MARIMO_OUTPUT_MAX_BYTES&lt;/code&gt;:&lt;/span&gt;&#92;n&lt;div class=&#92;&quot;language-gdscript codehilite&#92;&quot;&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class=&#92;&quot;k&#92;&quot;&gt;export&lt;/span&gt;&lt;span class=&#92;&quot;w&#92;&quot;&gt; &lt;/span&gt;&lt;span class=&#92;&quot;n&#92;&quot;&gt;MARIMO_OUTPUT_MAX_BYTES&lt;/span&gt;&lt;span class=&#92;&quot;o&#92;&quot;&gt;=&lt;/span&gt;&lt;span class=&#92;&quot;mi&#92;&quot;&gt;10&lt;/span&gt;&lt;span class=&#92;&quot;n&#92;&quot;&gt;_000_000&lt;/span&gt;&#92;n&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#92;n&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Increasing the max output size may cause performance issues.&#92;nIf you run into problems, please reach out&#92;nto us on &lt;a href=&#92;&quot;https://marimo.io/discord?ref=app&#92;&quot; rel=&#92;&quot;noopener noreferrer&#92;&quot; target=&#92;&quot;_blank&#92;&quot;&gt;Discord&lt;/a&gt; or&#92;n&lt;a href=&#92;&quot;https://github.com/marimo-team/marimo/issues&#92;&quot; rel=&#92;&quot;noopener noreferrer&#92;&quot; target=&#92;&quot;_blank&#92;&quot;&gt;GitHub&lt;/a&gt;.&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;warn&quot;'></marimo-callout-output>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

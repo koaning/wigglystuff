@@ -1,0 +1,204 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.21.0",
+    "script_metadata_hash": "d501304984ecb7d82966524b45547401"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "3a5771fd61911ad2dd453d4231e88ce0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "ddb30525301d3395d664af4099573986",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"updating-matplotlib-charts\">Updating <code>matplotlib</code> charts</h2>\n<span class=\"paragraph\">The easiest way to update matplotlib charts is to first write a function that can generate a chart. The most common way to use matplotlib is to use syntax like <code>plt.plot(...)</code> followed by a <code>plt.show(...)</code> and the best way to capture all of these layers is to wrap them all ina single function. Once you have such a function, you can use the <code>@refresh_matplotlib</code> decorator to turn this function into something that we can use in a refreshable-chart.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "aa85dbc1285b99631f4001aa193c5fb1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "c06229668702fbc26fddcdec7a50613a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The decorator takes the matplotlib image and turns it into a base64 encoded string that can be plotted by <code>&lt;img&gt;</code> tags in html. You can see this for yourself in the example below. The <code>img(src=...)</code> function call in <code>mohtml</code> is effectively a bit of syntactic sugar around <code>&lt;img src=\"...\"&gt;</code>.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "8b17da21c1f1ce6b51c47900be3ca7a4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<img src=\"data:image/jpg;base64, /9j/4AAQSkZJRgABAQEAZABkAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAHgAoADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5/ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKVMF1BGRmgBKK7jxNqWiaN4r1fS7fwbozw2d7NbxtJNeFiqOVBOJwM4HpWV/wkulf9CVof8A3+vP/kigDnKK6P8A4SXSv+hK0P8A7/Xn/wAkUf8ACS6V/wBCVof/AH+vP/kigDnKK6P/AISXSv8AoStD/wC/15/8kUf8JLpX/QlaH/3+vP8A5IoA5yiuj/4SXSv+hK0P/v8AXn/yRR/wkulf9CVof/f68/8AkigDnKK6P/hJdK/6ErQ/+/15/wDJFH/CS6V/0JWh/wDf68/+SKAOcoro/wDhJdK/6ErQ/wDv9ef/ACRR/wAJLpX/AEJWh/8Af68/+SKAOcoro/8AhJdK/wChK0P/AL/Xn/yRR/wkulf9CVof/f68/wDkigDnKK6P/hJdK/6ErQ/+/wBef/JFH/CS6V/0JWh/9/rz/wCSKAOcoro/+El0r/oStD/7/Xn/AMkUf8JLpX/QlaH/AN/rz/5IoA5yiuj/AOEl0r/oStD/AO/15/8AJFH/AAkulf8AQlaH/wB/rz/5IoA5yiuj/wCEl0r/AKErQ/8Av9ef/JFH/CS6V/0JWh/9/rz/AOSKAOcoro/+El0r/oStD/7/AF5/8kUf8JLpX/QlaH/3+vP/AJIoA5yiuj/4SXSv+hK0P/v9ef8AyRR/wkulf9CVof8A3+vP/kigDnKK6P8A4SXSv+hK0P8A7/Xn/wAkUf8ACS6V/wBCVof/AH+vP/kigDnKK6P/AISXSv8AoStD/wC/15/8kUf8JLpX/QlaH/3+vP8A5IoA5yiuj/4SXSv+hK0P/v8AXn/yRR/wkulf9CVof/f68/8AkigDnKK6P/hJdK/6ErQ/+/15/wDJFH/CS6V/0JWh/wDf68/+SKAOcoro/wDhJdK/6ErQ/wDv9ef/ACRR/wAJLpX/AEJWh/8Af68/+SKAOcoro/8AhJdK/wChK0P/AL/Xn/yRR/wkulf9CVof/f68/wDkigDnKK6P/hJdK/6ErQ/+/wBef/JFH/CS6V/0JWh/9/rz/wCSKAOcoro/+El0r/oStD/7/Xn/AMkUf8JLpX/QlaH/AN/rz/5IoA5yiuj/AOEl0r/oStD/AO/15/8AJFH/AAkulf8AQlaH/wB/rz/5IoA5yiuj/wCEl0r/AKErQ/8Av9ef/JFH/CS6V/0JWh/9/rz/AOSKAOcoro/+El0r/oStD/7/AF5/8kUf8JLpX/QlaH/3+vP/AJIoA5yiuj/4SXSv+hK0P/v9ef8AyRR/wkulf9CVof8A3+vP/kigDnKK6P8A4SXSv+hK0P8A7/Xn/wAkUf8ACS6V/wBCVof/AH+vP/kigDnKK6P/AISXSv8AoStD/wC/15/8kUf8JLpX/QlaH/3+vP8A5IoA5yiuj/4SXSv+hK0P/v8AXn/yRR/wkulf9CVof/f68/8AkigDnKK6P/hJdK/6ErQ/+/15/wDJFH/CS6V/0JWh/wDf68/+SKAOcoro/wDhJdK/6ErQ/wDv9ef/ACRR/wAJLpX/AEJWh/8Af68/+SKAOcoro/8AhJdK/wChK0P/AL/Xn/yRSr4k0osB/wAIXofJ/wCe15/8kUAc3RW14vsrbTPGmuWFnEIrW2v54YYwSdqK5AGTyeB3rFoAKKKKACiiigAooooAKKKKACiiigAooooAKsWNjdalfQ2VlA89zM4SONBksTVeul8AEDxzpZNyLfDsQxKgOdjYjy3A3nCZP96gDP1bw5qmiQxT3sEYgmYok0M8c0ZYYyu6NmAYZHBOazE++v1FegeL7eS28E2kVxoq+HZf7Sdl01WY+epTmbEhLjbgLnO07uAOc8lpGqWenqyXOhafqLOwIe6edSnsPLkQfmDQBc8ff8lE8S/9hS5/9GtXPV0Pj7/koniX/sKXP/o1q56gAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoopURpHVEUszHAUDJJoASiu0tPB9no1rHqPjC5a0jYbotOi5uZvqP4B9f0rnNbv7TUtTe4sdOi0+22hUgjYnAAxkk9Se5//AF0ERmpPQzqcn31+optOT76/UUFm/wCPv+SieJf+wpc/+jWrnq6Hx9/yUTxL/wBhS5/9GtXPUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABTk++v1FNpyffX6igDf8AH3/JRPEv/YUuf/RrVz1dD4+/5KJ4l/7Clz/6NaueoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoqW2tp7y4S3toZJppDhI41LMx9gK7OPw3o/hSNbrxZN9ovSN0ekWz5b281h90ew/XpRYmU1H1MPQPCmpeIWeSBUgsouZryc7Iox3yx6n2Fbr6/onhBGt/DEYvdSxtfVrlOFPfykPT6n9axPEHi3UdfVLd9lrp0XENjbjZEg7cDqfc/pWDTI5XL4/uJru8ub+6kubueSeeQ5eSRixP41DRRSNQpyffX6im05Pvr9RQBv+Pv+SieJf+wpc/8Ao1q56uh8ff8AJRPEv/YUuf8A0a1c9QAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFOT76/UU2nJ99fqKAN/x9/yUTxL/ANhS5/8ARrVz1dD4+/5KJ4l/7Clz/wCjWrnqACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiirenaZe6vepZ6fbSXFw/REGfxPoPc0A3bcqV0mg+DrzV7Y6hdSx6bpCcyXtzwp9kH8R+n51rf2b4e8FDfrDR6zrS9LCJv3EB/6aN/Efb9O9c5r3iXU/EdyJb+fKJxFBGNscQ9FXt/OmZc0p/Dt3/yN658W6foFvJYeDrdoSw2y6pOMzy/7v8AcH+eDXGSSPNK0krs8jnLMxySfUmm0Ui4wUdgooooKCiiigApyffX6im05Pvr9RQBv+Pv+SieJf8AsKXP/o1q56uh8ff8lE8S/wDYUuf/AEa1c9QAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAVJBC9xcRwRlA8jhF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rofH3/JRPEv/AGFLn/0a1c9QAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUVb0r7B/a1p/avnf2eJVNx5ABcx5+bbnvigCe40DVLXQ7XWp7Ro9PupDHBMWX52HXC5zjg84xxWen31+or0vxRdaRqfw5lvbbVLuZjrH7iJtPWFExCiiIASttRUHB5zjGO9cPpGqWenqyXOhafqLOwIe6edSnsPLkQfmDQBc8ff8lE8S/9hS5/9GtXPV0Pj7/koniX/sKXP/o1q56gAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoo613Wn6XZeC7CLWtfhWfVZV32GmP8Aw+kko7D0H9egTKXKN0rRrHwrp0Wv+JIRLcyDdYaW3WQ9nkHZfbv+lctrOs32vanLf6hMZJn/AACDsqjsBTNV1W91rUZb+/naa4lOSx7DsAOwHpVOmKMdeaW4UUUUiwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACnJ99fqKbTk++v1FAG/4+/5KJ4l/7Clz/wCjWrnq6Hx9/wAlE8S/9hS5/wDRrVz1ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAU5Pvr9RTacn31+ooA3/H3/JRPEv8A2FLn/wBGtXPV0Pj7/koniX/sKXP/AKNaueoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApQCzBVBJJwAO9KiPJIscaszsQFVRkknsBXeW9rafDy0S91COO58TSrutrRuVswejv/teg/wD10ESly+olnYWfgKyi1XWIUuNelXfZae/Itx2klHr6D+vTjNR1G71W/lvb6dpriVtzu3+eB7Uy9vbnUbyW7vJnmuJW3PI5ySagoCMbavcKKKKCwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApyffX6im05Pvr9RQBv+Pv8AkoniX/sKXP8A6NauerofH3/JRPEv/YUuf/RrVz1ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAU5Pvr9RTacn31+ooA3/H3/ACUTxL/2FLn/ANGtXPV0Pj7/AJKJ4l/7Clz/AOjWrnqACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAp8UUk8yQwxtJK7BURRksT0AFOt7ea7uI7e3ieWaRgqIgyWJ7AV3TNafDm1KIYrrxVKmGbhksFI6DsXx/nH3giU7aLcEjtPhzaiWZYrrxVKmUjOGSwUjqfV/wDPTrwtzcz3lzJc3MryzysWeRzksT3NNmmluZ3mnkaSWRizu5yWJ6kmmUwjC2r3CiiikWFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABTk++v1FNpyffX6igDf8AH3/JRPEv/YUuf/RrVz1dD4+/5KJ4l/7Clz/6NaueoAKKKKACiiigAooooAKKKKACiiigAooooAKfFE88yRRjLuwVRnGSeB1plS29vLd3MVtAm+aZxGi5xlicAfnQBp6n4X1fSLIXl1BEbYyCMy29zFOquQSFYxs204B4OOhrJT76/UV6Dqljcab8OLy2v9E/4R+f7TblUJcPqJAcElZCWG3JbK4X5unTHI6Rqlnp6slzoWn6izsCHunnUp7Dy5EH5g0AXPH3/JRPEv8A2FLn/wBGtXPV0Pj7/koniX/sKXP/AKNaueoAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKns7O4v7uK0tIXmuJW2pGgyWNa3h/wAJ6l4hLywqlvYxczXtwdkUY75J6n2Fbc3iDR/CltNZeFd9xfyKY5tYlGCB3ES/wj3/AJ8GnYzlPW0dWTTXFp8O7R7SyeK68TyptnuV+ZLIHqier+p//VXBySPLI0kjs7uSzMxyST1JNIzM7FmJZickk5JNJSHGHLr1CiiigsKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApyffX6im05Pvr9RQBv+Pv8AkoniX/sKXP8A6NauerofH3/JRPEv/YUuf/RrVz1ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAU5Pvr9RTacn31+ooA3/H3/ACUTxL/2FLn/ANGtXPV0Pj7/AJKJ4l/7Clz/AOjWrnqACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoorpNC8G3mq2x1G8mj03SE5e9ueAfZB1Y/SgUpKKuzAtrWe9uY7e1hkmnkOEjjUszH2Ars4/DmjeE41ufFcv2m/wAbo9Itn59vNcfdHsP16Uy58XWGg20mn+DrZoNw2y6nOM3Ev+7/AHB/ng1xkkjyyNJI7O7HLMxySfUmnsZ+9PyX4/8AANzxB4t1HxAEgkKW2nxcQ2VuNkUY7cDqfc/pWDRRSNFFRVkFFFFAwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApyffX6im05Pvr9RQBv+Pv8AkoniX/sKXP8A6NauerofH3/JRPEv/YUuf/RrVz1ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAU5Pvr9RTacn31+ooA3/H3/ACUTxL/2FLn/ANGtXPV0Pj7/AJKJ4l/7Clz/AOjWrnqACiiigAooooAKKKKACiiigAooooAKKKKACrem6XfaxepZ6fbSXFw/REGfxPoPc10Ok+C2axXVvEN0NJ0nqrSD97P7Rp1P1/Hmn6l40S2sn0rwtanS9PPEkoObi493ft9B/LinYzc7u0NfyLf9neHvBXz6s0eta2vSxibMEB/6aN/Efb9O9c3rviTVPEdyJtQuNypxFCg2xxD0Ve386yaKLjjCzu9WFFFFIsKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApyffX6im05Pvr9RQBv+Pv8AkoniX/sKXP8A6NauerofH3/JRPEv/YUuf/RrVz1ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABUttby3d1DbW6GSaZxHGg6sxOAPzqKprO0nv72CztYjLcXEixRRr1d2OAB9SRQBo6p4Y1fRrRLq8t4/s7SeV5sFxHMgfGdrGNmCtjnBweKyk++v1Fd74q8P6p4P8LnRDpV8IpLmObUNRkt3WF5lVgkURIwVXe/zfxE8cAZ5XSNUs9PVkudC0/UWdgQ9086lPYeXIg/MGgC54+/5KJ4l/7Clz/wCjWrnq6Hx9/wAlE8S/9hS5/wDRrVz1ABRRRQAUUUUAFFFFABRRRQAUUqqWYKoJYnAAHJNdlZeDbbSrSPU/F9y1hbsN0VjHzcz/APAf4R7n9KCZTUdzn9E0DU/EN59l022aVhy79EjHqzdAK6fzvDngni2EOu66v/LZhm1t2/2R/GR6/wAulZut+M7i9s/7K0m3TStHXgW0B5k95G6sf881y9MjllP4tF2L2razqGuXrXmpXUlxMehY8KPQDoB7CqNFFI0SS0QUUUUDCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACnJ99fqKbTk++v1FAG/4+/5KJ4l/7Clz/wCjWrnq6Hx9/wAlE8S/9hS5/wDRrVz1ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAU5Pvr9RTacn31+ooA3/H3/JRPEv8A2FLn/wBGtXPV0Pj7/koniX/sKXP/AKNaueoAKKKKACiiigAooqSCCa6nSC3ieWZztREUszH0AFAEdbWgeFtT8RSMbSNY7WPma7mOyKId8t/Qc1uw+GNK8MQpeeLpy9yRui0i2fMjenmMPuj/AD7Vka/4v1DXY1tAsdlpkXEVjbDbGo7Z/vH3P6UzLncvg+82W1vQvBymHw5Guo6qBh9VuE+SM/8ATJD/ADP6iuOvb661G7kur24knnkOWkkbJNV6KRUYKOvUKKKKCwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACnJ99fqKbTk++v1FAG/4+/5KJ4l/7Clz/wCjWrnq6Hx9/wAlE8S/9hS5/wDRrVz1ABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAU5Pvr9RTacn31+ooA3/H3/JRPEv8A2FLn/wBGtXPV0Pj7/koniX/sKXP/AKNaueoAKKKKACirNhp95ql4lpY28lxcOfljjXJ/+sPeuxGkaB4MAk1501XWByumwP8Auoj/ANNW7n2/mOaLESmo6dTH0Dwffa1A19NJHYaVHzLfXJ2oB/s/3j7D861J/FWmeHIHsfB9uVlYbZdWuFBmk9dgP3B/nrzWDr/ifU/Ec6te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/EFvc6hb/Z2iilVJp7u9hgG9wSBmV1yTtY8Z6Guq8U+EvEMPhPwfHNo17E0VvLbyeZEVCSPdylFYngEhlIz6iqXhu28X2ltf6bpugw6hbreBbuGezS5RJYwy/NnO3AZhuGOp5oA465t3tbmW3kMZkicoxjkV1yDjhlJDD3BINRVueMbbTrPxdqVvpJjNkkuIxE+9FOBuVW7qGyAe4FYdABRRRQAUUUUAFbn/AAiGuHTDqC2iPAIPtBVLiNpRFjO8xht4XBznGMVh16LpHhTXPDnhlvEEejahd3uoWUgtfJt3eK2t5EKtNIwGNxQttXsDuPYEA4K1gu9Qnt9PtUlnllk2wwJk7nbA4HqcD8hV3WPDmq6CsL6hbqkcxYRyRTJKjFfvLuQkZGRkZyM1t+BraXTPE+jahe7ba1v0uYrW4kcBd5jeIEnPy4dl5OPWpdW0688P/DpdL1eBrW+uNWFxDbS8OI1iKs+OysWUA99vHSgDiqKKKACiiigAooooA0tJ0HUNaEzWUcJSDb5jzXMcKruzgbpGUZODx7VDe2V/omozWd3FLa3cWUdCcEBh6jqCD9CD6Gtrwb4OvPFl1cvHDctYWKiS7a1iMsuDnaiIOrtggdhgk8Cn+JbTW9Y8R3zTaNPYNZ2iP9jmBRre1iRUTO7BOFC89yc4oApN4R1dNJj1ORbKK2lgNxGJdQt0keMEjKxlw55UgADJI4rDr03Q7bV9Q0y1i8S6Lajw1FpzqmpTWyI0SbWdCk3UtvYYTJyTjFeZUAFFFFABRRRQAUUUUAbd14S1mz02TUJLeF7aIK0pguopWiBOAXVGLKMkDkDk1W0zSNT8Q3MkdnGZ3iiDyPLKqJGgwoLO5CqOgGSOwrtrHSb3R/Bmuw6noX9is1ltGqMzBrw+YrCEByVYNgcxgfdBJIzmjo2i6iuheKfDItm/txntJltFYNJIiFy6qAfmPzo2B2HtQByGpaZe6PfyWN/A0FxHgshIPBGQQRwQQQQRwQaqV1fjv9zd6NYSMpvLDSYbe6AYNskBZthI7qrKp9CMdq5SgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD//2Q==\"/>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "662c4c9688d7a9d38af476b7874229dd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Having a static image is great, but we want dynamic images! That's where our <code>ImageRefreshWidget</code> comes in. It allows you to trigger a streaming update to an image by running code from another cell. Try it out below!</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "0fcc997a7cd24b0ca6e8e39f52a24a11",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='Xref-0' random-id='509011a6-dbc2-abff-b9c8-d880477ba9bc'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;60e7d0d400c9484a8e3134e5800249de&quot;}' data-label='null' data-js-url='&quot;data:text/javascript;base64,CiAgICBmdW5jdGlvbiByZW5kZXIoeyBtb2RlbCwgZWwgfSkgewogICAgICBsZXQgc3JjID0gKCkgPT4gbW9kZWwuZ2V0KCJzcmMiKTsKICAgICAgbGV0IGltYWdlID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiaW1nIik7CiAgICAgIGltYWdlLnNyYyA9IHNyYygpOwogICAgICBtb2RlbC5vbigiY2hhbmdlOnNyYyIsICgpID0+IHsKICAgICAgICBpbWFnZS5zcmMgPSBzcmMoKTsKICAgICAgfSk7CiAgICAgIGVsLmFwcGVuZENoaWxkKGltYWdlKTsKICAgIH0KICAgIGV4cG9ydCBkZWZhdWx0IHsgcmVuZGVyIH07CiAgICA=&quot;' data-js-hash='&quot;3f804ec770695922e50627d730f260b8&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "026d7b5c443c024bfa93f0ee8deef15f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "9e5903dc68975cafaff23acaba484b73",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">When you re-run the cell below you should see that the widget updates. This works because the widget knows how to respond to a change to the <code>widget.src</code> property. You only need to make sure that you pass along a base64 string that html images can handle, which is covered by the decorator that we applied earlier.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "2921b4ffb3c7929c09a3d7c4e16a8fd7",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"updating-altair-charts\">Updating <code>altair</code> charts</h2>\n<span class=\"paragraph\">This library can also deal with altair charts. This works by turning the chart into an SVG. This is a static representation that does not require any javascript to run, which means that we can apply a similar pattern as before!</span>\n<blockquote>\n<span class=\"paragraph\">Due to a required dependency to convert the altair chart to SVG we cannot run the altair demo in WASM. This code will run just fine locally on your machine but currently breaks on the Github pages deployment.</span>\n</blockquote>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"kn\">import</span><span class=\"w\"> </span><span class=\"nn\">altair</span><span class=\"w\"> </span><span class=\"k\">as</span><span class=\"w\"> </span><span class=\"nn\">alt</span>\n<span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">wigglystuff</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">HTMLRefreshWidget</span>\n<span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">wigglystuff.utils</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">refresh_altair</span><span class=\"p\">,</span> <span class=\"n\">altair2svg</span>\n\n<span class=\"nd\">@refresh_altair</span>\n<span class=\"k\">def</span><span class=\"w\"> </span><span class=\"nf\">altair_cumsum_chart</span><span class=\"p\">(</span><span class=\"n\">data</span><span class=\"p\">):</span>\n    <span class=\"n\">df</span> <span class=\"o\">=</span> <span class=\"n\">pl</span><span class=\"o\">.</span><span class=\"n\">DataFrame</span><span class=\"p\">({</span>\n        <span class=\"s2\">&quot;x&quot;</span><span class=\"p\">:</span> <span class=\"nb\">range</span><span class=\"p\">(</span><span class=\"nb\">len</span><span class=\"p\">(</span><span class=\"n\">data</span><span class=\"p\">)),</span> <span class=\"s2\">&quot;y&quot;</span><span class=\"p\">:</span> <span class=\"n\">np</span><span class=\"o\">.</span><span class=\"n\">array</span><span class=\"p\">(</span><span class=\"n\">data</span><span class=\"p\">)</span><span class=\"o\">.</span><span class=\"n\">cumsum</span><span class=\"p\">()</span>\n    <span class=\"p\">})</span>\n    <span class=\"k\">return</span> <span class=\"n\">alt</span><span class=\"o\">.</span><span class=\"n\">Chart</span><span class=\"p\">(</span><span class=\"n\">df</span><span class=\"p\">)</span><span class=\"o\">.</span><span class=\"n\">mark_line</span><span class=\"p\">()</span><span class=\"o\">.</span><span class=\"n\">encode</span><span class=\"p\">(</span><span class=\"n\">x</span><span class=\"o\">=</span><span class=\"s2\">&quot;x&quot;</span><span class=\"p\">,</span> <span class=\"n\">y</span><span class=\"o\">=</span><span class=\"s2\">&quot;y&quot;</span><span class=\"p\">)</span>\n\n<span class=\"n\">svg_widget</span> <span class=\"o\">=</span> <span class=\"n\">HTMLRefreshWidget</span><span class=\"p\">(</span><span class=\"n\">html</span><span class=\"o\">=</span><span class=\"n\">altair_cumsum_chart</span><span class=\"p\">([</span><span class=\"mi\">1</span><span class=\"p\">,</span> <span class=\"mi\">2</span><span class=\"p\">]))</span>\n\n<span class=\"n\">more_data</span> <span class=\"o\">=</span> <span class=\"p\">[</span><span class=\"n\">random</span><span class=\"o\">.</span><span class=\"n\">random</span><span class=\"p\">()</span> <span class=\"o\">-</span> <span class=\"mf\">0.5</span> <span class=\"k\">for</span> <span class=\"n\">_</span> <span class=\"ow\">in</span> <span class=\"nb\">range</span><span class=\"p\">(</span><span class=\"mi\">10</span><span class=\"p\">)]</span>\n\n<span class=\"k\">for</span> <span class=\"n\">_i</span> <span class=\"ow\">in</span> <span class=\"nb\">range</span><span class=\"p\">(</span><span class=\"mi\">10</span><span class=\"p\">):</span>\n    <span class=\"n\">more_data</span> <span class=\"o\">+=</span> <span class=\"p\">[</span><span class=\"n\">random</span><span class=\"o\">.</span><span class=\"n\">random</span><span class=\"p\">()</span> <span class=\"o\">-</span> <span class=\"mf\">0.5</span><span class=\"p\">]</span>\n    <span class=\"n\">svg_widget</span><span class=\"o\">.</span><span class=\"n\">html</span> <span class=\"o\">=</span> <span class=\"n\">altair_cumsum_chart</span><span class=\"p\">(</span><span class=\"n\">more_data</span><span class=\"p\">)</span>\n    <span class=\"n\">time</span><span class=\"o\">.</span><span class=\"n\">sleep</span><span class=\"p\">(</span><span class=\"mf\">0.1</span><span class=\"p\">)</span>\n\n<span class=\"k\">for</span> <span class=\"n\">_i</span> <span class=\"ow\">in</span> <span class=\"nb\">range</span><span class=\"p\">(</span><span class=\"mi\">10</span><span class=\"p\">):</span>\n    <span class=\"n\">more_data</span> <span class=\"o\">+=</span> <span class=\"p\">[</span><span class=\"n\">random</span><span class=\"o\">.</span><span class=\"n\">random</span><span class=\"p\">()</span> <span class=\"o\">-</span> <span class=\"mf\">0.5</span><span class=\"p\">]</span>\n    <span class=\"n\">svg_widget</span><span class=\"o\">.</span><span class=\"n\">html</span> <span class=\"o\">=</span> <span class=\"n\">altair_cumsum_chart</span><span class=\"p\">(</span><span class=\"n\">more_data</span><span class=\"p\">)</span>\n    <span class=\"n\">time</span><span class=\"o\">.</span><span class=\"n\">sleep</span><span class=\"p\">(</span><span class=\"mf\">0.1</span><span class=\"p\">)</span>\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "e90d75082178956cf09554f40dbe697d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Unlike matplotlib charts though, altair is actually designed to give you objects back. That means that you don't need to use a decorated function for the update, you can also just convert the altair chart to SVG directly. This library supports utilities for both patterns.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "b3ca2e49fba540a8b78e210cb767610f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"oh-one-more-thing-about-that-htmlrefreshwidget\">Oh ... one more thing about that <code>HTMLRefreshWidget</code></h2>\n<span class=\"paragraph\">We are injecting html now into that widget to allow us to draw altair charts. But why stop there? We can put in any HTML that we like!</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "765e7190e6e9fc7e30b2ebec6947eb07",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='Hstk-0' random-id='128d14f8-69b0-5442-eb3f-6144f6d69f4e'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;8aa95599507542a887823a5f5eea3e29&quot;}' data-label='null' data-js-url='&quot;data:text/javascript;base64,CiAgICBmdW5jdGlvbiByZW5kZXIoeyBtb2RlbCwgZWwgfSkgewogICAgICBsZXQgZWxlbSA9ICgpID0+IG1vZGVsLmdldCgiaHRtbCIpOwogICAgICBsZXQgZGl2ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiZGl2Iik7CiAgICAgIGRpdi5pbm5lckhUTUwgPSBlbGVtKCk7CiAgICAgIG1vZGVsLm9uKCJjaGFuZ2U6aHRtbCIsICgpID0+IHsKICAgICAgICBkaXYuaW5uZXJIVE1MID0gZWxlbSgpOwogICAgICB9KTsKICAgICAgZWwuYXBwZW5kQ2hpbGQoZGl2KTsKICAgIH0KICAgIGV4cG9ydCBkZWZhdWx0IHsgcmVuZGVyIH07CiAgICA=&quot;' data-js-hash='&quot;58dad82cef956ad9527d8d99a019a514&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "d61931dd0f0e2a657513929fd8d3a31b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "b72807cfd1618925ba5794261d8e775e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.21.0",
+    "script_metadata_hash": "2b6f6e5ac53e161059ed8432dfa8ffce"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "2ffefa94bbcb463e202101f9238f4bef",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"textcompare\">TextCompare</h2>\n<span class=\"paragraph\">A side-by-side text comparison widget that highlights matching passages between two texts. Useful for plagiarism detection, finding shared passages, or comparing document versions.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "32cd73faca23b3a95f009ea535c8fd73",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='vblA-0' random-id='124ab1f4-f068-085b-c9f8-e3d618867fe4'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;54391ec9c38446e6818b7c2582d69cef&quot;}' data-label='null' data-js-url='&quot;data:text/javascript;base64,ZnVuY3Rpb24gcmVuZGVyKHsgbW9kZWwsIGVsIH0pIHsKICAgIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpOwogICAgY29udGFpbmVyLmNsYXNzTmFtZSA9ICJ0ZXh0LWNvbXBhcmUtY29udGFpbmVyIjsKCiAgICBjb25zdCBwYW5lbEEgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTsKICAgIHBhbmVsQS5jbGFzc05hbWUgPSAidGV4dC1jb21wYXJlLXBhbmVsIjsKCiAgICBjb25zdCBwYW5lbEIgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTsKICAgIHBhbmVsQi5jbGFzc05hbWUgPSAidGV4dC1jb21wYXJlLXBhbmVsIjsKCiAgICBjb250YWluZXIuYXBwZW5kQ2hpbGQocGFuZWxBKTsKICAgIGNvbnRhaW5lci5hcHBlbmRDaGlsZChwYW5lbEIpOwogICAgZWwuYXBwZW5kQ2hpbGQoY29udGFpbmVyKTsKCiAgICBmdW5jdGlvbiB0b2tlbml6ZSh0ZXh0KSB7CiAgICAgICAgLy8gU3BsaXQgaW50byB3b3JkcyB3aGlsZSBwcmVzZXJ2aW5nIHdoaXRlc3BhY2UgaW5mbwogICAgICAgIGNvbnN0IHdvcmRzID0gW107CiAgICAgICAgY29uc3QgcmVnZXggPSAvKFxTKykoXHMqKS9nOwogICAgICAgIGxldCBtYXRjaDsKICAgICAgICB3aGlsZSAoKG1hdGNoID0gcmVnZXguZXhlYyh0ZXh0KSkgIT09IG51bGwpIHsKICAgICAgICAgICAgd29yZHMucHVzaCh7IHdvcmQ6IG1hdGNoWzFdLCBzcGFjZTogbWF0Y2hbMl0gfSk7CiAgICAgICAgfQogICAgICAgIHJldHVybiB3b3JkczsKICAgIH0KCiAgICBmdW5jdGlvbiBidWlsZE1hdGNoUmFuZ2VzKG1hdGNoZXMsIHNpZGUpIHsKICAgICAgICAvLyBCdWlsZCBhIG1hcCBvZiB3b3JkIGluZGljZXMgdGhhdCBiZWxvbmcgdG8gZWFjaCBtYXRjaAogICAgICAgIGNvbnN0IHdvcmRUb01hdGNoID0gbmV3IE1hcCgpOwogICAgICAgIG1hdGNoZXMuZm9yRWFjaCgobSwgaWR4KSA9PiB7CiAgICAgICAgICAgIGNvbnN0IHN0YXJ0ID0gc2lkZSA9PT0gImEiID8gbS5zdGFydF9hIDogbS5zdGFydF9iOwogICAgICAgICAgICBjb25zdCBlbmQgPSBzaWRlID09PSAiYSIgPyBtLmVuZF9hIDogbS5lbmRfYjsKICAgICAgICAgICAgZm9yIChsZXQgaSA9IHN0YXJ0OyBpIDwgZW5kOyBpKyspIHsKICAgICAgICAgICAgICAgIHdvcmRUb01hdGNoLnNldChpLCBpZHgpOwogICAgICAgICAgICB9CiAgICAgICAgfSk7CiAgICAgICAgcmV0dXJuIHdvcmRUb01hdGNoOwogICAgfQoKICAgIGZ1bmN0aW9uIHJlbmRlclBhbmVsKHBhbmVsLCB0ZXh0LCBtYXRjaGVzLCBzaWRlLCBvdGhlclBhbmVsKSB7CiAgICAgICAgcGFuZWwuaW5uZXJIVE1MID0gIiI7CiAgICAgICAgY29uc3QgdG9rZW5zID0gdG9rZW5pemUodGV4dCk7CiAgICAgICAgY29uc3Qgd29yZFRvTWF0Y2ggPSBidWlsZE1hdGNoUmFuZ2VzKG1hdGNoZXMsIHNpZGUpOwogICAgICAgIGNvbnN0IHNlbGVjdGVkTWF0Y2ggPSBtb2RlbC5nZXQoInNlbGVjdGVkX21hdGNoIik7CgogICAgICAgIGxldCBjdXJyZW50TWF0Y2hJZHggPSBudWxsOwogICAgICAgIGxldCBjdXJyZW50U3BhbiA9IG51bGw7CgogICAgICAgIHRva2Vucy5mb3JFYWNoKCh0b2tlbiwgd29yZElkeCkgPT4gewogICAgICAgICAgICBjb25zdCBtYXRjaElkeCA9IHdvcmRUb01hdGNoLmdldCh3b3JkSWR4KTsKCiAgICAgICAgICAgIGlmIChtYXRjaElkeCAhPT0gY3VycmVudE1hdGNoSWR4KSB7CiAgICAgICAgICAgICAgICAvLyBDbG9zZSBwcmV2aW91cyBzcGFuIGlmIGFueQogICAgICAgICAgICAgICAgaWYgKGN1cnJlbnRTcGFuKSB7CiAgICAgICAgICAgICAgICAgICAgcGFuZWwuYXBwZW5kQ2hpbGQoY3VycmVudFNwYW4pOwogICAgICAgICAgICAgICAgICAgIGN1cnJlbnRTcGFuID0gbnVsbDsKICAgICAgICAgICAgICAgIH0KCiAgICAgICAgICAgICAgICBpZiAobWF0Y2hJZHggIT09IHVuZGVmaW5lZCkgewogICAgICAgICAgICAgICAgICAgIC8vIFN0YXJ0IG5ldyBtYXRjaCBzcGFuCiAgICAgICAgICAgICAgICAgICAgY3VycmVudFNwYW4gPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCJzcGFuIik7CiAgICAgICAgICAgICAgICAgICAgY3VycmVudFNwYW4uY2xhc3NOYW1lID0gInRleHQtY29tcGFyZS1tYXRjaCI7CiAgICAgICAgICAgICAgICAgICAgY3VycmVudFNwYW4uZGF0YXNldC5tYXRjaEluZGV4ID0gbWF0Y2hJZHg7CiAgICAgICAgICAgICAgICAgICAgaWYgKG1hdGNoSWR4ID09PSBzZWxlY3RlZE1hdGNoKSB7CiAgICAgICAgICAgICAgICAgICAgICAgIGN1cnJlbnRTcGFuLmNsYXNzTGlzdC5hZGQoInNlbGVjdGVkIik7CiAgICAgICAgICAgICAgICAgICAgfQoKICAgICAgICAgICAgICAgICAgICAvLyBIb3ZlciBoYW5kbGVycwogICAgICAgICAgICAgICAgICAgIGN1cnJlbnRTcGFuLmFkZEV2ZW50TGlzdGVuZXIoIm1vdXNlZW50ZXIiLCAoKSA9PiB7CiAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsLnNldCgic2VsZWN0ZWRfbWF0Y2giLCBtYXRjaElkeCk7CiAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsLnNhdmVfY2hhbmdlcygpOwogICAgICAgICAgICAgICAgICAgIH0pOwoKICAgICAgICAgICAgICAgICAgICBjdXJyZW50U3Bhbi5hZGRFdmVudExpc3RlbmVyKCJtb3VzZWxlYXZlIiwgKCkgPT4gewogICAgICAgICAgICAgICAgICAgICAgICBtb2RlbC5zZXQoInNlbGVjdGVkX21hdGNoIiwgLTEpOwogICAgICAgICAgICAgICAgICAgICAgICBtb2RlbC5zYXZlX2NoYW5nZXMoKTsKICAgICAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGN1cnJlbnRNYXRjaElkeCA9IG1hdGNoSWR4OwogICAgICAgICAgICB9CgogICAgICAgICAgICAvLyBDcmVhdGUgdGV4dCBub2RlIGZvciB0aGlzIHdvcmQKICAgICAgICAgICAgY29uc3QgdGV4dE5vZGUgPSBkb2N1bWVudC5jcmVhdGVUZXh0Tm9kZSh0b2tlbi53b3JkICsgdG9rZW4uc3BhY2UpOwoKICAgICAgICAgICAgaWYgKGN1cnJlbnRTcGFuKSB7CiAgICAgICAgICAgICAgICBjdXJyZW50U3Bhbi5hcHBlbmRDaGlsZCh0ZXh0Tm9kZSk7CiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICBwYW5lbC5hcHBlbmRDaGlsZCh0ZXh0Tm9kZSk7CiAgICAgICAgICAgIH0KICAgICAgICB9KTsKCiAgICAgICAgLy8gQ2xvc2UgZmluYWwgc3BhbiBpZiBhbnkKICAgICAgICBpZiAoY3VycmVudFNwYW4pIHsKICAgICAgICAgICAgcGFuZWwuYXBwZW5kQ2hpbGQoY3VycmVudFNwYW4pOwogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB1cGRhdGVTZWxlY3Rpb24oKSB7CiAgICAgICAgY29uc3Qgc2VsZWN0ZWRNYXRjaCA9IG1vZGVsLmdldCgic2VsZWN0ZWRfbWF0Y2giKTsKCiAgICAgICAgLy8gVXBkYXRlIGNsYXNzZXMgb24gYWxsIG1hdGNoIHNwYW5zCiAgICAgICAgY29udGFpbmVyLnF1ZXJ5U2VsZWN0b3JBbGwoIi50ZXh0LWNvbXBhcmUtbWF0Y2giKS5mb3JFYWNoKHNwYW4gPT4gewogICAgICAgICAgICBjb25zdCBpZHggPSBwYXJzZUludChzcGFuLmRhdGFzZXQubWF0Y2hJbmRleCwgMTApOwogICAgICAgICAgICBpZiAoaWR4ID09PSBzZWxlY3RlZE1hdGNoKSB7CiAgICAgICAgICAgICAgICBzcGFuLmNsYXNzTGlzdC5hZGQoInNlbGVjdGVkIik7CiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICBzcGFuLmNsYXNzTGlzdC5yZW1vdmUoInNlbGVjdGVkIik7CiAgICAgICAgICAgIH0KICAgICAgICB9KTsKICAgIH0KCiAgICBmdW5jdGlvbiBmdWxsUmVuZGVyKCkgewogICAgICAgIGNvbnN0IHRleHRBID0gbW9kZWwuZ2V0KCJ0ZXh0X2EiKTsKICAgICAgICBjb25zdCB0ZXh0QiA9IG1vZGVsLmdldCgidGV4dF9iIik7CiAgICAgICAgY29uc3QgbWF0Y2hlcyA9IG1vZGVsLmdldCgibWF0Y2hlcyIpOwoKICAgICAgICByZW5kZXJQYW5lbChwYW5lbEEsIHRleHRBLCBtYXRjaGVzLCAiYSIsIHBhbmVsQik7CiAgICAgICAgcmVuZGVyUGFuZWwocGFuZWxCLCB0ZXh0QiwgbWF0Y2hlcywgImIiLCBwYW5lbEEpOwogICAgfQoKICAgIC8vIEluaXRpYWwgcmVuZGVyCiAgICBmdWxsUmVuZGVyKCk7CgogICAgLy8gTGlzdGVuIGZvciBjaGFuZ2VzCiAgICBtb2RlbC5vbigiY2hhbmdlOnRleHRfYSIsIGZ1bGxSZW5kZXIpOwogICAgbW9kZWwub24oImNoYW5nZTp0ZXh0X2IiLCBmdWxsUmVuZGVyKTsKICAgIG1vZGVsLm9uKCJjaGFuZ2U6bWF0Y2hlcyIsIGZ1bGxSZW5kZXIpOwogICAgbW9kZWwub24oImNoYW5nZTpzZWxlY3RlZF9tYXRjaCIsIHVwZGF0ZVNlbGVjdGlvbik7Cn0KCmV4cG9ydCBkZWZhdWx0IHsgcmVuZGVyIH07Cg==&quot;' data-js-hash='&quot;c6fe613ea0b2d0e3c621430cf8cfb144&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "b7d84eb7d9f1ed3177fca2f230e2f122",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Hover over highlighted matches in one panel to see the corresponding match highlighted in the other panel. The widget automatically scrolls to show the matching passage.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "877deb35039f32bf9507a795a13512a4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"accessing-match-data\">Accessing Match Data</h2>\n<span class=\"paragraph\">The widget exposes the detected matches programmatically, making it useful for analysis.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "f9f6a3934bfc796830dc0e2cc457425c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[{\"start_a\": 1, \"end_a\": 4, \"start_b\": 1, \"end_b\": 4, \"text\": \"quick brown fox\", \"word_count\": 3}, {\"start_a\": 7, \"end_a\": 11, \"start_b\": 7, \"end_b\": 11, \"text\": \"lazy dog. This is\", \"word_count\": 4}, {\"start_a\": 17, \"end_a\": 24, \"start_b\": 16, \"end_b\": 23, \"text\": \"Both texts share this common passage here.\", \"word_count\": 7}]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "a116efea90eaf2061fc8b2009e672936",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><strong>Found 3 matching passages</strong></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "bcecf2ab9f21e40af77ebc0a74a8e691",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"adjusting-sensitivity\">Adjusting Sensitivity</h2>\n<span class=\"paragraph\">The <code>min_match_words</code> parameter controls how many consecutive words are needed to count as a match.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "d15b3fbccbdbbc56a651f5a549753193",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='BYtC-0' random-id='8bb8d388-52ec-8261-ccf0-bd539c4ad53b'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;6f5acd0c1d084d1bada6125c6eb6228c&quot;}' data-label='null' data-js-url='&quot;data:text/javascript;base64,ZnVuY3Rpb24gcmVuZGVyKHsgbW9kZWwsIGVsIH0pIHsKICAgIGNvbnN0IGNvbnRhaW5lciA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpOwogICAgY29udGFpbmVyLmNsYXNzTmFtZSA9ICJ0ZXh0LWNvbXBhcmUtY29udGFpbmVyIjsKCiAgICBjb25zdCBwYW5lbEEgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTsKICAgIHBhbmVsQS5jbGFzc05hbWUgPSAidGV4dC1jb21wYXJlLXBhbmVsIjsKCiAgICBjb25zdCBwYW5lbEIgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTsKICAgIHBhbmVsQi5jbGFzc05hbWUgPSAidGV4dC1jb21wYXJlLXBhbmVsIjsKCiAgICBjb250YWluZXIuYXBwZW5kQ2hpbGQocGFuZWxBKTsKICAgIGNvbnRhaW5lci5hcHBlbmRDaGlsZChwYW5lbEIpOwogICAgZWwuYXBwZW5kQ2hpbGQoY29udGFpbmVyKTsKCiAgICBmdW5jdGlvbiB0b2tlbml6ZSh0ZXh0KSB7CiAgICAgICAgLy8gU3BsaXQgaW50byB3b3JkcyB3aGlsZSBwcmVzZXJ2aW5nIHdoaXRlc3BhY2UgaW5mbwogICAgICAgIGNvbnN0IHdvcmRzID0gW107CiAgICAgICAgY29uc3QgcmVnZXggPSAvKFxTKykoXHMqKS9nOwogICAgICAgIGxldCBtYXRjaDsKICAgICAgICB3aGlsZSAoKG1hdGNoID0gcmVnZXguZXhlYyh0ZXh0KSkgIT09IG51bGwpIHsKICAgICAgICAgICAgd29yZHMucHVzaCh7IHdvcmQ6IG1hdGNoWzFdLCBzcGFjZTogbWF0Y2hbMl0gfSk7CiAgICAgICAgfQogICAgICAgIHJldHVybiB3b3JkczsKICAgIH0KCiAgICBmdW5jdGlvbiBidWlsZE1hdGNoUmFuZ2VzKG1hdGNoZXMsIHNpZGUpIHsKICAgICAgICAvLyBCdWlsZCBhIG1hcCBvZiB3b3JkIGluZGljZXMgdGhhdCBiZWxvbmcgdG8gZWFjaCBtYXRjaAogICAgICAgIGNvbnN0IHdvcmRUb01hdGNoID0gbmV3IE1hcCgpOwogICAgICAgIG1hdGNoZXMuZm9yRWFjaCgobSwgaWR4KSA9PiB7CiAgICAgICAgICAgIGNvbnN0IHN0YXJ0ID0gc2lkZSA9PT0gImEiID8gbS5zdGFydF9hIDogbS5zdGFydF9iOwogICAgICAgICAgICBjb25zdCBlbmQgPSBzaWRlID09PSAiYSIgPyBtLmVuZF9hIDogbS5lbmRfYjsKICAgICAgICAgICAgZm9yIChsZXQgaSA9IHN0YXJ0OyBpIDwgZW5kOyBpKyspIHsKICAgICAgICAgICAgICAgIHdvcmRUb01hdGNoLnNldChpLCBpZHgpOwogICAgICAgICAgICB9CiAgICAgICAgfSk7CiAgICAgICAgcmV0dXJuIHdvcmRUb01hdGNoOwogICAgfQoKICAgIGZ1bmN0aW9uIHJlbmRlclBhbmVsKHBhbmVsLCB0ZXh0LCBtYXRjaGVzLCBzaWRlLCBvdGhlclBhbmVsKSB7CiAgICAgICAgcGFuZWwuaW5uZXJIVE1MID0gIiI7CiAgICAgICAgY29uc3QgdG9rZW5zID0gdG9rZW5pemUodGV4dCk7CiAgICAgICAgY29uc3Qgd29yZFRvTWF0Y2ggPSBidWlsZE1hdGNoUmFuZ2VzKG1hdGNoZXMsIHNpZGUpOwogICAgICAgIGNvbnN0IHNlbGVjdGVkTWF0Y2ggPSBtb2RlbC5nZXQoInNlbGVjdGVkX21hdGNoIik7CgogICAgICAgIGxldCBjdXJyZW50TWF0Y2hJZHggPSBudWxsOwogICAgICAgIGxldCBjdXJyZW50U3BhbiA9IG51bGw7CgogICAgICAgIHRva2Vucy5mb3JFYWNoKCh0b2tlbiwgd29yZElkeCkgPT4gewogICAgICAgICAgICBjb25zdCBtYXRjaElkeCA9IHdvcmRUb01hdGNoLmdldCh3b3JkSWR4KTsKCiAgICAgICAgICAgIGlmIChtYXRjaElkeCAhPT0gY3VycmVudE1hdGNoSWR4KSB7CiAgICAgICAgICAgICAgICAvLyBDbG9zZSBwcmV2aW91cyBzcGFuIGlmIGFueQogICAgICAgICAgICAgICAgaWYgKGN1cnJlbnRTcGFuKSB7CiAgICAgICAgICAgICAgICAgICAgcGFuZWwuYXBwZW5kQ2hpbGQoY3VycmVudFNwYW4pOwogICAgICAgICAgICAgICAgICAgIGN1cnJlbnRTcGFuID0gbnVsbDsKICAgICAgICAgICAgICAgIH0KCiAgICAgICAgICAgICAgICBpZiAobWF0Y2hJZHggIT09IHVuZGVmaW5lZCkgewogICAgICAgICAgICAgICAgICAgIC8vIFN0YXJ0IG5ldyBtYXRjaCBzcGFuCiAgICAgICAgICAgICAgICAgICAgY3VycmVudFNwYW4gPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCJzcGFuIik7CiAgICAgICAgICAgICAgICAgICAgY3VycmVudFNwYW4uY2xhc3NOYW1lID0gInRleHQtY29tcGFyZS1tYXRjaCI7CiAgICAgICAgICAgICAgICAgICAgY3VycmVudFNwYW4uZGF0YXNldC5tYXRjaEluZGV4ID0gbWF0Y2hJZHg7CiAgICAgICAgICAgICAgICAgICAgaWYgKG1hdGNoSWR4ID09PSBzZWxlY3RlZE1hdGNoKSB7CiAgICAgICAgICAgICAgICAgICAgICAgIGN1cnJlbnRTcGFuLmNsYXNzTGlzdC5hZGQoInNlbGVjdGVkIik7CiAgICAgICAgICAgICAgICAgICAgfQoKICAgICAgICAgICAgICAgICAgICAvLyBIb3ZlciBoYW5kbGVycwogICAgICAgICAgICAgICAgICAgIGN1cnJlbnRTcGFuLmFkZEV2ZW50TGlzdGVuZXIoIm1vdXNlZW50ZXIiLCAoKSA9PiB7CiAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsLnNldCgic2VsZWN0ZWRfbWF0Y2giLCBtYXRjaElkeCk7CiAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsLnNhdmVfY2hhbmdlcygpOwogICAgICAgICAgICAgICAgICAgIH0pOwoKICAgICAgICAgICAgICAgICAgICBjdXJyZW50U3Bhbi5hZGRFdmVudExpc3RlbmVyKCJtb3VzZWxlYXZlIiwgKCkgPT4gewogICAgICAgICAgICAgICAgICAgICAgICBtb2RlbC5zZXQoInNlbGVjdGVkX21hdGNoIiwgLTEpOwogICAgICAgICAgICAgICAgICAgICAgICBtb2RlbC5zYXZlX2NoYW5nZXMoKTsKICAgICAgICAgICAgICAgICAgICB9KTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGN1cnJlbnRNYXRjaElkeCA9IG1hdGNoSWR4OwogICAgICAgICAgICB9CgogICAgICAgICAgICAvLyBDcmVhdGUgdGV4dCBub2RlIGZvciB0aGlzIHdvcmQKICAgICAgICAgICAgY29uc3QgdGV4dE5vZGUgPSBkb2N1bWVudC5jcmVhdGVUZXh0Tm9kZSh0b2tlbi53b3JkICsgdG9rZW4uc3BhY2UpOwoKICAgICAgICAgICAgaWYgKGN1cnJlbnRTcGFuKSB7CiAgICAgICAgICAgICAgICBjdXJyZW50U3Bhbi5hcHBlbmRDaGlsZCh0ZXh0Tm9kZSk7CiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICBwYW5lbC5hcHBlbmRDaGlsZCh0ZXh0Tm9kZSk7CiAgICAgICAgICAgIH0KICAgICAgICB9KTsKCiAgICAgICAgLy8gQ2xvc2UgZmluYWwgc3BhbiBpZiBhbnkKICAgICAgICBpZiAoY3VycmVudFNwYW4pIHsKICAgICAgICAgICAgcGFuZWwuYXBwZW5kQ2hpbGQoY3VycmVudFNwYW4pOwogICAgICAgIH0KICAgIH0KCiAgICBmdW5jdGlvbiB1cGRhdGVTZWxlY3Rpb24oKSB7CiAgICAgICAgY29uc3Qgc2VsZWN0ZWRNYXRjaCA9IG1vZGVsLmdldCgic2VsZWN0ZWRfbWF0Y2giKTsKCiAgICAgICAgLy8gVXBkYXRlIGNsYXNzZXMgb24gYWxsIG1hdGNoIHNwYW5zCiAgICAgICAgY29udGFpbmVyLnF1ZXJ5U2VsZWN0b3JBbGwoIi50ZXh0LWNvbXBhcmUtbWF0Y2giKS5mb3JFYWNoKHNwYW4gPT4gewogICAgICAgICAgICBjb25zdCBpZHggPSBwYXJzZUludChzcGFuLmRhdGFzZXQubWF0Y2hJbmRleCwgMTApOwogICAgICAgICAgICBpZiAoaWR4ID09PSBzZWxlY3RlZE1hdGNoKSB7CiAgICAgICAgICAgICAgICBzcGFuLmNsYXNzTGlzdC5hZGQoInNlbGVjdGVkIik7CiAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICBzcGFuLmNsYXNzTGlzdC5yZW1vdmUoInNlbGVjdGVkIik7CiAgICAgICAgICAgIH0KICAgICAgICB9KTsKICAgIH0KCiAgICBmdW5jdGlvbiBmdWxsUmVuZGVyKCkgewogICAgICAgIGNvbnN0IHRleHRBID0gbW9kZWwuZ2V0KCJ0ZXh0X2EiKTsKICAgICAgICBjb25zdCB0ZXh0QiA9IG1vZGVsLmdldCgidGV4dF9iIik7CiAgICAgICAgY29uc3QgbWF0Y2hlcyA9IG1vZGVsLmdldCgibWF0Y2hlcyIpOwoKICAgICAgICByZW5kZXJQYW5lbChwYW5lbEEsIHRleHRBLCBtYXRjaGVzLCAiYSIsIHBhbmVsQik7CiAgICAgICAgcmVuZGVyUGFuZWwocGFuZWxCLCB0ZXh0QiwgbWF0Y2hlcywgImIiLCBwYW5lbEEpOwogICAgfQoKICAgIC8vIEluaXRpYWwgcmVuZGVyCiAgICBmdWxsUmVuZGVyKCk7CgogICAgLy8gTGlzdGVuIGZvciBjaGFuZ2VzCiAgICBtb2RlbC5vbigiY2hhbmdlOnRleHRfYSIsIGZ1bGxSZW5kZXIpOwogICAgbW9kZWwub24oImNoYW5nZTp0ZXh0X2IiLCBmdWxsUmVuZGVyKTsKICAgIG1vZGVsLm9uKCJjaGFuZ2U6bWF0Y2hlcyIsIGZ1bGxSZW5kZXIpOwogICAgbW9kZWwub24oImNoYW5nZTpzZWxlY3RlZF9tYXRjaCIsIHVwZGF0ZVNlbGVjdGlvbik7Cn0KCmV4cG9ydCBkZWZhdWx0IHsgcmVuZGVyIH07Cg==&quot;' data-js-hash='&quot;c6fe613ea0b2d0e3c621430cf8cfb144&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "f30af725eac1ba2558c50b81ea23f08f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[{\"start_a\": 0, \"end_a\": 4, \"start_b\": 1, \"end_b\": 5, \"text\": \"one two three four\", \"word_count\": 4}, {\"start_a\": 6, \"end_a\": 9, \"start_b\": 6, \"end_b\": 9, \"text\": \"2 3 4\", \"word_count\": 3}]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

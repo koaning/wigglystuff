@@ -1,0 +1,61 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.21.0",
+    "script_metadata_hash": "2407c87c70a254909d2e72ffbf52268f"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "523db9738bb9c5785227a98f8d5cf254",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "76a68eae3cc016f2d35d1b5667f9edb9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='Hbol-0' random-id='3e64dcb7-f00e-fcc8-d9d2-84336c65b4d0'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;2690820f11ab49688334af71b9da7877&quot;}' data-label='null' data-js-url='&quot;data:text/javascript;base64,ZnVuY3Rpb24gcmVuZGVyKHsgbW9kZWwsIGVsIH0pIHsKICBlbC5pbm5lckhUTUwgPSAnJzsKICBjb25zdCB3cmFwcGVyID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7CiAgd3JhcHBlci5jbGFzc05hbWUgPSAnY29sb3JwaWNrZXItd3JhcHBlcic7CgogIGNvbnN0IGlucHV0ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnaW5wdXQnKTsKICBpbnB1dC50eXBlID0gJ2NvbG9yJzsKICBpbnB1dC5jbGFzc05hbWUgPSAnY29sb3JwaWNrZXItaW5wdXQnOwogIGlucHV0LnZhbHVlID0gbW9kZWwuZ2V0KCdjb2xvcicpOwoKICBjb25zdCBsYWJlbCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NwYW4nKTsKICBsYWJlbC5jbGFzc05hbWUgPSAnY29sb3JwaWNrZXItbGFiZWwnOwoKICBsZXQgbG9jYWxVcGRhdGUgPSBmYWxzZTsKCiAgY29uc3Qgc3luY0Zyb21Nb2RlbCA9ICgpID0+IHsKICAgIGNvbnN0IGNvbG9yID0gbW9kZWwuZ2V0KCdjb2xvcicpIHx8ICcjMDAwMDAwJzsKICAgIGlucHV0LnZhbHVlID0gY29sb3I7CiAgICBsYWJlbC50ZXh0Q29udGVudCA9IGNvbG9yOwogICAgY29uc3Qgc2hvd0xhYmVsID0gbW9kZWwuZ2V0KCdzaG93X2xhYmVsJyk7CiAgICBsYWJlbC5zdHlsZS5kaXNwbGF5ID0gc2hvd0xhYmVsID09PSBmYWxzZSA/ICdub25lJyA6ICcnOwoKICAgIGlmICghbG9jYWxVcGRhdGUpIHsKICAgICAgLy8gRWNobyBiYWNrZW5kLWRyaXZlbiB1cGRhdGVzIHNvIG1hcmltbyBjYW4gcmVhY3QgdG8gcHJvZ3JhbW1hdGljIGNoYW5nZXMuCiAgICAgIG1vZGVsLnNhdmVfY2hhbmdlcygpOwogICAgfQogICAgbG9jYWxVcGRhdGUgPSBmYWxzZTsKICB9OwoKICBpbnB1dC5hZGRFdmVudExpc3RlbmVyKCdpbnB1dCcsICgpID0+IHsKICAgIGxvY2FsVXBkYXRlID0gdHJ1ZTsKICAgIG1vZGVsLnNldCgnY29sb3InLCBpbnB1dC52YWx1ZSk7CiAgICBtb2RlbC5zYXZlX2NoYW5nZXMoKTsKICB9KTsKCiAgbW9kZWwub24oJ2NoYW5nZTpjb2xvcicsIHN5bmNGcm9tTW9kZWwpOwogIG1vZGVsLm9uKCdjaGFuZ2U6c2hvd19sYWJlbCcsIHN5bmNGcm9tTW9kZWwpOwoKICB3cmFwcGVyLmFwcGVuZENoaWxkKGlucHV0KTsKICB3cmFwcGVyLmFwcGVuZENoaWxkKGxhYmVsKTsKICBlbC5hcHBlbmRDaGlsZCh3cmFwcGVyKTsKCiAgc3luY0Zyb21Nb2RlbCgpOwp9CgpleHBvcnQgZGVmYXVsdCB7IHJlbmRlciB9Owo=&quot;' data-js-hash='&quot;aa77aecb5b0271b93bd40de8787e3e4e&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "f0ef7f4c09d2dab5c25c9c50432d76d0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">You picked <strong>#0ea5e9</strong> which is <strong>RGB 14, 165, 233</strong>.</span></span><span class=\"markdown prose dark:prose-invert contents\"><div style='width:96px;height:96px;border-radius:0.75rem;border:1px solid #d4d4d8;background:#0ea5e9;'></div></span><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Hex labels are shown by default. Set <code>show_label=False</code> to hide them.</span></span></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "73bf7f0f85a3993a1078290cd7be8fc3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='bkHC-0' random-id='c257813c-df85-8bce-220a-69251d0547ff'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Surprise me&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false'></marimo-button></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

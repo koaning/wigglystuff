@@ -24,6 +24,20 @@ jobs:
           uv pip install -e ".[test]"
           uv run pytest --ignore=tests/test_browser
 
+  session-check:
+    runs-on: ubuntu-latest
+    container: ghcr.io/astral-sh/uv:python3.11-bookworm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export marimo sessions and check for staleness
+        run: |
+          uv pip install -e ".[docs]"
+          make marimo-sessions
+          git diff --exit-code demos/__marimo__ examples/__marimo__ || {
+            echo "::error::Session files are stale. Run 'make marimo-sessions' and commit the results."
+            exit 1
+          }
+
   browser-tests:
     runs-on: ubuntu-latest
     steps:

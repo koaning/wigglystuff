@@ -168,6 +168,8 @@ Untitled.ipynb
 .specstory/
 .cursorindexingignore
 **/__marimo__/**
+!**/__marimo__/session/
+!**/__marimo__/session/**
 mkdocs/examples/*
 !mkdocs/examples/.demo-hashes.json
 
