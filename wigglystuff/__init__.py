@@ -34,6 +34,7 @@ from .tangle import TangleChoice, TangleSelect, TangleSlider
 from .text_compare import TextCompare
 from .three_widget import ThreeWidget
 from .wandb_chart import WandbChart
+from .utils import forecast_chart
 from .webcam_capture import WebcamCapture
 
 __version__ = importlib.metadata.version("wigglystuff")
@@ -76,4 +77,5 @@ __all__ = [
     "HTMLRefreshWidget",
     "ImageRefreshWidget",
     "ProgressBar",
+    "forecast_chart",
 ]

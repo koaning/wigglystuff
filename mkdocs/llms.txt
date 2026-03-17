@@ -48,4 +48,4 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 
 ## Optional
 
-- [Utils](https://koaning.github.io/wigglystuff/reference/utils.md): Utility functions
+- [Utils](https://koaning.github.io/wigglystuff/reference/utils.md): Utility functions including `forecast_chart` (time series chart with robust exponential forecast)
