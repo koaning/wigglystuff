@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- `forecast_chart` demo now uses `AltairWidget` for flicker-free updates in marimo wasm mode.
+
 ## [0.2.38] - 2026-03-17
 
 ### Added

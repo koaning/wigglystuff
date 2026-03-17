@@ -12,7 +12,7 @@
 
 import marimo
 
-
+__generated_with = "0.21.0"
 app = marimo.App(width="medium")
 
 
@@ -33,9 +33,9 @@ def _():
 
 @app.cell
 def _():
-    from wigglystuff import forecast_chart
+    from wigglystuff import AltairWidget, forecast_chart
 
-    return (forecast_chart,)
+    return AltairWidget, forecast_chart
 
 
 @app.cell(hide_code=True)
@@ -85,20 +85,74 @@ def _(np, pl):
 
 
 @app.cell
+def _(AltairWidget):
+    widget = AltairWidget(width=600, height=400)
+    return (widget,)
+
+
+@app.cell
+def _(mo, widget):
+    wrapped = mo.ui.anywidget(widget)
+    return (wrapped,)
+
+
+@app.cell
 def _(fit_window, mo, projection_days):
     mo.hstack([fit_window, projection_days])
     return
 
 
 @app.cell(hide_code=True)
-def _(df, fit_window, forecast_chart, projection_days):
-    forecast_chart(
+def _(df, fit_window, forecast_chart, projection_days, widget):
+    import time
+
+    time.sleep(0.1)
+
+    widget.chart = forecast_chart(
         df,
         date_col="date",
         value_col="value",
         fit_window=fit_window.value,
         projection_days=projection_days.value,
         title="Synthetic metric forecast",
+        width=600,
+    )
+    return (time,)
+
+
+@app.cell
+def _(wrapped):
+    wrapped
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    The chart above is wrapped in an `AltairWidget` via `mo.ui.anywidget`.
+    This keeps the DOM element stable across slider changes so the Vega view
+    can patch data in-place instead of rebuilding from scratch. The result is
+    a flicker-free experience, especially in marimo's WASM mode where full
+    re-renders cause noticeable jumps.
+
+    For comparison, the plain `forecast_chart` output is shown below. Try
+    dragging the sliders and notice the difference.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(df, fit_window, forecast_chart, projection_days, time):
+    time.sleep(0.1)
+
+    forecast_chart(
+        df,
+        date_col="date",
+        value_col="value",
+        fit_window=fit_window.value,
+        projection_days=projection_days.value,
+        title="Synthetic metric forecast (plain)",
+        width=600,
     )
     return
 
