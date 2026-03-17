@@ -33,7 +33,7 @@ jobs:
         run: |
           UV_SYSTEM_PYTHON=1 uv pip install -e ".[docs]"
           UV_SYSTEM_PYTHON=1 make marimo-sessions
-          git diff --exit-code demos/__marimo__ examples/__marimo__ || {
+          git diff --stat --exit-code demos/__marimo__ examples/__marimo__ || {
             echo "::error::Session files are stale. Run 'make marimo-sessions' and commit the results."
             exit 1
           }
