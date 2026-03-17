@@ -1,0 +1,87 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.21.0",
+    "script_metadata_hash": "2b6f6e5ac53e161059ed8432dfa8ffce"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "7068e7a5902b06ed1dfd3bca078d215b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"speech-to-text\">Speech to Text</h2>\n<span class=\"paragraph\">You can use the free webkit API in your browser to transcribe audio live! Not every browser may support this but it is a very easy way to talk and pass the transcription to Python.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "9b8e246db8b0db1fde0fe047ea12a441",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='vblA-0' random-id='31bcf8fb-2b74-decd-82a4-bfcd25e576d3'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;e4a2b11c60e1480fbde5ed1373c2f6d5&quot;}' data-label='null' data-js-url='&quot;data:text/javascript;base64,ZnVuY3Rpb24gcmVuZGVyKHsgbW9kZWwsIGVsIH0pIHsKICBjb25zdCBjb250YWluZXIgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICBjb250YWluZXIuY2xhc3NOYW1lID0gJ3NwZWVjaC1jb250YWluZXInOwoKICBjb25zdCBzdGF0dXMgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICBzdGF0dXMuY2xhc3NOYW1lID0gJ3N0YXR1cy1pbmRpY2F0b3InOwogIHN0YXR1cy50ZXh0Q29udGVudCA9IG1vZGVsLmdldCgnbGlzdGVuaW5nJykgPyAnTGlzdGVuaW5nLi4uJyA6ICdOb3QgbGlzdGVuaW5nJzsKCiAgY29uc3QgZGlzcGxheSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpOwogIGRpc3BsYXkuY2xhc3NOYW1lID0gJ3RyYW5zY3JpcHQtZGlzcGxheSc7CiAgY29uc3QgdHJhbnNjcmlwdFZhbHVlID0gbW9kZWwuZ2V0KCd0cmFuc2NyaXB0JykgfHwgJ1RyYW5zY3JpcHQgd2lsbCBhcHBlYXIgaGVyZS4uLic7CiAgZGlzcGxheS50ZXh0Q29udGVudCA9IHRyYW5zY3JpcHRWYWx1ZTsKCiAgY29uc3QgYnV0dG9uID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnYnV0dG9uJyk7CiAgYnV0dG9uLmNsYXNzTmFtZSA9ICdzcGVlY2gtYnV0dG9uJzsKICBidXR0b24udGV4dENvbnRlbnQgPSBtb2RlbC5nZXQoJ2xpc3RlbmluZycpID8gJ1N0b3AgTGlzdGVuaW5nJyA6ICdTdGFydCBMaXN0ZW5pbmcnOwoKICBjb250YWluZXIuYXBwZW5kQ2hpbGQoc3RhdHVzKTsKICBjb250YWluZXIuYXBwZW5kQ2hpbGQoZGlzcGxheSk7CiAgY29udGFpbmVyLmFwcGVuZENoaWxkKGJ1dHRvbik7CiAgZWwuYXBwZW5kQ2hpbGQoY29udGFpbmVyKTsKCiAgbGV0IHJlY29nbml0aW9uID0gbnVsbDsKCiAgdHJ5IHsKICAgIGNvbnN0IFNwZWVjaFJlY29nbml0aW9uID0KICAgICAgd2luZG93LlNwZWVjaFJlY29nbml0aW9uIHx8IHdpbmRvdy53ZWJraXRTcGVlY2hSZWNvZ25pdGlvbjsKICAgIHJlY29nbml0aW9uID0gbmV3IFNwZWVjaFJlY29nbml0aW9uKCk7CiAgICByZWNvZ25pdGlvbi5jb250aW51b3VzID0gdHJ1ZTsKICAgIHJlY29nbml0aW9uLmludGVyaW1SZXN1bHRzID0gdHJ1ZTsKCiAgICByZWNvZ25pdGlvbi5vbnN0YXJ0ID0gKCkgPT4gewogICAgICBzdGF0dXMudGV4dENvbnRlbnQgPSAnTGlzdGVuaW5nLi4uJzsKICAgICAgc3RhdHVzLmNsYXNzTGlzdC5hZGQoJ2FjdGl2ZScpOwogICAgICBidXR0b24udGV4dENvbnRlbnQgPSAnU3RvcCBMaXN0ZW5pbmcnOwogICAgICBtb2RlbC5zZXQoJ2xpc3RlbmluZycsIHRydWUpOwogICAgICBtb2RlbC5zYXZlX2NoYW5nZXMoKTsKICAgIH07CgogICAgcmVjb2duaXRpb24ub25yZXN1bHQgPSAoZXZlbnQpID0+IHsKICAgICAgbGV0IGZpbmFsVHJhbnNjcmlwdCA9ICcnOwogICAgICBsZXQgaW50ZXJpbVRyYW5zY3JpcHQgPSAnJzsKCiAgICAgIGZvciAobGV0IGkgPSBldmVudC5yZXN1bHRJbmRleDsgaSA8IGV2ZW50LnJlc3VsdHMubGVuZ3RoOyBpKyspIHsKICAgICAgICBjb25zdCB0cmFuc2NyaXB0ID0gZXZlbnQucmVzdWx0c1tpXVswXS50cmFuc2NyaXB0OwogICAgICAgIGlmIChldmVudC5yZXN1bHRzW2ldLmlzRmluYWwpIHsKICAgICAgICAgIGZpbmFsVHJhbnNjcmlwdCArPSB0cmFuc2NyaXB0OwogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICBpbnRlcmltVHJhbnNjcmlwdCArPSB0cmFuc2NyaXB0OwogICAgICAgIH0KICAgICAgfQoKICAgICAgY29uc3QgZnVsbFRyYW5zY3JpcHQgPSBmaW5hbFRyYW5zY3JpcHQgfHwgaW50ZXJpbVRyYW5zY3JpcHQ7CiAgICAgIGRpc3BsYXkudGV4dENvbnRlbnQgPSBmdWxsVHJhbnNjcmlwdCB8fCAnVHJhbnNjcmlwdCB3aWxsIGFwcGVhciBoZXJlLi4uJzsKICAgICAgbW9kZWwuc2V0KCd0cmFuc2NyaXB0JywgZnVsbFRyYW5zY3JpcHQpOwogICAgICBtb2RlbC5zYXZlX2NoYW5nZXMoKTsKICAgIH07CgogICAgcmVjb2duaXRpb24ub25lcnJvciA9IChldmVudCkgPT4gewogICAgICBjb25zb2xlLmVycm9yKCdTcGVlY2ggcmVjb2duaXRpb24gZXJyb3InLCBldmVudC5lcnJvcik7CiAgICAgIHN0YXR1cy50ZXh0Q29udGVudCA9IGBFcnJvcjogJHtldmVudC5lcnJvcn1gOwogICAgICBzdGF0dXMuY2xhc3NMaXN0LnJlbW92ZSgnYWN0aXZlJyk7CiAgICAgIGJ1dHRvbi50ZXh0Q29udGVudCA9ICdTdGFydCBMaXN0ZW5pbmcnOwogICAgICBtb2RlbC5zZXQoJ2xpc3RlbmluZycsIGZhbHNlKTsKICAgICAgbW9kZWwuc2F2ZV9jaGFuZ2VzKCk7CiAgICB9OwoKICAgIHJlY29nbml0aW9uLm9uZW5kID0gKCkgPT4gewogICAgICBzdGF0dXMudGV4dENvbnRlbnQgPSAnTm90IGxpc3RlbmluZyc7CiAgICAgIHN0YXR1cy5jbGFzc0xpc3QucmVtb3ZlKCdhY3RpdmUnKTsKICAgICAgYnV0dG9uLnRleHRDb250ZW50ID0gJ1N0YXJ0IExpc3RlbmluZyc7CiAgICAgIG1vZGVsLnNldCgnbGlzdGVuaW5nJywgZmFsc2UpOwogICAgICBtb2RlbC5zYXZlX2NoYW5nZXMoKTsKICAgIH07CiAgfSBjYXRjaCAoZXJyb3IpIHsKICAgIGNvbnNvbGUuZXJyb3IoJ1NwZWVjaCByZWNvZ25pdGlvbiBub3Qgc3VwcG9ydGVkJywgZXJyb3IpOwogICAgc3RhdHVzLnRleHRDb250ZW50ID0gJ1NwZWVjaCByZWNvZ25pdGlvbiBub3Qgc3VwcG9ydGVkIGluIHRoaXMgYnJvd3Nlcic7CiAgICBidXR0b24uZGlzYWJsZWQgPSB0cnVlOwogICAgcmVjb2duaXRpb24gPSBudWxsOwogIH0KCiAgY29uc3QgdG9nZ2xlTGlzdGVuaW5nID0gKCkgPT4gewogICAgaWYgKCFyZWNvZ25pdGlvbikgewogICAgICByZXR1cm47CiAgICB9CgogICAgY29uc3QgaXNMaXN0ZW5pbmcgPSBtb2RlbC5nZXQoJ2xpc3RlbmluZycpOwogICAgaWYgKGlzTGlzdGVuaW5nKSB7CiAgICAgIHJlY29nbml0aW9uLnN0b3AoKTsKICAgIH0gZWxzZSB7CiAgICAgIHJlY29nbml0aW9uLnN0YXJ0KCk7CiAgICB9CiAgfTsKCiAgYnV0dG9uLmFkZEV2ZW50TGlzdGVuZXIoJ2NsaWNrJywgdG9nZ2xlTGlzdGVuaW5nKTsKCiAgbW9kZWwub24oJ2NoYW5nZTp0cmlnZ2VyX2xpc3RlbicsICgpID0+IHsKICAgIGlmIChtb2RlbC5nZXQoJ3RyaWdnZXJfbGlzdGVuJykpIHsKICAgICAgdG9nZ2xlTGlzdGVuaW5nKCk7CiAgICAgIG1vZGVsLnNldCgndHJpZ2dlcl9saXN0ZW4nLCBmYWxzZSk7CiAgICAgIG1vZGVsLnNhdmVfY2hhbmdlcygpOwogICAgfQogIH0pOwoKICBtb2RlbC5vbignY2hhbmdlOmxpc3RlbmluZycsICgpID0+IHsKICAgIGNvbnN0IGlzTGlzdGVuaW5nID0gbW9kZWwuZ2V0KCdsaXN0ZW5pbmcnKTsKICAgIGNvbnN0IGN1cnJlbnRseUxpc3RlbmluZyA9IHN0YXR1cy50ZXh0Q29udGVudCA9PT0gJ0xpc3RlbmluZy4uLic7CgogICAgaWYgKGlzTGlzdGVuaW5nICE9PSBjdXJyZW50bHlMaXN0ZW5pbmcpIHsKICAgICAgaWYgKGlzTGlzdGVuaW5nICYmIHJlY29nbml0aW9uKSB7CiAgICAgICAgcmVjb2duaXRpb24uc3RhcnQoKTsKICAgICAgfSBlbHNlIGlmIChyZWNvZ25pdGlvbikgewogICAgICAgIHJlY29nbml0aW9uLnN0b3AoKTsKICAgICAgfQogICAgfQoKICAgIGJ1dHRvbi50ZXh0Q29udGVudCA9IGlzTGlzdGVuaW5nID8gJ1N0b3AgTGlzdGVuaW5nJyA6ICdTdGFydCBMaXN0ZW5pbmcnOwogICAgc3RhdHVzLnRleHRDb250ZW50ID0gaXNMaXN0ZW5pbmcgPyAnTGlzdGVuaW5nLi4uJyA6ICdOb3QgbGlzdGVuaW5nJzsKICAgIHN0YXR1cy5jbGFzc0xpc3QudG9nZ2xlKCdhY3RpdmUnLCBpc0xpc3RlbmluZyk7CiAgfSk7CgogIG1vZGVsLm9uKCdjaGFuZ2U6dHJhbnNjcmlwdCcsICgpID0+IHsKICAgIGRpc3BsYXkudGV4dENvbnRlbnQgPSBtb2RlbC5nZXQoJ3RyYW5zY3JpcHQnKSB8fCAnVHJhbnNjcmlwdCB3aWxsIGFwcGVhciBoZXJlLi4uJzsKICB9KTsKfQoKZXhwb3J0IGRlZmF1bHQgeyByZW5kZXIgfTsK&quot;' data-js-hash='&quot;c190c563d54b81cf5de11e98a0580066&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "fcfae035ea278ac2fcaae45f1c4528e7",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>&#x27;&#x27;</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "11c2a00a9b9acbb2bcc73da4af7c54eb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">You can also choose to trigger the recording from Python. Use the following two buttons.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "5bec4fdf4b65924bc38c526d1960a993",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: space-between;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><marimo-ui-element object-id='PKri-0' random-id='fea51f50-18bf-6fa7-ade4-24b1361ca9f1'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Start Recording&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false'></marimo-button></marimo-ui-element><marimo-ui-element object-id='PKri-1' random-id='a8abd872-13c9-a61b-f2d7-dffb8d4f8ea9'><marimo-button data-initial-value='0' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;End Recording&lt;/span&gt;&lt;/span&gt;&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false'></marimo-button></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

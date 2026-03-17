@@ -1,4 +1,4 @@
-.PHONY: js docs test docs-serve docs-build docs-llm docs-gh marimo-notebook
+.PHONY: js docs test docs-serve docs-build docs-llm docs-gh marimo-notebook marimo-sessions
 
 install:
 	# install the build tool for JS written in Golang
@@ -89,6 +89,10 @@ docs-llm:
 
 docs-gh: docs-build
 	uv run mkdocs gh-deploy -f mkdocs.yml --dirty
+
+marimo-sessions:
+	-uv run marimo export session demos/
+	-uv run marimo export session examples/
 
 marimo-notebook:
 	uv run marimo -y export html-wasm notebook.py --output docs/index.html --mode edit

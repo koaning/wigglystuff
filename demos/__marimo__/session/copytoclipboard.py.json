@@ -1,0 +1,87 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.21.0",
+    "script_metadata_hash": "2b6f6e5ac53e161059ed8432dfa8ffce"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "fe4a3d7da90b5eda91d5a5e4183fc8bb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "9d2b1ad5bbc16c44d49116dc213c53f2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='Hbol-0' random-id='9236ae6d-dc42-529f-a497-e7318d5851ea'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;9169ca91bc944f4f9d3a906d8e80fd73&quot;}' data-label='null' data-js-url='&quot;data:text/javascript;base64,Ly8ganMvY29weWJ1dHRvbi93aWRnZXQuanMKY29uc3QgU1ZHX05TID0gImh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIjsKZnVuY3Rpb24gY3JlYXRlQ29weUljb24oKSB7CiAgY29uc3Qgc3ZnID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudE5TKFNWR19OUywgInN2ZyIpOwogIHN2Zy5zZXRBdHRyaWJ1dGUoInZpZXdCb3giLCAiMCAwIDE1IDE1Iik7CiAgc3ZnLnNldEF0dHJpYnV0ZSgiY2xhc3MiLCAiY29weS1idXR0b24taWNvbiIpOwogIHN2Zy5zZXRBdHRyaWJ1dGUoImFyaWEtaGlkZGVuIiwgInRydWUiKTsKICBzdmcuc2V0QXR0cmlidXRlKCJmb2N1c2FibGUiLCAiZmFsc2UiKTsKICBjb25zdCBwYXRoID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudE5TKFNWR19OUywgInBhdGgiKTsKICBwYXRoLnNldEF0dHJpYnV0ZSgKICAgICJkIiwKICAgICJNMSA5LjUwMDA2QzEgMTAuMzI4NSAxLjY3MTU3IDExLjAwMDEgMi41IDExLjAwMDFINEw0IDEwLjAwMDFIMi41QzIuMjIzODYgMTAuMDAwMSAyIDkuNzc2MiAyIDkuNTAwMDZMMiAyLjUwMDA2QzIgMi4yMjM5MiAyLjIyMzg2IDIuMDAwMDYgMi41IDIuMDAwMDZMOS41IDIuMDAwMDZDOS43NzYxNCAyLjAwMDA2IDEwIDIuMjIzOTIgMTAgMi41MDAwNlY0LjAwMDAySDUuNUM0LjY3MTU4IDQuMDAwMDIgNCA0LjY3MTU5IDQgNS41MDAwMlYxMi41QzQgMTMuMzI4NCA0LjY3MTU4IDE0IDUuNSAxNEgxMi41QzEzLjMyODQgMTQgMTQgMTMuMzI4NCAxNCAxMi41VjUuNTAwMDJDMTQgNC42NzE1OSAxMy4zMjg0IDQuMDAwMDIgMTIuNSA0LjAwMDAySDExVjIuNTAwMDZDMTEgMS42NzE2MyAxMC4zMjg0IDEuMDAwMDYgOS41IDEuMDAwMDZIMi41QzEuNjcxNTcgMS4wMDAwNiAxIDEuNjcxNjMgMSAyLjUwMDA2VjkuNTAwMDZaTTUgNS41MDAwMkM1IDUuMjIzODggNS4yMjM4NiA1LjAwMDAyIDUuNSA1LjAwMDAySDEyLjVDMTIuNzc2MSA1LjAwMDAyIDEzIDUuMjIzODggMTMgNS41MDAwMlYxMi41QzEzIDEyLjc3NjIgMTIuNzc2MSAxMyAxMi41IDEzSDUuNUM1LjIyMzg2IDEzIDUgMTIuNzc2MiA1IDEyLjVWNS41MDAwMloiCiAgKTsKICBwYXRoLnNldEF0dHJpYnV0ZSgiZmlsbCIsICJjdXJyZW50Q29sb3IiKTsKICBwYXRoLnNldEF0dHJpYnV0ZSgiZmlsbC1ydWxlIiwgImV2ZW5vZGQiKTsKICBwYXRoLnNldEF0dHJpYnV0ZSgiY2xpcC1ydWxlIiwgImV2ZW5vZGQiKTsKICBzdmcuYXBwZW5kQ2hpbGQocGF0aCk7CiAgcmV0dXJuIHN2ZzsKfQpmdW5jdGlvbiBmYWxsYmFja0NvcHkodGV4dCkgewogIGNvbnN0IHRleHRhcmVhID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgidGV4dGFyZWEiKTsKICB0ZXh0YXJlYS52YWx1ZSA9IHRleHQ7CiAgdGV4dGFyZWEuc2V0QXR0cmlidXRlKCJyZWFkb25seSIsICIiKTsKICB0ZXh0YXJlYS5zdHlsZS5wb3NpdGlvbiA9ICJmaXhlZCI7CiAgdGV4dGFyZWEuc3R5bGUudG9wID0gIjAiOwogIHRleHRhcmVhLnN0eWxlLmxlZnQgPSAiMCI7CiAgdGV4dGFyZWEuc3R5bGUud2lkdGggPSAiMXB4IjsKICB0ZXh0YXJlYS5zdHlsZS5oZWlnaHQgPSAiMXB4IjsKICB0ZXh0YXJlYS5zdHlsZS5vcGFjaXR5ID0gIjAiOwogIGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQodGV4dGFyZWEpOwogIHRleHRhcmVhLnNlbGVjdCgpOwogIHRleHRhcmVhLnNldFNlbGVjdGlvblJhbmdlKDAsIHRleHRhcmVhLnZhbHVlLmxlbmd0aCk7CiAgY29uc3Qgb2sgPSBkb2N1bWVudC5leGVjQ29tbWFuZCgiY29weSIpOwogIGRvY3VtZW50LmJvZHkucmVtb3ZlQ2hpbGQodGV4dGFyZWEpOwogIHJldHVybiBvazsKfQpmdW5jdGlvbiBjb3B5VGV4dCh0ZXh0KSB7CiAgaWYgKG5hdmlnYXRvci5jbGlwYm9hcmQgJiYgd2luZG93LmlzU2VjdXJlQ29udGV4dCkgewogICAgcmV0dXJuIG5hdmlnYXRvci5jbGlwYm9hcmQud3JpdGVUZXh0KHRleHQpOwogIH0KICByZXR1cm4gbmV3IFByb21pc2UoKHJlc29sdmUsIHJlamVjdCkgPT4gewogICAgdHJ5IHsKICAgICAgY29uc3Qgb2sgPSBmYWxsYmFja0NvcHkodGV4dCk7CiAgICAgIG9rID8gcmVzb2x2ZSgpIDogcmVqZWN0KG5ldyBFcnJvcigiQ29weSBjb21tYW5kIGZhaWxlZCIpKTsKICAgIH0gY2F0Y2ggKGVycm9yKSB7CiAgICAgIHJlamVjdChlcnJvcik7CiAgICB9CiAgfSk7Cn0KZnVuY3Rpb24gcmVuZGVyKHsgbW9kZWwsIGVsIH0pIHsKICBjb25zdCB3cmFwcGVyID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiZGl2Iik7CiAgd3JhcHBlci5jbGFzc05hbWUgPSAiY29weS1idXR0b24td3JhcHBlciI7CiAgY29uc3QgYnV0dG9uID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiYnV0dG9uIik7CiAgYnV0dG9uLmNsYXNzTmFtZSA9ICJjb3B5LWJ1dHRvbiI7CiAgYnV0dG9uLnR5cGUgPSAiYnV0dG9uIjsKICBidXR0b24uYXBwZW5kQ2hpbGQoY3JlYXRlQ29weUljb24oKSk7CiAgY29uc3QgbGFiZWwgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCJzcGFuIik7CiAgY29uc3QgZGVmYXVsdExhYmVsID0gIkNvcHkgdG8gQ2xpcGJvYXJkIjsKICBsYWJlbC50ZXh0Q29udGVudCA9IGRlZmF1bHRMYWJlbDsKICBidXR0b24uYXBwZW5kQ2hpbGQobGFiZWwpOwogIHdyYXBwZXIuYXBwZW5kQ2hpbGQoYnV0dG9uKTsKICBlbC5hcHBlbmRDaGlsZCh3cmFwcGVyKTsKICBsZXQgcmVzZXRUaW1lciA9IG51bGw7CiAgY29uc3Qgc2V0TGFiZWwgPSAodGV4dCkgPT4gewogICAgbGFiZWwudGV4dENvbnRlbnQgPSB0ZXh0OwogIH07CiAgYnV0dG9uLmFkZEV2ZW50TGlzdGVuZXIoImNsaWNrIiwgKCkgPT4gewogICAgY29uc3QgdGV4dCA9IG1vZGVsLmdldCgidGV4dF90b19jb3B5IikgPz8gIiI7CiAgICBpZiAocmVzZXRUaW1lcikgewogICAgICBjbGVhclRpbWVvdXQocmVzZXRUaW1lcik7CiAgICAgIHJlc2V0VGltZXIgPSBudWxsOwogICAgfQogICAgY29weVRleHQodGV4dCkKICAgICAgLnRoZW4oKCkgPT4gc2V0TGFiZWwoIkNvcGllZCEiKSkKICAgICAgLmNhdGNoKCgpID0+IHNldExhYmVsKCJDb3B5IGZhaWxlZCIpKQogICAgICAuZmluYWxseSgoKSA9PiB7CiAgICAgICAgcmVzZXRUaW1lciA9IHNldFRpbWVvdXQoKCkgPT4gc2V0TGFiZWwoZGVmYXVsdExhYmVsKSwgMTIwMCk7CiAgICAgIH0pOwogIH0pOwp9CnZhciB3aWRnZXRfZGVmYXVsdCA9IHsgcmVuZGVyIH07CmV4cG9ydCB7CiAgd2lkZ2V0X2RlZmF1bHQgYXMgZGVmYXVsdAp9Owo=&quot;' data-js-hash='&quot;3e45b7b472ab8883badb161af2837f44&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "5aee9dbd2a188839105073571bee1b1f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='Hbol-1' random-id='8f7e516c-4630-1614-22be-c451f8db4828'><marimo-text-area data-initial-value='&quot;pip install wigglystuff&quot;' data-label='&quot;&lt;span class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&gt;&lt;span class=&#92;&quot;paragraph&#92;&quot;&gt;Text to copy&lt;/span&gt;&lt;/span&gt;&quot;' data-placeholder='&quot;&quot;' data-disabled='false' data-debounce='true' data-full-width='false'></marimo-text-area></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "b0a8ecbf7d730ccc35a119b40e57dcfb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "105525b88bddf24c02c83f61436b8cec",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><div class=\"language-text codehilite\"><pre><span></span><code>pip install wigglystuff\n</code></pre></div></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}
