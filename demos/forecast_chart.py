@@ -217,7 +217,7 @@ def _(fit_window, mo, projection_days):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(df, fit_window, forecast_chart, projection_days):
     forecast_chart(
         df,
