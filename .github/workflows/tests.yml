@@ -32,7 +32,8 @@ jobs:
       - name: Export marimo sessions and check for staleness
         run: |
           UV_SYSTEM_PYTHON=1 uv pip install -e ".[docs]"
-          UV_SYSTEM_PYTHON=1 make marimo-sessions
+          UV_SYSTEM_PYTHON=1 uv run marimo export session --no-sandbox demos/
+          UV_SYSTEM_PYTHON=1 uv run marimo export session --no-sandbox examples/
           git diff --exit-code demos/__marimo__ examples/__marimo__ || {
             echo "::error::Session files are stale. Run 'make marimo-sessions' and commit the results."
             exit 1
