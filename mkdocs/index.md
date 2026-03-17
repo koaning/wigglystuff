@@ -180,6 +180,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/play_slider.py/wasm" class="gallery-img"><img src="assets/gallery/playslider.png" alt="PlaySlider"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/play_slider.py/wasm">molab</a><a href="reference/play-slider/">API</a><a href="reference/play-slider.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">ForecastChart</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm" class="gallery-img"><img src="assets/gallery/forecast-chart.png" alt="ForecastChart"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm">molab</a><a href="reference/utils/">API</a><a href="reference/utils.md">MD</a></div>
+</div>
 </div>
 
 Each widget links to a live demo on [molab](https://molab.marimo.io) where you can interact with and edit the notebook directly in your browser.
@@ -231,18 +236,5 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 <div class="example-desc">Visualize Fashion MNIST embeddings with parallel coordinates filtering.</div>
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/examples/fashion-mnist-parallel-coords.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/examples/fashion-mnist-parallel-coords.py">Source</a></div>
-</div>
-<div class="example-item">
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/examples/pair-up.py" class="example-img"><img src="assets/gallery/pair-up.png" alt="Pair Up"></a>
-<div class="example-content">
-<div class="example-title">Pair Up</div>
-<div class="example-desc">Combine scatter, matrix, and 3D widgets for interactive data transformation.</div>
-</div>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/examples/pair-up.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/examples/pair-up.py">Source</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">forecast_chart</div>
-<a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py" class="gallery-img"><img src="assets/gallery/forecast-chart.png" alt="forecast_chart"></a>
-<div class="gallery-links"><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py">Demo</a><a href="reference/utils/">API</a><a href="reference/utils.md">MD</a></div>
 </div>
 </div>

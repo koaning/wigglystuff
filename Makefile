@@ -74,14 +74,14 @@ clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
 docs:
-	mkdocs build -f mkdocs.yml
+	mkdocs build -f mkdocs.yml 2>&1 | grep -v '^\[WARNING\] Div at'
 	uv run python scripts/copy_docs_md.py
 
 docs-serve:
 	uv run python -m http.server --directory site
 
 docs-build:
-	uv run mkdocs build -f mkdocs.yml
+	uv run mkdocs build -f mkdocs.yml 2>&1 | grep -v '^\[WARNING\] Div at'
 	uv run python scripts/copy_docs_md.py
 
 docs-llm:

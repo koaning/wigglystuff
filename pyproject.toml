@@ -19,6 +19,7 @@ dependencies = [
     "numpy",
     "pillow",
     "python-dotenv>=1.2.1",
+    "umap-learn>=0.5.11",
 ]
 
 [project.optional-dependencies]
