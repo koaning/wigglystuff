@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
+import time
 from pathlib import Path
 from typing import Any
 
 import anywidget
 import traitlets
+
+
+def _ts() -> float:
+    """Return a monotonic timestamp to ensure traitlet change detection."""
+    return time.monotonic()
 
 
 class ParallelCoordinates(anywidget.AnyWidget):
@@ -54,6 +60,12 @@ class ParallelCoordinates(anywidget.AnyWidget):
 
     # Brush extents synced from JS (compact dict describing axis brush ranges)
     brush_extents = traitlets.Dict({}).tag(sync=True)
+
+    # Accumulated filter rules synced from JS (each Keep/Exclude click)
+    _filter_history = traitlets.List([]).tag(sync=True)
+
+    # Signal traitlet for Python → JS action requests
+    _action_request = traitlets.Dict({}).tag(sync=True)
 
     # UIDs synced from JS (HiPlot onChange events for Keep/Exclude/brush)
     filtered_uids = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
@@ -143,6 +155,47 @@ class ParallelCoordinates(anywidget.AnyWidget):
     def selected_data(self) -> list[dict]:
         """Return the subset of data rows that are selected."""
         return [self.data[i] for i in self.selected_indices]
+
+    @property
+    def selections(self) -> list[dict]:
+        """Return the full filtering state including the active brush.
+
+        Returns a list of ``{"action": ..., "extents": ...}`` dicts.
+        Completed Keep/Exclude steps come first, followed by a
+        ``{"action": "current", "extents": ...}`` entry if there is an
+        active brush on any axis.
+        """
+        result = list(self._filter_history)
+        if self.brush_extents:
+            result.append({"action": "current", "extents": dict(self.brush_extents)})
+        return result
+
+    def keep(self) -> None:
+        """Trigger a Keep action on the current brush selection.
+
+        Equivalent to clicking the Keep button in the UI. Rows outside
+        the current brush are removed. The action and brush extents are
+        recorded in :attr:`filter_history`.
+        """
+        self._action_request = {"action": "keep", "ts": _ts()}
+
+    def exclude(self) -> None:
+        """Trigger an Exclude action on the current brush selection.
+
+        Equivalent to clicking the Exclude button in the UI. Rows inside
+        the current brush are removed. The action and brush extents are
+        recorded in :attr:`filter_history`.
+        """
+        self._action_request = {"action": "exclude", "ts": _ts()}
+
+    def restore(self) -> None:
+        """Restore all rows and clear the filter history.
+
+        Equivalent to clicking the Restore button in the UI. All
+        Keep/Exclude operations are undone and :attr:`filter_history`
+        is reset to an empty list.
+        """
+        self._action_request = {"action": "restore", "ts": _ts()}
 
 
 def _to_records(data: Any) -> list[dict]:
