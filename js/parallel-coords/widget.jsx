@@ -58,6 +58,7 @@ function render({ model, el }) {
   let domObserver = null;
   let themeObserver = null;
   let labelDragGuardInstalled = false;
+  let filterHistoryListenerInstalled = false;
   let lastRenderedDark = null;
 
   function applyHeaderLayout() {
@@ -180,6 +181,43 @@ function render({ model, el }) {
     el.__pcCleanupLabelDragGuard = () => {
       el.removeEventListener("pointerdown", onPointerDown, true);
       labelDragGuardInstalled = false;
+    };
+  }
+
+  function ensureFilterHistoryListener() {
+    if (filterHistoryListenerInstalled) return;
+
+    const onClick = (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      const btn = target.closest("button.btn.btn-sm");
+      if (!btn || !el.contains(btn)) return;
+
+      const text = (btn.textContent || "").trim().toLowerCase();
+      if (text === "keep" || text === "exclude") {
+        const extents = model.get("brush_extents");
+        if (extents && Object.keys(extents).length > 0) {
+          const history = [...(model.get("_filter_history") || [])];
+          history.push({
+            action: text,
+            extents: JSON.parse(JSON.stringify(extents)),
+          });
+          model.set("_filter_history", history);
+          model.save_changes();
+        }
+      } else if (text === "restore") {
+        model.set("_filter_history", []);
+        model.save_changes();
+      }
+    };
+
+    el.addEventListener("click", onClick, true); // capture phase
+    filterHistoryListenerInstalled = true;
+
+    el.__pcCleanupFilterHistory = () => {
+      el.removeEventListener("click", onClick, true);
+      filterHistoryListenerInstalled = false;
     };
   }
 
@@ -320,7 +358,47 @@ function render({ model, el }) {
       ensureDomObserver();
       ensureThemeObserver();
       ensureLabelDragGuard();
+      ensureFilterHistoryListener();
     });
+  }
+
+  function onActionRequest() {
+    const req = model.get("_action_request") || {};
+    const action = req.action;
+    if (!action) return;
+
+    if (!hiplotRef.current) return;
+
+    if (action === "keep") {
+      // Record history before HiPlot clears the brush
+      const extents = model.get("brush_extents");
+      if (extents && Object.keys(extents).length > 0) {
+        const history = [...(model.get("_filter_history") || [])];
+        history.push({
+          action: "keep",
+          extents: JSON.parse(JSON.stringify(extents)),
+        });
+        model.set("_filter_history", history);
+        model.save_changes();
+      }
+      hiplotRef.current.filterRows(true);
+    } else if (action === "exclude") {
+      const extents = model.get("brush_extents");
+      if (extents && Object.keys(extents).length > 0) {
+        const history = [...(model.get("_filter_history") || [])];
+        history.push({
+          action: "exclude",
+          extents: JSON.parse(JSON.stringify(extents)),
+        });
+        model.set("_filter_history", history);
+        model.save_changes();
+      }
+      hiplotRef.current.filterRows(false);
+    } else if (action === "restore") {
+      model.set("_filter_history", []);
+      model.save_changes();
+      hiplotRef.current.restoreAllRows();
+    }
   }
 
   doRender();
@@ -329,6 +407,7 @@ function render({ model, el }) {
   model.on("change:color_map", doRender);
   model.on("change:height", doRender);
   model.on("change:width", doRender);
+  model.on("change:_action_request", onActionRequest);
 
   return () => {
     model.off("change:data", doRender);
@@ -336,6 +415,7 @@ function render({ model, el }) {
     model.off("change:color_map", doRender);
     model.off("change:height", doRender);
     model.off("change:width", doRender);
+    model.off("change:_action_request", onActionRequest);
     if (domObserver) {
       domObserver.disconnect();
       domObserver = null;
@@ -347,6 +427,10 @@ function render({ model, el }) {
     if (typeof el.__pcCleanupLabelDragGuard === "function") {
       el.__pcCleanupLabelDragGuard();
       delete el.__pcCleanupLabelDragGuard;
+    }
+    if (typeof el.__pcCleanupFilterHistory === "function") {
+      el.__pcCleanupFilterHistory();
+      delete el.__pcCleanupFilterHistory;
     }
     root.unmount();
   };

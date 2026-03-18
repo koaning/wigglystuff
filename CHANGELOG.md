@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- `ParallelCoordinates` now exposes a `selections` property that returns the full filtering state: completed Keep/Exclude steps plus the active brush, enabling decision-tree-style filtering audit trails.
+- `ParallelCoordinates` now has `keep()`, `exclude()`, and `restore()` methods for programmatic control from Python.
+
 ## [0.2.39] - 2026-03-17
 
 ### Changed

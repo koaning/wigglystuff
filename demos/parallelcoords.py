@@ -8,9 +8,10 @@
 #     "wigglystuff==0.2.37",
 # ]
 # ///
+
 import marimo
 
-__generated_with = "0.20.2"
+__generated_with = "0.21.0"
 app = marimo.App()
 
 
@@ -45,10 +46,15 @@ def _(mo):
         {name: iris.data[:, i] for i, name in enumerate(iris.feature_names)}
     ).with_columns(pl.Series("target", iris.target))
 
-    widget = mo.ui.anywidget(ParallelCoordinates(
-        df, height=300, width=700, color_by="target",
-        color_map={0: "teal", 1: "orange", 2: "crimson"},
-    ))
+    widget = mo.ui.anywidget(
+        ParallelCoordinates(
+            df,
+            height=300,
+            width=700,
+            color_by="target",
+            color_map={0: "teal", 1: "orange", 2: "crimson"},
+        )
+    )
     widget
     return ParallelCoordinates, pl, widget
 
@@ -57,7 +63,14 @@ def _(mo):
 def _(mo, widget):
     n_filtered = len(widget.filtered_indices)
     n_total = len(widget.data)
-    mo.md(f"**Filtered:** {n_filtered} / {n_total} rows")
+    selections = widget.selections
+    lines = [f"**Filtered:** {n_filtered} / {n_total} rows"]
+    if selections:
+        lines.append("\n**Selections:**")
+        for step in selections:
+            cols = ", ".join(step["extents"].keys())
+            lines.append(f"- **{step['action']}** on {cols}")
+    mo.md("\n".join(lines))
     return
 
 
