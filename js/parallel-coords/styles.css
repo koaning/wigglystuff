@@ -6,6 +6,8 @@
 
 .pc-wrapper {
     color-scheme: light dark;
+    -webkit-user-select: none;
+    user-select: none;
     --pc-bg: #ffffff;
     --pc-border: #d0d7de;
     --pc-text: #111827;
