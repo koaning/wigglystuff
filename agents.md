@@ -35,7 +35,7 @@ syncs back to Python.
 | ThreeWidget | `wigglystuff.three_widget.ThreeWidget` | `data`, `width`, `height`, `show_grid`, `show_axes`, `dark_mode`, `axis_labels`, `animate_updates`, `animation_duration_ms` | 3D scatter plot for point clouds |
 | WebcamCapture | `wigglystuff.webcam_capture.WebcamCapture` | `image_base64`, `capturing`, `interval_ms`, `facing_mode` | Webcam preview with snapshot capture |
 | GamepadWidget | `wigglystuff.gamepad.GamepadWidget` | `axes`, `current_button_press`, `dpad_*`, `current_timestamp` | Streams browser Gamepad API events |
-| HoverZoom | `wigglystuff.hover_zoom.HoverZoom` | `image`, `zoom_factor`, `width`, `height` | Image hover zoom with magnified side panel |
+| HoverZoom | `wigglystuff.hover_zoom.HoverZoom` | `image`, `zoom_factor`, `width`, `height`, `_crop` | Image hover zoom with magnified side panel |
 | KeystrokeWidget | `wigglystuff.keystroke.KeystrokeWidget` | `last_key` | Captures the latest keypress w/ modifiers |
 | WebkitSpeechToTextWidget | `wigglystuff.talk.WebkitSpeechToTextWidget` | `transcript`, `listening`, `trigger_listen` | WebKit speech recognition bridge |
 | DriverTour | `wigglystuff.driver_tour.DriverTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Guided product tours via Driver.js |

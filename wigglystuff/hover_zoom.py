@@ -41,6 +41,7 @@ class HoverZoom(anywidget.AnyWidget):
     zoom_factor = traitlets.Float(3.0).tag(sync=True)
     width = traitlets.Int(500).tag(sync=True)
     height = traitlets.Int(0).tag(sync=True)
+    _crop = traitlets.List(traitlets.Float(), [0.0, 0.0, 1.0, 1.0]).tag(sync=True)
 
     def __init__(
         self,
@@ -73,8 +74,15 @@ class HoverZoom(anywidget.AnyWidget):
                 if pil_image is not None:
                     self.image = pil_to_base64(pil_image)
 
-    def get_pil(self):
-        """Return the current image as a PIL Image."""
+    def get_pil_zoom(self):
+        """Return the currently zoomed region as a PIL Image.
+
+        Returns the cropped portion of the image that is visible in the
+        zoom panel. Returns ``None`` if no image is set.
+        """
         if not self.image:
             return None
-        return base64_to_pil(self.image)
+        img = base64_to_pil(self.image)
+        x0_r, y0_r, x1_r, y1_r = self._crop
+        w, h = img.size
+        return img.crop((int(x0_r * w), int(y0_r * h), int(x1_r * w), int(y1_r * h)))

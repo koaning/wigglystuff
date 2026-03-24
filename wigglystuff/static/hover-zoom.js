@@ -75,11 +75,17 @@ function render({ model, el }) {
 
     const ratioX = rectLeft / imgW;
     const ratioY = rectTop / imgH;
+    const ratioW = rectW / imgW;
+    const ratioH = rectH / imgH;
     const bgW = imgW * zf;
     const bgH = imgH * zf;
 
     zoomPanel.style.backgroundPosition = -(ratioX * bgW) + "px " + -(ratioY * bgH) + "px";
     zoomPanel.style.backgroundSize = bgW + "px " + bgH + "px";
+
+    // Sync crop region to Python as [x0, y0, x1, y1] ratios
+    model.set("_crop", [ratioX, ratioY, ratioX + ratioW, ratioY + ratioH]);
+    model.save_changes();
   }
 
   function showZoom() {
