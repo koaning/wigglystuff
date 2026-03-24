@@ -46,7 +46,7 @@ js-driver-tour:
 	./esbuild --bundle --format=esm --loader:.css=text --outfile=wigglystuff/static/driver-tour.js js/driver-tour/widget.js
 
 js-paint:
-	./node_modules/.bin/tailwindcss -i ./js/paint/styles.css -o ./wigglystuff/static/paint.css
+	cp js/paint/styles.css wigglystuff/static/paint.css
 	./node_modules/.bin/esbuild js/paint/widget.tsx --bundle --format=esm --outfile=wigglystuff/static/paint.js --minify
 
 js-pulsar-chart:

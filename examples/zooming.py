@@ -56,8 +56,8 @@ def _(Image, ImageDraw, io):
 @app.cell
 def _(mo):
     upload = mo.ui.file(kind="button", label="Upload Screenshot")
-    c_re = mo.ui.slider(0.1, 7.0, step=0.01, value=1.0, label="Scale ($c_{re}$)")
-    c_im = mo.ui.slider(-7.0, 7.0, step=0.01, value=0.0, label="Twist ($c_{im}$)")
+    c_re = mo.ui.slider(-7, 7.0, step=0.01, value=1.0, label="Scale ($c_{re}$)")
+    c_im = mo.ui.slider(-70.0, 70.0, step=0.01, value=0.0, label="Twist ($c_{im}$)")
     zoom = mo.ui.slider(0.0, 10.0, step=0.01, value=0.0, label="Zoom Depth")
     view_mode = mo.ui.radio(["Spiral Space", "Log Space"], value="Spiral Space", label="View")
     return c_im, c_re, upload, view_mode, zoom
@@ -125,11 +125,9 @@ def _(apply_droste, c_im, c_re, mo, paint, upload, view_mode, zoom):
     src_img = paint.get_pil()
     res_img = apply_droste(src_img, c_re.value, c_im.value, zoom.value, view_mode.value)
 
-    mo.md(
-        f"""
+    mo.md(f"""
         # 3Blue1Brown Droste Simulator
-        {upload}"""
-    )
+        {upload}""")
     return res_img, src_img
 
 
