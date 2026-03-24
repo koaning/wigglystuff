@@ -4,11 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.40] - 2026-03-24
+
 ### Added
+- `PlaySlider` now has a `values` property that returns all discrete values in the range, useful for pre-caching downstream results before hitting play.
 - `ParallelCoordinates` now exposes a `selections` property that returns the full filtering state: completed Keep/Exclude steps plus the active brush, enabling decision-tree-style filtering audit trails.
 - `ParallelCoordinates` now has `keep()`, `exclude()`, and `restore()` methods for programmatic control from Python.
 
 ### Fixed
+- `PlaySlider` no longer produces floating-point rounding artifacts (e.g., `0.30000000000000004`) when using fractional step values. Both the displayed label and the synced Python value are now rounded to the step's precision.
 - `ParallelCoordinates` axis tick labels no longer get highlighted during brush/drag interactions.
 
 ## [0.2.39] - 2026-03-17
