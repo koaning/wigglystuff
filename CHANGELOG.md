@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.3.0] - 2026-03-24
 
 ### Changed
 - `Paint` widget redesigned: replaced MS Paint window chrome with a minimal toolbar (brush, marker, eraser, undo, clear, color picker). Dropped Tailwind CSS dependency in favor of scoped CSS variables with dark mode support.

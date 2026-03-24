@@ -148,11 +148,15 @@ class Paint(anywidget.AnyWidget):
             else:
                 self.width = width
                 self.height = height
-                self.base64 = ""
+                self.base64 = pil_to_base64(
+                    create_empty_image(width, height, (0, 0, 0, 0))
+                ).split(",")[1]
         else:
             self.width = width
             self.height = height
-            self.base64 = ""
+            self.base64 = pil_to_base64(
+                create_empty_image(width, height, (0, 0, 0, 0))
+            ).split(",")[1]
 
         self.store_background = store_background
 
