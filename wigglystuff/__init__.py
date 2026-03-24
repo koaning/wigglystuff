@@ -16,6 +16,7 @@ from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
 from .gamepad import GamepadWidget
+from .hover_zoom import HoverZoom
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
 from .matrix import Matrix
@@ -74,6 +75,7 @@ __all__ = [
     "ThreeWidget",
     "WandbChart",
     "WebcamCapture",
+    "HoverZoom",
     "HTMLRefreshWidget",
     "ImageRefreshWidget",
     "ProgressBar",

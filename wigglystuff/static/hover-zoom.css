@@ -1,0 +1,55 @@
+.hover-zoom-wrapper {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  position: relative;
+  color-scheme: light dark;
+  --hz-rect-bg: rgba(255, 255, 255, 0.25);
+  --hz-rect-border: rgba(0, 0, 0, 0.4);
+  --hz-panel-border: rgba(0, 0, 0, 0.15);
+  --hz-panel-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.dark .hover-zoom-wrapper,
+.dark-theme .hover-zoom-wrapper,
+[data-theme="dark"] .hover-zoom-wrapper {
+  --hz-rect-bg: rgba(255, 255, 255, 0.2);
+  --hz-rect-border: rgba(255, 255, 255, 0.6);
+  --hz-panel-border: rgba(255, 255, 255, 0.2);
+  --hz-panel-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.hover-zoom-source {
+  position: relative;
+  display: inline-block;
+  cursor: crosshair;
+  flex-shrink: 0;
+}
+
+.hover-zoom-img {
+  display: block;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hover-zoom-rect {
+  display: none;
+  position: absolute;
+  background: var(--hz-rect-bg);
+  border: 2px solid var(--hz-rect-border);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.hover-zoom-rect--pinned {
+  border-style: dashed;
+}
+
+.hover-zoom-panel {
+  display: none;
+  flex-shrink: 0;
+  border: 1px solid var(--hz-panel-border);
+  box-shadow: var(--hz-panel-shadow);
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
