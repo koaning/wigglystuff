@@ -1,4 +1,4 @@
-"""Paint widget ported from the mopaint project."""
+"""Minimal drawing canvas widget with PIL helpers."""
 
 from __future__ import annotations
 
@@ -81,7 +81,7 @@ def input_to_pil(input_data: Union[str, Path, "Image.Image", bytes, None]):
 
 
 class Paint(anywidget.AnyWidget):
-    """Notebook-friendly paint widget with MS Paint style tools and PIL helpers.
+    """Notebook-friendly drawing canvas with brush, marker, eraser, undo, and PIL helpers.
 
     Examples:
         ```python
@@ -138,6 +138,11 @@ class Paint(anywidget.AnyWidget):
                     self.width = image_width
                     self.height = image_height
 
+                if (self.width, self.height) != pil_image.size:
+                    from PIL import Image as _PILImage
+                    pil_image = pil_image.resize(
+                        (self.width, self.height), _PILImage.LANCZOS
+                    )
                 encoded = pil_to_base64(pil_image).split(",")[1]
                 self.base64 = encoded
             else:
