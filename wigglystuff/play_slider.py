@@ -68,3 +68,15 @@ class PlaySlider(anywidget.AnyWidget):
             width=width,
             **kwargs,
         )
+
+    @property
+    def values(self):
+        """All discrete values from min_value to max_value (inclusive) at the current step."""
+        step_str = str(self.step)
+        precision = len(step_str.rstrip("0").split(".")[-1]) if "." in step_str else 0
+        result = []
+        v = self.min_value
+        while v <= self.max_value:
+            result.append(round(v, precision))
+            v += self.step
+        return result

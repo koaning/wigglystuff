@@ -49,7 +49,7 @@ function render({ model, el }) {
   function renderValue() {
     const val = model.get("value");
     slider.value = val;
-    label.textContent = val;
+    label.textContent = val.toFixed(getPrecision());
     updateTrackFill();
   }
 
@@ -57,10 +57,18 @@ function render({ model, el }) {
     btn.innerHTML = model.get("playing") ? PAUSE_ICON : PLAY_ICON;
   }
 
+  function getPrecision() {
+    const s = String(model.get("step"));
+    const dot = s.indexOf(".");
+    return dot === -1 ? 0 : s.length - dot - 1;
+  }
+
   function snap(val) {
     const step = model.get("step");
     const min = model.get("min_value");
-    return Math.round((val - min) / step) * step + min;
+    const prec = getPrecision();
+    const raw = Math.round((val - min) / step) * step + min;
+    return parseFloat(raw.toFixed(prec));
   }
 
   function tick() {
@@ -117,7 +125,7 @@ function render({ model, el }) {
   // Manual slider input
   slider.addEventListener("input", () => {
     localUpdate = true;
-    model.set("value", parseFloat(slider.value));
+    model.set("value", snap(parseFloat(slider.value)));
     model.save_changes();
     updateTrackFill();
   });
