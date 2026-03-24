@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.3.0] - 2026-03-24
+
+### Changed
+- `Paint` widget redesigned: replaced MS Paint window chrome with a minimal toolbar (brush, marker, eraser, undo, clear, color picker). Dropped Tailwind CSS dependency in favor of scoped CSS variables with dark mode support.
+
+### Fixed
+- `Paint` canvas now respects the `width` and `height` traitlets instead of expanding to fill the host container.
+- `Paint` with `init_image` now resizes the image to match target dimensions upfront, so `get_pil()` returns the correct resolution before the first stroke.
 
 ### Added
 - New `HoverZoom` widget — hover over an image to see a magnified side panel, like product zoom on e-commerce sites.

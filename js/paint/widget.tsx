@@ -1,577 +1,309 @@
 import { createRender, useModelState } from "@anywidget/react";
 import React, { useRef, useState, useEffect } from 'react';
 
-const Button = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    variant?: 'default' | 'ghost'
-  }
->(({ className = '', variant = 'default', ...props }, ref) => {
-  const baseStyles = 'inline-flex items-center justify-center rounded-md text-sm font-medium focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50';
-  const variantStyles = {
-    default: 'bg-gray-200 active:bg-gray-300',
-    ghost: 'active:bg-gray-100/50'
-  };
-  
-  return (
-    <button
-      ref={ref}
-      className={`${baseStyles} ${variantStyles[variant]} ${className}`}
-      {...props}
-    />
-  );
-});
-Button.displayName = 'Button';
-
-const colors = [
-  '#000000', '#FFFFFF', '#C0C0C0', '#FF0000', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#FF00FF', '#FFFF80', '#00FF80', '#80FFFF', '#8080FF', '#FF0080'
-];
-
-// Constants for canvas settings
-const MAX_CANVAS_DIMENSION = 4096; // Most browsers support up to 4096x4096
+const MAX_UNDO_STEPS = 20;
 
 function Component() {
-  const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState('#000000');
   const [tool, setTool] = useState('brush');
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [dragging, setDragging] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   let [base64, setBase64] = useModelState<string>("base64");
-  let [height, setHeight] = useModelState<number>("height");
-  let [storeBackground, setStoreBackground] = useModelState<boolean>("store_background");
-  
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  let [height] = useModelState<number>("height");
+  let [width] = useModelState<number>("width");
+  let [storeBackground] = useModelState<boolean>("store_background");
 
-  // Utility function to ensure canvas context is available
-  const getContext = () => {
-    const drawingContext = drawingCanvasRef.current?.getContext('2d');
-    return drawingContext;
-  };
+  const originalImageRef = useRef<string>("");
+  const lastLoadedBase64Ref = useRef<string>("");
+  const isLoadingRef = useRef(false);
+  const [exportTrigger, setExportTrigger] = useState(0);
+  const undoStackRef = useRef<ImageData[]>([]);
+  const [undoCount, setUndoCount] = useState(0);
 
-  // Utility function to ensure canvas sizes are in sync
-  const syncCanvasSizes = (width: number, height: number) => {
-    const drawingContext = getContext();
-    if (!drawingContext) return false;
-
-    // Scale down if dimensions are too large
-    const scale = Math.min(1, MAX_CANVAS_DIMENSION / Math.max(width, height));
-    const finalWidth = Math.floor(width * scale);
-    const finalHeight = Math.floor(height * scale);
-
-    try {
-      // Store the current drawing
-      const drawingData = drawingCanvasRef.current?.toDataURL();
-
-      // Set canvas dimensions
-      drawingCanvasRef.current!.width = finalWidth;
-      drawingCanvasRef.current!.height = finalHeight;
-
-      // Restore the drawing if we had one
-      if (drawingData) {
-        const img = new Image();
-        img.onload = () => {
-          drawingContext.drawImage(img, 0, 0);
-        };
-        img.src = drawingData;
-      }
-
-      return true;
-    } catch (e) {
-      console.error('Failed to resize canvases:', e);
-      setError('Failed to resize canvas. Try reducing the window size.');
-      return false;
-    }
-  };
-
-  // Handle window resize with debouncing
+  // Capture the original base64 once on mount
   useEffect(() => {
-    let resizeTimeout: number;
-    
-    const resizeCanvas = () => {
-      const container = drawingCanvasRef.current?.parentElement;
-      if (!container) return;
+    originalImageRef.current = base64;
+  }, []);
 
-      let newWidth = container.clientWidth;
-      let newHeight = container.clientHeight;
-      
-      // If we have an original image, use its dimensions to maintain aspect ratio
-      // and prevent scaling distortion
-      if (originalImageRef.current) {
-        // For images, we want to maintain the original dimensions
-        // Width can be responsive to container, but height should match image proportions
-        const img = new Image();
-        img.onload = () => {
-          const imageAspectRatio = img.width / img.height;
-          const containerAspectRatio = newWidth / newHeight;
-          
-          // Preserve original image dimensions - don't scale the image
-          // Instead, adjust canvas to accommodate the image
-          newWidth = Math.min(newWidth, img.width);
-          newHeight = img.height;
-          
-          if (syncCanvasSizes(newWidth, newHeight)) {
-            setCanvasSize({ width: newWidth, height: newHeight });
-          }
-        };
-        img.src = `data:image/png;base64,${originalImageRef.current}`;
-      } else {
-        // No original image, use container dimensions as before
-        if (syncCanvasSizes(newWidth, newHeight)) {
-          setCanvasSize({ width: newWidth, height: newHeight });
-        }
-      }
-    };
+  const getContext = () => canvasRef.current?.getContext('2d') ?? null;
 
-    const debouncedResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(resizeCanvas, 250);
-    };
-
-    window.addEventListener('resize', debouncedResize);
-    resizeCanvas(); // Initial sizing
-
-    return () => {
-      window.removeEventListener('resize', debouncedResize);
-      clearTimeout(resizeTimeout);
-    };
-  }, []); // Empty dependency - resize logic handles original image internally
-
-  // Effect to handle touch events
+  // Clear undo stack when dimensions change
   useEffect(() => {
-    const drawingCanvas = drawingCanvasRef.current;
-    if (!drawingCanvas) return;
+    undoStackRef.current = [];
+    setUndoCount(0);
+  }, [width, height]);
+
+  // Touch events
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
     const touchStart = (e: TouchEvent) => {
       e.preventDefault();
-      const touch = e.touches[0];
-      const rect = drawingCanvas.getBoundingClientRect();
-      startDrawingAt(touch.clientX - rect.left, touch.clientY - rect.top);
+      const t = e.touches[0];
+      const r = canvas.getBoundingClientRect();
+      startDrawingAt(t.clientX - r.left, t.clientY - r.top);
     };
-
     const touchMove = (e: TouchEvent) => {
       e.preventDefault();
-      const touch = e.touches[0];
-      const rect = drawingCanvas.getBoundingClientRect();
-      drawAt(touch.clientX - rect.left, touch.clientY - rect.top);
+      const t = e.touches[0];
+      const r = canvas.getBoundingClientRect();
+      drawAt(t.clientX - r.left, t.clientY - r.top);
     };
-
     const touchEnd = (e: TouchEvent) => {
       e.preventDefault();
       stopDrawing();
     };
 
-    drawingCanvas.addEventListener('touchstart', touchStart);
-    drawingCanvas.addEventListener('touchmove', touchMove);
-    drawingCanvas.addEventListener('touchend', touchEnd);
+    canvas.addEventListener('touchstart', touchStart, { passive: false });
+    canvas.addEventListener('touchmove', touchMove, { passive: false });
+    canvas.addEventListener('touchend', touchEnd, { passive: false });
 
     return () => {
-      drawingCanvas.removeEventListener('touchstart', touchStart);
-      drawingCanvas.removeEventListener('touchmove', touchMove);
-      drawingCanvas.removeEventListener('touchend', touchEnd);
+      canvas.removeEventListener('touchstart', touchStart);
+      canvas.removeEventListener('touchmove', touchMove);
+      canvas.removeEventListener('touchend', touchEnd);
     };
   }, []);
 
-  // Track the last loaded base64 to detect changes
-  const lastLoadedBase64Ref = useRef<string>("");
-  // Track if we're in the process of loading an initial image
-  const isLoadingInitialImageRef = useRef(false);
-  // Store the original base64 image for reset operations (captured on first render only)
-  const originalImageRef = useRef<string>("");
-  // Track drawing changes to trigger exports
-  const [exportTrigger, setExportTrigger] = useState(0);
-
-  // Capture the original base64 ONCE on component mount (before any user drawings)
+  // Load initial/updated image
   useEffect(() => {
-    originalImageRef.current = base64;
-  }, []); // Empty deps = runs only once on mount
+    const ctx = getContext();
+    if (!ctx || !canvasRef.current || !base64) return;
+    if (width === 0 || height === 0) return;
 
-  // Drawing functions - defined before effects that use them
-  const startDrawingAt = (x: number, y: number) => {
-    const drawingContext = getContext();
-    if (!drawingContext) return;
+    if (base64 === lastLoadedBase64Ref.current) {
+      const canvas = canvasRef.current;
+      if (canvas.width > 0 && canvas.height > 0) {
+        try {
+          const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          if (data.data.some(p => p !== 0)) return;
+        } catch {}
+      }
+    }
+
+    isLoadingRef.current = true;
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvasRef.current!.width, canvasRef.current!.height);
+      ctx.drawImage(img, 0, 0, canvasRef.current!.width, canvasRef.current!.height);
+      lastLoadedBase64Ref.current = base64;
+      isLoadingRef.current = false;
+    };
+    img.onerror = () => { isLoadingRef.current = false; };
+    img.src = `data:image/png;base64,${base64}`;
+  }, [base64, width, height]);
+
+  // Export on trigger
+  useEffect(() => {
+    if (!canvasRef.current || exportTrigger === 0 || isLoadingRef.current) return;
+
+    const exportCanvas = document.createElement('canvas');
+    exportCanvas.width = canvasRef.current.width;
+    exportCanvas.height = canvasRef.current.height;
+    const exportCtx = exportCanvas.getContext('2d', { alpha: true });
+    if (!exportCtx) return;
+
+    exportCtx.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
+
+    if (storeBackground) {
+      exportCtx.fillStyle = '#FFFFFF';
+      exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+    }
+
+    exportCtx.globalCompositeOperation = 'source-over';
+    exportCtx.drawImage(canvasRef.current, 0, 0);
 
     try {
-      drawingContext.beginPath();
-      drawingContext.moveTo(x, y);
-      setIsDrawing(true);
-    } catch (e) {
-      console.error('Failed to start drawing:', e);
-      setError('Failed to start drawing. Try refreshing the page.');
+      const dataUrl = exportCanvas.toDataURL('image/png');
+      setBase64(dataUrl.split(',')[1]);
+    } catch {}
+  }, [storeBackground, width, height, exportTrigger]);
+
+  // Save undo snapshot before a stroke
+  const saveUndoSnapshot = () => {
+    const ctx = getContext();
+    const canvas = canvasRef.current;
+    if (!ctx || !canvas || canvas.width === 0 || canvas.height === 0) return;
+
+    const snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const stack = undoStackRef.current;
+    if (stack.length >= MAX_UNDO_STEPS) stack.shift();
+    stack.push(snapshot);
+    setUndoCount(stack.length);
+  };
+
+  const handleUndo = () => {
+    const ctx = getContext();
+    const canvas = canvasRef.current;
+    if (!ctx || !canvas) return;
+
+    const snapshot = undoStackRef.current.pop();
+    if (!snapshot) return;
+
+    ctx.putImageData(snapshot, 0, 0);
+    setUndoCount(undoStackRef.current.length);
+    setExportTrigger(prev => prev + 1);
+  };
+
+  const handleClear = () => {
+    const ctx = getContext();
+    const canvas = canvasRef.current;
+    if (!ctx || !canvas) return;
+
+    // Save current state so clear is undoable
+    saveUndoSnapshot();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (originalImageRef.current) {
+      isLoadingRef.current = true;
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        isLoadingRef.current = false;
+        setExportTrigger(prev => prev + 1);
+      };
+      img.onerror = () => {
+        isLoadingRef.current = false;
+        setExportTrigger(prev => prev + 1);
+      };
+      img.src = `data:image/png;base64,${originalImageRef.current}`;
+    } else {
+      setExportTrigger(prev => prev + 1);
     }
+  };
+
+  const startDrawingAt = (x: number, y: number) => {
+    const ctx = getContext();
+    if (!ctx) return;
+    saveUndoSnapshot();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    setIsDrawing(true);
   };
 
   const drawAt = (x: number, y: number) => {
     if (!isDrawing) return;
+    const ctx = getContext();
+    if (!ctx) return;
 
-    const drawingContext = getContext();
-    if (!drawingContext) return;
+    ctx.lineTo(x, y);
 
-    try {
-      drawingContext.lineTo(x, y);
-      
-      if (tool === 'eraser') {
-        // Save the current state
-        drawingContext.save();
-        // Set composite operation to clear the pixels
-        drawingContext.globalCompositeOperation = 'destination-out';
-        drawingContext.strokeStyle = '#000000';  // Color doesn't matter for eraser
-        drawingContext.lineWidth = 20;
-        drawingContext.lineCap = 'round';
-        drawingContext.stroke();
-        // Restore the previous state
-        drawingContext.restore();
-      } else {
-        // Normal drawing
-        drawingContext.strokeStyle = color;
-        drawingContext.lineWidth = tool === 'marker' ? 8 : 2;
-        drawingContext.lineCap = 'round';
-        drawingContext.stroke();
-      }
-    } catch (e) {
-      console.error('Failed to draw:', e);
-      setError('Failed to draw. Try refreshing the page.');
-      setIsDrawing(false);
+    if (tool === 'eraser') {
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 20;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      ctx.restore();
+    } else {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = tool === 'marker' ? 8 : 2;
+      ctx.lineCap = 'round';
+      ctx.stroke();
     }
   };
 
   const stopDrawing = () => {
     if (!isDrawing) return;
-    
-    try {
-      // Trigger export after drawing
-      setExportTrigger(prev => prev + 1);
-    } catch (e) {
-      console.error('Failed to complete drawing:', e);
-      setError('Failed to complete drawing. Try refreshing the page.');
-    }
-    
+    setExportTrigger(prev => prev + 1);
     setIsDrawing(false);
   };
 
-  // Effect to load initial image when base64 is available and canvas is ready
-  useEffect(() => {
-    const drawingContext = getContext();
-
-    // Skip if no context, canvas, or base64
-    if (!drawingContext || !drawingCanvasRef.current || !base64) {
-      return;
-    }
-    
-    // Skip if we already loaded this exact base64, BUT only if canvas still has content
-    if (base64 === lastLoadedBase64Ref.current) {
-      // Check if canvas actually has the image content
-      const canvas = drawingCanvasRef.current;
-      if (canvas && canvas.width > 0 && canvas.height > 0) {
-        try {
-          const imageData = drawingContext.getImageData(0, 0, canvas.width, canvas.height);
-          const hasContent = imageData.data.some(pixel => pixel !== 0);
-          if (hasContent) {
-            return;
-          }
-        } catch (e) {
-          // Could not check canvas content, proceed with reload
-        }
-      }
-    }
-    
-    const canvas = drawingCanvasRef.current;
-    // Only proceed if canvas has proper dimensions
-    if (canvas.width === 0 || canvas.height === 0) {
-      return;
-    }
-    
-    isLoadingInitialImageRef.current = true;
-
-    // Load the initial image
-    const img = new Image();
-    img.onload = () => {
-      drawingContext.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Draw image at original size (no scaling) - preserve image dimensions
-      drawingContext.drawImage(img, 0, 0, img.width, img.height);
-      
-      lastLoadedBase64Ref.current = base64;
-      isLoadingInitialImageRef.current = false;
-    };
-    img.onerror = (e) => {
-      console.error('Failed to load image:', e);
-      isLoadingInitialImageRef.current = false;
-    };
-    img.src = `data:image/png;base64,${base64}`;
-  }, [base64, canvasSize.width, canvasSize.height]);
-
-  // Effect to handle export updates
-  useEffect(() => {
-    if (!drawingCanvasRef.current) return;
-    
-    // Don't export on initial render (when exportTrigger is 0)
-    if (exportTrigger === 0) {
-      return;
-    }
-    
-    // Don't export while we're loading an initial image
-    if (isLoadingInitialImageRef.current) {
-      return;
-    }
-    
-    const exportCanvas = document.createElement('canvas');
-    exportCanvas.width = drawingCanvasRef.current.width;
-    exportCanvas.height = drawingCanvasRef.current.height;
-    const exportContext = exportCanvas.getContext('2d', { alpha: true });
-    if (!exportContext) return;
-
-    // Start fresh with a transparent canvas
-    exportContext.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
-    
-    // Layer 1: Background (if enabled)
-    if (storeBackground) {
-      exportContext.fillStyle = '#FFFFFF';
-      exportContext.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-    }
-    
-    // Layer 2: Drawing content (always preserve original alpha)
-    exportContext.globalCompositeOperation = 'source-over';
-    exportContext.drawImage(drawingCanvasRef.current, 0, 0);
-
-    // Update base64 output
-    try {
-      const dataUrl = exportCanvas.toDataURL('image/png');
-      setBase64(dataUrl.split(',')[1]);
-    } catch (e) {
-      console.error('Failed to export canvas:', e);
-      setError('Failed to export canvas. Try refreshing the page.');
-    }
-  }, [storeBackground, canvasSize, exportTrigger]);
-
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    startDrawingAt(e.clientX - rect.left, e.clientY - rect.top);
+  const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    startDrawingAt(e.clientX - r.left, e.clientY - r.top);
   };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    drawAt(e.clientX - rect.left, e.clientY - rect.top);
+  const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    drawAt(e.clientX - r.left, e.clientY - r.top);
   };
 
-  const startDragging = (e: React.MouseEvent<HTMLDivElement>) => {
-    setDragging(true);
-    setPosition({
-      x: e.clientX - (containerRef.current?.offsetLeft || 0),
-      y: e.clientY - (containerRef.current?.offsetTop || 0)
-    });
-  };
-
-  const onDrag = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (dragging) {
-      const left = e.clientX - position.x;
-      const top = e.clientY - position.y;
-      if (containerRef.current) {
-        containerRef.current.style.left = `${left}px`;
-        containerRef.current.style.top = `${top}px`;
-      }
-    }
-  };
-
-  const stopDragging = () => {
-    setDragging(false);
-  };
-
-  const BackgroundIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-      <rect x="7" y="7" width="10" height="10" rx="1" ry="1" fill="currentColor" fillOpacity="0.2"></rect>
-    </svg>
-  );
+  const canvasBg = storeBackground
+    ? '#ffffff'
+    : 'repeating-conic-gradient(#d0d0d0 0% 25%, #f0f0f0 0% 50%) 0 0 / 16px 16px';
 
   return (
-    <div className="bg-teal-600 w-full overflow-hidden" style={{ height: `${height}px` }}>
-      {error && (
-        <div className="absolute top-0 left-0 right-0 bg-red-500 text-white p-2 text-center">
-          {error}
-          <button 
-            className="ml-2 underline"
-            onClick={() => setError(null)}
+    <div className="paint-container" style={{ width: `${width}px` }}>
+      <div className="paint-toolbar">
+        <div className="paint-tool-group">
+          <button
+            className={tool === 'brush' ? 'active' : ''}
+            onClick={() => setTool('brush')}
+            title="Brush (thin)"
           >
-            Dismiss
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m21.174 6.812-3.524-3.524-2.197 2.197 3.524 3.524z"/>
+              <path d="m14.264 6.674-8.884 8.886a1.5 1.5 0 0 0-.398.725L3.5 22.5l6.215-1.482a1.5 1.5 0 0 0 .725-.398l8.884-8.886"/>
+            </svg>
+          </button>
+          <button
+            className={tool === 'marker' ? 'active' : ''}
+            onClick={() => setTool('marker')}
+            title="Marker (thick)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15.707 4.293a1 1 0 0 1 1.414 0l2.586 2.586a1 1 0 0 1 0 1.414L8.414 19.586a2 2 0 0 1-.829.525l-5.085 1.695 1.695-5.085a2 2 0 0 1 .525-.829z"/>
+              <path d="m13 6 5 5"/>
+            </svg>
+          </button>
+          <button
+            className={tool === 'eraser' ? 'active' : ''}
+            onClick={() => setTool('eraser')}
+            title="Eraser"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/>
+              <path d="M22 21H7"/>
+              <path d="m5 11 9 9"/>
+            </svg>
           </button>
         </div>
-      )}
-      <div 
-        ref={containerRef}
-        className="absolute bg-white border-2 border-gray-200 shadow-md flex flex-col" 
-        style={{ 
-          width: '90%', 
-          height: '90%', 
-          left: '50%', 
-          top: '50%', 
-          transform: 'translate(-50%, -50%)',
-          minWidth: '400px',
-          minHeight: '300px'
-        }}
-      >
-        {/* Title bar */}
-        <div 
-          className="bg-blue-900 text-white px-2 py-1 flex justify-between items-center cursor-move"
-          onMouseDown={startDragging}
-          onMouseMove={onDrag}
-          onMouseUp={stopDragging}
-          onMouseLeave={stopDragging}
-        >
-          <span className="text-white">untitled - Paint</span>
-          <div className="flex gap-1">
-            <Button variant="ghost" className="h-5 w-5 p-0 min-w-0 text-white hover:bg-blue-700">_</Button>
-            <Button variant="ghost" className="h-5 w-5 p-0 min-w-0 text-white hover:bg-blue-700">□</Button>
-            <Button variant="ghost" className="h-5 w-5 p-0 min-w-0 text-white hover:bg-blue-700">×</Button>
-          </div>
+
+        <div className="paint-divider" />
+
+        <div className="paint-action-group">
+          <button
+            onClick={handleUndo}
+            disabled={undoCount === 0}
+            title="Undo"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 7v6h6"/>
+              <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+            </svg>
+          </button>
+          <button onClick={handleClear} title="Clear">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 6h18"/>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+            </svg>
+          </button>
         </div>
 
-        {/* Menu bar */}
-        <div className="bg-gray-300 px-2 py-1 text-sm text-black">
-          <span className="mr-4 text-black">File</span>
-          <span className="mr-4 text-black">Edit</span>
-          <span className="mr-4 text-black">View</span>
-          <span className="mr-4 text-black">Image</span>
-          <span className="mr-4 text-black">Options</span>
-          <span className="text-black">Help</span>
-        </div>
+        <div className="paint-divider" />
 
-        {/* Main content area */}
-        <div className="flex flex-1 min-h-0">
-          {/* Left toolbar */}
-          <div className="w-8 bg-gray-300 p-0.5 border-r border-gray-400">
-            <Button
-              variant="ghost"
-              className={`w-7 h-7 p-0 min-w-0 mb-0.5 ${tool === 'brush' ? 'bg-gray-300 border border-gray-400 shadow-inner' : ''}`}
-              onClick={() => setTool('brush')}
-              title="Brush"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-black">
-                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-              </svg>
-            </Button>
-            <Button
-              variant="ghost"
-              className={`w-7 h-7 p-0 min-w-0 mb-0.5 ${tool === 'marker' ? 'bg-gray-300 border border-gray-400 shadow-inner' : ''}`}
-              onClick={() => setTool('marker')}
-              title="Thick Marker"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-black">
-                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-              </svg>
-            </Button>
-            <Button
-              variant="ghost"
-              className={`w-7 h-7 p-0 min-w-0 mb-0.5 ${tool === 'eraser' ? 'bg-gray-300 border border-gray-400 shadow-inner' : ''}`}
-              onClick={() => setTool('eraser')}
-              title="Eraser"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-black">
-                <path d="M7 21h10"/>
-                <path d="M5.5 13.5L13 6c.83-.83 2.17-.83 3 0l2 2c.83.83.83 2.17 0 3l-7.5 7.5c-.83.83-2.17.83-3 0l-2-2c-.83-.83-.83-2.17 0-3z"/>
-              </svg>
-            </Button>
-            <div className="w-7 h-0.5 bg-gray-400 my-1"></div>
-            <Button
-              variant="ghost"
-              className={`w-7 h-7 p-0 min-w-0 mb-0.5 ${storeBackground ? 'bg-gray-300 border border-gray-400 shadow-inner' : ''}`}
-              onClick={() => setStoreBackground(!storeBackground)}
-              title="Store White Background"
-            >
-              <BackgroundIcon />
-            </Button>
-            <div className="w-7 h-0.5 bg-gray-400 my-1"></div>
-            <Button
-              variant="ghost"
-              className="w-7 h-7 p-0 min-w-0 mb-0.5"
-              onClick={() => {
-                const drawingCanvas = drawingCanvasRef.current;
-                if (drawingCanvas) {
-                  const drawingContext = drawingCanvas.getContext('2d');
-                  if (drawingContext) {
-                    // Clear the entire canvas first
-                    drawingContext.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        <input
+          type="color"
+          value={color}
+          onChange={e => setColor(e.target.value)}
+          title="Color"
+        />
+      </div>
 
-                    // If we have an original image, restore it
-                    if (originalImageRef.current) {
-                      // Set loading flag to prevent premature exports
-                      isLoadingInitialImageRef.current = true;
-
-                      const img = new Image();
-                      img.onload = () => {
-                        // Draw image at original size (no scaling)
-                        drawingContext.drawImage(img, 0, 0, img.width, img.height);
-                        // Clear loading flag
-                        isLoadingInitialImageRef.current = false;
-                        // Trigger export after restoring
-                        setExportTrigger(prev => prev + 1);
-                      };
-                      img.onerror = () => {
-                        // Clear loading flag even on error
-                        isLoadingInitialImageRef.current = false;
-                        // Trigger export of empty canvas
-                        setExportTrigger(prev => prev + 1);
-                      };
-                      img.src = `data:image/png;base64,${originalImageRef.current}`;
-                    } else {
-                      // No original image, just clear and trigger export
-                      setExportTrigger(prev => prev + 1);
-                    }
-                  }
-                }
-              }}
-              title="Clear Canvas"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-black">
-                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                <path d="M21 3v5h-5"/>
-                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-                <path d="M8 16H3v5"/>
-              </svg>
-            </Button>
-          </div>
-
-          {/* Canvas area */}
-          <div className="flex-grow overflow-hidden border border-gray-400 relative">
-            {/* Drawing canvas */}
-            <canvas
-              ref={drawingCanvasRef}
-              width={canvasSize.width}
-              height={canvasSize.height}
-              style={{
-                width: '100%',
-                height: '100%',
-                background: 'transparent'
-              }}
-              onMouseDown={startDrawing}
-              onMouseMove={draw}
-              onMouseUp={stopDrawing}
-              onMouseLeave={stopDrawing}
-            />
-          </div>
-        </div>
-
-        {/* Bottom color picker */}
-        <div className="flex bg-gray-300 p-1 border-t border-gray-400">
-          <div className="flex flex-wrap gap-1">
-            {colors.map((c) => (
-              <Button
-                key={c}
-                variant="ghost"
-                className={`w-6 h-6 p-0 min-w-0 ${color === c ? 'ring-1 ring-gray-600' : ''}`}
-                style={{ backgroundColor: c }}
-                onClick={() => setColor(c)}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Status bar */}
-        <div className="bg-gray-300 px-2 py-1 text-xs border-t border-gray-400 text-black">
-          For Help, click Help Topics on the Help Menu.
-        </div>
+      <div className="paint-canvas-area" style={{ background: canvasBg }}>
+        <canvas
+          ref={canvasRef}
+          width={width}
+          height={height}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={stopDrawing}
+          onMouseLeave={stopDrawing}
+        />
       </div>
     </div>
   );
