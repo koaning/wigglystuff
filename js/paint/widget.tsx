@@ -30,6 +30,7 @@ const colors = [
 // Constants for canvas settings
 const MAX_CANVAS_DIMENSION = 4096; // Most browsers support up to 4096x4096
 
+
 function Component() {
   const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -96,29 +97,23 @@ function Component() {
 
       let newWidth = container.clientWidth;
       let newHeight = container.clientHeight;
-      
-      // If we have an original image, use its dimensions to maintain aspect ratio
-      // and prevent scaling distortion
-      if (originalImageRef.current) {
-        // For images, we want to maintain the original dimensions
-        // Width can be responsive to container, but height should match image proportions
+
+      // When an image is loaded, fit the canvas to the image's aspect ratio
+      // so there's no dead space around it.
+      // Use base64 (model state) rather than originalImageRef which may not be set yet on mount.
+      const imageData = originalImageRef.current || base64;
+      if (imageData) {
         const img = new Image();
         img.onload = () => {
-          const imageAspectRatio = img.width / img.height;
-          const containerAspectRatio = newWidth / newHeight;
-          
-          // Preserve original image dimensions - don't scale the image
-          // Instead, adjust canvas to accommodate the image
-          newWidth = Math.min(newWidth, img.width);
-          newHeight = img.height;
-          
-          if (syncCanvasSizes(newWidth, newHeight)) {
-            setCanvasSize({ width: newWidth, height: newHeight });
+          const scale = Math.min(newWidth / img.width, newHeight / img.height);
+          const fitWidth = Math.round(img.width * scale);
+          const fitHeight = Math.round(img.height * scale);
+          if (syncCanvasSizes(fitWidth, fitHeight)) {
+            setCanvasSize({ width: fitWidth, height: fitHeight });
           }
         };
-        img.src = `data:image/png;base64,${originalImageRef.current}`;
+        img.src = `data:image/png;base64,${imageData}`;
       } else {
-        // No original image, use container dimensions as before
         if (syncCanvasSizes(newWidth, newHeight)) {
           setCanvasSize({ width: newWidth, height: newHeight });
         }
@@ -290,9 +285,9 @@ function Component() {
     img.onload = () => {
       drawingContext.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw image at original size (no scaling) - preserve image dimensions
-      drawingContext.drawImage(img, 0, 0, img.width, img.height);
-      
+      // Draw image to fill the canvas (canvas is already fitted to image aspect ratio)
+      drawingContext.drawImage(img, 0, 0, canvas.width, canvas.height);
+
       lastLoadedBase64Ref.current = base64;
       isLoadingInitialImageRef.current = false;
     };
@@ -501,8 +496,8 @@ function Component() {
 
                       const img = new Image();
                       img.onload = () => {
-                        // Draw image at original size (no scaling)
-                        drawingContext.drawImage(img, 0, 0, img.width, img.height);
+                        // Draw image to fill the canvas (canvas is already fitted to image aspect ratio)
+                        drawingContext.drawImage(img, 0, 0, drawingCanvas.width, drawingCanvas.height);
                         // Clear loading flag
                         isLoadingInitialImageRef.current = false;
                         // Trigger export after restoring
@@ -534,15 +529,15 @@ function Component() {
           </div>
 
           {/* Canvas area */}
-          <div className="flex-grow overflow-hidden border border-gray-400 relative">
+          <div className="flex-grow overflow-hidden border border-gray-400 relative flex items-center justify-center">
             {/* Drawing canvas */}
             <canvas
               ref={drawingCanvasRef}
               width={canvasSize.width}
               height={canvasSize.height}
               style={{
-                width: '100%',
-                height: '100%',
+                maxWidth: '100%',
+                maxHeight: '100%',
                 background: 'transparent'
               }}
               onMouseDown={startDrawing}

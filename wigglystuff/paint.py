@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any, Optional, Union
 import urllib.request
 
+import warnings
+
 import anywidget
 import traitlets
 
@@ -112,19 +114,24 @@ class Paint(anywidget.AnyWidget):
         user_provided_width = width != DEFAULT_WIDTH
         user_provided_height = height != DEFAULT_HEIGHT
 
-        if init_image is not None and user_provided_width:
-            raise ValueError(
-                "Cannot specify both init_image and explicit width parameter. "
-                "Canvas width is automatically calculated from the image aspect ratio."
-            )
-
         if init_image is not None:
             pil_image = input_to_pil(init_image)
             if pil_image is not None:
                 image_width, image_height = pil_image.size
                 aspect_ratio = image_width / image_height
 
-                if user_provided_height:
+                if user_provided_width and user_provided_height:
+                    self.width = width
+                    self.height = height
+                    if abs(width / height - aspect_ratio) > 0.01:
+                        warnings.warn(
+                            f"Specified dimensions ({width}x{height}) have a different aspect ratio "
+                            f"than the image ({image_width}x{image_height}). Image will be scaled to fit."
+                        )
+                elif user_provided_width:
+                    self.width = width
+                    self.height = int(width / aspect_ratio)
+                elif user_provided_height:
                     self.height = height
                     self.width = int(height * aspect_ratio)
                 else:
