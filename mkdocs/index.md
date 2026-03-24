@@ -66,6 +66,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/colorpicker.py/wasm">molab</a><a href="reference/color-picker/">API</a><a href="reference/color-picker.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">HoverZoom</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hoverzoom.py/wasm" class="gallery-img"><img src="assets/gallery/hoverzoom.png" alt="HoverZoom widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hoverzoom.py/wasm">molab</a><a href="reference/hover-zoom/">API</a><a href="reference/hover-zoom.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">GamepadWidget</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/gamepad.py/wasm" class="gallery-img"><img src="assets/gallery/gamepad.png" alt="GamepadWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/gamepad.py/wasm">molab</a><a href="reference/gamepad/">API</a><a href="reference/gamepad.md">MD</a></div>

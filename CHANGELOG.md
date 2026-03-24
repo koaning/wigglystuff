@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- New `HoverZoom` widget — hover over an image to see a magnified side panel, like product zoom on e-commerce sites.
+
 ## [0.2.40] - 2026-03-24
 
 ### Added
