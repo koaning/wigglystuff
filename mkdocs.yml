@@ -67,6 +67,7 @@ nav:
       - AltairWidget: reference/altair-widget.md
       - ApiDoc: reference/api-doc.md
       - PlaySlider: reference/play-slider.md
+      - HoverZoom: reference/hover-zoom.md
       - Utils: reference/utils.md
 plugins:
   - search
