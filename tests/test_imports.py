@@ -71,3 +71,18 @@ def test_import_scatter_widget():
 
 def test_import_three_widget():
     from wigglystuff.three_widget import ThreeWidget
+
+
+def test_no_unexpected_dependencies():
+    """Guard against accidentally adding dependencies to pyproject.toml."""
+    import tomllib
+    from pathlib import Path
+
+    pyproject = Path(__file__).parent.parent / "pyproject.toml"
+    data = tomllib.loads(pyproject.read_text())
+    deps = {
+        d.split(">")[0].split("<")[0].split("=")[0].split("[")[0].strip()
+        for d in data["project"]["dependencies"]
+    }
+    allowed = {"anywidget", "drawdata", "numpy", "pillow"}
+    assert deps == allowed, f"Unexpected dependencies: {deps - allowed}"
