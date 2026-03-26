@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -632,10 +632,65 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#wigglystuff.parallel_coords.ParallelCoordinates.selections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        selections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wigglystuff.parallel_coords.ParallelCoordinates.exclude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        exclude
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wigglystuff.parallel_coords.ParallelCoordinates.keep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        keep
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wigglystuff.parallel_coords.ParallelCoordinates.restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        restore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#synced-traitlets" class="md-nav__link">
     <span class="md-ellipsis">
       
         Synced traitlets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
       
     </span>
   </a>
@@ -1442,6 +1497,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../hover-zoom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HoverZoom
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../utils/" class="md-nav__link">
         
   
@@ -1552,10 +1635,65 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#wigglystuff.parallel_coords.ParallelCoordinates.selections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        selections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wigglystuff.parallel_coords.ParallelCoordinates.exclude" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        exclude
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wigglystuff.parallel_coords.ParallelCoordinates.keep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        keep
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wigglystuff.parallel_coords.ParallelCoordinates.restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        restore
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#synced-traitlets" class="md-nav__link">
     <span class="md-ellipsis">
       
         Synced traitlets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
       
     </span>
   </a>
@@ -1904,19 +2042,7 @@ the default palette.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>wigglystuff/parallel_coords.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-66"> 66</a></span>
-<span class="normal"><a href="#__codelineno-0-67"> 67</a></span>
-<span class="normal"><a href="#__codelineno-0-68"> 68</a></span>
-<span class="normal"><a href="#__codelineno-0-69"> 69</a></span>
-<span class="normal"><a href="#__codelineno-0-70"> 70</a></span>
-<span class="normal"><a href="#__codelineno-0-71"> 71</a></span>
-<span class="normal"><a href="#__codelineno-0-72"> 72</a></span>
-<span class="normal"><a href="#__codelineno-0-73"> 73</a></span>
-<span class="normal"><a href="#__codelineno-0-74"> 74</a></span>
-<span class="normal"><a href="#__codelineno-0-75"> 75</a></span>
-<span class="normal"><a href="#__codelineno-0-76"> 76</a></span>
-<span class="normal"><a href="#__codelineno-0-77"> 77</a></span>
-<span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
+                    <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
 <span class="normal"><a href="#__codelineno-0-79"> 79</a></span>
 <span class="normal"><a href="#__codelineno-0-80"> 80</a></span>
 <span class="normal"><a href="#__codelineno-0-81"> 81</a></span>
@@ -1943,46 +2069,58 @@ the default palette.</p>
 <span class="normal"><a href="#__codelineno-0-102">102</a></span>
 <span class="normal"><a href="#__codelineno-0-103">103</a></span>
 <span class="normal"><a href="#__codelineno-0-104">104</a></span>
-<span class="normal"><a href="#__codelineno-0-105">105</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="n">color_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>    <span class="n">color_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="n">ignore</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a ParallelCoordinates widget.</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="sd">        data: Dataset as a list of dicts, pandas DataFrame, or polars</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">            DataFrame. Each dict/row is one data point.</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">        color_by: Column name to color lines by. Empty string for uniform</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="sd">            color.</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="sd">        color_map: Mapping of categorical values to CSS colors (e.g.</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">            ``{&quot;a&quot;: &quot;red&quot;, &quot;b&quot;: &quot;#0000ff&quot;}``). Values not in the map use</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">            the default palette.</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a><span class="sd">        height: Widget height in pixels.</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="sd">        width: Widget width in pixels. Set to 0 for container width.</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="sd">        ignore: Column names to exclude from the plot.</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="n">records</span> <span class="o">=</span> <span class="n">_to_records</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="k">if</span> <span class="n">ignore</span><span class="p">:</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a>        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">}</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">records</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="p">]</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="n">filtered_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)))</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">,</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="n">color_by</span><span class="o">=</span><span class="n">color_by</span><span class="p">,</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="n">color_map</span><span class="o">=</span><span class="n">color_map</span> <span class="ow">or</span> <span class="p">{},</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a>        <span class="n">filtered_indices</span><span class="o">=</span><span class="n">filtered_indices</span><span class="p">,</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="n">selected_indices</span><span class="o">=</span><span class="p">[],</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-105">105</a></span>
+<span class="normal"><a href="#__codelineno-0-106">106</a></span>
+<span class="normal"><a href="#__codelineno-0-107">107</a></span>
+<span class="normal"><a href="#__codelineno-0-108">108</a></span>
+<span class="normal"><a href="#__codelineno-0-109">109</a></span>
+<span class="normal"><a href="#__codelineno-0-110">110</a></span>
+<span class="normal"><a href="#__codelineno-0-111">111</a></span>
+<span class="normal"><a href="#__codelineno-0-112">112</a></span>
+<span class="normal"><a href="#__codelineno-0-113">113</a></span>
+<span class="normal"><a href="#__codelineno-0-114">114</a></span>
+<span class="normal"><a href="#__codelineno-0-115">115</a></span>
+<span class="normal"><a href="#__codelineno-0-116">116</a></span>
+<span class="normal"><a href="#__codelineno-0-117">117</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="n">color_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="n">color_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>    <span class="n">ignore</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a ParallelCoordinates widget.</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="sd">        data: Dataset as a list of dicts, pandas DataFrame, or polars</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="sd">            DataFrame. Each dict/row is one data point.</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="sd">        color_by: Column name to color lines by. Empty string for uniform</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="sd">            color.</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a><span class="sd">        color_map: Mapping of categorical values to CSS colors (e.g.</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="sd">            ``{&quot;a&quot;: &quot;red&quot;, &quot;b&quot;: &quot;#0000ff&quot;}``). Values not in the map use</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">            the default palette.</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a><span class="sd">        height: Widget height in pixels.</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">        width: Widget width in pixels. Set to 0 for container width.</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">        ignore: Column names to exclude from the plot.</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>    <span class="n">records</span> <span class="o">=</span> <span class="n">_to_records</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a>    <span class="k">if</span> <span class="n">ignore</span><span class="p">:</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">}</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">records</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>        <span class="p">]</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a>    <span class="n">filtered_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)))</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110"></a>        <span class="n">data</span><span class="o">=</span><span class="n">records</span><span class="p">,</span>
+<a id="__codelineno-0-111" name="__codelineno-0-111"></a>        <span class="n">color_by</span><span class="o">=</span><span class="n">color_by</span><span class="p">,</span>
+<a id="__codelineno-0-112" name="__codelineno-0-112"></a>        <span class="n">color_map</span><span class="o">=</span><span class="n">color_map</span> <span class="ow">or</span> <span class="p">{},</span>
+<a id="__codelineno-0-113" name="__codelineno-0-113"></a>        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+<a id="__codelineno-0-114" name="__codelineno-0-114"></a>        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+<a id="__codelineno-0-115" name="__codelineno-0-115"></a>        <span class="n">filtered_indices</span><span class="o">=</span><span class="n">filtered_indices</span><span class="p">,</span>
+<a id="__codelineno-0-116" name="__codelineno-0-116"></a>        <span class="n">selected_indices</span><span class="o">=</span><span class="p">[],</span>
+<a id="__codelineno-0-117" name="__codelineno-0-117"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -2092,8 +2230,162 @@ the default palette.</p>
 
 </div>
 
+<div class="doc doc-object doc-attribute">
 
 
+
+<h2 id="wigglystuff.parallel_coords.ParallelCoordinates.selections" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">selections</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#wigglystuff.parallel_coords.ParallelCoordinates.selections" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">selections</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="dict">dict</span></span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return the full filtering state including the active brush.</p>
+<p>Returns a list of <code>{"action": ..., "extents": ...}</code> dicts.
+Completed Keep/Exclude steps come first, followed by a
+<code>{"action": "current", "extents": ...}</code> entry if there is an
+active brush on any axis.</p>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="wigglystuff.parallel_coords.ParallelCoordinates.exclude" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">exclude</span>
+
+
+<a href="#wigglystuff.parallel_coords.ParallelCoordinates.exclude" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">exclude</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Trigger an Exclude action on the current brush selection.</p>
+<p>Equivalent to clicking the Exclude button in the UI. Rows inside
+the current brush are removed. The action and brush extents are
+recorded in :attr:<code>filter_history</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>wigglystuff/parallel_coords.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-182">182</a></span>
+<span class="normal"><a href="#__codelineno-0-183">183</a></span>
+<span class="normal"><a href="#__codelineno-0-184">184</a></span>
+<span class="normal"><a href="#__codelineno-0-185">185</a></span>
+<span class="normal"><a href="#__codelineno-0-186">186</a></span>
+<span class="normal"><a href="#__codelineno-0-187">187</a></span>
+<span class="normal"><a href="#__codelineno-0-188">188</a></span>
+<span class="normal"><a href="#__codelineno-0-189">189</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="k">def</span><span class="w"> </span><span class="nf">exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Trigger an Exclude action on the current brush selection.</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a>
+<a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="sd">    Equivalent to clicking the Exclude button in the UI. Rows inside</span>
+<a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="sd">    the current brush are removed. The action and brush extents are</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">    recorded in :attr:`filter_history`.</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_action_request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;exclude&quot;</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="n">_ts</span><span class="p">()}</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="wigglystuff.parallel_coords.ParallelCoordinates.keep" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">keep</span>
+
+
+<a href="#wigglystuff.parallel_coords.ParallelCoordinates.keep" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">keep</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Trigger a Keep action on the current brush selection.</p>
+<p>Equivalent to clicking the Keep button in the UI. Rows outside
+the current brush are removed. The action and brush extents are
+recorded in :attr:<code>filter_history</code>.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>wigglystuff/parallel_coords.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-173">173</a></span>
+<span class="normal"><a href="#__codelineno-0-174">174</a></span>
+<span class="normal"><a href="#__codelineno-0-175">175</a></span>
+<span class="normal"><a href="#__codelineno-0-176">176</a></span>
+<span class="normal"><a href="#__codelineno-0-177">177</a></span>
+<span class="normal"><a href="#__codelineno-0-178">178</a></span>
+<span class="normal"><a href="#__codelineno-0-179">179</a></span>
+<span class="normal"><a href="#__codelineno-0-180">180</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="k">def</span><span class="w"> </span><span class="nf">keep</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Trigger a Keep action on the current brush selection.</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175"></a>
+<a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">    Equivalent to clicking the Keep button in the UI. Rows outside</span>
+<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    the current brush are removed. The action and brush extents are</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">    recorded in :attr:`filter_history`.</span>
+<a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-180" name="__codelineno-0-180"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_action_request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;keep&quot;</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="n">_ts</span><span class="p">()}</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="wigglystuff.parallel_coords.ParallelCoordinates.restore" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">restore</span>
+
+
+<a href="#wigglystuff.parallel_coords.ParallelCoordinates.restore" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">restore</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Restore all rows and clear the filter history.</p>
+<p>Equivalent to clicking the Restore button in the UI. All
+Keep/Exclude operations are undone and :attr:<code>filter_history</code>
+is reset to an empty list.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>wigglystuff/parallel_coords.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-191">191</a></span>
+<span class="normal"><a href="#__codelineno-0-192">192</a></span>
+<span class="normal"><a href="#__codelineno-0-193">193</a></span>
+<span class="normal"><a href="#__codelineno-0-194">194</a></span>
+<span class="normal"><a href="#__codelineno-0-195">195</a></span>
+<span class="normal"><a href="#__codelineno-0-196">196</a></span>
+<span class="normal"><a href="#__codelineno-0-197">197</a></span>
+<span class="normal"><a href="#__codelineno-0-198">198</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="k">def</span><span class="w"> </span><span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Restore all rows and clear the filter history.</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">    Equivalent to clicking the Restore button in the UI. All</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">    Keep/Exclude operations are undone and :attr:`filter_history`</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    is reset to an empty list.</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_action_request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;restore&quot;</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="n">_ts</span><span class="p">()}</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 
@@ -2137,6 +2429,11 @@ the default palette.</p>
 <td>Plot width in pixels. Set to 0 for container width.</td>
 </tr>
 <tr>
+<td><code>brush_extents</code></td>
+<td><code>dict</code></td>
+<td>Current brush ranges on axes. Resets to <code>{}</code> after Keep/Exclude.</td>
+</tr>
+<tr>
 <td><code>filtered_indices</code></td>
 <td><code>list[int]</code></td>
 <td>Indices currently passing filters/selection.</td>
@@ -2145,6 +2442,49 @@ the default palette.</p>
 <td><code>selected_indices</code></td>
 <td><code>list[int]</code></td>
 <td>Indices currently selected in the active brush.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>selections</code></td>
+<td>Property returning <code>filter_history</code> + a trailing <code>{"action": "current", "extents": ...}</code> entry for the active brush (if any).</td>
+</tr>
+<tr>
+<td><code>keep()</code></td>
+<td>Trigger a Keep action on the current brush selection (same as the Keep button).</td>
+</tr>
+<tr>
+<td><code>exclude()</code></td>
+<td>Trigger an Exclude action on the current brush selection (same as the Exclude button).</td>
+</tr>
+<tr>
+<td><code>restore()</code></td>
+<td>Restore all rows and clear <code>filter_history</code> (same as the Restore button).</td>
+</tr>
+<tr>
+<td><code>filtered_data</code></td>
+<td>Property returning the list of dicts for rows passing all filters.</td>
+</tr>
+<tr>
+<td><code>filtered_as_pandas</code></td>
+<td>Property returning filtered data as a pandas DataFrame.</td>
+</tr>
+<tr>
+<td><code>filtered_as_polars</code></td>
+<td>Property returning filtered data as a polars DataFrame.</td>
+</tr>
+<tr>
+<td><code>selected_data</code></td>
+<td>Property returning the list of dicts for selected rows.</td>
 </tr>
 </tbody>
 </table>

@@ -4,7 +4,7 @@
  Bases: `AnyWidget`
 
 
-Notebook-friendly paint widget with MS Paint style tools and PIL helpers.
+Notebook-friendly drawing canvas with brush, marker, eraser, undo, and PIL helpers.
 
 
 
@@ -38,35 +38,49 @@ def __init__(self, height: int = DEFAULT_HEIGHT, width: int = DEFAULT_WIDTH, sto
     user_provided_width = width != DEFAULT_WIDTH
     user_provided_height = height != DEFAULT_HEIGHT
 
-    if init_image is not None and user_provided_width:
-        raise ValueError(
-            "Cannot specify both init_image and explicit width parameter. "
-            "Canvas width is automatically calculated from the image aspect ratio."
-        )
-
     if init_image is not None:
         pil_image = input_to_pil(init_image)
         if pil_image is not None:
             image_width, image_height = pil_image.size
             aspect_ratio = image_width / image_height
 
-            if user_provided_height:
+            if user_provided_width and user_provided_height:
+                self.width = width
+                self.height = height
+                if abs(width / height - aspect_ratio) > 0.01:
+                    warnings.warn(
+                        f"Specified dimensions ({width}x{height}) have a different aspect ratio "
+                        f"than the image ({image_width}x{image_height}). Image will be scaled to fit."
+                    )
+            elif user_provided_width:
+                self.width = width
+                self.height = int(width / aspect_ratio)
+            elif user_provided_height:
                 self.height = height
                 self.width = int(height * aspect_ratio)
             else:
                 self.width = image_width
                 self.height = image_height
 
+            if (self.width, self.height) != pil_image.size:
+                from PIL import Image as _PILImage
+                pil_image = pil_image.resize(
+                    (self.width, self.height), _PILImage.LANCZOS
+                )
             encoded = pil_to_base64(pil_image).split(",")[1]
             self.base64 = encoded
         else:
             self.width = width
             self.height = height
-            self.base64 = ""
+            self.base64 = pil_to_base64(
+                create_empty_image(width, height, (0, 0, 0, 0))
+            ).split(",")[1]
     else:
         self.width = width
         self.height = height
-        self.base64 = ""
+        self.base64 = pil_to_base64(
+            create_empty_image(width, height, (0, 0, 0, 0))
+        ).split(",")[1]
 
     self.store_background = store_background
 ```

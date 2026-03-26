@@ -66,6 +66,17 @@ def __init__(
 ```
 
 
+## values `property`
+
+
+```
+values
+```
+
+
+All discrete values from min_value to max_value (inclusive) at the current step.
+
+
 ## Synced traitlets
 
 

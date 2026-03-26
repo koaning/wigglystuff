@@ -26,7 +26,7 @@ pip install wigglystuff
 
 ## What you can build
 
-  Slider2D molabAPIMD  Matrix molabAPIMD  Paint molabAPIMD  ThreeWidget molabAPIMD  EdgeDraw molabAPIMD  SortableList molabAPIMD  ColorPicker molabAPIMD  GamepadWidget molabAPIMD  KeystrokeWidget molabAPIMD  SpeechToText molabAPIMD  CopyToClipboard molabAPIMD  CellTour molabAPIMD  WebcamCapture molabAPIMD  ImageRefreshWidget molabAPIMD  HTMLRefreshWidget molabAPIMD  ProgressBar molabAPIMD  PulsarChart molabAPIMD  TextCompare molabAPIMD  EnvConfig molabAPIMD  Tangle molabAPIMD  ChartPuck molabAPIMD  ChartMultiSelect molabAPIMD  ChartSelect molabAPIMD  ParallelCoordinates molabAPIMD  ScatterWidget molabAPIMD  DiffViewer molabAPIMD  SplineDraw molabAPIMD  ApiDoc molabAPIMD  AnnotationWidget molabAPIMD  PlaySlider molabAPIMD  ForecastChart molabAPIMD
+  Slider2D molabAPIMD  Matrix molabAPIMD  Paint molabAPIMD  ThreeWidget molabAPIMD  EdgeDraw molabAPIMD  SortableList molabAPIMD  ColorPicker molabAPIMD  HoverZoom molabAPIMD  GamepadWidget molabAPIMD  KeystrokeWidget molabAPIMD  SpeechToText molabAPIMD  CopyToClipboard molabAPIMD  CellTour molabAPIMD  WebcamCapture molabAPIMD  ImageRefreshWidget molabAPIMD  HTMLRefreshWidget molabAPIMD  ProgressBar molabAPIMD  PulsarChart molabAPIMD  TextCompare molabAPIMD  EnvConfig molabAPIMD  Tangle molabAPIMD  ChartPuck molabAPIMD  ChartMultiSelect molabAPIMD  ChartSelect molabAPIMD  ParallelCoordinates molabAPIMD  ScatterWidget molabAPIMD  DiffViewer molabAPIMD  SplineDraw molabAPIMD  ApiDoc molabAPIMD  AnnotationWidget molabAPIMD  PlaySlider molabAPIMD  ForecastChart molabAPIMD
 
 Each widget links to a live demo on molab where you can interact with and edit the notebook directly in your browser.
 

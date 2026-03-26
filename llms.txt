@@ -22,6 +22,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [ColorPicker](https://koaning.github.io/wigglystuff/reference/color-picker.md): Color selection widget
 - [CopyToClipboard](https://koaning.github.io/wigglystuff/reference/copy-to-clipboard.md): Copy text to clipboard
 - [Tangle Widgets](https://koaning.github.io/wigglystuff/reference/tangle.md): Bret Victor-style tangle controls
+- [HoverZoom](https://koaning.github.io/wigglystuff/reference/hover-zoom.md): Image hover zoom with magnified side panel
 - [GamepadWidget](https://koaning.github.io/wigglystuff/reference/gamepad.md): Gamepad controller input
 - [WebcamCapture](https://koaning.github.io/wigglystuff/reference/webcam-capture.md): Webcam image capture
 - [CellTour](https://koaning.github.io/wigglystuff/reference/cell-tour.md): Guided notebook tours

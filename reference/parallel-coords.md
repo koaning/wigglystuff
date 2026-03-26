@@ -121,6 +121,101 @@ selected_data: list[dict]
 Return the subset of data rows that are selected.
 
 
+## selections `property`
+
+
+```
+selections: list[dict]
+```
+
+
+Return the full filtering state including the active brush.
+
+
+Returns a list of `{"action": ..., "extents": ...}` dicts. Completed Keep/Exclude steps come first, followed by a `{"action": "current", "extents": ...}` entry if there is an active brush on any axis.
+
+
+## exclude
+
+
+```
+exclude() -> None
+```
+
+
+Trigger an Exclude action on the current brush selection.
+
+
+Equivalent to clicking the Exclude button in the UI. Rows inside the current brush are removed. The action and brush extents are recorded in :attr:`filter_history`.
+
+ Source code in `wigglystuff/parallel_coords.py`
+
+```
+def exclude(self) -> None:
+    """Trigger an Exclude action on the current brush selection.
+
+    Equivalent to clicking the Exclude button in the UI. Rows inside
+    the current brush are removed. The action and brush extents are
+    recorded in :attr:`filter_history`.
+    """
+    self._action_request = {"action": "exclude", "ts": _ts()}
+```
+
+
+## keep
+
+
+```
+keep() -> None
+```
+
+
+Trigger a Keep action on the current brush selection.
+
+
+Equivalent to clicking the Keep button in the UI. Rows outside the current brush are removed. The action and brush extents are recorded in :attr:`filter_history`.
+
+ Source code in `wigglystuff/parallel_coords.py`
+
+```
+def keep(self) -> None:
+    """Trigger a Keep action on the current brush selection.
+
+    Equivalent to clicking the Keep button in the UI. Rows outside
+    the current brush are removed. The action and brush extents are
+    recorded in :attr:`filter_history`.
+    """
+    self._action_request = {"action": "keep", "ts": _ts()}
+```
+
+
+## restore
+
+
+```
+restore() -> None
+```
+
+
+Restore all rows and clear the filter history.
+
+
+Equivalent to clicking the Restore button in the UI. All Keep/Exclude operations are undone and :attr:`filter_history` is reset to an empty list.
+
+ Source code in `wigglystuff/parallel_coords.py`
+
+```
+def restore(self) -> None:
+    """Restore all rows and clear the filter history.
+
+    Equivalent to clicking the Restore button in the UI. All
+    Keep/Exclude operations are undone and :attr:`filter_history`
+    is reset to an empty list.
+    """
+    self._action_request = {"action": "restore", "ts": _ts()}
+```
+
+
 ## Synced traitlets
 
 
@@ -131,5 +226,21 @@ Return the subset of data rows that are selected.
 | `color_map` | `dict` | Map of categorical values to CSS colors (e.g. `{"a": "red", "b": "#00f"}`). Unmapped values use the default palette. |
 | `height` | `int` | Plot height in pixels. |
 | `width` | `int` | Plot width in pixels. Set to 0 for container width. |
+| `brush_extents` | `dict` | Current brush ranges on axes. Resets to `{}` after Keep/Exclude. |
 | `filtered_indices` | `list[int]` | Indices currently passing filters/selection. |
 | `selected_indices` | `list[int]` | Indices currently selected in the active brush. |
+
+
+## Methods
+
+
+| Method | Description |
+| --- | --- |
+| `selections` | Property returning `filter_history` + a trailing `{"action": "current", "extents": ...}` entry for the active brush (if any). |
+| `keep()` | Trigger a Keep action on the current brush selection (same as the Keep button). |
+| `exclude()` | Trigger an Exclude action on the current brush selection (same as the Exclude button). |
+| `restore()` | Restore all rows and clear `filter_history` (same as the Restore button). |
+| `filtered_data` | Property returning the list of dicts for rows passing all filters. |
+| `filtered_as_pandas` | Property returning filtered data as a pandas DataFrame. |
+| `filtered_as_polars` | Property returning filtered data as a polars DataFrame. |
+| `selected_data` | Property returning the list of dicts for selected rows. |
