@@ -151,10 +151,5 @@ def _(mo, res_img, src_img):
     return
 
 
-@app.cell
-def _():
-    return
-
-
 if __name__ == "__main__":
     app.run()
