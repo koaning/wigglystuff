@@ -81,7 +81,7 @@ docs-serve:
 	uv run python -m http.server --directory site
 
 docs-build:
-	uv run mkdocs build -f mkdocs.yml 2>&1 | grep -v '^\[WARNING\] Div at'
+	DISABLE_MKDOCS_2_WARNING=true uv run mkdocs build -f mkdocs.yml 2>&1 | grep -v '^\[WARNING\] Div at'
 	uv run python scripts/copy_docs_md.py
 
 docs-llm:
