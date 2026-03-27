@@ -86,7 +86,7 @@ def _(np, pl):
 
 @app.cell
 def _(AltairWidget):
-    widget = AltairWidget(width=600, height=400)
+    widget = AltairWidget(height=400)
     return (widget,)
 
 
@@ -115,7 +115,6 @@ def _(df, fit_window, forecast_chart, projection_days, widget):
         fit_window=fit_window.value,
         projection_days=projection_days.value,
         title="Synthetic metric forecast",
-        width=600,
     )
     return (time,)
 
@@ -152,7 +151,6 @@ def _(df, fit_window, forecast_chart, projection_days, time):
         fit_window=fit_window.value,
         projection_days=projection_days.value,
         title="Synthetic metric forecast (plain)",
-        width=600,
     )
     return
 
