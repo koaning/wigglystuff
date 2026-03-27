@@ -7,7 +7,7 @@
 #     "mohtml==0.1.7",
 #     "numpy==2.2.5",
 #     "polars==1.29.0",
-#     "wigglystuff==0.2.37",
+#     "wigglystuff==0.3.1",
 # ]
 # ///
 
