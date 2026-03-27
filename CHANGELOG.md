@@ -86,7 +86,7 @@ All notable changes to this project will be documented in this file.
 - `ParallelCoordinates` demo notebook and docstring examples now use polars instead of pandas.
 
 ### Added
-- New `examples/fashion-mnist-parallel-coords.py` example notebook showing PCA + parallel coordinates on Fashion MNIST.
+- New `demos/fashion-mnist-parallel-coords.py` example notebook showing PCA + parallel coordinates on Fashion MNIST.
 
 ## [0.2.33] - 2026-02-27
 
