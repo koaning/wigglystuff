@@ -43,4 +43,4 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 
 These notebooks show how to combine multiple widgets for more complex workflows.
 
-   Dimensions Explore high-dimensional data with parallel coordinates and interactive scatter plots. molabSource   Fashion MNIST Visualize Fashion MNIST embeddings with parallel coordinates filtering. molabSource
+   Dimensions Explore high-dimensional data with parallel coordinates and interactive scatter plots. molabSource   Fashion MNIST Visualize Fashion MNIST embeddings with parallel coordinates filtering. molabSource   Infinite Zoom A 3Blue1Brown-inspired Droste effect simulator using the Paint widget with conformal mapping. molabSource
