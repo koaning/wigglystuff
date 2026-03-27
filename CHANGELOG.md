@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+- Moved example notebooks from `examples/` to `demos/` folder.
+- Added infinite zoom (Droste effect) example to the docs gallery.
+
 ## [0.3.1] - 2026-03-25
 
 ### Fixed
@@ -86,7 +92,7 @@ All notable changes to this project will be documented in this file.
 - `ParallelCoordinates` demo notebook and docstring examples now use polars instead of pandas.
 
 ### Added
-- New `demos/fashion-mnist-parallel-coords.py` example notebook showing PCA + parallel coordinates on Fashion MNIST.
+- New `examples/fashion-mnist-parallel-coords.py` example notebook showing PCA + parallel coordinates on Fashion MNIST.
 
 ## [0.2.33] - 2026-02-27
 
