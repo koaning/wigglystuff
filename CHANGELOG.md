@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
+- Moved example notebooks from `examples/` to `demos/` folder.
+- Added infinite zoom (Droste effect) example to the docs gallery.
 - `Paint` toolbar icons: replaced generic pencil icons with a distinct pen (brush) and highlighter (marker) to make the tools easier to tell apart.
 
 ## [0.3.1] - 2026-03-25
