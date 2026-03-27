@@ -3,7 +3,7 @@
 # dependencies = [
 #     "marimo",
 #     "mohtml",
-#     "wigglystuff==0.2.40",
+#     "wigglystuff==0.3.1",
 # ]
 # ///
 
