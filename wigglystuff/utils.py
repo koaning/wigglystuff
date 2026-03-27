@@ -108,7 +108,7 @@ def forecast_chart(
     fit_window: int = 180,
     projection_days: int = 365,
     title: str | None = None,
-    width: int | None = None,
+    width: int | str | None = None,
     height: int = 400,
 ):
     """Create a time series chart with an exponential forecast.
@@ -123,7 +123,7 @@ def forecast_chart(
         fit_window: Number of most-recent data points to use for the fit.
         projection_days: How many days to project into the future.
         title: Optional chart title.
-        width: Chart width in pixels. If None, uses Altair default.
+        width: Chart width in pixels, or "container" for responsive. Defaults to "container".
         height: Chart height in pixels (default 400).
 
     Returns:
@@ -229,10 +229,9 @@ def forecast_chart(
 
     props = {
         "height": height,
+        "width": width if width is not None else "container",
         "usermeta": {"embedOptions": {"actions": False}},
     }
-    if width is not None:
-        props["width"] = width
     if title:
         props["title"] = title
 
