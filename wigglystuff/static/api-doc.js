@@ -374,7 +374,7 @@ function render({ model, el }) {
     if (doc.signature) {
       const sigDiv = document.createElement("div");
       sigDiv.className = "ad-signature";
-      sigDiv.textContent = doc.name + doc.signature;
+      sigDiv.innerHTML = highlightPython(doc.name + doc.signature);
       container.appendChild(sigDiv);
     }
 
