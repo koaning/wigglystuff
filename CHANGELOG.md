@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-04-10
+
+### Added
+- `ApiDoc.to_markdown()` method to export API documentation as a Markdown string for use in READMEs.
+- `ApiDoc` signature block now has Python syntax highlighting, matching code blocks in docstrings.
+
 ### Changed
 - Moved example notebooks from `examples/` to `demos/` folder.
 - Added infinite zoom (Droste effect) example to the docs gallery.

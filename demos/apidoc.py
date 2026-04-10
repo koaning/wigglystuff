@@ -8,7 +8,7 @@
 
 import marimo
 
-__generated_with = "0.20.2"
+__generated_with = "0.23.0"
 app = marimo.App(width="medium")
 
 
@@ -108,6 +108,22 @@ class Estimator:
 @app.cell
 def _(ApiDoc, mo):
     mo.ui.anywidget(ApiDoc(Estimator))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Markdown export
+
+    You can export the documentation as Markdown with `to_markdown()`, handy for GitHub READMEs.
+    """)
+    return
+
+
+@app.cell
+def _(ApiDoc):
+    print(ApiDoc(Estimator).to_markdown())
     return
 
 
