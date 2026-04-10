@@ -100,3 +100,6 @@ syncs back to Python.
 - When planning a new widget, always present the proposed Python API
   (constructor, traitlets, helper methods) during plan review so the user
   can sign off on the interface before implementation.
+- When creating a GitHub release, extract the relevant section from
+  `CHANGELOG.md` with:
+  `gh release create v<VERSION> --title "v<VERSION>" --notes "$(awk '/^## \[<VERSION>\]/{flag=1; next} /^## \[/{flag=0} flag' CHANGELOG.md)"`
