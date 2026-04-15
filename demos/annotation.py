@@ -93,7 +93,7 @@ def _(examples):
     from wigglystuff import ProgressBar
 
     progress = ProgressBar(
-        value=0, 
+        value=0,
         max_value=len(examples), height=8, show_text=True, )
     return (progress,)
 
