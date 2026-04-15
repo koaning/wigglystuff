@@ -51,7 +51,12 @@ function render({ model, el }) {
     canvas.classList.add("chart-select__canvas--no-controls");
   }
 
+  // Tooltip for point hover (only active when point_data is provided)
+  const tooltip = document.createElement("div");
+  tooltip.className = "chart-select__tooltip";
+
   container.appendChild(canvas);
+  container.appendChild(tooltip);
   el.appendChild(container);
 
   // === STATE ===
@@ -59,6 +64,7 @@ function render({ model, el }) {
   const chartImage = new Image();
   let imageLoaded = false;
   let currentMode = model.get("mode");
+  let hoveredPointIdx = -1;
 
   // Selection state
   let isSelecting = false;
@@ -133,6 +139,73 @@ function render({ model, el }) {
     return inside;
   }
 
+  // === HOVER TOOLTIP ===
+  function findNearestPoint(coords) {
+    const points = model.get("point_data") || [];
+    if (points.length === 0) return -1;
+    const threshold = 64; // squared pixel distance
+    let bestIdx = -1;
+    let bestDist = threshold;
+    for (let i = 0; i < points.length; i++) {
+      const p = dataToPixel(points[i].x, points[i].y);
+      const dx = p.x - coords.x;
+      const dy = p.y - coords.y;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < bestDist) {
+        bestDist = d2;
+        bestIdx = i;
+      }
+    }
+    return bestIdx;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function showTooltip(idx, canvasCoords) {
+    const points = model.get("point_data") || [];
+    const pt = points[idx];
+    if (!pt) return;
+
+    // Build tooltip HTML from all fields except x and y
+    const keys = Object.keys(pt).filter((k) => k !== "x" && k !== "y");
+    let html = "";
+    if (keys.length > 0) {
+      // Use the first non-coordinate field as the title
+      html += `<div class="chart-select__tt-title">${esc(pt[keys[0]])}</div>`;
+      if (keys.length > 1) {
+        html += '<div class="chart-select__tt-grid">';
+        for (let i = 1; i < keys.length; i++) {
+          html += `<div class="chart-select__tt-key">${esc(keys[i])}</div>`;
+          html += `<div class="chart-select__tt-val">${esc(pt[keys[i]])}</div>`;
+        }
+        html += "</div>";
+      }
+    }
+
+    tooltip.innerHTML = html;
+    tooltip.style.display = "block";
+
+    // Position relative to the canvas display size
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = rect.width / canvas.width;
+    const scaleY = rect.height / canvas.height;
+    const px = canvasCoords.x * scaleX;
+    const py = canvasCoords.y * scaleY;
+
+    // Prefer right of cursor; flip left if near edge
+    const tipW = tooltip.offsetWidth;
+    const left = px + 16 + tipW > rect.width ? px - tipW - 8 : px + 16;
+    tooltip.style.left = left + "px";
+    tooltip.style.top = py - 12 + "px";
+  }
+
+  function hideTooltip() {
+    tooltip.style.display = "none";
+    hoveredPointIdx = -1;
+  }
+
   // === MODE MANAGEMENT ===
   function setMode(mode) {
     currentMode = mode;
@@ -181,6 +254,7 @@ function render({ model, el }) {
   // === EVENT HANDLERS ===
   function handleMouseDown(event) {
     event.preventDefault();
+    hideTooltip();
     const coords = getCanvasCoords(event);
 
     // Check if clicking inside existing selection (to drag it)
@@ -227,8 +301,21 @@ function render({ model, el }) {
     // Update cursor based on hover state
     if (model.get("has_selection") && isInsideSelection(coords)) {
       canvas.style.cursor = "move";
+      hideTooltip();
     } else {
       canvas.style.cursor = "crosshair";
+      // Show tooltip for nearest point when idle
+      if (!isSelecting) {
+        const idx = findNearestPoint(coords);
+        if (idx !== hoveredPointIdx) {
+          hoveredPointIdx = idx;
+          if (idx >= 0) {
+            showTooltip(idx, coords);
+          } else {
+            hideTooltip();
+          }
+        }
+      }
     }
 
     // Handle creating new selection

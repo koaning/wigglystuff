@@ -97,6 +97,12 @@ class ChartSelect(AnyWidget):
     selection_opacity = traitlets.Float(0.3).tag(sync=True)
     stroke_width = traitlets.Int(2).tag(sync=True)
 
+    # Optional point data for hover tooltips.
+    # Each entry is a dict with "x" and "y" (data-space coordinates) plus
+    # arbitrary tooltip fields (e.g. "name", "category").
+    # When provided, hovering over the chart shows a tooltip for the nearest point.
+    point_data = traitlets.List(traitlets.Dict(), default_value=[]).tag(sync=True)
+
     def __init__(
         self,
         fig: Any,
