@@ -7,7 +7,7 @@
 
 import marimo
 
-__generated_with = "0.20.4"
+__generated_with = "0.23.1"
 app = marimo.App(width="medium")
 
 
@@ -39,10 +39,10 @@ def _(ProgressBar, mo):
 
 @app.cell
 def _(progress, time):
-    progress.value = 0
+    progress.widget.value = 0
     for _ in range(100):
         time.sleep(0.05)
-        progress.value += 1
+        progress.widget.value += 1
     return
 
 
@@ -67,10 +67,10 @@ def _(ProgressBar, mo):
 
 @app.cell
 def _(slim_bar, time):
-    slim_bar.value = 0
+    slim_bar.widget.value = 0
     for _ in range(50):
         time.sleep(0.05)
-        slim_bar.value += 1
+        slim_bar.widget.value += 1
     return
 
 

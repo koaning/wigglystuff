@@ -112,8 +112,8 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 </div>
 <div class="gallery-item">
 <div class="gallery-title">ProgressBar</div>
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/htmlwidget.py/wasm" class="gallery-img"><img src="assets/gallery/progressbar.png" alt="ProgressBar widget"></a>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/htmlwidget.py/wasm">molab</a><a href="reference/progress-bar/">API</a><a href="reference/progress-bar.md">MD</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/progressbar.py/wasm" class="gallery-img"><img src="assets/gallery/progressbar.png" alt="ProgressBar widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/progressbar.py/wasm">molab</a><a href="reference/progress-bar/">API</a><a href="reference/progress-bar.md">MD</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">PulsarChart</div>
