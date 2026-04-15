@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 ### Added
 - `TangleSlider` now accepts an optional `steps` parameter for non-linear value ranges. When provided, the slider cycles through the explicit list of values instead of using linear min/max/step bounds.
 
+### Fixed
+- ProgressBar demo now uses `.widget.value` to correctly update progress when wrapped with `mo.ui.anywidget()`.
+- ProgressBar gallery links in docs and README now point to the correct `demos/progressbar.py` instead of `demos/htmlwidget.py`.
+
 ## [0.3.2] - 2026-04-10
 
 ### Added
