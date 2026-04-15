@@ -23,7 +23,7 @@ syncs back to Python.
 | ChartMultiSelect | `wigglystuff.chart_multi_select.ChartMultiSelect` | `selections`, `active_class`, `n_classes`, `selected_index`, `mode`, `modes`, `x_bounds`, `y_bounds`, `axes_pixel_bounds`, `width`, `height`, `chart_base64`, `selection_opacity` | Multi-region class-labeled selection on matplotlib charts |
 | ChartSelect | `wigglystuff.chart_select.ChartSelect` | `mode`, `selection`, `has_selection`, `x_bounds`, `y_bounds`, `axes_pixel_bounds`, `width`, `height`, `chart_base64`, `selection_color`, `selection_opacity` | Box/lasso selection on matplotlib charts |
 | Matrix | `wigglystuff.matrix.Matrix` | `matrix`, `rows`, `cols`, `min_value`, `max_value`, `step`, `mirror` | Spreadsheet-like numeric editor |
-| TangleSlider | `wigglystuff.tangle.TangleSlider` | `amount`, `min_value`, `max_value`, `step`, `pixels_per_step` | Inline slider ala Bret Victor |
+| TangleSlider | `wigglystuff.tangle.TangleSlider` | `amount`, `min_value`, `max_value`, `step`, `steps`, `pixels_per_step` | Inline slider ala Bret Victor |
 | TangleChoice | `wigglystuff.tangle.TangleChoice` | `choice`, `choices` | Inline toggle among labels |
 | TangleSelect | `wigglystuff.tangle.TangleSelect` | `choice`, `choices` | Dropdown version of the above |
 | SortableList | `wigglystuff.sortable_list.SortableList` | `value`, `addable`, `removable`, `editable`, `label` | Drag-and-drop ordering with optional CRUD |

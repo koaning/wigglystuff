@@ -11,7 +11,7 @@
 
 import marimo
 
-__generated_with = "0.19.4"
+__generated_with = "0.23.1"
 app = marimo.App(width="medium")
 
 
@@ -23,6 +23,7 @@ def _():
     import pandas as pd
 
     from wigglystuff import TangleSlider, TangleChoice, TangleSelect
+
     return TangleChoice, TangleSelect, TangleSlider, alt, mo, np, pd
 
 
@@ -105,6 +106,32 @@ def _(c, mo, prob1, prob2):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
+    ## TangleSlider with steps
+
+    You can pass explicit `steps` for non-linear ranges, just like `mo.ui.slider`.
+    """)
+    return
+
+
+@app.cell
+def _(TangleSlider, mo, np):
+    learning_rate = mo.ui.anywidget(
+        TangleSlider(steps=np.logspace(-4, 3, 8), digits=4, suffix="x")
+    )
+    return (learning_rate,)
+
+
+@app.cell(hide_code=True)
+def _(learning_rate, mo):
+    mo.md(f"""
+    The current multiplier is {learning_rate}. Drag to cycle through orders of magnitude.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
     ## TangleChoice
     """)
     return
@@ -136,14 +163,14 @@ def _(mo):
 
 
 @app.cell
-def _(TangleSelect, mo):
+def _(TangleSelect, TangleSlider, mo):
     shouting = mo.ui.anywidget(TangleSelect(["🥔", "🥕", "🍎"]))
     times2 = mo.ui.anywidget(TangleSlider(min_value=1, max_value=20, step=1, suffix=" times", amount=3))    
     return shouting, times2
 
 
 @app.cell
-def _(mo, shouting, times):
+def _(mo, shouting, times2):
     mo.md(f"""
     As a quick demo, let's repeat {shouting} {times2}.
 
