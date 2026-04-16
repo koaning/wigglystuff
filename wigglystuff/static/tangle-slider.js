@@ -10,6 +10,7 @@ function render({model, el}) {
     };
 
     let amount = model.get("amount");
+    let steps = model.get("steps");
 
     const container = document.createElement('div');
     container.classList.add("tangle-container");
@@ -17,7 +18,7 @@ function render({model, el}) {
     el.appendChild(container);
 
     // Listen for external changes to all config traitlets
-    ["amount", "min_value", "max_value", "step", "prefix", "suffix", "digits", "pixels_per_step"].forEach(name => {
+    ["amount", "min_value", "max_value", "step", "steps", "prefix", "suffix", "digits", "pixels_per_step"].forEach(name => {
         model.on(`change:${name}`, () => {
             config.minValue = model.get("min_value");
             config.maxValue = model.get("max_value");
@@ -27,6 +28,7 @@ function render({model, el}) {
             config.digits = model.get("digits");
             config.pixelsPerStep = model.get("pixels_per_step");
             amount = model.get("amount");
+            steps = model.get("steps");
             renderValue();
         });
     });
@@ -60,13 +62,19 @@ function render({model, el}) {
         element.style.cursor = 'grabbing';
         const startX = e.clientX;
         const startValue = parseFloat(element.textContent.replace(config.prefix, '').replace(config.suffix, ''));
+        const startIndex = steps.length > 0 ? Math.max(0, steps.indexOf(amount)) : -1;
 
         function onMouseMove(e) {
             const deltaX = e.clientX - startX;
-            const steps = Math.floor(deltaX / config.pixelsPerStep);
-            amount = Math.max(config.minValue, 
-                           Math.min(config.maxValue, 
-                                    startValue + steps * config.stepSize));
+            const pixelSteps = Math.floor(deltaX / config.pixelsPerStep);
+            if (steps.length > 0) {
+                const newIndex = Math.max(0, Math.min(steps.length - 1, startIndex + pixelSteps));
+                amount = steps[newIndex];
+            } else {
+                amount = Math.max(config.minValue,
+                               Math.min(config.maxValue,
+                                        startValue + pixelSteps * config.stepSize));
+            }
             renderValue();
             debouncedUpdateModel();
         }
