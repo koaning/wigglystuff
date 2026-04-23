@@ -16,6 +16,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 Tree = dict[str, Any]
 Value = float | int | dict[str, float]
+EMPTY_TREE_ERROR = "tree must contain at least one leaf"
 
 
 def _is_scalar(v: Any) -> bool:
@@ -34,6 +35,8 @@ def validate_tree(data: Mapping[str, Any]) -> None:
         raise ValueError(f"tree must be a dict, got {type(data).__name__}")
     mode = {"dict": False, "scalar": False}
     _validate_node(data, path=(), mode=mode)
+    if not mode["dict"] and not mode["scalar"]:
+        raise ValueError(EMPTY_TREE_ERROR)
 
 
 def _validate_node(node: Mapping[str, Any], path: tuple[str, ...], mode: dict) -> None:
@@ -45,6 +48,8 @@ def _validate_node(node: Mapping[str, Any], path: tuple[str, ...], mode: dict) -
     children = node.get("children")
     here = path + (name,)
     if children is None:
+        if "value" not in node and not path:
+            return
         value = node.get("value")
         if _is_scalar(value):
             mode["scalar"] = True
@@ -61,10 +66,12 @@ def _validate_node(node: Mapping[str, Any], path: tuple[str, ...], mode: dict) -
                 "choose one representation"
             )
         return
-    if not isinstance(children, list) or not children:
+    if not isinstance(children, list):
         raise ValueError(
             f"node at {list(here)} has 'children' but it is not a non-empty list"
         )
+    if not children:
+        raise ValueError(EMPTY_TREE_ERROR)
     for child in children:
         if not isinstance(child, Mapping):
             raise ValueError(
@@ -131,6 +138,8 @@ def tree_from_paths(
 
     Values can be a single number or a ``{col: number}`` dict (multi-column).
     """
+    if not mapping:
+        raise ValueError(EMPTY_TREE_ERROR)
     root: Tree = {"name": root_name, "children": []}
     for path, value in mapping.items():
         parts = [p for p in path.split(sep) if p]

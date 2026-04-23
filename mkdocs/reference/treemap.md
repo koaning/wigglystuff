@@ -10,7 +10,6 @@
 | `width` | `int \| str` | Chart width in pixels, or a CSS length like `"100%"`. |
 | `height` | `int` | Chart height in pixels. |
 | `max_depth` | `int` | How many levels below the current zoom to draw. |
-| `palette` | `list[str]` | CSS colors assigned to top-level groups; descendants use shaded variants. |
 | `value_col` | `str` | When leaves carry dicts, the column that drives rectangle sizing. |
 | `selected_path` | `list[str]` | Breadcrumb path of the currently-zoomed node. |
 | `clicked_path` | `list[str]` | Path of the most recently clicked node (fires for leaves too). |

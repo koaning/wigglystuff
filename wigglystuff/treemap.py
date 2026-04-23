@@ -10,6 +10,7 @@ import anywidget
 import traitlets
 
 from ._tree_utils import (
+    EMPTY_TREE_ERROR,
     aggregate_values,
     collect_columns,
     tree_from_dataframe,
@@ -38,12 +39,6 @@ class Treemap(anywidget.AnyWidget):
         height: Chart height in pixels.
         max_depth: How many nesting levels to render below the current
             zoom (default ``3``).
-        palette: Optional list of CSS colors. Each top-level group (direct
-            child of the root) is painted with a distinct color from the
-            palette, and its descendants inherit shaded variants of that
-            color. When ``None`` (the default), a balanced built-in palette
-            is used. Example: ``palette=["#4e79a7", "#f28e2c", "#e15759",
-            "#76b7b2", "#59a14f"]``.
         value_col: When the tree has dict values, the column that drives
             rectangle sizing. Ignored for scalar values.
         format: Optional callable ``(value) -> str`` applied to rectangle
@@ -72,7 +67,6 @@ class Treemap(anywidget.AnyWidget):
     ).tag(sync=True)
     height = traitlets.Int(400).tag(sync=True)
     max_depth = traitlets.Int(3).tag(sync=True)
-    palette = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
     value_col = traitlets.Unicode(default_value="", allow_none=True).tag(sync=True)
     selected_path = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
     clicked_path = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
@@ -84,7 +78,6 @@ class Treemap(anywidget.AnyWidget):
         width: int | str = 600,
         height: int = 400,
         max_depth: int = 3,
-        palette: Sequence[str] | None = None,
         value_col: str | None = None,
         format: Callable[[float], str] | None = None,
     ):
@@ -94,7 +87,6 @@ class Treemap(anywidget.AnyWidget):
             width=width,
             height=height,
             max_depth=max_depth,
-            palette=list(palette) if palette else [],
             value_col=value_col or "",
         )
 
@@ -106,7 +98,7 @@ class Treemap(anywidget.AnyWidget):
         formatter: Callable[[float], str] | None,
     ) -> dict:
         if data is None:
-            return {"name": "root", "children": []}
+            raise ValueError(EMPTY_TREE_ERROR)
         tree = copy.deepcopy(dict(data))
         validate_tree(tree)
         aggregate_values(tree)

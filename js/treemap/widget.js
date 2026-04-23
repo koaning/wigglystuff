@@ -4,8 +4,10 @@ const STYLE = `
 .wiggly-treemap {
   --bg: #ffffff;
   --fg: #1f2328;
+  --path-current: #101828;
   --muted: #667085;
   --tile-stroke: rgba(255, 255, 255, 0.9);
+  --hover-stroke: rgba(17, 24, 39, 0.48);
   color-scheme: light dark;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--fg);
@@ -17,24 +19,71 @@ const STYLE = `
 [data-theme="dark"] .wiggly-treemap {
   --bg: #111316;
   --fg: #f2f4f7;
+  --path-current: #ffffff;
   --muted: #a3aab7;
   --tile-stroke: rgba(17, 19, 22, 0.92);
+  --hover-stroke: rgba(255, 255, 255, 0.56);
 }
-.wiggly-treemap-breadcrumbs {
+.wiggly-treemap-topbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 0.75rem;
   width: 100%;
   min-height: 2rem;
   padding: 0.35rem 0.45rem;
-  background: transparent;
   font: inherit;
   font-size: 0.9rem;
   text-align: left;
-  border: none;
-  cursor: pointer;
   color: var(--fg);
 }
-.wiggly-treemap-breadcrumbs:disabled {
-  cursor: default;
+.wiggly-treemap-path,
+.wiggly-treemap-meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wiggly-treemap-path {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.wiggly-treemap-path-part {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 0 1 auto;
+}
+.wiggly-treemap-path-part.-last {
+  flex: 0 0 auto;
+  max-width: min(70%, 32rem);
+}
+.wiggly-treemap-path-separator {
+  flex: 0 0 auto;
+}
+.wiggly-treemap-path-part.-clickable {
+  cursor: pointer;
+}
+.wiggly-treemap-path-part.-clickable:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18rem;
+}
+.wiggly-treemap-current-path {
+  color: var(--path-current);
+  font-weight: 600;
+}
+.wiggly-treemap-next-path {
   color: var(--muted);
+}
+.wiggly-treemap-meta {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 .wiggly-treemap-chart {
   position: relative;
@@ -52,16 +101,17 @@ const STYLE = `
 `;
 
 const DEFAULT_PALETTE = [
-  "#3b82f6",
-  "#14b8a6",
-  "#f59e0b",
-  "#ef4444",
-  "#8b5cf6",
-  "#22c55e",
-  "#ec4899",
-  "#64748b",
+  "#1d4ed8",
+  "#0f766e",
+  "#b45309",
+  "#b91c1c",
+  "#6d28d9",
+  "#15803d",
+  "#be185d",
+  "#475569",
 ];
 const NEUTRAL_COLOR = "#6b7280";
+const TILE_TEXT_COLOR = "#ffffff";
 const ANIMATION_MS = 420;
 const MAX_LABELS = 450;
 const MIN_RECT_SIDE = 0.55;
@@ -71,6 +121,13 @@ function defaultFormat(v) {
   if (v === null || v === undefined || Number.isNaN(v)) return "";
   if (Number.isInteger(v)) return String(v);
   return (Math.round(v * 100) / 100).toFixed(2);
+}
+
+function formatPercent(value) {
+  if (!Number.isFinite(value)) return "";
+  if (value > 0 && value < 0.1) return "<0.1%";
+  if (value >= 99.95 && value < 100) return "99.9%";
+  return `${value.toFixed(1)}%`;
 }
 
 function pickValue(rawValue, valueCol) {
@@ -97,6 +154,17 @@ function nodePath(node) {
     cur = cur.parent;
   }
   return parts;
+}
+
+function topLevelName(node) {
+  let cur = node;
+  while (cur.parent && cur.parent.parent) cur = cur.parent;
+  return cur.data.name;
+}
+
+function isSamePath(a, b) {
+  if (a.length !== b.length) return false;
+  return a.every((part, index) => part === b[index]);
 }
 
 function findNodeByPath(root, path) {
@@ -135,6 +203,7 @@ function easeOutCubic(t) {
 }
 
 function visibleDescendants(selected, maxDepth) {
+  if (!selected.children || selected.children.length === 0) return [selected];
   const out = [];
   function walk(node, rel) {
     if (rel > maxDepth) return;
@@ -147,15 +216,7 @@ function visibleDescendants(selected, maxDepth) {
   return out;
 }
 
-function assignColors(hierarchy, palette) {
-  const colors = palette && palette.length ? palette : DEFAULT_PALETTE;
-  const tops = hierarchy.children || [];
-  tops.forEach((top, i) => {
-    const color = colors[i % colors.length] || NEUTRAL_COLOR;
-    top.each((desc) => {
-      desc._color = color;
-    });
-  });
+function assignSiblingIndexes(hierarchy) {
   hierarchy.each((node) => {
     if (!node.children) return;
     node.children.forEach((child, index) => {
@@ -164,18 +225,44 @@ function assignColors(hierarchy, palette) {
   });
 }
 
-function colorForNode(node) {
-  const base = d3.color(node._color || NEUTRAL_COLOR) || d3.color(NEUTRAL_COLOR);
-  const depthShift = Math.max(0, node.depth - 1) * 0.28;
-  const siblingShift = ((node._siblingIndex || 0) % 5) * 0.035;
-  return base.brighter(depthShift + siblingShift).formatHex();
+function anchorForView(node, viewRoot) {
+  if (!node || !viewRoot || node === viewRoot) return null;
+  let cur = node;
+  while (cur.parent && cur.parent !== viewRoot) cur = cur.parent;
+  return cur.parent === viewRoot ? cur : null;
 }
 
-function readableTextColor(fill) {
-  const c = d3.color(fill);
-  if (!c) return "#ffffff";
-  const luminance = (0.299 * c.r + 0.587 * c.g + 0.114 * c.b) / 255;
-  return luminance > 0.58 ? "#111827" : "#ffffff";
+function paletteColor(index) {
+  const safeIndex = Math.max(0, index || 0);
+  const cycle = Math.floor(safeIndex / DEFAULT_PALETTE.length);
+  const base = DEFAULT_PALETTE[safeIndex % DEFAULT_PALETTE.length] || NEUTRAL_COLOR;
+  const color = d3.color(base) || d3.color(NEUTRAL_COLOR);
+  return color.brighter(cycle * 0.18).formatHex();
+}
+
+function colorForNodeInView(node, viewRoot) {
+  if (!node || !viewRoot) return NEUTRAL_COLOR;
+  if (node === viewRoot && (!viewRoot.children || viewRoot.children.length === 0)) {
+    return DEFAULT_PALETTE[0];
+  }
+
+  const anchor = anchorForView(node, viewRoot);
+  if (!anchor) return NEUTRAL_COLOR;
+
+  const anchorIndex = anchor._siblingIndex || 0;
+  const base = d3.color(paletteColor(anchorIndex)) || d3.color(DEFAULT_PALETTE[0]);
+  const relativeDepth = Math.max(0, node.depth - anchor.depth);
+  const siblingShift = ((node._siblingIndex || 0) % 5) * 0.025;
+  return base.brighter(Math.min(0.32, relativeDepth * 0.11 + siblingShift)).formatHex();
+}
+
+function isDescendantOrSelf(node, ancestor) {
+  let cur = node;
+  while (cur) {
+    if (cur === ancestor) return true;
+    cur = cur.parent;
+  }
+  return false;
 }
 
 function projectedBox(node, extent, width, height) {
@@ -225,10 +312,14 @@ function render({ model, el }) {
   style.textContent = STYLE;
   root.appendChild(style);
 
-  const breadcrumbsBtn = document.createElement("button");
-  breadcrumbsBtn.className = "wiggly-treemap-breadcrumbs";
-  breadcrumbsBtn.type = "button";
-  root.appendChild(breadcrumbsBtn);
+  const topbar = document.createElement("div");
+  topbar.className = "wiggly-treemap-topbar";
+  const pathEl = document.createElement("span");
+  pathEl.className = "wiggly-treemap-path";
+  const metaEl = document.createElement("span");
+  metaEl.className = "wiggly-treemap-meta";
+  topbar.append(pathEl, metaEl);
+  root.appendChild(topbar);
 
   const chart = document.createElement("div");
   chart.className = "wiggly-treemap-chart";
@@ -247,18 +338,15 @@ function render({ model, el }) {
   let lastMeasuredWidth = null;
   let hitNodes = [];
   let hoveredNode = null;
+  let hoverTarget = null;
   let cachedVisible = null;
   let cachedSelected = null;
   let cachedMaxDepth = null;
+  let colorTransition = null;
 
   function measuredWidth() {
     const raw = model.get("width");
     return typeof raw === "number" ? raw : chart.clientWidth || 600;
-  }
-
-  function paletteFromModel() {
-    const p = model.get("palette");
-    return p && p.length ? p : DEFAULT_PALETTE;
   }
 
   function currentColors() {
@@ -266,6 +354,7 @@ function render({ model, el }) {
     return {
       bg: computed.getPropertyValue("--bg").trim() || "#ffffff",
       stroke: computed.getPropertyValue("--tile-stroke").trim() || "rgba(255,255,255,0.9)",
+      hoverStroke: computed.getPropertyValue("--hover-stroke").trim() || "rgba(255,255,255,0.98)",
       muted: computed.getPropertyValue("--muted").trim() || "#667085",
     };
   }
@@ -312,6 +401,16 @@ function render({ model, el }) {
     return cachedVisible;
   }
 
+  function colorForDraw(node) {
+    if (!colorTransition) return colorForNodeInView(node, selected);
+
+    const to = colorForNodeInView(node, colorTransition.toView);
+    const from = isDescendantOrSelf(node, colorTransition.fromView)
+      ? colorForNodeInView(node, colorTransition.fromView)
+      : to;
+    return d3.interpolateRgb(from, to)(colorTransition.progress);
+  }
+
   function build() {
     const data = model.get("data");
     const widthRaw = model.get("width");
@@ -329,9 +428,10 @@ function render({ model, el }) {
       currentExtent = null;
       targetExtent = null;
       hitNodes = [];
+      hoverTarget = null;
       invalidateVisibleCache();
-      breadcrumbsBtn.textContent = "";
-      breadcrumbsBtn.disabled = true;
+      pathEl.textContent = "";
+      metaEl.textContent = "";
       ctx.clearRect(0, 0, width, height);
       return;
     }
@@ -344,7 +444,7 @@ function render({ model, el }) {
       .sort((a, b) => b.value - a.value);
 
     applyTreemap(width, height);
-    assignColors(hierarchy, paletteFromModel());
+    assignSiblingIndexes(hierarchy);
     lastMeasuredWidth = width;
 
     const syncedPath = model.get("selected_path") || [];
@@ -354,6 +454,7 @@ function render({ model, el }) {
     selected = byPath || hierarchy;
     currentExtent = extentOf(selected);
     targetExtent = currentExtent;
+    colorTransition = null;
     invalidateVisibleCache();
     updateBreadcrumbs();
     draw(currentExtent);
@@ -384,7 +485,7 @@ function render({ model, el }) {
 
     let labelsDrawn = 0;
     for (const { node, box } of drawItems) {
-      const fill = colorForNode(node);
+      const fill = colorForDraw(node);
       const radius = Math.min(7, Math.max(2, Math.min(box.width, box.height) / 8));
       ctx.save();
       roundedRect(ctx, box.left, box.top, box.width, box.height, radius);
@@ -408,8 +509,7 @@ function render({ model, el }) {
       ctx.beginPath();
       ctx.rect(box.left + 2, box.top + 2, Math.max(0, box.width - 4), Math.max(0, box.height - 4));
       ctx.clip();
-      const textColor = readableTextColor(fill);
-      ctx.fillStyle = textColor;
+      ctx.fillStyle = TILE_TEXT_COLOR;
       ctx.font = "600 12px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
       ctx.textBaseline = "top";
       const label = fitText(ctx, nameText, box.width - 12);
@@ -418,7 +518,7 @@ function render({ model, el }) {
         labelsDrawn += 1;
       }
       if (canShowValue) {
-        ctx.globalAlpha = textColor === "#ffffff" ? 0.78 : 0.68;
+        ctx.globalAlpha = 0.78;
         ctx.font = "11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
         const value = fitText(ctx, valueText, box.width - 12);
         if (value) ctx.fillText(value, box.left + 6, box.top + 20);
@@ -431,6 +531,25 @@ function render({ model, el }) {
       ctx.font = "13px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
       ctx.fillText("Zoom in or increase the widget size to see these tiny items.", 12, 18);
     }
+
+    if (hoverTarget && hoverTarget !== selected) {
+      const box = projectedBox(hoverTarget, extent, width, height);
+      if (box.width >= 2 && box.height >= 2) {
+        ctx.save();
+        roundedRect(
+          ctx,
+          box.left,
+          box.top,
+          box.width,
+          box.height,
+          Math.min(8, Math.max(2, Math.min(box.width, box.height) / 8))
+        );
+        ctx.lineWidth = Math.min(2.75, Math.max(1.75, Math.min(box.width, box.height) / 26));
+        ctx.strokeStyle = colors.hoverStroke;
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
   }
 
   function animateTo(nextExtent) {
@@ -441,13 +560,16 @@ function render({ model, el }) {
 
     function tick(now) {
       const t = Math.min(1, (now - start) / ANIMATION_MS);
-      currentExtent = interpolateExtent(startExtent, targetExtent, easeOutCubic(t));
+      const easedT = easeOutCubic(t);
+      if (colorTransition) colorTransition.progress = easedT;
+      currentExtent = interpolateExtent(startExtent, targetExtent, easedT);
       draw(currentExtent);
       if (t < 1) {
         animationFrame = requestAnimationFrame(tick);
       } else {
         currentExtent = targetExtent;
         animationFrame = null;
+        colorTransition = null;
         draw(currentExtent);
       }
     }
@@ -456,30 +578,107 @@ function render({ model, el }) {
 
   function updateBreadcrumbs() {
     if (!selected) {
-      breadcrumbsBtn.textContent = "";
-      breadcrumbsBtn.disabled = true;
+      pathEl.textContent = "";
+      metaEl.textContent = "";
       return;
     }
-    const path = nodePath(selected);
-    const display = selected.data.display || defaultFormat(selected.value || 0);
-    const nLeaves = selected.leaves ? selected.leaves().length : 0;
-    const leafWord = nLeaves === 1 ? "leaf" : "leaves";
-    const suffix = display
-      ? ` - ${display} (${nLeaves} ${leafWord})`
-      : `(${nLeaves} ${leafWord})`;
-    breadcrumbsBtn.textContent = `${path.join(" / ")} ${suffix}`;
-    breadcrumbsBtn.disabled = !selected.parent;
+    updateTopBar(selected);
   }
 
-  function setSelected(node, animate = true) {
+  function nodeSummary(node) {
+    const valueCol = model.get("value_col") || "";
+    const valueText = labelFor(node, valueCol) || defaultFormat(node.value || 0);
+    const total = hierarchy && hierarchy.value ? hierarchy.value : 0;
+    const percentText = total ? formatPercent((node.value / total) * 100) : "";
+    const nLeaves = node.leaves ? node.leaves().length : 0;
+    const leafWord = nLeaves === 1 ? "leaf" : "leaves";
+    const valueSummary = percentText ? `${valueText} (${percentText})` : valueText;
+    return valueSummary
+      ? `${valueSummary} - ${nLeaves} ${leafWord}`
+      : `${nLeaves} ${leafWord}`;
+  }
+
+  function updateTopBar(node) {
+    if (!node) return;
+    const path = nodePath(node);
+    const selectedPath = selected ? nodePath(selected) : [];
+    const commonLength = path.reduce((count, part, index) => {
+      return count === index && selectedPath[index] === part ? count + 1 : count;
+    }, 0);
+    const currentPath = path.slice(0, commonLength).join(" / ");
+    const displayPath = path.join(" / ");
+
+    pathEl.replaceChildren();
+    path.forEach((part, index) => {
+      if (index > 0) {
+        const separator = document.createElement("span");
+        separator.textContent = " / ";
+        separator.className =
+          index <= commonLength
+            ? "wiggly-treemap-path-separator wiggly-treemap-current-path"
+            : "wiggly-treemap-path-separator wiggly-treemap-next-path";
+        pathEl.appendChild(separator);
+      }
+
+      const partPath = path.slice(0, index + 1);
+      const target = findNodeByPath(hierarchy, partPath);
+      const isCurrent = index < commonLength;
+      const partEl = document.createElement("button");
+      partEl.type = "button";
+      partEl.className = `wiggly-treemap-path-part ${
+        isCurrent ? "wiggly-treemap-current-path" : "wiggly-treemap-next-path"
+      }`;
+      if (index === path.length - 1) partEl.classList.add("-last");
+      partEl.textContent = part;
+      if (target && !isSamePath(partPath, selectedPath)) {
+        partEl.classList.add("-clickable");
+        partEl.addEventListener("click", (event) => {
+          event.stopPropagation();
+          setSelected(target);
+        });
+      }
+      pathEl.appendChild(partEl);
+    });
+    if (!path.length) {
+      pathEl.textContent = currentPath || displayPath;
+    }
+    pathEl.title = displayPath;
+    metaEl.textContent = nodeSummary(node);
+    metaEl.title = `${topLevelName(node)} - ${displayPath}`;
+  }
+
+  function zoomTargetFor(node) {
+    if (!node) return null;
+    if (node === selected) return selected;
+    let target = node;
+    while (target.parent && target.parent !== selected) {
+      target = target.parent;
+    }
+    return target;
+  }
+
+  function setSelected(node, animate = true, sync = true) {
+    const previousSelected = selected;
     selected = node;
     const nextExtent = extentOf(node);
     invalidateVisibleCache();
-    model.set("selected_path", nodePath(node));
-    model.save_changes();
+    if (sync) {
+      model.set("selected_path", nodePath(node));
+      model.save_changes();
+    }
     updateBreadcrumbs();
-    if (animate) animateTo(nextExtent);
-    else {
+    if (animate && previousSelected && previousSelected !== node) {
+      colorTransition = {
+        fromView: previousSelected,
+        toView: node,
+        progress: 0,
+      };
+      animateTo(nextExtent);
+    } else if (animate) {
+      colorTransition = null;
+      animateTo(nextExtent);
+    } else {
+      colorTransition = null;
       currentExtent = nextExtent;
       targetExtent = nextExtent;
       draw(currentExtent);
@@ -512,41 +711,35 @@ function render({ model, el }) {
   function onNodeClick(node) {
     model.set("clicked_path", nodePath(node));
     model.save_changes();
-    let target = node;
-    while (target.parent && target.parent !== selected) {
-      target = target.parent;
-    }
-    if (target !== selected && target.children) setSelected(target);
+    const target = zoomTargetFor(node);
+    if (target && target !== selected) setSelected(target);
   }
 
   canvas.addEventListener("mousemove", (ev) => {
     if (!selected) return;
     const point = eventPoint(ev);
     const node = hitTest(point.x, point.y);
+    const nextHoverTarget = zoomTargetFor(node);
+    const hoverChanged = nextHoverTarget !== hoverTarget;
     hoveredNode = node;
-    chart.style.cursor = node && node.children ? "pointer" : "default";
-    if (node) {
-      const valueText = labelFor(node, model.get("value_col") || "");
-      chart.title = valueText ? `${nodePath(node).join(" / ")} - ${valueText}` : nodePath(node).join(" / ");
-    } else {
-      chart.title = "";
-    }
+    hoverTarget = nextHoverTarget;
+    chart.style.cursor = hoverTarget && hoverTarget !== selected ? "pointer" : "default";
+    updateTopBar(hoverTarget || selected);
+    if (hoverChanged) draw(currentExtent || extentOf(selected));
   });
 
   canvas.addEventListener("mouseleave", () => {
     hoveredNode = null;
+    hoverTarget = null;
     chart.style.cursor = "default";
-    chart.title = "";
+    updateTopBar(selected);
+    draw(currentExtent || extentOf(selected));
   });
 
   canvas.addEventListener("click", (ev) => {
     const point = eventPoint(ev);
     const node = hitTest(point.x, point.y) || hoveredNode;
     if (node) onNodeClick(node);
-  });
-
-  breadcrumbsBtn.addEventListener("click", () => {
-    if (selected && selected.parent) setSelected(selected.parent);
   });
 
   const resizeObserver = new ResizeObserver(() => {
@@ -559,6 +752,7 @@ function render({ model, el }) {
     applyTreemap(w, height);
     currentExtent = extentOf(selected);
     targetExtent = currentExtent;
+    colorTransition = null;
     invalidateVisibleCache();
     draw(currentExtent);
   });
@@ -568,11 +762,6 @@ function render({ model, el }) {
   model.on("change:width", build);
   model.on("change:height", build);
   model.on("change:value_col", build);
-  model.on("change:palette", () => {
-    if (!hierarchy) return;
-    assignColors(hierarchy, paletteFromModel());
-    draw(currentExtent || extentOf(selected));
-  });
   model.on("change:max_depth", () => {
     invalidateVisibleCache();
     draw(currentExtent || extentOf(selected));
@@ -582,10 +771,7 @@ function render({ model, el }) {
     const synced = model.get("selected_path") || [];
     const target = synced.length ? findNodeByPath(hierarchy, synced) : hierarchy;
     if (target && target !== selected) {
-      selected = target;
-      invalidateVisibleCache();
-      updateBreadcrumbs();
-      animateTo(extentOf(selected));
+      setSelected(target, true, false);
     }
   });
 

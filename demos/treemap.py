@@ -15,6 +15,11 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
     import marimo as mo
     from wigglystuff import Treemap
 
@@ -58,7 +63,7 @@ def _(Treemap, mo):
             value_col="hours",
             format=lambda v: f"{v:.1f}h",
             root_name="projects",
-            width="100%"
+            width="100%",
         )
     )
     widget
@@ -80,8 +85,7 @@ def _(mo):
 
     A synthetic tree generated with `random`, branching up to eight levels
     deep with variable fan-out. Click a rectangle to zoom one level in;
-    the breadcrumb walks you back out. Pass `palette=[...]` to colorize
-    the top-level groups.
+    the breadcrumb walks you back out.
     """)
     return
 

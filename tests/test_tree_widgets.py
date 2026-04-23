@@ -45,6 +45,11 @@ def test_from_paths_duplicate_leaf_raises():
         tree_from_paths({"a/b": 1, "a//b": 2})
 
 
+def test_from_paths_empty_mapping_raises():
+    with pytest.raises(ValueError, match="leaf"):
+        tree_from_paths({})
+
+
 # ---- tree_from_records: value_cols ----
 
 
@@ -162,12 +167,26 @@ def test_validate_tree_requires_string_name():
         validate_tree({"name": 123, "value": 1})
 
 
+def test_validate_tree_allows_single_leaf_root():
+    validate_tree({"name": "only", "value": 1})
+
+
 # ---- Treemap widget ----
 
 
 def test_treemap_basic_scalar():
     widget = Treemap.from_paths({"a/b": 1, "a/c": 2})
     assert widget.data["name"] == "root"
+
+
+def test_treemap_none_data_raises():
+    with pytest.raises(ValueError, match="leaf"):
+        Treemap()
+
+
+def test_treemap_empty_children_raises():
+    with pytest.raises(ValueError, match="leaf"):
+        Treemap({"name": "root", "children": []})
 
 
 def test_treemap_requires_value_col_for_dict_leaves():

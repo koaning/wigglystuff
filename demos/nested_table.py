@@ -15,6 +15,11 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
     import marimo as mo
     from wigglystuff import NestedTable
 
@@ -130,7 +135,7 @@ def _(NestedTable, mo):
         NestedTable.from_dataframe(
             df,
             path_cols=["dept", "team", "person"],
-            value_cols=["hours", "tickets"],
+            value_cols=["tickets", "hours"],
             root_name="org",
             format={"hours": lambda v: f"{v:.0f}h"},
             show_percent=["hours"],

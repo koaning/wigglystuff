@@ -38,7 +38,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [ApiDoc](https://koaning.github.io/wigglystuff/reference/api-doc.md): Renders API docs for Python classes and functions directly in notebooks
 - [PlaySlider](https://koaning.github.io/wigglystuff/reference/play-slider.md): Slider with play/pause button for auto-advancing values at a configurable pace
 - [ForecastChart](https://koaning.github.io/wigglystuff/reference/utils.md): Time series chart with robust exponential forecast via log-linear regression
-- [Treemap](https://koaning.github.io/wigglystuff/reference/treemap.md): Zoomable hierarchical treemap with breadcrumb navigation; builds trees from dicts, path strings, records, or dataframes
+- [Treemap](https://koaning.github.io/wigglystuff/reference/treemap.md): Zoomable hierarchical treemap with clickable path navigation and constructors for dicts, path strings, records, or dataframes
 - [NestedTable](https://koaning.github.io/wigglystuff/reference/nested-table.md): Recursive expandable table for hierarchical data with name, summed value, and share-of-total columns
 
 ## 3rd party widgets
