@@ -74,6 +74,8 @@ def _(Treemap, mo):
 def _(mo, widget):
     mo.md(f"""
     Currently zoomed into: **{' / '.join(widget.selected_path) or '—'}**
+
+    Hovering: **{' / '.join(widget.hovered_path) or '—'}**
     """)
     return
 

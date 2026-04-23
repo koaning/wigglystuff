@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-04-23
+
+### Added
+- `Treemap` widget: new `hovered_path` traitlet that updates as the cursor moves over rectangles, allowing Python code to react to hover without requiring a click.
+
 ## [0.3.4] - 2026-04-23
 
 ### Added

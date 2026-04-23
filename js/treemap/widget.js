@@ -721,18 +721,28 @@ function render({ model, el }) {
     const node = hitTest(point.x, point.y);
     const nextHoverTarget = zoomTargetFor(node);
     const hoverChanged = nextHoverTarget !== hoverTarget;
+    const prevHoveredNode = hoveredNode;
     hoveredNode = node;
     hoverTarget = nextHoverTarget;
     chart.style.cursor = hoverTarget && hoverTarget !== selected ? "pointer" : "default";
     updateTopBar(hoverTarget || selected);
+    if (node !== prevHoveredNode) {
+      model.set("hovered_path", node ? nodePath(node) : []);
+      model.save_changes();
+    }
     if (hoverChanged) draw(currentExtent || extentOf(selected));
   });
 
   canvas.addEventListener("mouseleave", () => {
+    const hadHover = hoveredNode !== null;
     hoveredNode = null;
     hoverTarget = null;
     chart.style.cursor = "default";
     updateTopBar(selected);
+    if (hadHover) {
+      model.set("hovered_path", []);
+      model.save_changes();
+    }
     draw(currentExtent || extentOf(selected));
   });
 

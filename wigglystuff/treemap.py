@@ -70,6 +70,7 @@ class Treemap(anywidget.AnyWidget):
     value_col = traitlets.Unicode(default_value="", allow_none=True).tag(sync=True)
     selected_path = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
     clicked_path = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
+    hovered_path = traitlets.List(traitlets.Unicode(), default_value=[]).tag(sync=True)
 
     def __init__(
         self,
