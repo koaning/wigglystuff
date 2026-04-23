@@ -1344,6 +1344,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#wigglystuff.api_doc.ApiDoc.to_markdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_markdown
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#synced-traitlets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1426,6 +1437,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../treemap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Treemap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nested-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NestedTable
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../utils/" class="md-nav__link">
         
   
@@ -1485,6 +1552,17 @@
     <span class="md-ellipsis">
       
         ApiDoc
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wigglystuff.api_doc.ApiDoc.to_markdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        to_markdown
       
     </span>
   </a>
@@ -1705,6 +1783,145 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="wigglystuff.api_doc.ApiDoc.to_markdown" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">to_markdown</span>
+
+
+<a href="#wigglystuff.api_doc.ApiDoc.to_markdown" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_markdown</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Export the API documentation as a Markdown string.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>wigglystuff/api_doc.py</code></summary>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-181">181</a></span>
+<span class="normal"><a href="#__codelineno-0-182">182</a></span>
+<span class="normal"><a href="#__codelineno-0-183">183</a></span>
+<span class="normal"><a href="#__codelineno-0-184">184</a></span>
+<span class="normal"><a href="#__codelineno-0-185">185</a></span>
+<span class="normal"><a href="#__codelineno-0-186">186</a></span>
+<span class="normal"><a href="#__codelineno-0-187">187</a></span>
+<span class="normal"><a href="#__codelineno-0-188">188</a></span>
+<span class="normal"><a href="#__codelineno-0-189">189</a></span>
+<span class="normal"><a href="#__codelineno-0-190">190</a></span>
+<span class="normal"><a href="#__codelineno-0-191">191</a></span>
+<span class="normal"><a href="#__codelineno-0-192">192</a></span>
+<span class="normal"><a href="#__codelineno-0-193">193</a></span>
+<span class="normal"><a href="#__codelineno-0-194">194</a></span>
+<span class="normal"><a href="#__codelineno-0-195">195</a></span>
+<span class="normal"><a href="#__codelineno-0-196">196</a></span>
+<span class="normal"><a href="#__codelineno-0-197">197</a></span>
+<span class="normal"><a href="#__codelineno-0-198">198</a></span>
+<span class="normal"><a href="#__codelineno-0-199">199</a></span>
+<span class="normal"><a href="#__codelineno-0-200">200</a></span>
+<span class="normal"><a href="#__codelineno-0-201">201</a></span>
+<span class="normal"><a href="#__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#__codelineno-0-205">205</a></span>
+<span class="normal"><a href="#__codelineno-0-206">206</a></span>
+<span class="normal"><a href="#__codelineno-0-207">207</a></span>
+<span class="normal"><a href="#__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#__codelineno-0-214">214</a></span>
+<span class="normal"><a href="#__codelineno-0-215">215</a></span>
+<span class="normal"><a href="#__codelineno-0-216">216</a></span>
+<span class="normal"><a href="#__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#__codelineno-0-223">223</a></span>
+<span class="normal"><a href="#__codelineno-0-224">224</a></span>
+<span class="normal"><a href="#__codelineno-0-225">225</a></span>
+<span class="normal"><a href="#__codelineno-0-226">226</a></span>
+<span class="normal"><a href="#__codelineno-0-227">227</a></span>
+<span class="normal"><a href="#__codelineno-0-228">228</a></span>
+<span class="normal"><a href="#__codelineno-0-229">229</a></span>
+<span class="normal"><a href="#__codelineno-0-230">230</a></span>
+<span class="normal"><a href="#__codelineno-0-231">231</a></span>
+<span class="normal"><a href="#__codelineno-0-232">232</a></span>
+<span class="normal"><a href="#__codelineno-0-233">233</a></span>
+<span class="normal"><a href="#__codelineno-0-234">234</a></span>
+<span class="normal"><a href="#__codelineno-0-235">235</a></span>
+<span class="normal"><a href="#__codelineno-0-236">236</a></span>
+<span class="normal"><a href="#__codelineno-0-237">237</a></span>
+<span class="normal"><a href="#__codelineno-0-238">238</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_markdown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Export the API documentation as a Markdown string.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a>    <span class="n">doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">doc</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-185" name="__codelineno-0-185"></a>        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-186" name="__codelineno-0-186"></a>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a>    <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="c1"># Title</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span> <span class="k">if</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a>    <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;## `</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a>    <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&gt; </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;kind&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;class&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a>    <span class="c1"># Signature</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a>    <span class="k">if</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;signature&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a>        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">```python</span><span class="se">\n</span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;signature&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">```&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a>    <span class="c1"># Bases</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a>    <span class="k">if</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bases&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a>        <span class="n">bases</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">`&quot;</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;bases&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a>        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Bases: </span><span class="si">{</span><span class="n">bases</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a>    <span class="c1"># Docstring</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a>    <span class="k">if</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;docstring&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a>        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;docstring&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a>    <span class="c1"># Parameter table</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a>    <span class="n">params</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parameters&quot;</span><span class="p">,</span> <span class="p">[])</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a>    <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a>        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">| Name | Type | Default |&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a>        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;| --- | --- | --- |&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a>        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a>            <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">`&quot;</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a>            <span class="n">ann</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;annotation&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">`&quot;</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;annotation&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a>            <span class="n">default</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">`&quot;</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a>            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">ann</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">default</span><span class="si">}</span><span class="s2"> |&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a>    <span class="c1"># Methods</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a>    <span class="n">methods</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;methods&quot;</span><span class="p">,</span> <span class="p">[])</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a>    <span class="k">if</span> <span class="n">methods</span><span class="p">:</span>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a>        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">### Methods&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a>        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+<a id="__codelineno-0-223" name="__codelineno-0-223"></a>            <span class="n">sig</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;signature&quot;</span><span class="p">,</span> <span class="s2">&quot;()&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-224" name="__codelineno-0-224"></a>            <span class="n">decorator</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; *</span><span class="si">{</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;decorator&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">*&quot;</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;decorator&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a>            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">#### `</span><span class="si">{</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">sig</span><span class="si">}</span><span class="s2">`</span><span class="si">{</span><span class="n">decorator</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-226" name="__codelineno-0-226"></a>            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;docstring&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a>                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;docstring&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-228" name="__codelineno-0-228"></a>
+<a id="__codelineno-0-229" name="__codelineno-0-229"></a>    <span class="c1"># Properties</span>
+<a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="n">props</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="p">[])</span>
+<a id="__codelineno-0-231" name="__codelineno-0-231"></a>    <span class="k">if</span> <span class="n">props</span><span class="p">:</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a>        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">### Properties&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-233" name="__codelineno-0-233"></a>        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">props</span><span class="p">:</span>
+<a id="__codelineno-0-234" name="__codelineno-0-234"></a>            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">#### `</span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">` *property*&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a>            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;docstring&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-236" name="__codelineno-0-236"></a>                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;docstring&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a>    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

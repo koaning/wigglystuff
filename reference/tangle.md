@@ -33,6 +33,7 @@ def __init__(
     min_value: float = -100,
     max_value: float = 100,
     step: float = 1.0,
+    steps: Optional[List[float]] = None,
     pixels_per_step: int = 2,
     prefix: str = "",
     suffix: str = "",
@@ -42,23 +43,45 @@ def __init__(
     """Create a slider suitable for inline Tangle interactions.
 
     Args:
-        amount: Starting value; defaults to midpoint of bounds.
-        min_value: Lower bound.
-        max_value: Upper bound.
-        step: Increment size.
+        amount: Starting value; defaults to midpoint of bounds (linear mode)
+            or first element (steps mode).
+        min_value: Lower bound. Mutually exclusive with ``steps``.
+        max_value: Upper bound. Mutually exclusive with ``steps``.
+        step: Increment size. Mutually exclusive with ``steps``.
+        steps: Explicit list of values to cycle through. When set,
+            ``min_value``, ``max_value``, and ``step`` must not be provided.
         pixels_per_step: Drag distance per step.
         prefix: Text shown before the value.
         suffix: Text shown after the value.
         digits: Number formatting precision.
         **kwargs: Forwarded to ``anywidget.AnyWidget``.
     """
-    if amount is None:
-        amount = (max_value + min_value) / 2
+    if steps is not None:
+        steps = [float(v) for v in steps]
+        linear_given = {
+            k for k, v in self._LINEAR_DEFAULTS.items()
+            if locals()[k] != v
+        }
+        if linear_given:
+            raise ValueError(
+                f"Cannot use 'steps' together with {', '.join(sorted(linear_given))}."
+            )
+        if len(steps) < 2:
+            raise ValueError("Must pass at least two steps.")
+        if amount is not None and amount not in steps:
+            raise ValueError(f"amount={amount} is not in the steps list.")
+        if amount is None:
+            amount = steps[0]
+    else:
+        steps = []
+        if amount is None:
+            amount = (max_value + min_value) / 2
     super().__init__(
         amount=amount,
         min_value=min_value,
         max_value=max_value,
         step=step,
+        steps=steps,
         pixels_per_step=pixels_per_step,
         prefix=prefix,
         suffix=suffix,
