@@ -125,7 +125,22 @@ class Treemap(anywidget.AnyWidget):
         root_name: str = "root",
         **kwargs: Any,
     ) -> "Treemap":
-        """Build a ``Treemap`` from a mapping of path strings to leaf values."""
+        """Build a ``Treemap`` from a mapping of path strings to leaf values.
+
+        Examples:
+            ```python
+            from wigglystuff import Treemap
+
+            Treemap.from_paths(
+                {
+                    "analytics/cluster/Agg": {"hours": 10, "count": 5},
+                    "analytics/graph/Shortest": {"hours": 6, "count": 2},
+                    "animate/Easing": {"hours": 4, "count": 8},
+                },
+                value_col="hours",
+            )
+            ```
+        """
         return cls(tree_from_paths(mapping, sep=sep, root_name=root_name), **kwargs)
 
     @classmethod
@@ -138,7 +153,23 @@ class Treemap(anywidget.AnyWidget):
         root_name: str = "root",
         **kwargs: Any,
     ) -> "Treemap":
-        """Build a ``Treemap`` from an iterable of record dicts."""
+        """Build a ``Treemap`` from an iterable of record dicts.
+
+        Examples:
+            ```python
+            from wigglystuff import Treemap
+
+            Treemap.from_records(
+                [
+                    {"team": "analytics", "project": "cluster", "hours": 10},
+                    {"team": "analytics", "project": "graph", "hours": 6},
+                    {"team": "animate", "project": "easing", "hours": 4},
+                ],
+                path_cols=["team", "project"],
+                value_cols="hours",
+            )
+            ```
+        """
         tree = tree_from_records(
             records, path_cols=path_cols, value_cols=value_cols, root_name=root_name
         )
@@ -155,7 +186,27 @@ class Treemap(anywidget.AnyWidget):
         root_name: str = "root",
         **kwargs: Any,
     ) -> "Treemap":
-        """Build a ``Treemap`` from a pandas or polars dataframe."""
+        """Build a ``Treemap`` from a pandas or polars dataframe.
+
+        Examples:
+            ```python
+            import pandas as pd
+            from wigglystuff import Treemap
+
+            df = pd.DataFrame(
+                {
+                    "team": ["analytics", "analytics", "animate"],
+                    "project": ["cluster", "graph", "easing"],
+                    "hours": [10, 6, 4],
+                }
+            )
+            Treemap.from_dataframe(
+                df,
+                path_cols=["team", "project"],
+                value_cols="hours",
+            )
+            ```
+        """
         tree = tree_from_dataframe(
             df, path_cols=path_cols, value_cols=value_cols, root_name=root_name
         )

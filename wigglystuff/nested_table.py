@@ -126,7 +126,22 @@ class NestedTable(anywidget.AnyWidget):
         root_name: str = "root",
         **kwargs: Any,
     ) -> "NestedTable":
-        """Build a ``NestedTable`` from a mapping of path strings to leaf values."""
+        """Build a ``NestedTable`` from a mapping of path strings to leaf values.
+
+        Examples:
+            ```python
+            from wigglystuff import NestedTable
+
+            NestedTable.from_paths(
+                {
+                    "analytics/cluster/Agg": {"hours": 12.5, "count": 5},
+                    "analytics/graph/Shortest": {"hours": 6.0, "count": 2},
+                    "animate/Easing": {"hours": 4.25, "count": 8},
+                },
+                show_percent=["hours"],
+            )
+            ```
+        """
         return cls(tree_from_paths(mapping, sep=sep, root_name=root_name), **kwargs)
 
     @classmethod
@@ -139,7 +154,23 @@ class NestedTable(anywidget.AnyWidget):
         root_name: str = "root",
         **kwargs: Any,
     ) -> "NestedTable":
-        """Build a ``NestedTable`` from an iterable of record dicts."""
+        """Build a ``NestedTable`` from an iterable of record dicts.
+
+        Examples:
+            ```python
+            from wigglystuff import NestedTable
+
+            NestedTable.from_records(
+                [
+                    {"team": "analytics", "project": "cluster", "hours": 12.5},
+                    {"team": "analytics", "project": "graph", "hours": 6.0},
+                    {"team": "animate", "project": "easing", "hours": 4.25},
+                ],
+                path_cols=["team", "project"],
+                value_cols="hours",
+            )
+            ```
+        """
         tree = tree_from_records(
             records, path_cols=path_cols, value_cols=value_cols, root_name=root_name
         )
@@ -155,7 +186,28 @@ class NestedTable(anywidget.AnyWidget):
         root_name: str = "root",
         **kwargs: Any,
     ) -> "NestedTable":
-        """Build a ``NestedTable`` from a pandas or polars dataframe."""
+        """Build a ``NestedTable`` from a pandas or polars dataframe.
+
+        Examples:
+            ```python
+            import pandas as pd
+            from wigglystuff import NestedTable
+
+            df = pd.DataFrame(
+                {
+                    "team": ["analytics", "analytics", "animate"],
+                    "project": ["cluster", "graph", "easing"],
+                    "hours": [12.5, 6.0, 4.25],
+                    "count": [5, 2, 8],
+                }
+            )
+            NestedTable.from_dataframe(
+                df,
+                path_cols=["team", "project"],
+                value_cols=["hours", "count"],
+            )
+            ```
+        """
         tree = tree_from_dataframe(
             df, path_cols=path_cols, value_cols=value_cols, root_name=root_name
         )
