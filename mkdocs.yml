@@ -68,6 +68,8 @@ nav:
       - ApiDoc: reference/api-doc.md
       - PlaySlider: reference/play-slider.md
       - HoverZoom: reference/hover-zoom.md
+      - Treemap: reference/treemap.md
+      - NestedTable: reference/nested-table.md
       - Utils: reference/utils.md
 plugins:
   - search

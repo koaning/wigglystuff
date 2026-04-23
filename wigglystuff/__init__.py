@@ -22,6 +22,7 @@ from .keystroke import KeystrokeWidget
 from .matrix import Matrix
 from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
+from .nested_table import NestedTable
 from .paint import Paint
 from .parallel_coords import ParallelCoordinates
 from .play_slider import PlaySlider
@@ -33,6 +34,7 @@ from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget
 from .tangle import TangleChoice, TangleSelect, TangleSlider
 from .text_compare import TextCompare
+from .treemap import Treemap
 from .three_widget import ThreeWidget
 from .wandb_chart import WandbChart
 from .utils import forecast_chart
@@ -59,6 +61,7 @@ __all__ = [
     "Matrix",
     "ModuleTreeWidget",
     "Neo4jWidget",
+    "NestedTable",
     "Paint",
     "ParallelCoordinates",
     "PlaySlider",
@@ -71,6 +74,7 @@ __all__ = [
     "TangleSelect",
     "TangleSlider",
     "TextCompare",
+    "Treemap",
     "WebkitSpeechToTextWidget",
     "ThreeWidget",
     "WandbChart",

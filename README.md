@@ -61,6 +61,10 @@ uv pip install wigglystuff
 <td align="center"><b>PlaySlider</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/play_slider.py/wasm"><img src="./mkdocs/assets/gallery/playslider.png" width="330"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/play_slider.py/wasm">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/play-slider/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/play-slider.md">MD</a></td>
 <td align="center"><b>forecast_chart</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py"><img src="./mkdocs/assets/gallery/forecast-chart.png" width="330"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/utils/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/utils.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>Treemap</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/treemap.py/wasm"><img src="./mkdocs/assets/gallery/treemap.png" width="330"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/treemap.py/wasm">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/treemap/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/treemap.md">MD</a></td>
+<td align="center"><b>NestedTable</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/nested_table.py/wasm"><img src="./mkdocs/assets/gallery/nested_table.png" width="330"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/nested_table.py/wasm">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/nested-table/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/nested-table.md">MD</a></td>
+</tr>
 </table>
 
 ## 3rd party widgets

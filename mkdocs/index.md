@@ -190,6 +190,16 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm" class="gallery-img"><img src="assets/gallery/forecast-chart.png" alt="ForecastChart"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm">molab</a><a href="reference/utils/">API</a><a href="reference/utils.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">Treemap</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/treemap.py/wasm" class="gallery-img"><img src="assets/gallery/treemap.png" alt="Treemap widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/treemap.py/wasm">molab</a><a href="reference/treemap/">API</a><a href="reference/treemap.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title">NestedTable</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/nested_table.py/wasm" class="gallery-img"><img src="assets/gallery/nested_table.png" alt="NestedTable widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/nested_table.py/wasm">molab</a><a href="reference/nested-table/">API</a><a href="reference/nested-table.md">MD</a></div>
+</div>
 </div>
 
 Each widget links to a live demo on [molab](https://molab.marimo.io) where you can interact with and edit the notebook directly in your browser.
