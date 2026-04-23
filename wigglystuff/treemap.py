@@ -38,12 +38,12 @@ class Treemap(anywidget.AnyWidget):
         height: Chart height in pixels.
         max_depth: How many nesting levels to render below the current
             zoom (default ``3``).
-        palette: Optional list of CSS colors. When provided, each
-            top-level group (direct child of the root) is painted with a
-            distinct color from the palette, and its descendants inherit
-            that color. When ``None`` (the default), every rect uses a
-            single neutral gray. Example: ``palette=["#4e79a7", "#f28e2c",
-            "#e15759", "#76b7b2", "#59a14f"]``.
+        palette: Optional list of CSS colors. Each top-level group (direct
+            child of the root) is painted with a distinct color from the
+            palette, and its descendants inherit shaded variants of that
+            color. When ``None`` (the default), a balanced built-in palette
+            is used. Example: ``palette=["#4e79a7", "#f28e2c", "#e15759",
+            "#76b7b2", "#59a14f"]``.
         value_col: When the tree has dict values, the column that drives
             rectangle sizing. Ignored for scalar values.
         format: Optional callable ``(value) -> str`` applied to rectangle

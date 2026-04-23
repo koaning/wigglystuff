@@ -4,7 +4,8 @@ const STYLE = `
 .wiggly-treemap {
   --bg: #ffffff;
   --fg: #1f2328;
-  --muted: #6b7280;
+  --muted: #667085;
+  --tile-stroke: rgba(255, 255, 255, 0.9);
   color-scheme: light dark;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--fg);
@@ -12,55 +13,59 @@ const STYLE = `
 }
 :host([data-theme="dark"]) .wiggly-treemap,
 .dark .wiggly-treemap,
-.dark-theme .wiggly-treemap {
-  --bg: #1a1a1a;
-  --fg: #e6e6e6;
-  --muted: #a0a0a0;
+.dark-theme .wiggly-treemap,
+[data-theme="dark"] .wiggly-treemap {
+  --bg: #111316;
+  --fg: #f2f4f7;
+  --muted: #a3aab7;
+  --tile-stroke: rgba(17, 19, 22, 0.92);
 }
 .wiggly-treemap-breadcrumbs {
   width: 100%;
-  padding: 0.3rem 0.4rem;
+  min-height: 2rem;
+  padding: 0.35rem 0.45rem;
   background: transparent;
   font: inherit;
+  font-size: 0.9rem;
   text-align: left;
   border: none;
   cursor: pointer;
   color: var(--fg);
 }
-.wiggly-treemap-breadcrumbs:disabled { cursor: default; color: var(--muted); }
+.wiggly-treemap-breadcrumbs:disabled {
+  cursor: default;
+  color: var(--muted);
+}
 .wiggly-treemap-chart {
   position: relative;
   overflow: hidden;
   margin: 0 0 4px 0;
   background: var(--bg);
+  border-radius: 8px;
+  contain: layout paint style;
 }
-.wiggly-treemap-node {
-  position: absolute;
-  box-sizing: border-box;
-  overflow: hidden;
-  padding: 2px 5px;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  font-size: 11px;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-  transition: left 0.6s cubic-bezier(0.33, 1, 0.68, 1),
-              top 0.6s cubic-bezier(0.33, 1, 0.68, 1),
-              width 0.6s cubic-bezier(0.33, 1, 0.68, 1),
-              height 0.6s cubic-bezier(0.33, 1, 0.68, 1),
-              background-color 0.6s cubic-bezier(0.33, 1, 0.68, 1),
-              color 0.6s cubic-bezier(0.33, 1, 0.68, 1),
-              opacity 0.4s ease-out;
-}
-.wiggly-treemap-node.-clickable { cursor: pointer; }
-.wiggly-treemap-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 500;
+.wiggly-treemap-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 `;
 
+const DEFAULT_PALETTE = [
+  "#3b82f6",
+  "#14b8a6",
+  "#f59e0b",
+  "#ef4444",
+  "#8b5cf6",
+  "#22c55e",
+  "#ec4899",
+  "#64748b",
+];
 const NEUTRAL_COLOR = "#6b7280";
+const ANIMATION_MS = 420;
+const MAX_LABELS = 450;
+const MIN_RECT_SIDE = 0.55;
+const MIN_HIT_AREA = 12;
 
 function defaultFormat(v) {
   if (v === null || v === undefined || Number.isNaN(v)) return "";
@@ -94,10 +99,6 @@ function nodePath(node) {
   return parts;
 }
 
-function pathKey(node) {
-  return nodePath(node).join("\u0000");
-}
-
 function findNodeByPath(root, path) {
   if (!path || path.length === 0) return root;
   let cur = root;
@@ -120,15 +121,17 @@ function extentOf(node) {
   };
 }
 
-function positionElement(elem, node, extent, width, height) {
-  const left = ((node.x0 - extent.sx0) / extent.sdx) * width;
-  const top = ((node.y0 - extent.sy0) / extent.sdy) * height;
-  const w = ((node.x1 - node.x0) / extent.sdx) * width;
-  const h = ((node.y1 - node.y0) / extent.sdy) * height;
-  elem.style.left = left + "px";
-  elem.style.top = top + "px";
-  elem.style.width = Math.max(w, 0) + "px";
-  elem.style.height = Math.max(h, 0) + "px";
+function interpolateExtent(a, b, t) {
+  return {
+    sx0: a.sx0 + (b.sx0 - a.sx0) * t,
+    sy0: a.sy0 + (b.sy0 - a.sy0) * t,
+    sdx: a.sdx + (b.sdx - a.sdx) * t,
+    sdy: a.sdy + (b.sdy - a.sdy) * t,
+  };
+}
+
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
 }
 
 function visibleDescendants(selected, maxDepth) {
@@ -145,13 +148,74 @@ function visibleDescendants(selected, maxDepth) {
 }
 
 function assignColors(hierarchy, palette) {
+  const colors = palette && palette.length ? palette : DEFAULT_PALETTE;
   const tops = hierarchy.children || [];
   tops.forEach((top, i) => {
-    const color = palette[i % palette.length];
+    const color = colors[i % colors.length] || NEUTRAL_COLOR;
     top.each((desc) => {
       desc._color = color;
     });
   });
+  hierarchy.each((node) => {
+    if (!node.children) return;
+    node.children.forEach((child, index) => {
+      child._siblingIndex = index;
+    });
+  });
+}
+
+function colorForNode(node) {
+  const base = d3.color(node._color || NEUTRAL_COLOR) || d3.color(NEUTRAL_COLOR);
+  const depthShift = Math.max(0, node.depth - 1) * 0.28;
+  const siblingShift = ((node._siblingIndex || 0) % 5) * 0.035;
+  return base.brighter(depthShift + siblingShift).formatHex();
+}
+
+function readableTextColor(fill) {
+  const c = d3.color(fill);
+  if (!c) return "#ffffff";
+  const luminance = (0.299 * c.r + 0.587 * c.g + 0.114 * c.b) / 255;
+  return luminance > 0.58 ? "#111827" : "#ffffff";
+}
+
+function projectedBox(node, extent, width, height) {
+  const left = ((node.x0 - extent.sx0) / extent.sdx) * width;
+  const top = ((node.y0 - extent.sy0) / extent.sdy) * height;
+  const w = ((node.x1 - node.x0) / extent.sdx) * width;
+  const h = ((node.y1 - node.y0) / extent.sdy) * height;
+  return { left, top, width: Math.max(w, 0), height: Math.max(h, 0) };
+}
+
+function roundedRect(ctx, x, y, width, height, radius) {
+  const r = Math.max(0, Math.min(radius, width / 2, height / 2));
+  if (ctx.roundRect) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, width, height, r);
+    return;
+  }
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + width, y, x + width, y + height, r);
+  ctx.arcTo(x + width, y + height, x, y + height, r);
+  ctx.arcTo(x, y + height, x, y, r);
+  ctx.arcTo(x, y, x + width, y, r);
+}
+
+function fitText(ctx, text, maxWidth) {
+  if (!text || maxWidth <= 0) return "";
+  if (ctx.measureText(text).width <= maxWidth) return text;
+  const ellipsis = "...";
+  let lo = 0;
+  let hi = text.length;
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (ctx.measureText(text.slice(0, mid) + ellipsis).width <= maxWidth) {
+      lo = mid;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  return lo > 0 ? text.slice(0, lo) + ellipsis : "";
 }
 
 function render({ model, el }) {
@@ -168,14 +232,24 @@ function render({ model, el }) {
 
   const chart = document.createElement("div");
   chart.className = "wiggly-treemap-chart";
+  const canvas = document.createElement("canvas");
+  canvas.className = "wiggly-treemap-canvas";
+  chart.appendChild(canvas);
   root.appendChild(chart);
   el.appendChild(root);
 
-  const nodeElements = new Map(); // pathKey -> { elem, node }
+  const ctx = canvas.getContext("2d");
   let hierarchy = null;
   let selected = null;
-  let lastExtent = null;
+  let currentExtent = null;
+  let targetExtent = null;
+  let animationFrame = null;
   let lastMeasuredWidth = null;
+  let hitNodes = [];
+  let hoveredNode = null;
+  let cachedVisible = null;
+  let cachedSelected = null;
+  let cachedMaxDepth = null;
 
   function measuredWidth() {
     const raw = model.get("width");
@@ -184,15 +258,58 @@ function render({ model, el }) {
 
   function paletteFromModel() {
     const p = model.get("palette");
-    return p && p.length ? p : [NEUTRAL_COLOR];
+    return p && p.length ? p : DEFAULT_PALETTE;
+  }
+
+  function currentColors() {
+    const computed = getComputedStyle(root);
+    return {
+      bg: computed.getPropertyValue("--bg").trim() || "#ffffff",
+      stroke: computed.getPropertyValue("--tile-stroke").trim() || "rgba(255,255,255,0.9)",
+      muted: computed.getPropertyValue("--muted").trim() || "#667085",
+    };
+  }
+
+  function syncCanvasSize(width, height) {
+    const dpr = window.devicePixelRatio || 1;
+    const pixelWidth = Math.max(1, Math.round(width * dpr));
+    const pixelHeight = Math.max(1, Math.round(height * dpr));
+    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+      canvas.width = pixelWidth;
+      canvas.height = pixelHeight;
+    }
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   function applyTreemap(width, height) {
     d3.treemap()
       .size([width, height])
-      .paddingTop(18)
+      .paddingTop((node) => (node.children ? 20 : 0))
       .paddingInner(1)
-      .paddingOuter(2)(hierarchy);
+      .paddingOuter(2)
+      .round(true)(hierarchy);
+  }
+
+  function invalidateVisibleCache() {
+    cachedVisible = null;
+    cachedSelected = null;
+    cachedMaxDepth = null;
+  }
+
+  function getVisibleNodes(maxDepth) {
+    if (
+      cachedVisible &&
+      cachedSelected === selected &&
+      cachedMaxDepth === maxDepth
+    ) {
+      return cachedVisible;
+    }
+    cachedVisible = visibleDescendants(selected, maxDepth);
+    cachedSelected = selected;
+    cachedMaxDepth = maxDepth;
+    return cachedVisible;
   }
 
   function build() {
@@ -204,15 +321,18 @@ function render({ model, el }) {
       typeof widthRaw === "number" ? widthRaw + "px" : widthRaw || "600px";
     chart.style.height = height + "px";
     const width = measuredWidth();
+    syncCanvasSize(width, height);
 
     if (!data || !data.name) {
-      chart.innerHTML = "";
-      nodeElements.clear();
       hierarchy = null;
       selected = null;
-      lastExtent = null;
+      currentExtent = null;
+      targetExtent = null;
+      hitNodes = [];
+      invalidateVisibleCache();
       breadcrumbsBtn.textContent = "";
       breadcrumbsBtn.disabled = true;
+      ctx.clearRect(0, 0, width, height);
       return;
     }
 
@@ -232,86 +352,106 @@ function render({ model, el }) {
       ? findNodeByPath(hierarchy, syncedPath)
       : null;
     selected = byPath || hierarchy;
-
-    chart.innerHTML = "";
-    nodeElements.clear();
-    lastExtent = null;
-    layout();
+    currentExtent = extentOf(selected);
+    targetExtent = currentExtent;
+    invalidateVisibleCache();
+    updateBreadcrumbs();
+    draw(currentExtent);
   }
 
-  function layout() {
+  function draw(extent) {
     if (!hierarchy || !selected) return;
-
     const width = measuredWidth();
     const height = model.get("height") || 400;
     const valueCol = model.get("value_col") || "";
     const maxDepth = model.get("max_depth") || 3;
+    const colors = currentColors();
+    syncCanvasSize(width, height);
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = colors.bg;
+    ctx.fillRect(0, 0, width, height);
 
-    const visible = visibleDescendants(selected, maxDepth);
-    const visibleKeys = new Set();
-    for (const node of visible) visibleKeys.add(pathKey(node));
+    const visible = getVisibleNodes(maxDepth);
+    const drawItems = [];
+    hitNodes = [];
 
-    const newExtent = extentOf(selected);
-    const oldExtent = lastExtent || newExtent;
-
-    let createdAny = false;
     for (const node of visible) {
-      const key = pathKey(node);
-      const existing = nodeElements.get(key);
-      if (existing) {
-        existing.node = node;
-        continue;
-      }
-      const elem = document.createElement("div");
-      elem.className = "wiggly-treemap-node";
-      const label = document.createElement("div");
-      label.className = "wiggly-treemap-label";
-      elem.appendChild(label);
-      elem.addEventListener("click", (ev) => {
-        ev.stopPropagation();
-        const entry = nodeElements.get(key);
-        if (entry) onNodeClick(entry.node);
-      });
-      chart.appendChild(elem);
-      positionElement(elem, node, oldExtent, width, height);
-      elem.style.opacity = "0";
-      nodeElements.set(key, { elem, node });
-      createdAny = true;
+      const box = projectedBox(node, extent, width, height);
+      if (box.width < MIN_RECT_SIDE || box.height < MIN_RECT_SIDE) continue;
+      drawItems.push({ node, box });
+      if (box.width * box.height >= MIN_HIT_AREA) hitNodes.push({ node, box });
     }
 
-    if (createdAny) void chart.offsetHeight;
+    let labelsDrawn = 0;
+    for (const { node, box } of drawItems) {
+      const fill = colorForNode(node);
+      const radius = Math.min(7, Math.max(2, Math.min(box.width, box.height) / 8));
+      ctx.save();
+      roundedRect(ctx, box.left, box.top, box.width, box.height, radius);
+      ctx.fillStyle = fill;
+      ctx.fill();
+      if (box.width > 3 && box.height > 3) {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = colors.stroke;
+        ctx.stroke();
+      }
+      ctx.restore();
 
-    for (const [key, entry] of nodeElements) {
-      const { elem, node } = entry;
-      positionElement(elem, node, newExtent, width, height);
+      if (labelsDrawn >= MAX_LABELS) continue;
+      const nameText = node.data.name;
+      const valueText = labelFor(node, valueCol);
+      const canShowName = box.width >= 46 && box.height >= 18;
+      const canShowValue = box.width >= 68 && box.height >= 34 && valueText;
+      if (!canShowName) continue;
 
-      if (visibleKeys.has(key)) {
-        const isLeaf = !node.children;
-        elem.classList.toggle("-clickable", !isLeaf);
-        const bg = node._color || NEUTRAL_COLOR;
-        elem.style.backgroundColor = bg;
-        elem.style.color = "#ffffff";
-        const nameText = node.data.name;
-        const valueText = labelFor(node, valueCol);
-        const labelText = valueText ? `${nameText} — ${valueText}` : nameText;
-        elem.firstChild.textContent = labelText;
-        elem.title = labelText;
-        elem.style.opacity = "1";
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(box.left + 2, box.top + 2, Math.max(0, box.width - 4), Math.max(0, box.height - 4));
+      ctx.clip();
+      const textColor = readableTextColor(fill);
+      ctx.fillStyle = textColor;
+      ctx.font = "600 12px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+      ctx.textBaseline = "top";
+      const label = fitText(ctx, nameText, box.width - 12);
+      if (label) {
+        ctx.fillText(label, box.left + 6, box.top + 5);
+        labelsDrawn += 1;
+      }
+      if (canShowValue) {
+        ctx.globalAlpha = textColor === "#ffffff" ? 0.78 : 0.68;
+        ctx.font = "11px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+        const value = fitText(ctx, valueText, box.width - 12);
+        if (value) ctx.fillText(value, box.left + 6, box.top + 20);
+      }
+      ctx.restore();
+    }
+
+    if (drawItems.length === 0 && selected.children && selected.children.length) {
+      ctx.fillStyle = colors.muted;
+      ctx.font = "13px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+      ctx.fillText("Zoom in or increase the widget size to see these tiny items.", 12, 18);
+    }
+  }
+
+  function animateTo(nextExtent) {
+    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+    const startExtent = currentExtent || nextExtent;
+    const start = performance.now();
+    targetExtent = nextExtent;
+
+    function tick(now) {
+      const t = Math.min(1, (now - start) / ANIMATION_MS);
+      currentExtent = interpolateExtent(startExtent, targetExtent, easeOutCubic(t));
+      draw(currentExtent);
+      if (t < 1) {
+        animationFrame = requestAnimationFrame(tick);
       } else {
-        elem.style.opacity = "0";
-        const staleEl = elem;
-        const staleKey = key;
-        setTimeout(() => {
-          if (staleEl.style.opacity !== "0") return;
-          if (staleEl.parentNode === chart) chart.removeChild(staleEl);
-          const curr = nodeElements.get(staleKey);
-          if (curr && curr.elem === staleEl) nodeElements.delete(staleKey);
-        }, 650);
+        currentExtent = targetExtent;
+        animationFrame = null;
+        draw(currentExtent);
       }
     }
-
-    lastExtent = newExtent;
-    updateBreadcrumbs();
+    animationFrame = requestAnimationFrame(tick);
   }
 
   function updateBreadcrumbs() {
@@ -321,22 +461,52 @@ function render({ model, el }) {
       return;
     }
     const path = nodePath(selected);
-    const display =
-      selected.data.display || defaultFormat(selected.value || 0);
+    const display = selected.data.display || defaultFormat(selected.value || 0);
     const nLeaves = selected.leaves ? selected.leaves().length : 0;
     const leafWord = nLeaves === 1 ? "leaf" : "leaves";
     const suffix = display
-      ? `— ${display} (${nLeaves} ${leafWord})`
+      ? ` - ${display} (${nLeaves} ${leafWord})`
       : `(${nLeaves} ${leafWord})`;
     breadcrumbsBtn.textContent = `${path.join(" / ")} ${suffix}`;
     breadcrumbsBtn.disabled = !selected.parent;
   }
 
-  function setSelected(node) {
+  function setSelected(node, animate = true) {
     selected = node;
+    const nextExtent = extentOf(node);
+    invalidateVisibleCache();
     model.set("selected_path", nodePath(node));
     model.save_changes();
-    layout();
+    updateBreadcrumbs();
+    if (animate) animateTo(nextExtent);
+    else {
+      currentExtent = nextExtent;
+      targetExtent = nextExtent;
+      draw(currentExtent);
+    }
+  }
+
+  function hitTest(x, y) {
+    for (let i = hitNodes.length - 1; i >= 0; i--) {
+      const { node, box } = hitNodes[i];
+      if (
+        x >= box.left &&
+        x <= box.left + box.width &&
+        y >= box.top &&
+        y <= box.top + box.height
+      ) {
+        return node;
+      }
+    }
+    return null;
+  }
+
+  function eventPoint(ev) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: ev.clientX - rect.left,
+      y: ev.clientY - rect.top,
+    };
   }
 
   function onNodeClick(node) {
@@ -348,6 +518,32 @@ function render({ model, el }) {
     }
     if (target !== selected && target.children) setSelected(target);
   }
+
+  canvas.addEventListener("mousemove", (ev) => {
+    if (!selected) return;
+    const point = eventPoint(ev);
+    const node = hitTest(point.x, point.y);
+    hoveredNode = node;
+    chart.style.cursor = node && node.children ? "pointer" : "default";
+    if (node) {
+      const valueText = labelFor(node, model.get("value_col") || "");
+      chart.title = valueText ? `${nodePath(node).join(" / ")} - ${valueText}` : nodePath(node).join(" / ");
+    } else {
+      chart.title = "";
+    }
+  });
+
+  canvas.addEventListener("mouseleave", () => {
+    hoveredNode = null;
+    chart.style.cursor = "default";
+    chart.title = "";
+  });
+
+  canvas.addEventListener("click", (ev) => {
+    const point = eventPoint(ev);
+    const node = hitTest(point.x, point.y) || hoveredNode;
+    if (node) onNodeClick(node);
+  });
 
   breadcrumbsBtn.addEventListener("click", () => {
     if (selected && selected.parent) setSelected(selected.parent);
@@ -361,8 +557,10 @@ function render({ model, el }) {
     lastMeasuredWidth = w;
     const height = model.get("height") || 400;
     applyTreemap(w, height);
-    lastExtent = null;
-    layout();
+    currentExtent = extentOf(selected);
+    targetExtent = currentExtent;
+    invalidateVisibleCache();
+    draw(currentExtent);
   });
   resizeObserver.observe(chart);
 
@@ -373,16 +571,21 @@ function render({ model, el }) {
   model.on("change:palette", () => {
     if (!hierarchy) return;
     assignColors(hierarchy, paletteFromModel());
-    layout();
+    draw(currentExtent || extentOf(selected));
   });
-  model.on("change:max_depth", layout);
+  model.on("change:max_depth", () => {
+    invalidateVisibleCache();
+    draw(currentExtent || extentOf(selected));
+  });
   model.on("change:selected_path", () => {
     if (!hierarchy) return;
     const synced = model.get("selected_path") || [];
     const target = synced.length ? findNodeByPath(hierarchy, synced) : hierarchy;
     if (target && target !== selected) {
       selected = target;
-      layout();
+      invalidateVisibleCache();
+      updateBreadcrumbs();
+      animateTo(extentOf(selected));
     }
   });
 

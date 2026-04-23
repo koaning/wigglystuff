@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 - `Treemap` widget: zoomable hierarchical treemap with breadcrumb navigation and colors cycled by depth. Accepts a `{name, value, children}` dict directly or via `Treemap.from_paths`, `Treemap.from_records`, and `Treemap.from_dataframe` classmethods. Ported from the Svelte components in `koaning/pytest-duration-insights`.
 - `NestedTable` widget: recursive expandable table showing name, summed value, and share of the root total. Shares the same hierarchy shape and `from_paths` / `from_records` / `from_dataframe` classmethods as `Treemap`.
 
+### Changed
+- `Treemap` now renders rectangles on a canvas instead of creating one DOM node per visible rectangle, which makes large hierarchies much faster to zoom and gives dense views cleaner labels and colors.
+
 ## [0.3.3] - 2026-04-15
 
 ### Added
