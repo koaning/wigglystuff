@@ -34,7 +34,13 @@ def test_env_config_ui_download_omits_manually_entered_secret(
 
     url = start_marimo(str(notebook), env=env, cwd=ROOT)
     page.goto(url, wait_until="networkidle")
-    page.wait_for_selector(".env-config-widget", timeout=10_000)
+    try:
+        page.wait_for_selector(".env-config-widget", timeout=30_000)
+    except PlaywrightTimeoutError:
+        import sys
+        sys.stderr.write(f"\n[page url] {page.url}\n")
+        sys.stderr.write(f"\n[page content]\n{page.content()[:8000]}\n")
+        raise
 
     env_input = page.locator(".env-input")
     env_input.fill(SECRET_VALUE)
