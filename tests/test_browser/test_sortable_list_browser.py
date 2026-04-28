@@ -1,8 +1,10 @@
 """Playwright integration tests for SortableList widget."""
 
+import pytest
 from playwright.sync_api import Page, expect
 
 
+@pytest.mark.e2e
 def test_sortable_list_renders(start_marimo, page: Page):
     """Test that the SortableList widget renders in the browser."""
     url = start_marimo("demos/sortlist.py")
@@ -15,6 +17,7 @@ def test_sortable_list_renders(start_marimo, page: Page):
     expect(items).to_have_count(3)  # ["a", "b", "c"]
 
 
+@pytest.mark.e2e
 def test_add_item_updates_list(start_marimo, page: Page):
     """Test that adding an item via the input updates the widget."""
     url = start_marimo("demos/sortlist.py")
@@ -36,6 +39,7 @@ def test_add_item_updates_list(start_marimo, page: Page):
     expect(new_item_label).to_be_visible()
 
 
+@pytest.mark.e2e
 def test_remove_item_updates_list(start_marimo, page: Page):
     """Test that clicking remove button removes an item."""
     url = start_marimo("demos/sortlist.py")
@@ -53,6 +57,7 @@ def test_remove_item_updates_list(start_marimo, page: Page):
     expect(items).to_have_count(2)
 
 
+@pytest.mark.e2e
 def test_edit_item_updates_value(start_marimo, page: Page):
     """Test that editing an item updates its value."""
     url = start_marimo("demos/sortlist.py")
@@ -74,6 +79,7 @@ def test_edit_item_updates_value(start_marimo, page: Page):
     expect(edited_label).to_be_visible()
 
 
+@pytest.mark.e2e
 def test_python_state_updates_after_add(start_marimo, page: Page):
     """Test that adding an item updates the Python state visible in the notebook."""
     url = start_marimo("demos/sortlist.py")
