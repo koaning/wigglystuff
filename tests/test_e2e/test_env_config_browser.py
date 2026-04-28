@@ -38,8 +38,14 @@ def test_env_config_ui_download_omits_manually_entered_secret(
         page.wait_for_selector(".env-config-widget", timeout=30_000)
     except PlaywrightTimeoutError:
         import sys
+        content = page.content()
         sys.stderr.write(f"\n[page url] {page.url}\n")
-        sys.stderr.write(f"\n[page content]\n{page.content()[:8000]}\n")
+        sys.stderr.write(f"\n[page len] {len(content)}\n")
+        for marker in ("env-config", "anywidget", "EnvConfig", "wigglystuff", "ModuleNotFoundError", "Error", "Traceback"):
+            idx = content.find(marker)
+            sys.stderr.write(f"[find {marker!r}] idx={idx}\n")
+            if idx >= 0:
+                sys.stderr.write(f"  context: ...{content[max(0,idx-150):idx+300]}...\n")
         raise
 
     env_input = page.locator(".env-input")
