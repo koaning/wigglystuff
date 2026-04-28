@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import shutil
 from pathlib import Path
 
 import pytest
@@ -27,26 +26,15 @@ def test_env_config_ui_download_omits_manually_entered_secret(
     assert SECRET_NAME in notebook_source
     assert SECRET_VALUE not in notebook_source
 
-    notebook = tmp_path / NOTEBOOK.name
-    shutil.copyfile(NOTEBOOK, notebook)
+    # Run from the in-tree fixture path so marimo picks up the project's
+    # `[tool.marimo.runtime] auto_instantiate = true`. Copying the notebook
+    # to tmp_path leaves it without project context and the cells never run.
     env = os.environ.copy()
     env.pop(SECRET_NAME, None)
 
-    url = start_marimo(str(notebook), env=env, cwd=ROOT)
+    url = start_marimo(str(NOTEBOOK), env=env, cwd=ROOT)
     page.goto(url, wait_until="networkidle")
-    try:
-        page.wait_for_selector(".env-config-widget", timeout=30_000)
-    except PlaywrightTimeoutError:
-        import sys
-        content = page.content()
-        sys.stderr.write(f"\n[page url] {page.url}\n")
-        sys.stderr.write(f"\n[page len] {len(content)}\n")
-        for marker in ("env-config", "anywidget", "EnvConfig", "wigglystuff", "ModuleNotFoundError", "Error", "Traceback"):
-            idx = content.find(marker)
-            sys.stderr.write(f"[find {marker!r}] idx={idx}\n")
-            if idx >= 0:
-                sys.stderr.write(f"  context: ...{content[max(0,idx-150):idx+300]}...\n")
-        raise
+    page.wait_for_selector(".env-config-widget", timeout=10_000)
 
     env_input = page.locator(".env-input")
     env_input.fill(SECRET_VALUE)

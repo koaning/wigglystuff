@@ -2,7 +2,6 @@
 
 import os
 import subprocess
-import sys
 import time
 import socket
 import pytest
@@ -84,13 +83,4 @@ def start_marimo():
     # Cleanup all servers started during the test
     for proc in servers:
         proc.terminate()
-        try:
-            stdout, stderr = proc.communicate(timeout=5)
-        except subprocess.TimeoutExpired:
-            proc.kill()
-            stdout, stderr = proc.communicate()
-        if os.environ.get("CI"):
-            sys.stderr.write(
-                f"\n[marimo stdout]\n{stdout.decode(errors='replace')}\n"
-                f"[marimo stderr]\n{stderr.decode(errors='replace')}\n"
-            )
+        proc.wait(timeout=5)
