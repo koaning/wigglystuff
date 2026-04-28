@@ -5,6 +5,7 @@ import subprocess
 import time
 import socket
 import pytest
+from pathlib import Path
 
 
 def find_free_port():
@@ -25,7 +26,12 @@ def start_marimo():
     """
     servers = []
 
-    def _start(notebook_path: str) -> str:
+    def _start(
+        notebook_path: str,
+        *,
+        env: dict[str, str] | None = None,
+        cwd: str | Path | None = None,
+    ) -> str:
         port = find_free_port()
         proc = subprocess.Popen(
             [
@@ -36,6 +42,8 @@ def start_marimo():
                 "--port", str(port),
                 notebook_path,
             ],
+            cwd=cwd,
+            env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )

@@ -6,7 +6,7 @@ from pathlib import Path
 from playwright.sync_api import Page, expect
 
 # Use a minimal test notebook without requires-python metadata
-NOTEBOOK = str(Path(__file__).parent / "tangle_test_notebook.py")
+NOTEBOOK = str(Path(__file__).parent.parent / "fixtures" / "tangle_test_notebook.py")
 TIMEOUT = 30000 if os.environ.get("CI") else 10000
 
 

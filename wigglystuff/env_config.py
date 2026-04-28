@@ -48,7 +48,10 @@ class EnvConfig(anywidget.AnyWidget):
     variables = traitlets.List(traitlets.Dict()).tag(sync=True)
     all_valid = traitlets.Bool(False).tag(sync=True)
 
-    # JS -> Python: user entered a value
+    # JS -> Python: user submitted a value. Synced (not custom message) so that
+    # marimo's reactive runtime sees the JS->Python state update and re-runs
+    # downstream cells. Cleared back to {} immediately after Python processes it,
+    # so the value never lives in trait state at rest.
     _pending_value = traitlets.Dict({}).tag(sync=True)
 
     def __init__(
@@ -83,10 +86,8 @@ class EnvConfig(anywidget.AnyWidget):
             if value is not None:
                 self._values[name] = value
                 status = self._validate(name, value)
-                # Include value for JS to display (browser masks it)
-                status["value"] = value
             else:
-                status = {"status": "missing", "error": None, "value": ""}
+                status = {"status": "missing", "error": None}
             initial_vars.append(
                 {"name": name, "has_validator": has_validator, **status}
             )
@@ -110,13 +111,18 @@ class EnvConfig(anywidget.AnyWidget):
 
     @traitlets.observe("_pending_value")
     def _on_pending_value(self, change: dict) -> None:
-        """Handle value submitted from JavaScript frontend."""
+        """Handle value submitted via the synced fallback trait."""
         data = change["new"]
-        if not data or "name" not in data:
+        if not data:
             return
 
-        name = data["name"]
-        value = data["value"]
+        self._submit_value(data.get("name"), data.get("value"))
+        self._pending_value = {}
+
+    def _submit_value(self, name: Any, value: Any) -> None:
+        """Validate and store a submitted value without syncing it back."""
+        if name not in self._var_names or not isinstance(value, str):
+            return
 
         # Run validation (synchronous, no need for "validating" intermediate state)
         result = self._validate(name, value)
@@ -125,8 +131,8 @@ class EnvConfig(anywidget.AnyWidget):
             # Store internally only - never touch os.environ
             self._values[name] = value
 
-        # Update state in one go - pass the entered value so it can be displayed
-        self._set_var_status(name, result["status"], result["error"], value)
+        # Update synced state without echoing the submitted value.
+        self._set_var_status(name, result["status"], result["error"])
         self._recalc_all_valid()
 
     def _set_var_status(
@@ -134,7 +140,6 @@ class EnvConfig(anywidget.AnyWidget):
         name: str,
         status: str,
         error: Optional[str],
-        value: Optional[str] = None,
     ) -> None:
         """Update status for a specific variable."""
         vars_copy = [dict(v) for v in self.variables]
@@ -142,8 +147,6 @@ class EnvConfig(anywidget.AnyWidget):
             if v["name"] == name:
                 v["status"] = status
                 v["error"] = error
-                # Include the entered value so JS can display it (even if invalid)
-                v["value"] = value if value is not None else self._values.get(name, "")
                 break
         self.variables = vars_copy
 

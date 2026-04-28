@@ -35,10 +35,6 @@ function render({ model, el }) {
       input.autocomplete = "off";
       inputs.push(input);
 
-      // Set initial value/placeholder - show value even for invalid status
-      if (variable.status === "valid" || variable.status === "invalid") {
-        input.value = variable.value || "";
-      }
       if (variable.status === "missing") {
         input.placeholder = "Enter value...";
       }
@@ -53,6 +49,7 @@ function render({ model, el }) {
           model.set("_pending_value", {
             name: variable.name,
             value: value,
+            nonce: Date.now(),
           });
           model.save_changes();
         }
@@ -118,12 +115,8 @@ function render({ model, el }) {
       // Update row status (for background color)
       row.dataset.status = variable.status;
 
-      // Update input based on status - show value even for invalid status
+      // Update input based on status without syncing secret values back from Python.
       if (variable.status === "valid" || variable.status === "invalid") {
-        // Only update value if it changed (avoid overwriting while user types)
-        if (input.value !== variable.value) {
-          input.value = variable.value || "";
-        }
         input.placeholder = "";
       } else {
         input.placeholder = "Enter value...";
