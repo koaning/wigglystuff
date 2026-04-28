@@ -1,8 +1,8 @@
 # /// script
 # dependencies = [
-#     "anywidget==0.11.0",
-#     "marimo>=0.23.3",
-#     "wigglystuff==0.3.5",
+#     "anywidget",
+#     "marimo",
+#     "wigglystuff",
 # ]
 # ///
 
