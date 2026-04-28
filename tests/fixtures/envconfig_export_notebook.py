@@ -1,11 +1,3 @@
-# /// script
-# dependencies = [
-#     "anywidget",
-#     "marimo",
-#     "wigglystuff",
-# ]
-# ///
-
 import marimo
 
 __generated_with = "0.23.3"
