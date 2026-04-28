@@ -11,7 +11,7 @@ class WandbChart(anywidget.AnyWidget):
     """DEPRECATED"""
     def __init__(
         self,
-        *args: Sequence[Any]
+        *args: Sequence[Any],
         **kwargs: Any,
     ) -> None:
         """DEPRECATED"""
