@@ -13,7 +13,7 @@ function render({ model, el }) {
   function buildInitialDOM() {
     const variables = model.get("variables");
 
-    variables.forEach((variable, index) => {
+    variables.forEach((variable) => {
       const row = document.createElement("div");
       row.className = "env-config-row";
       row.dataset.status = variable.status;
@@ -84,8 +84,13 @@ function render({ model, el }) {
         </svg>
       `;
     } else if (variable.status === "invalid") {
+      // Escape because variable.error is user content (str of a validator's exception).
+      const safeError = (variable.error || "Invalid")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;");
       statusEl.innerHTML = `
-        <span class="env-error-text" title="${variable.error || "Invalid"}">
+        <span class="env-error-text" title="${safeError}">
           <svg class="env-error-icon" viewBox="0 0 24 24" width="18" height="18">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
           </svg>
