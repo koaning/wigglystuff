@@ -22,37 +22,7 @@ jobs:
           python -m pip install --upgrade uv
           uv venv
           uv pip install -e ".[test]"
-          uv run pytest -m "not e2e"
-
-  browser-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade uv
-          uv venv
-          uv pip install -e ".[test-browser]"
-      - name: Get Playwright version
-        id: pw-version
-        run: echo "version=$(uv run python -c 'import playwright; print(playwright.__version__)')" >> "$GITHUB_OUTPUT"
-      - name: Cache Playwright browsers
-        id: pw-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ steps.pw-version.outputs.version }}-chromium
-      - name: Install Playwright browsers
-        if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: uv run playwright install chromium --with-deps
-      - name: Install Playwright system deps
-        if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: uv run playwright install-deps chromium
-      - name: Pytest (browser tests)
-        run: uv run pytest tests/test_browser -v
+          uv run pytest --ignore=tests/test_e2e
 
   e2e-tests:
     runs-on: ubuntu-latest
@@ -82,4 +52,4 @@ jobs:
         if: steps.pw-cache.outputs.cache-hit == 'true'
         run: uv run playwright install-deps chromium
       - name: Pytest (e2e tests)
-        run: uv run pytest -m e2e --ignore=tests/test_browser -v
+        run: uv run pytest tests/test_e2e -v
