@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Removed
+- `WandbChart` widget removed due to a security concern: marimo's static HTML export embeds all anywidget traitlets, which would leak the user-supplied `api_key` into any exported notebook.
+
 ## [0.3.5] - 2026-04-23
 
 ### Added
