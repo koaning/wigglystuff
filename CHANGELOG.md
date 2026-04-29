@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## 0.4.0
+
+### Fixed
+
+- `EnvConfig` no longer syncs configured secret values in its exported anywidget state, preventing marimo static HTML exports from embedding environment-loaded or manually entered secrets.
+
+### Removed
+
+- `WandbChart` widget removed due to a security concern: marimo's static HTML export embeds all anywidget traitlets, which would leak the user-supplied `api_key` into any exported notebook.
 
 ## [0.3.5] - 2026-04-23
 

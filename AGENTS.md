@@ -43,7 +43,6 @@ syncs back to Python.
 | TextCompare | `wigglystuff.text_compare.TextCompare` | `text_a`, `text_b`, `matches`, `selected_match`, `min_match_words` | Side-by-side text diff with match highlighting |
 | EnvConfig | `wigglystuff.env_config.EnvConfig` | `variables`, `all_valid` | Environment variable config with validation |
 | ModuleTreeWidget | `wigglystuff.module_tree.ModuleTreeWidget` | `tree`, `initial_expand_depth` | Interactive tree viewer for PyTorch nn.Module |
-| WandbChart | `wigglystuff.wandb_chart.WandbChart` | `api_key`, `entity`, `project`, `key`, `poll_seconds`, `smoothing_kind`, `smoothing_param`, `show_slider`, `width`, `height` | Live line chart that polls wandb for metric data with smoothing |
 | Neo4jWidget | `wigglystuff.neo4j_widget.Neo4jWidget` | `nodes`, `relationships`, `schema`, `error`, `query_running`, `selected_nodes`, `selected_relationships`, `width`, `height` | Interactive Neo4j graph explorer with Cypher query input |
 | SplineDraw | `wigglystuff.spline_draw.SplineDraw` | `data`, `curve`, `curve_error`, `brushsize`, `n_classes`, `width`, `height` | Draw scatter points with Python-computed spline curve fitting |
 | ScatterWidget | re-exported from [`drawdata`](https://github.com/koaning/drawdata) | `data`, `brushsize`, `width`, `height`, `n_classes` | Paint multi-class 2D scatter data with brush |
@@ -101,3 +100,10 @@ syncs back to Python.
 - When planning a new widget, always present the proposed Python API
   (constructor, traitlets, helper methods) during plan review so the user
   can sign off on the interface before implementation.
+- E2E test fixtures (`tests/fixtures/*.py`, `demos/*.py` used by Playwright
+  tests) must live inside the project tree. The repo's `pyproject.toml`
+  sets `[tool.marimo.runtime] auto_instantiate = true` so cells run on
+  notebook open — without that, `marimo edit` shows the editor but never
+  produces widget output and selectors will time out. If a test needs an
+  isolated copy, put the copy somewhere a `pyproject.toml` walk reaches,
+  not under `tmp_path`.

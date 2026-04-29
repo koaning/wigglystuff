@@ -139,6 +139,8 @@ def test_preexisting_env_vars_detected():
         assert config.variables[2]["status"] == "missing"
         assert config["PREEXIST_A"] == "value_a"
         assert config["PREEXIST_B"] == "value_b"
+        assert "value" not in config.variables[0]
+        assert "value" not in config.variables[1]
     finally:
         del os.environ["PREEXIST_A"]
         del os.environ["PREEXIST_B"]
@@ -169,6 +171,44 @@ def test_has_validator_flag():
     vars_by_name = {v["name"]: v for v in config.variables}
     assert vars_by_name["WITH_VALIDATOR"]["has_validator"] is True
     assert vars_by_name["WITHOUT_VALIDATOR"]["has_validator"] is False
+
+
+def test_synced_submit_trait_is_scrubbed_after_frontend_update():
+    def validator(value):
+        if value != "secret-value":
+            raise ValueError("bad secret")
+
+    config = EnvConfig({"PENDING_SECRET": validator})
+
+    config.set_trait(
+        "_pending_value",
+        {
+            "name": "PENDING_SECRET",
+            "value": "bad-value",
+            "nonce": 1,
+        },
+    )
+
+    assert config.variables[0]["status"] == "invalid"
+    assert config.variables[0]["error"] == "bad secret"
+    assert "value" not in config.variables[0]
+    assert config._pending_value == {}
+    assert "PENDING_SECRET" not in config
+
+    config.set_trait(
+        "_pending_value",
+        {
+            "name": "PENDING_SECRET",
+            "value": "secret-value",
+            "nonce": 2,
+        },
+    )
+
+    assert config["PENDING_SECRET"] == "secret-value"
+    assert config.variables[0]["status"] == "valid"
+    assert config.variables[0]["error"] is None
+    assert "value" not in config.variables[0]
+    assert config._pending_value == {}
 
 
 def test_require_valid_with_subset():

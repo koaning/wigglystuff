@@ -48,7 +48,10 @@ class EnvConfig(anywidget.AnyWidget):
     variables = traitlets.List(traitlets.Dict()).tag(sync=True)
     all_valid = traitlets.Bool(False).tag(sync=True)
 
-    # JS -> Python: user entered a value
+    # JS -> Python: user submitted a value. Synced (not custom message) so that
+    # marimo's reactive runtime sees the JS->Python state update and re-runs
+    # downstream cells. Cleared back to {} immediately after Python processes it,
+    # so the value never lives in trait state at rest.
     _pending_value = traitlets.Dict({}).tag(sync=True)
 
     def __init__(
@@ -76,20 +79,14 @@ class EnvConfig(anywidget.AnyWidget):
         self._values: dict[str, str] = {}  # Internal storage, never touches os.environ
 
         # Build initial state by checking current environment
-        initial_vars = []
-        for name in self._var_names:
-            value = os.environ.get(name)
-            has_validator = variables[name] is not None
-            if value is not None:
-                self._values[name] = value
-                status = self._validate(name, value)
-                # Include value for JS to display (browser masks it)
-                status["value"] = value
-            else:
-                status = {"status": "missing", "error": None, "value": ""}
-            initial_vars.append(
-                {"name": name, "has_validator": has_validator, **status}
-            )
+        initial_vars = [
+            {
+                "name": name,
+                "has_validator": self._validators[name] is not None,
+                **self._initial_status(name),
+            }
+            for name in self._var_names
+        ]
 
         super().__init__(
             variables=initial_vars,
@@ -108,15 +105,28 @@ class EnvConfig(anywidget.AnyWidget):
         except Exception as e:
             return {"status": "invalid", "error": str(e)}
 
+    def _initial_status(self, name: str) -> dict:
+        """Return {status, error} for `name`, recording the value in self._values if present."""
+        value = os.environ.get(name)
+        if value is None:
+            return {"status": "missing", "error": None}
+        self._values[name] = value
+        return self._validate(name, value)
+
     @traitlets.observe("_pending_value")
     def _on_pending_value(self, change: dict) -> None:
-        """Handle value submitted from JavaScript frontend."""
+        """Handle value submitted via the synced fallback trait."""
         data = change["new"]
-        if not data or "name" not in data:
+        if not data:
             return
 
-        name = data["name"]
-        value = data["value"]
+        self._submit_value(data.get("name"), data.get("value"))
+        self._pending_value = {}
+
+    def _submit_value(self, name: Any, value: Any) -> None:
+        """Validate and store a submitted value without syncing it back."""
+        if name not in self._var_names or not isinstance(value, str):
+            return
 
         # Run validation (synchronous, no need for "validating" intermediate state)
         result = self._validate(name, value)
@@ -125,31 +135,24 @@ class EnvConfig(anywidget.AnyWidget):
             # Store internally only - never touch os.environ
             self._values[name] = value
 
-        # Update state in one go - pass the entered value so it can be displayed
-        self._set_var_status(name, result["status"], result["error"], value)
-        self._recalc_all_valid()
+        # Update synced state without echoing the submitted value.
+        self._update_var(name, result["status"], result["error"])
 
-    def _set_var_status(
+    def _update_var(
         self,
         name: str,
         status: str,
         error: Optional[str],
-        value: Optional[str] = None,
     ) -> None:
-        """Update status for a specific variable."""
+        """Update status for a variable and recompute all_valid."""
         vars_copy = [dict(v) for v in self.variables]
         for v in vars_copy:
             if v["name"] == name:
                 v["status"] = status
                 v["error"] = error
-                # Include the entered value so JS can display it (even if invalid)
-                v["value"] = value if value is not None else self._values.get(name, "")
                 break
         self.variables = vars_copy
-
-    def _recalc_all_valid(self) -> None:
-        """Recalculate all_valid based on current variable statuses."""
-        self.all_valid = all(v["status"] == "valid" for v in self.variables)
+        self.all_valid = all(v["status"] == "valid" for v in vars_copy)
 
     def require_valid(self, variables: Optional[Sequence[str]] = None) -> None:
         """Assert environment variables are valid.
@@ -170,28 +173,21 @@ class EnvConfig(anywidget.AnyWidget):
                 f"Variable(s) not configured in this EnvConfig: {', '.join(sorted(unknown))}"
             )
 
-        # Filter to only checked variables
-        checked_vars = [v for v in self.variables if v["name"] in to_check]
-
-        # Early return if all checked vars are valid
-        if all(v["status"] == "valid" for v in checked_vars):
+        rows = [v for v in self.variables if v["name"] in to_check]
+        missing = [v["name"] for v in rows if v["status"] == "missing"]
+        invalid = [
+            f"{v['name']} ({v['error']})" for v in rows if v["status"] == "invalid"
+        ]
+        if not missing and not invalid:
             return
 
-        missing = [v["name"] for v in checked_vars if v["status"] == "missing"]
-        invalid = [
-            f"{v['name']} ({v['error']})"
-            for v in checked_vars
-            if v["status"] == "invalid"
-        ]
-
-        msg_parts = []
+        parts = []
         if missing:
-            msg_parts.append(f"Missing: {', '.join(missing)}")
+            parts.append(f"Missing: {', '.join(missing)}")
         if invalid:
-            msg_parts.append(f"Invalid: {', '.join(invalid)}")
-
+            parts.append(f"Invalid: {', '.join(invalid)}")
         raise EnvironmentError(
-            f"Environment configuration incomplete. {'; '.join(msg_parts)}. "
+            f"Environment configuration incomplete. {'; '.join(parts)}. "
             "Please set all required variables using the widget above."
         )
 

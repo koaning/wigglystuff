@@ -5,9 +5,10 @@
 #     "wigglystuff==0.3.1",
 # ]
 # ///
+
 import marimo
 
-__generated_with = "0.18.1"
+__generated_with = "0.23.3"
 app = marimo.App(width="columns", sql_output="polars")
 
 
@@ -15,6 +16,7 @@ app = marimo.App(width="columns", sql_output="polars")
 def _():
     import marimo as mo
     from wigglystuff import SortableList
+
     return SortableList, mo
 
 

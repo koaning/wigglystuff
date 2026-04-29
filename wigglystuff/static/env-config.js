@@ -13,7 +13,7 @@ function render({ model, el }) {
   function buildInitialDOM() {
     const variables = model.get("variables");
 
-    variables.forEach((variable, index) => {
+    variables.forEach((variable) => {
       const row = document.createElement("div");
       row.className = "env-config-row";
       row.dataset.status = variable.status;
@@ -35,10 +35,6 @@ function render({ model, el }) {
       input.autocomplete = "off";
       inputs.push(input);
 
-      // Set initial value/placeholder - show value even for invalid status
-      if (variable.status === "valid" || variable.status === "invalid") {
-        input.value = variable.value || "";
-      }
       if (variable.status === "missing") {
         input.placeholder = "Enter value...";
       }
@@ -53,6 +49,7 @@ function render({ model, el }) {
           model.set("_pending_value", {
             name: variable.name,
             value: value,
+            nonce: Date.now(),
           });
           model.save_changes();
         }
@@ -87,8 +84,13 @@ function render({ model, el }) {
         </svg>
       `;
     } else if (variable.status === "invalid") {
+      // Escape because variable.error is user content (str of a validator's exception).
+      const safeError = (variable.error || "Invalid")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;");
       statusEl.innerHTML = `
-        <span class="env-error-text" title="${variable.error || "Invalid"}">
+        <span class="env-error-text" title="${safeError}">
           <svg class="env-error-icon" viewBox="0 0 24 24" width="18" height="18">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
           </svg>
@@ -118,12 +120,8 @@ function render({ model, el }) {
       // Update row status (for background color)
       row.dataset.status = variable.status;
 
-      // Update input based on status - show value even for invalid status
+      // Update input based on status without syncing secret values back from Python.
       if (variable.status === "valid" || variable.status === "invalid") {
-        // Only update value if it changed (avoid overwriting while user types)
-        if (input.value !== variable.value) {
-          input.value = variable.value || "";
-        }
         input.placeholder = "";
       } else {
         input.placeholder = "Enter value...";

@@ -8,7 +8,7 @@
 
 import marimo
 
-__generated_with = "0.19.4"
+__generated_with = "0.23.3"
 app = marimo.App(width="medium")
 
 
@@ -17,6 +17,7 @@ def _():
     import os
     import marimo as mo
     from wigglystuff import EnvConfig
+
     return EnvConfig, mo, os
 
 
@@ -65,6 +66,12 @@ def _(mo):
     mo.md(r"""
     You can fetch values from this widget directly.
     """)
+    return
+
+
+@app.cell
+def _(config_validated):
+    "MY_API_KEY" in config_validated
     return
 
 

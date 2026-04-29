@@ -22,9 +22,9 @@ jobs:
           python -m pip install --upgrade uv
           uv venv
           uv pip install -e ".[test]"
-          uv run pytest --ignore=tests/test_browser
+          uv run pytest --ignore=tests/test_e2e
 
-  browser-tests:
+  e2e-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,5 +51,5 @@ jobs:
       - name: Install Playwright system deps
         if: steps.pw-cache.outputs.cache-hit == 'true'
         run: uv run playwright install-deps chromium
-      - name: Pytest (browser tests)
-        run: uv run pytest tests/test_browser -v
+      - name: Pytest (e2e tests)
+        run: uv run pytest tests/test_e2e -v

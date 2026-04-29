@@ -3,13 +3,15 @@
 import os
 from pathlib import Path
 
+import pytest
 from playwright.sync_api import Page, expect
 
 # Use a minimal test notebook without requires-python metadata
-NOTEBOOK = str(Path(__file__).parent / "tangle_test_notebook.py")
+NOTEBOOK = str(Path(__file__).parent.parent / "fixtures" / "tangle_test_notebook.py")
 TIMEOUT = 30000 if os.environ.get("CI") else 10000
 
 
+@pytest.mark.e2e
 def test_tangle_slider_renders(start_marimo, page: Page):
     """Test that the TangleSlider widget renders in the browser."""
     url = start_marimo(NOTEBOOK)
@@ -24,6 +26,7 @@ def test_tangle_slider_renders(start_marimo, page: Page):
     expect(widget).to_contain_text("coffees")
 
 
+@pytest.mark.e2e
 def test_tangle_slider_drag_updates_value(start_marimo, page: Page):
     """Test that dragging the TangleSlider changes its displayed value."""
     url = start_marimo(NOTEBOOK)
@@ -47,6 +50,7 @@ def test_tangle_slider_drag_updates_value(start_marimo, page: Page):
     assert new_text != initial_text, f"Value did not change after drag: {initial_text}"
 
 
+@pytest.mark.e2e
 def test_tangle_choice_renders_and_cycles(start_marimo, page: Page):
     """Test that TangleChoice renders and clicking cycles through choices."""
     url = start_marimo(NOTEBOOK)
@@ -66,6 +70,7 @@ def test_tangle_choice_renders_and_cycles(start_marimo, page: Page):
     expect(cycled).to_be_visible()
 
 
+@pytest.mark.e2e
 def test_tangle_select_renders(start_marimo, page: Page):
     """Test that TangleSelect renders a select element."""
     url = start_marimo(NOTEBOOK)

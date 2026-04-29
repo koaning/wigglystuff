@@ -6,7 +6,7 @@
 
 | Traitlet | Type | Notes |
 | --- | --- | --- |
-| `variables` | `list` | List of variable info dicts with name, status, error, has_validator, value. |
+| `variables` | `list` | List of variable info dicts with name, status, error, and has_validator. Secret values are not synced. |
 | `all_valid` | `bool` | True when all variables are valid. |
 
 ## Helper methods
