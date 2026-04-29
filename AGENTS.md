@@ -100,3 +100,10 @@ syncs back to Python.
 - When planning a new widget, always present the proposed Python API
   (constructor, traitlets, helper methods) during plan review so the user
   can sign off on the interface before implementation.
+- E2E test fixtures (`tests/fixtures/*.py`, `demos/*.py` used by Playwright
+  tests) must live inside the project tree. The repo's `pyproject.toml`
+  sets `[tool.marimo.runtime] auto_instantiate = true` so cells run on
+  notebook open — without that, `marimo edit` shows the editor but never
+  produces widget output and selectors will time out. If a test needs an
+  isolated copy, put the copy somewhere a `pyproject.toml` walk reaches,
+  not under `tmp_path`.
