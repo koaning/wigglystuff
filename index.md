@@ -36,7 +36,7 @@ Each widget links to a live demo on molab where you can interact with and edit t
 
 These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on molab because many of the dependencies are not compatible with WASM.
 
-  ModuleTreeWidget molabAPIMD  WandbChart molabAPIMD  Neo4jWidget molabAPIMD  AltairWidget molabAPIMD
+  ModuleTreeWidget molabAPIMD  Neo4jWidget molabAPIMD  AltairWidget molabAPIMD
 
 ## Examples
 
