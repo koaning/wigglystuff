@@ -12,13 +12,8 @@
 {% block content %}
   {% if page and "reference/" in page.url and page.url != "reference/" %}
     {% set slug = page.url | replace("reference/", "") | replace("/", "") %}
-    <a class="llm-md-banner" href="../{{ slug }}.md">
-      <span class="llm-md-banner__icon">📄</span>
-      <span class="llm-md-banner__text">
-        <strong>Feeding a clanker?</strong>
-        Grab this page as raw markdown — drop the <code>.md</code> URL into your prompt.
-      </span>
-      <span class="llm-md-banner__arrow">→</span>
+    <a class="llm-md-link" href="../{{ slug }}.md">
+      Feeding a clanker? Grab this page as raw <code>.md</code> <span class="llm-md-link__arrow">→</span>
     </a>
   {% endif %}
   {% include "partials/content.html" %}
