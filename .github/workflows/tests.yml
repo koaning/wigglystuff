@@ -38,7 +38,7 @@ jobs:
           uv pip install -e ".[test-browser]"
       - name: Get Playwright version
         id: pw-version
-        run: echo "version=$(uv run python -c 'import playwright; print(playwright.__version__)')" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(uv run python -c 'from importlib.metadata import version; print(version("playwright"))')" >> "$GITHUB_OUTPUT"
       - name: Cache Playwright browsers
         id: pw-cache
         uses: actions/cache@v4

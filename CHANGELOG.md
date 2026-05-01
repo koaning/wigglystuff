@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2026-05-01
+
+### Changed
+
+- `Matrix`, `ModuleTreeWidget`, and `ChartSelect` now render a small "graduated to marimo core" hint in the cell when instantiated inside a marimo notebook, with a link to the equivalent marimo built-in (`marimo.ui.matrix`, marimo's built-in PyTorch formatter, and `marimo.ui.matplotlib` respectively). The widgets continue to work as before in Jupyter and other anywidget hosts.
+
 ## 0.4.0
 
 ### Fixed

@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 from anywidget import AnyWidget
 import traitlets
 
+from ._marimo_notice import warn_if_in_marimo
 from .chart_puck import extract_axes_info, fig_to_base64
 
 
@@ -20,6 +21,12 @@ class ChartSelect(AnyWidget):
 
     Allows interactive box or lasso (freehand) selection on a static matplotlib
     chart. Returns selection coordinates in data space for user-side filtering.
+
+    Note:
+        This widget has graduated to marimo core. If you are using marimo,
+        prefer [`marimo.ui.matplotlib`](https://docs.marimo.io/guides/working_with_data/plotting/#matplotlib).
+        `ChartSelect` will continue to work in plain Jupyter and other
+        anywidget hosts.
 
     Examples:
         Basic usage:
@@ -117,6 +124,12 @@ class ChartSelect(AnyWidget):
             selection_opacity: Opacity of selection fill (0-1).
             **kwargs: Forwarded to ``AnyWidget``.
         """
+        warn_if_in_marimo(
+            "ChartSelect",
+            'Use <a href="https://docs.marimo.io/guides/working_with_data/plotting/#matplotlib" '
+            'style="font-weight: 600; text-decoration: underline;">'
+            "<code>marimo.ui.matplotlib</code></a> instead.",
+        )
         x_bounds, y_bounds, axes_pixel_bounds, width_px, height_px, x_scale, y_scale = extract_axes_info(
             fig
         )
