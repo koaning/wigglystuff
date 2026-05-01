@@ -1,55 +1,20 @@
-"""Copy markdown sources into the built site for LLM consumption."""
+"""Post-process a `zensical build`:
+
+1. Copy each `.md` source into `site/`, rendering reference pages from the
+   built HTML so the served `.md` contains the expanded docstring.
+2. Restore gallery `MD` link hrefs that zensical's link extension rewrites
+   to their HTML directory equivalent.
+"""
 
 from __future__ import annotations
 
-import fnmatch
 import re
-import shutil
-from pathlib import Path
 from html.parser import HTMLParser
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MKDOCS_YML = ROOT / "mkdocs.yml"
-
-
-def _parse_top_level_value(lines: list[str], key: str) -> str | None:
-    prefix = f"{key}:"
-    for index, line in enumerate(lines):
-        if not line.startswith(prefix):
-            continue
-        value = line[len(prefix) :].strip()
-        if value:
-            return value.strip("'\"")
-        # handle a simple YAML list
-        values: list[str] = []
-        for item in lines[index + 1 :]:
-            if item and not item.startswith(" "):
-                break
-            stripped = item.strip()
-            if stripped.startswith("-"):
-                values.append(stripped[1:].strip().strip("'\""))
-        if values:
-            return ",".join(values)
-    return None
-
-
-def _load_config() -> tuple[Path, Path, list[str]]:
-    lines = MKDOCS_YML.read_text(encoding="utf-8").splitlines()
-    docs_dir = _parse_top_level_value(lines, "docs_dir") or "mkdocs"
-    site_dir = _parse_top_level_value(lines, "site_dir") or "site"
-    exclude_raw = _parse_top_level_value(lines, "exclude_docs") or ""
-    excludes = [value.strip() for value in exclude_raw.split(",") if value.strip()]
-    return ROOT / docs_dir, ROOT / site_dir, excludes
-
-
-def _is_excluded(relative_posix: str, patterns: list[str]) -> bool:
-    return any(fnmatch.fnmatch(relative_posix, pattern) for pattern in patterns)
-
-
-def _html_path_for(relative: str, site_dir: Path) -> Path:
-    if relative == "index.md":
-        return site_dir / "index.html"
-    return site_dir / relative.removesuffix(".md") / "index.html"
+DOCS_DIR = ROOT / "mkdocs"
+SITE_DIR = ROOT / "site"
 
 
 def _extract_article_html(html: str) -> str | None:
@@ -123,7 +88,6 @@ class _HtmlToMarkdown(HTMLParser):
         if tag == "a" and "headerlink" in attr_map.get("class", ""):
             self._skip_depth = 1
             return
-        # Track doc-section-title spans to detect Parameters sections
         if tag == "span" and "doc-section-title" in attr_map.get("class", ""):
             self._in_doc_section_title = True
             return
@@ -176,7 +140,6 @@ class _HtmlToMarkdown(HTMLParser):
             if "highlighttable" in attr_map.get("class", ""):
                 self._in_highlight_table = True
                 return
-            # Skip parameters table (table following "Parameters:" section title)
             if self._skip_next_table:
                 self._skip_next_table = False
                 self._skip_depth = 1
@@ -251,13 +214,11 @@ class _HtmlToMarkdown(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self._skip_depth:
             return
-        # Capture widget name from H1 heading (e.g., "Slider2D API" -> "Slider2D")
         if self._capturing_h1:
             title = data.strip()
             if title.endswith(" API"):
                 self._widget_name = title[:-4]
             self._capturing_h1 = False
-        # Check if we're in a doc-section-title
         if self._in_doc_section_title:
             section_title = data.strip()
             if section_title == "Parameters:":
@@ -286,7 +247,6 @@ class _HtmlToMarkdown(HTMLParser):
     def _flush_pre(self) -> None:
         pre_text = "".join(self._pre_buffer)
         pre_text = pre_text.rstrip("\n")
-        # Prepend import statement to examples code block
         if self._add_import_to_next_code and self._widget_name:
             import_line = f"from wigglystuff import {self._widget_name}\n\n"
             pre_text = import_line + pre_text
@@ -325,43 +285,49 @@ class _HtmlToMarkdown(HTMLParser):
         return value.replace("|", r"\|").strip()
 
 
-def _html_to_markdown(html: str) -> str:
-    parser = _HtmlToMarkdown()
-    parser.feed(html)
-    return parser.get_markdown()
+def _html_path_for(relative: str) -> Path:
+    if relative == "index.md":
+        return SITE_DIR / "index.html"
+    return SITE_DIR / relative.removesuffix(".md") / "index.html"
 
 
-def main() -> None:
-    docs_dir, site_dir, excludes = _load_config()
-    legacy_dir = site_dir / "llm"
-    if legacy_dir.exists():
-        shutil.rmtree(legacy_dir)
-
-    # Copy llms.txt if it exists
-    llms_txt_source = docs_dir / "llms.txt"
-    if llms_txt_source.exists():
-        site_dir.mkdir(parents=True, exist_ok=True)
-        llms_txt_dest = site_dir / "llms.txt"
-        shutil.copy2(llms_txt_source, llms_txt_dest)
-        print(f"[docs] copied llms.txt to {site_dir.relative_to(ROOT)}")
-
-    for source in sorted(docs_dir.rglob("*.md")):
-        relative = source.relative_to(docs_dir).as_posix()
-        if _is_excluded(relative, excludes):
-            continue
-        destination = site_dir / relative
+def _copy_markdown_sources() -> None:
+    for source in sorted(DOCS_DIR.rglob("*.md")):
+        relative = source.relative_to(DOCS_DIR).as_posix()
+        destination = SITE_DIR / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
-        html_path = _html_path_for(relative, site_dir)
+        html_path = _html_path_for(relative)
         if html_path.exists():
             html = html_path.read_text(encoding="utf-8")
             article_html = _extract_article_html(html)
             if article_html:
-                markdown = _html_to_markdown(article_html)
-                destination.write_text(markdown, encoding="utf-8")
+                parser = _HtmlToMarkdown()
+                parser.feed(article_html)
+                destination.write_text(parser.get_markdown(), encoding="utf-8")
                 continue
         destination.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
 
-    print(f"[docs] copied markdown to {site_dir.relative_to(ROOT)}")
+
+_MD_LINK_PATTERN = re.compile(
+    r'<a href="((?:\.\.?/)*)reference/([^/"]+)/">MD</a>'
+)
+
+
+def _patch_md_links() -> None:
+    for html_file in SITE_DIR.rglob("*.html"):
+        text = html_file.read_text(encoding="utf-8")
+        patched = _MD_LINK_PATTERN.sub(
+            r'<a href="\1reference/\2.md">MD</a>',
+            text,
+        )
+        if patched != text:
+            html_file.write_text(patched, encoding="utf-8")
+
+
+def main() -> None:
+    _copy_markdown_sources()
+    _patch_md_links()
+    print(f"[post-zensical] copied .md sources and patched gallery MD links in {SITE_DIR.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
