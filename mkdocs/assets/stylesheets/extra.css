@@ -273,6 +273,57 @@
 }
 
 /* ——————————————————————————————————————————
+   LLM markdown banner (top of reference pages)
+   —————————————————————————————————————————— */
+.llm-md-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin: 0 0 1.5rem;
+  border: 1px solid var(--wiggly-border);
+  border-radius: 8px;
+  background: var(--wiggly-card-bg);
+  box-shadow: var(--wiggly-card-shadow);
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.85rem;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+
+.llm-md-banner:hover {
+  border-color: var(--wiggly-molab);
+  transform: translateY(-1px);
+}
+
+.llm-md-banner__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.llm-md-banner__text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.llm-md-banner__text code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+[data-md-color-scheme="slate"] .llm-md-banner__text code {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.llm-md-banner__arrow {
+  color: var(--wiggly-molab);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* ——————————————————————————————————————————
    Small-screen adjustments
    —————————————————————————————————————————— */
 @media (max-width: 600px) {
