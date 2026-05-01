@@ -8,10 +8,6 @@ All notable changes to this project will be documented in this file.
 
 - `Matrix`, `ModuleTreeWidget`, and `ChartSelect` now render a small "graduated to marimo core" hint in the cell when instantiated inside a marimo notebook, with a link to the equivalent marimo built-in (`marimo.ui.matrix`, marimo's built-in PyTorch formatter, and `marimo.ui.matplotlib` respectively). The widgets continue to work as before in Jupyter and other anywidget hosts.
 
-### Fixed
-
-- `make docs` now uses `uv run mkdocs build` so it works from a fresh `make install` venv (it previously called the bare `mkdocs` binary, which isn't on the system `PATH`).
-
 ## 0.4.0
 
 ### Fixed
