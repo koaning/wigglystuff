@@ -1,4 +1,4 @@
-.PHONY: js docs test docs-serve docs-build docs-llm docs-gh marimo-notebook marimo-sessions
+.PHONY: js docs test docs-serve docs-build docs-llm docs-gh docs-zensical docs-zensical-serve marimo-notebook marimo-sessions
 
 install:
 	# install the build tool for JS written in Golang
@@ -89,6 +89,13 @@ docs-llm:
 
 docs-gh: docs-build
 	uv run mkdocs gh-deploy -f mkdocs.yml --dirty
+
+docs-zensical:
+	uv run zensical build --clean
+	uv run python scripts/post_zensical.py
+
+docs-zensical-serve: docs-zensical
+	uv run python -m http.server --directory site
 
 marimo-sessions:
 	-uv run marimo export session demos/

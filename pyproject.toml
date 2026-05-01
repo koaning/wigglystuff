@@ -74,3 +74,8 @@ auto_instantiate = true
 markers = [
     "e2e: browser/server tests that exercise full user flows",
 ]
+
+[dependency-groups]
+dev = [
+    "zensical>=0.0.38",
+]
