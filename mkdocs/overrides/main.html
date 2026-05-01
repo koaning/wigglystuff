@@ -8,3 +8,13 @@
   plausible.init()
 </script>
 {% endblock %}
+
+{% block content %}
+  {% if page and "reference/" in page.url and page.url != "reference/" %}
+    {% set slug = page.url | replace("reference/", "") | replace("/", "") %}
+    <a class="llm-md-link" href="../{{ slug }}.md">
+      Feeding a clanker? Grab this page as raw <code>.md</code> <span class="llm-md-link__arrow">→</span>
+    </a>
+  {% endif %}
+  {% include "partials/content.html" %}
+{% endblock %}

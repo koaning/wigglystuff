@@ -79,13 +79,22 @@ features = [
 repo = "fontawesome/brands/github"
 
 [project.theme.font]
-text = "PT Sans"
-code = "Fira Mono"
+text = "Geist"
+code = "Geist Mono"
 
 [[project.theme.palette]]
 scheme = "default"
 primary = "grey"
 accent = "blue grey"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "grey"
+accent = "blue grey"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
 
 # ----------------------------------------------------------------------------
 # Extra

@@ -273,6 +273,39 @@
 }
 
 /* ——————————————————————————————————————————
+   LLM markdown pill (top-right of reference pages)
+   —————————————————————————————————————————— */
+.llm-md-link {
+  float: right;
+  margin: 0.65rem 0 0.5rem 1rem;
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--wiggly-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--wiggly-muted);
+  text-decoration: none;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.llm-md-link:hover {
+  color: var(--md-primary-fg-color);
+  border-color: var(--wiggly-border-hover);
+}
+
+.llm-md-link code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.llm-md-link__arrow {
+  margin-left: 0.15rem;
+}
+
+/* ——————————————————————————————————————————
    Small-screen adjustments
    —————————————————————————————————————————— */
 @media (max-width: 600px) {
