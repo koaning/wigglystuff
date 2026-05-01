@@ -6,6 +6,10 @@
 
 Spreadsheet-like numeric editor with bounds, naming, and symmetry helpers.
 
+ Note
+
+This widget has graduated to marimo core. If you are using marimo, prefer `marimo.ui.matrix`. `Matrix` will continue to work in plain Jupyter and other anywidget hosts.
+
 
 
 ```
@@ -59,6 +63,12 @@ def __init__(
         mirror: If ``True``, mirror edits symmetrically across the diagonal.
         **kwargs: Forwarded to ``anywidget.AnyWidget``.
     """
+    warn_if_in_marimo(
+        "Matrix",
+        'Use <a href="https://docs.marimo.io/api/inputs/matrix/" '
+        'style="font-weight: 600; text-decoration: underline;">'
+        "<code>marimo.ui.matrix</code></a> instead.",
+    )
     if matrix is not None:
         matrix_array = np.array(matrix)
         if matrix_array.min() < min_value:
