@@ -170,7 +170,7 @@ Untitled.ipynb
 **/__marimo__/**
 !**/__marimo__/session/
 !**/__marimo__/session/**
-mkdocs/examples/*
-!mkdocs/examples/.demo-hashes.json
+docs/examples/*
+!docs/examples/.demo-hashes.json
 
 wandb/**
