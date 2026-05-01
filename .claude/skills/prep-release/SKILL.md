@@ -14,11 +14,11 @@ Prepare a new wigglystuff release. Follow these steps:
    - Look at the git diff against `main` to determine what changed
 
 4. **Update all documentation locations** for any new widgets:
-   - `mkdocs/reference/<widget-name>.md` — create a reference doc following the pattern in existing reference pages (use `::: wigglystuff.module.ClassName` mkdocstrings directive + a synced traitlets table)
-   - `mkdocs.yml` — add the widget to the `nav` Reference section
-   - `mkdocs/index.md` — add to the appropriate gallery section (main gallery or 3rd party gallery)
+   - `docs/reference/<widget-name>.md` — create a reference doc following the pattern in existing reference pages (use `::: wigglystuff.module.ClassName` mkdocstrings directive + a synced traitlets table)
+   - `zensical.toml` — add the widget to the `nav` Reference section
+   - `docs/index.md` — add to the appropriate gallery section (main gallery or 3rd party gallery)
    - `readme.md` — add to the appropriate gallery table (main gallery or 3rd party table)
-   - `mkdocs/llms.txt` — add a one-line entry in the appropriate section
+   - `docs/llms.txt` — add a one-line entry in the appropriate section
    - `CLAUDE.md` — add a row to the quick reference table
    - `wigglystuff/__init__.py` — verify the widget is imported and listed in `__all__`
 
@@ -26,7 +26,7 @@ Prepare a new wigglystuff release. Follow these steps:
    - Place them in the "3rd party widgets" section of the galleries (not the main gallery)
    - Use a molab link for the demo instead of a local example page
    - Use `MOLAB_LINK_HERE` as a placeholder if the molab link is not yet available and tell the user they need to fill it in
-   - Screenshot path should be `mkdocs/assets/gallery/<widgetname>.png` — tell the user if one is missing
+   - Screenshot path should be `docs/assets/gallery/<widgetname>.png` — tell the user if one is missing
 
 6. **Check dependencies**: Read `pyproject.toml` and verify that no 3rd party widget dependency (neo4j, torch, wandb, etc.) has been added to core `[project] dependencies`. These must only appear under `[project.optional-dependencies]` as extras. Core dependencies should only include packages needed by all widgets (anywidget, numpy, pillow, python-dotenv). If a 3rd party dep has leaked into core dependencies, remove it.
 

@@ -4,7 +4,7 @@ site_description = "Creative AnyWidgets for notebooks"
 site_url = "https://koaning.github.io/wigglystuff/"
 repo_url = "https://github.com/koaning/wigglystuff"
 repo_name = "koaning/wigglystuff"
-docs_dir = "mkdocs"
+docs_dir = "docs"
 site_dir = "site"
 
 nav = [
@@ -57,7 +57,7 @@ extra_css = ["assets/stylesheets/extra.css"]
 # Theme
 # ----------------------------------------------------------------------------
 [project.theme]
-custom_dir = "mkdocs/overrides"
+custom_dir = "docs/overrides"
 logo = "assets/logo.png"
 favicon = "assets/logo.png"
 language = "en"
@@ -79,8 +79,8 @@ features = [
 repo = "fontawesome/brands/github"
 
 [project.theme.font]
-text = "Geist"
-code = "Geist Mono"
+text = "IBM Plex Sans"
+code = "JetBrains Mono"
 
 [[project.theme.palette]]
 scheme = "default"
