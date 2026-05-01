@@ -8,9 +8,10 @@
 #     "wigglystuff==0.3.1",
 # ]
 # ///
+
 import marimo
 
-__generated_with = "0.18.2"
+__generated_with = "0.23.4"
 app = marimo.App(width="full")
 
 
@@ -22,6 +23,7 @@ def _():
     import altair as alt
 
     from wigglystuff import Matrix
+
     return Matrix, alt, mo, np, pd
 
 

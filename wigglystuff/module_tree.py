@@ -6,6 +6,8 @@ from typing import Any
 import anywidget
 import traitlets
 
+from ._marimo_notice import warn_if_in_marimo
+
 
 def _is_uninitialized(param):
     """Check if a parameter is a lazy/uninitialized parameter."""
@@ -137,6 +139,12 @@ class ModuleTreeWidget(anywidget.AnyWidget):
     Displays the full module hierarchy with parameter counts, shapes,
     trainable/frozen/buffer badges, and a density indicator.
 
+    Note:
+        This widget has graduated to marimo core. If you are using marimo,
+        you can simply return an ``nn.Module`` from a cell — marimo's
+        built-in PyTorch formatter will render it. ``ModuleTreeWidget``
+        will continue to work in plain Jupyter and other anywidget hosts.
+
     Examples:
         ```python
         import torch.nn as nn
@@ -169,6 +177,11 @@ class ModuleTreeWidget(anywidget.AnyWidget):
             module: A PyTorch ``nn.Module`` to visualise.
             initial_expand_depth: Number of tree levels to expand initially.
         """
+        warn_if_in_marimo(
+            "ModuleTreeWidget",
+            "marimo's built-in PyTorch formatter will render an "
+            "<code>nn.Module</code> returned from a cell.",
+        )
         super().__init__(initial_expand_depth=initial_expand_depth)
         if module is not None:
             self.tree = _extract_tree(module)
