@@ -1,4 +1,4 @@
-.PHONY: js docs test docs-serve docs-build docs-llm docs-gh docs-zensical docs-zensical-serve marimo-notebook marimo-sessions
+.PHONY: js docs test docs-serve marimo-notebook marimo-sessions
 
 install:
 	# install the build tool for JS written in Golang
@@ -74,27 +74,10 @@ clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 
 docs:
-	DISABLE_MKDOCS_2_WARNING=true uv run mkdocs build -f mkdocs.yml 2>&1 | grep -v '^\[WARNING\] Div at'
-	uv run python scripts/copy_docs_md.py
-
-docs-serve: docs
-	uv run python -m http.server --directory site
-
-docs-build:
-	DISABLE_MKDOCS_2_WARNING=true uv run mkdocs build -f mkdocs.yml 2>&1 | grep -v '^\[WARNING\] Div at'
-	uv run python scripts/copy_docs_md.py
-
-docs-llm:
-	uv run python scripts/copy_docs_md.py
-
-docs-gh: docs-build
-	uv run mkdocs gh-deploy -f mkdocs.yml --dirty
-
-docs-zensical:
 	uv run zensical build --clean
 	uv run python scripts/post_zensical.py
 
-docs-zensical-serve: docs-zensical
+docs-serve: docs
 	uv run python -m http.server --directory site
 
 marimo-sessions:
