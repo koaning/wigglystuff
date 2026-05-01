@@ -75,6 +75,10 @@
   filter: brightness(0) invert(1);
 }
 
+.md-typeset {
+  font-size: 0.85rem;
+}
+
 /* ——————————————————————————————————————————
    Shared card styles (widget + example gallery)
    —————————————————————————————————————————— */
