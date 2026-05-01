@@ -79,8 +79,8 @@ features = [
 repo = "fontawesome/brands/github"
 
 [project.theme.font]
-text = "PT Sans"
-code = "Fira Mono"
+text = "Geist"
+code = "Geist Mono"
 
 [[project.theme.palette]]
 scheme = "default"
