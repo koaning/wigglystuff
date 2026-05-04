@@ -97,6 +97,11 @@ syncs back to Python.
 - **Do not modify `package-lock.json`** unless intentionally updating JS
   dependencies. If it shows up in `git diff`, revert it with
   `git checkout package-lock.json`.
+- **Docs are built with [zensical](https://zensical.com/), not mkdocs.** The
+  config lives in `zensical.toml`; build with `make docs` and preview with
+  `make docs-serve` (which builds, then serves `site/` via
+  `python -m http.server`). Packages like `mkdocstrings` are zensical plugins —
+  their presence is not evidence that this is an mkdocs project.
 - When planning a new widget, always present the proposed Python API
   (constructor, traitlets, helper methods) during plan review so the user
   can sign off on the interface before implementation.

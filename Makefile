@@ -1,4 +1,4 @@
-.PHONY: js docs test docs-serve marimo-notebook marimo-sessions
+.PHONY: js docs test test-links docs-serve marimo-notebook marimo-sessions
 
 install:
 	# install the build tool for JS written in Golang
@@ -10,6 +10,13 @@ install:
 test:
 	uv pip install -e '.[test]'
 	uv run pytest --ignore=tests/test_browser
+
+test-links: docs
+	uv pip install -e '.[test]'
+	uv run pytest --check-links site/ --links-ext=html \
+		--ignore=site/404.html \
+		--ignore=site/overrides \
+		--check-links-ignore '^https?://'
 
 test-browser:
 	uv pip install -e '.[test-browser]'

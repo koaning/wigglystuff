@@ -257,6 +257,19 @@
 /* ——————————————————————————————————————————
    YouTube embeds
    —————————————————————————————————————————— */
+.youtube-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin: 1rem 0 1.5rem;
+}
+
+@media (min-width: 960px) {
+  .youtube-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .youtube-embed {
   position: relative;
   padding-bottom: 56.25%;
@@ -265,6 +278,10 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow: var(--wiggly-card-shadow);
+}
+
+.youtube-grid .youtube-embed {
+  margin: 0;
 }
 
 .youtube-embed iframe {

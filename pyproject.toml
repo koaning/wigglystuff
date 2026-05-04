@@ -32,6 +32,7 @@ neo4j = [
 ]
 test = [
     "pytest>=8.3.3",
+    "pytest-check-links>=0.10.0",
     "marimo>=0.23.3",
     "scikit-learn>=1.0",
     "matplotlib>=3.0",
