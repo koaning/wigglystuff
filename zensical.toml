@@ -28,6 +28,7 @@ nav = [
         { CopyToClipboard = "reference/copy-to-clipboard.md" },
         { "Tangle Widgets" = "reference/tangle.md" },
         { GamepadWidget = "reference/gamepad.md" },
+        { AnnotationWidget = "reference/annotation.md" },
         { WebcamCapture = "reference/webcam-capture.md" },
         { CellTour = "reference/cell-tour.md" },
         { ImageRefreshWidget = "reference/image-refresh.md" },
