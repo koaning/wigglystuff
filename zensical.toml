@@ -59,8 +59,8 @@ extra_css = ["assets/stylesheets/extra.css"]
 # ----------------------------------------------------------------------------
 [project.theme]
 custom_dir = "docs/overrides"
-logo = "assets/logo.png"
-favicon = "assets/logo.png"
+logo = "assets/logo.webp"
+favicon = "assets/logo.webp"
 language = "en"
 features = [
     "content.code.annotate",

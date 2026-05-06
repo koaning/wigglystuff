@@ -26,7 +26,7 @@ Prepare a new wigglystuff release. Follow these steps:
    - Place them in the "3rd party widgets" section of the galleries (not the main gallery)
    - Use a molab link for the demo instead of a local example page
    - Use `MOLAB_LINK_HERE` as a placeholder if the molab link is not yet available and tell the user they need to fill it in
-   - Screenshot path should be `docs/assets/gallery/<widgetname>.png` — tell the user if one is missing
+   - Screenshot path should be `docs/assets/gallery/<widgetname>.webp` — tell the user if one is missing (run `uv run python scripts/png_to_webp.py` if a PNG was added)
 
 6. **Check dependencies**: Read `pyproject.toml` and verify that no 3rd party widget dependency (neo4j, torch, wandb, etc.) has been added to core `[project] dependencies`. These must only appear under `[project.optional-dependencies]` as extras. Core dependencies should only include packages needed by all widgets (anywidget, numpy, pillow, python-dotenv). If a 3rd party dep has leaked into core dependencies, remove it.
 
