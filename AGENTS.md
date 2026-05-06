@@ -74,7 +74,9 @@ syncs back to Python.
   (`docs/index.md`), the README gallery (`readme.md`), the LLM context
   file (`docs/llms.txt`), and the changelog (`CHANGELOG.md`). Add a
   screenshot to `docs/assets/gallery/` and reference it from the gallery
-  locations to keep them in sync.
+  locations to keep them in sync. Screenshots are stored as `.webp` —
+  if you only have a PNG, drop it in and run
+  `uv run python scripts/png_to_webp.py` to convert and clean up.
 - New or changed features that haven't been released yet go under the
   `## [Unreleased]` section at the top of `CHANGELOG.md`. That section gets
   renamed to a versioned heading (e.g., `## [0.2.37]`) only at release time.

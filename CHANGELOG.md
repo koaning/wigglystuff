@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Converted docs gallery screenshots from PNG to WebP, shrinking `docs/assets/` from 6.2 MB to 1.2 MB (82% smaller).
+
 ## [0.4.1] - 2026-05-01
 
 ### Changed
