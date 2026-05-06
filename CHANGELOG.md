@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Added "Complex Plane Roots" to the docs gallery Examples section, linking a molab notebook by Simone Conradi that uses `ChartPuck` to visualize the argument of a monic polynomial on the complex plane.
+
 ### Changed
 
 - Converted docs gallery screenshots from PNG to WebP, shrinking `docs/assets/` from 6.2 MB to 1.2 MB (82% smaller).
