@@ -255,4 +255,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/zooming.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/zooming.py">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/notebooks/nb_qUrxbhdkek5FCCSfQiZzFU" class="example-img"><img src="assets/gallery/complex-plane-roots.webp" alt="Complex Plane Roots"></a>
+<div class="example-content">
+<div class="example-title">Complex Plane Roots</div>
+<div class="example-desc">Move polynomial roots interactively and watch the phase singularities follow. By Simone Conradi.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/notebooks/nb_qUrxbhdkek5FCCSfQiZzFU">molab</a></div>
+</div>
 </div>
