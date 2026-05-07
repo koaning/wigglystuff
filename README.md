@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-dark.svg">
+    <img src="docs/assets/logo.svg" alt="wigglystuff" width="120">
+  </picture>
+</p>
+
 # wigglystuff 
 
 > "A collection of creative AnyWidgets for Python notebook environments."

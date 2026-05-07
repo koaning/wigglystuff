@@ -71,7 +71,20 @@
   color: var(--md-primary-fg-color);
 }
 
-[data-md-component="header"] .md-header__button.md-logo img {
+[data-md-component="header"] .md-header__button.md-logo {
+  display: inline-flex;
+}
+
+[data-md-color-scheme="slate"] [data-md-component="header"] .md-header__button.md-logo img {
+  filter: brightness(0) invert(1);
+}
+
+.docs-hero-logo {
+  display: block;
+  margin: 0 auto 1rem;
+}
+
+[data-md-color-scheme="slate"] .docs-hero-logo {
   filter: brightness(0) invert(1);
 }
 
