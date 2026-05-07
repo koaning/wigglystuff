@@ -323,16 +323,6 @@ def _patch_md_links() -> None:
         if patched != text:
             html_file.write_text(patched, encoding="utf-8")
 
-    index_html = SITE_DIR / "index.html"
-    if index_html.exists():
-        text = index_html.read_text(encoding="utf-8")
-        patched = text.replace(
-            '<a class="llm-md-link" href="">',
-            '<a class="llm-md-link" href="index.md">',
-        )
-        if patched != text:
-            index_html.write_text(patched, encoding="utf-8")
-
 
 def main() -> None:
     _copy_markdown_sources()
