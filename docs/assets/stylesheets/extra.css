@@ -80,8 +80,8 @@
 }
 
 .docs-hero-logo {
-  display: block;
-  margin: 0 auto 1rem;
+  float: right;
+  margin: 0 0 1rem 1.5rem;
 }
 
 [data-md-color-scheme="slate"] .docs-hero-logo {
