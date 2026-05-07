@@ -4,6 +4,8 @@ hide:
   - toc
 ---
 
+<img src="assets/logo.svg" alt="wigglystuff" class="docs-hero-logo" width="120">
+
 # Wiggly notebooks, zero friction
 
 > "A collection of creative AnyWidgets for Python notebook environments."
