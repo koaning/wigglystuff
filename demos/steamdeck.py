@@ -117,7 +117,16 @@ def _(mo):
     ]
     get_index, set_index = mo.state(0)
     get_annotations, set_annotations = mo.state({})
-    return examples, get_annotations, get_index, set_annotations, set_index
+    get_last_ts, set_last_ts = mo.state(0.0)
+    return (
+        examples,
+        get_annotations,
+        get_index,
+        get_last_ts,
+        set_annotations,
+        set_index,
+        set_last_ts,
+    )
 
 
 @app.cell
@@ -145,23 +154,29 @@ def _(
     examples,
     get_annotations,
     get_index,
+    get_last_ts,
     set_annotations,
     set_index,
+    set_last_ts,
 ):
-    action = annot_widget.action
-    note = annot_widget.note
-    _ = annot_widget.action_timestamp
+    # Marimo re-runs this cell on *any* traitlet change, including each
+    # streamed speech token writing to `note`. Gate on `action_timestamp`
+    # so we only commit when the user actually presses an action button.
+    ts = annot_widget.action_timestamp
+    if ts > get_last_ts():
+        set_last_ts(ts)
+        action = annot_widget.action
+        note = annot_widget.note
+        _i = get_index()
+        _annots = get_annotations()
 
-    _i = get_index()
-    _annots = get_annotations()
-
-    if action in ("accept", "fail", "defer"):
-        set_annotations({**_annots, _i: {"label": action, "note": note}})
-        if _i < len(examples) - 1:
-            set_index(_i + 1)
-    elif action == "previous":
-        if _i > 0:
-            set_index(_i - 1)
+        if action in ("accept", "fail", "defer"):
+            set_annotations({**_annots, _i: {"label": action, "note": note}})
+            if _i < len(examples) - 1:
+                set_index(_i + 1)
+        elif action == "previous":
+            if _i > 0:
+                set_index(_i - 1)
     return
 
 
