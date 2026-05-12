@@ -149,13 +149,14 @@ def _(
     set_index,
 ):
     action = annot_widget.action
+    note = annot_widget.note
     _ = annot_widget.action_timestamp
 
     _i = get_index()
     _annots = get_annotations()
 
     if action in ("accept", "fail", "defer"):
-        set_annotations({**_annots, _i: action})
+        set_annotations({**_annots, _i: {"label": action, "note": note}})
         if _i < len(examples) - 1:
             set_index(_i + 1)
     elif action == "previous":
@@ -185,7 +186,8 @@ def _(examples, get_annotations, mo):
         {
             "index": idx,
             "text": text[:60] + ("..." if len(text) > 60 else ""),
-            "label": _annots.get(idx, ""),
+            "label": _annots.get(idx, {}).get("label", ""),
+            "note": _annots.get(idx, {}).get("note", ""),
         }
         for idx, text in enumerate(examples)
     ]
