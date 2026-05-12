@@ -7,10 +7,19 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added "Complex Plane Roots" to the docs gallery Examples section, linking a molab notebook by Simone Conradi that uses `ChartPuck` to visualize the argument of a monic polynomial on the complex plane.
+- Added "Steam Deck Annotations" example (`demos/steamdeck.py`, linked from the docs gallery) showing how to drive `AnnotationWidget` from a Steam Deck by mapping its buttons to keyboard keys through Steam Input, with a separate `KeystrokeWidget` section for inspecting what each button emits.
 
 ### Changed
 
 - Converted docs gallery screenshots from PNG to WebP, shrinking `docs/assets/` from 6.2 MB to 1.2 MB (82% smaller).
+
+### Fixed
+
+- `AnnotationWidget` voice-input no longer duplicates finalized phrases. The `change:note` listener was synchronizing the session base text (`noteBeforeSpeech`) on every note write, including writes from the widget's own `onresult` handler — so on the next speech-result event the cumulative `event.results` array re-concatenated every already-finalized phrase onto the new base. Only sync `noteBeforeSpeech` from `change:note` when not actively recording.
+
+### Changed
+
+- `AnnotationWidget`: a keyboard shortcut mapped to the `"mic"` action is now **push-to-talk** — recording starts on keydown and stops on keyup. The mic button still toggles on click. This makes spacebar / Steam-Deck button setups behave the way you'd expect ("hold to talk").
 
 ## [0.4.1] - 2026-05-01
 

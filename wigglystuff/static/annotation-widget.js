@@ -203,12 +203,28 @@ function render({ model, el }) {
   });
 
   let keyFadeTimer = null;
+  // Key currently held that started a mic session (for push-to-talk).
+  let activeMicKey = null;
   keyArea.addEventListener("keydown", (event) => {
     event.preventDefault();
     event.stopPropagation();
     const key = event.key.toLowerCase();
     const mapping = model.get("keyboard_mapping") || {};
     const actionName = mapping[key];
+    if (actionName === "mic") {
+      // Hold-to-talk: keydown starts recording once; keyup stops it.
+      if (event.repeat) return;
+      if (!model.get("listening")) {
+        activeMicKey = key;
+        keyArea.textContent = key + " → mic (hold)";
+        triggerAction("mic");
+      }
+      clearTimeout(keyFadeTimer);
+      keyFadeTimer = setTimeout(() => {
+        keyArea.textContent = "Keyboard shortcuts active — press a key";
+      }, 350);
+      return;
+    }
     if (actionName) {
       keyArea.textContent = key + " \u2192 " + actionName;
       triggerAction(actionName);
@@ -222,6 +238,16 @@ function render({ model, el }) {
     }, 350);
   });
 
+  keyArea.addEventListener("keyup", (event) => {
+    const key = event.key.toLowerCase();
+    if (activeMicKey && key === activeMicKey) {
+      activeMicKey = null;
+      if (model.get("listening")) {
+        triggerAction("mic");
+      }
+    }
+  });
+
   // --- Note sync ---
   noteInput.addEventListener("input", () => {
     model.set("note", noteInput.value);
@@ -233,8 +259,14 @@ function render({ model, el }) {
     if (noteInput.value !== val) {
       noteInput.value = val;
     }
-    // Keep speech base text in sync so mic appends to the correct value
-    noteBeforeSpeech = val;
+    // Sync the speech-session base note — but only when we are not
+    // actively recording. Our own onresult writes to `note`, and if we
+    // overwrote noteBeforeSpeech here the cumulative event.results from
+    // the next onresult would concatenate the same finalized phrases
+    // again onto an already-grown base.
+    if (!model.get("listening")) {
+      noteBeforeSpeech = val;
+    }
   });
 
   // --- Speech-to-text ---
@@ -255,6 +287,11 @@ function render({ model, el }) {
       };
 
       recognition.onresult = (event) => {
+        // event.results is cumulative across every onresult call in this
+        // session, so finalTranscript already contains every finalized
+        // phrase. Do not mutate noteBeforeSpeech here — doing so makes
+        // each finalized phrase get concatenated again on subsequent
+        // events and the note repeats itself.
         let finalTranscript = "";
         let interimTranscript = "";
         for (let i = 0; i < event.results.length; i++) {
@@ -264,20 +301,14 @@ function render({ model, el }) {
             interimTranscript += event.results[i][0].transcript;
           }
         }
-        // Build the full note: base + final + interim preview
         const base = noteBeforeSpeech;
-        const separator = base.length > 0 ? " " : "";
-        const confirmed = finalTranscript ? separator + finalTranscript : "";
-        const preview = interimTranscript
-          ? (base.length > 0 || finalTranscript ? " " : "") + interimTranscript
-          : "";
-        const newNote = base + confirmed + preview;
-        noteInput.value = newNote;
-        // Only sync finalized text to the model
+        const finalSep = base.length > 0 && finalTranscript ? " " : "";
+        const interimSep =
+          (base.length > 0 || finalTranscript) && interimTranscript ? " " : "";
+        noteInput.value =
+          base + finalSep + finalTranscript + interimSep + interimTranscript;
         if (finalTranscript) {
-          const finalNote = base + confirmed;
-          noteBeforeSpeech = finalNote;
-          model.set("note", finalNote);
+          model.set("note", base + finalSep + finalTranscript);
           model.save_changes();
         }
       };
