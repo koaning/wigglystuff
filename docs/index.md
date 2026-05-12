@@ -265,4 +265,11 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/notebooks/nb_qUrxbhdkek5FCCSfQiZzFU">molab</a></div>
 </div>
+<div class="example-item">
+<div class="example-content">
+<div class="example-title">Steam Deck Annotations</div>
+<div class="example-desc">Use Steam Input to map Steam Deck buttons to keyboard keys, then drive AnnotationWidget through its keyboard_mapping — with a KeystrokeWidget section for inspecting what each button emits.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/steamdeck.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/steamdeck.py">Source</a></div>
+</div>
 </div>

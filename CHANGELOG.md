@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added "Complex Plane Roots" to the docs gallery Examples section, linking a molab notebook by Simone Conradi that uses `ChartPuck` to visualize the argument of a monic polynomial on the complex plane.
+- Added "Steam Deck Annotations" example (`demos/steamdeck.py`, linked from the docs gallery) showing how to drive `AnnotationWidget` from a Steam Deck by mapping its buttons to keyboard keys through Steam Input, with a separate `KeystrokeWidget` section for inspecting what each button emits.
 
 ### Changed
 
