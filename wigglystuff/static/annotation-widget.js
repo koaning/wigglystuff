@@ -203,12 +203,28 @@ function render({ model, el }) {
   });
 
   let keyFadeTimer = null;
+  // Key currently held that started a mic session (for push-to-talk).
+  let activeMicKey = null;
   keyArea.addEventListener("keydown", (event) => {
     event.preventDefault();
     event.stopPropagation();
     const key = event.key.toLowerCase();
     const mapping = model.get("keyboard_mapping") || {};
     const actionName = mapping[key];
+    if (actionName === "mic") {
+      // Hold-to-talk: keydown starts recording once; keyup stops it.
+      if (event.repeat) return;
+      if (!model.get("listening")) {
+        activeMicKey = key;
+        keyArea.textContent = key + " → mic (hold)";
+        triggerAction("mic");
+      }
+      clearTimeout(keyFadeTimer);
+      keyFadeTimer = setTimeout(() => {
+        keyArea.textContent = "Keyboard shortcuts active — press a key";
+      }, 350);
+      return;
+    }
     if (actionName) {
       keyArea.textContent = key + " \u2192 " + actionName;
       triggerAction(actionName);
@@ -222,6 +238,16 @@ function render({ model, el }) {
     }, 350);
   });
 
+  keyArea.addEventListener("keyup", (event) => {
+    const key = event.key.toLowerCase();
+    if (activeMicKey && key === activeMicKey) {
+      activeMicKey = null;
+      if (model.get("listening")) {
+        triggerAction("mic");
+      }
+    }
+  });
+
   // --- Note sync ---
   noteInput.addEventListener("input", () => {
     model.set("note", noteInput.value);
@@ -233,8 +259,14 @@ function render({ model, el }) {
     if (noteInput.value !== val) {
       noteInput.value = val;
     }
-    // Keep speech base text in sync so mic appends to the correct value
-    noteBeforeSpeech = val;
+    // Sync the speech-session base note — but only when we are not
+    // actively recording. Our own onresult writes to `note`, and if we
+    // overwrote noteBeforeSpeech here the cumulative event.results from
+    // the next onresult would concatenate the same finalized phrases
+    // again onto an already-grown base.
+    if (!model.get("listening")) {
+      noteBeforeSpeech = val;
+    }
   });
 
   // --- Speech-to-text ---

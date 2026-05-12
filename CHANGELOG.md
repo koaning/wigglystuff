@@ -15,7 +15,11 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- `AnnotationWidget` voice-input no longer duplicates finalized phrases. The widget mutated its session-base note after each finalized speech chunk, while the Web Speech API's cumulative `event.results` continued to include those chunks — so every previously finalized phrase was concatenated again on each subsequent result event.
+- `AnnotationWidget` voice-input no longer duplicates finalized phrases. The `change:note` listener was synchronizing the session base text (`noteBeforeSpeech`) on every note write, including writes from the widget's own `onresult` handler — so on the next speech-result event the cumulative `event.results` array re-concatenated every already-finalized phrase onto the new base. Only sync `noteBeforeSpeech` from `change:note` when not actively recording.
+
+### Changed
+
+- `AnnotationWidget`: a keyboard shortcut mapped to the `"mic"` action is now **push-to-talk** — recording starts on keydown and stops on keyup. The mic button still toggles on click. This makes spacebar / Steam-Deck button setups behave the way you'd expect ("hold to talk").
 
 ## [0.4.1] - 2026-05-01
 
