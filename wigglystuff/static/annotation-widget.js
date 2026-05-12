@@ -255,6 +255,11 @@ function render({ model, el }) {
       };
 
       recognition.onresult = (event) => {
+        // event.results is cumulative across every onresult call in this
+        // session, so finalTranscript already contains every finalized
+        // phrase. Do not mutate noteBeforeSpeech here — doing so makes
+        // each finalized phrase get concatenated again on subsequent
+        // events and the note repeats itself.
         let finalTranscript = "";
         let interimTranscript = "";
         for (let i = 0; i < event.results.length; i++) {
@@ -264,20 +269,14 @@ function render({ model, el }) {
             interimTranscript += event.results[i][0].transcript;
           }
         }
-        // Build the full note: base + final + interim preview
         const base = noteBeforeSpeech;
-        const separator = base.length > 0 ? " " : "";
-        const confirmed = finalTranscript ? separator + finalTranscript : "";
-        const preview = interimTranscript
-          ? (base.length > 0 || finalTranscript ? " " : "") + interimTranscript
-          : "";
-        const newNote = base + confirmed + preview;
-        noteInput.value = newNote;
-        // Only sync finalized text to the model
+        const finalSep = base.length > 0 && finalTranscript ? " " : "";
+        const interimSep =
+          (base.length > 0 || finalTranscript) && interimTranscript ? " " : "";
+        noteInput.value =
+          base + finalSep + finalTranscript + interimSep + interimTranscript;
         if (finalTranscript) {
-          const finalNote = base + confirmed;
-          noteBeforeSpeech = finalNote;
-          model.set("note", finalNote);
+          model.set("note", base + finalSep + finalTranscript);
           model.save_changes();
         }
       };

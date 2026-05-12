@@ -13,6 +13,10 @@ All notable changes to this project will be documented in this file.
 
 - Converted docs gallery screenshots from PNG to WebP, shrinking `docs/assets/` from 6.2 MB to 1.2 MB (82% smaller).
 
+### Fixed
+
+- `AnnotationWidget` voice-input no longer duplicates finalized phrases. The widget mutated its session-base note after each finalized speech chunk, while the Web Speech API's cumulative `event.results` continued to include those chunks — so every previously finalized phrase was concatenated again on each subsequent result event.
+
 ## [0.4.1] - 2026-05-01
 
 ### Changed
