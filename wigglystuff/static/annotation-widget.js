@@ -14,6 +14,91 @@ const ICONS = {
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>',
 };
 
+// Space is rendered as the word "Space" — ␣/⎵ are obscure and don't read well.
+const KEY_GLYPHS = {
+  arrowleft: "←",
+  arrowup: "↑",
+  arrowright: "→",
+  arrowdown: "↓",
+  cmd: "⌘",
+  shift: "⇧",
+  ctrl: "⌃",
+  alt: "⌥",
+  " ": "Space",
+  space: "Space",
+};
+
+const MOD_ALIASES = {
+  command: "cmd",
+  meta: "cmd",
+  control: "ctrl",
+  option: "alt",
+};
+
+// macOS canonical display order: ⌃⌥⇧⌘key
+const MOD_ORDER = ["ctrl", "alt", "shift", "cmd"];
+const MOD_SET = new Set(MOD_ORDER);
+
+function parseBinding(binding) {
+  const str = String(binding);
+  // Treat a literal space as the spacebar so " " binds the same as "space".
+  if (str === " ") return { mods: new Set(), key: " " };
+  const tokens = str.split("+").map((t) => t.trim().toLowerCase());
+  const mods = new Set();
+  let key = null;
+  for (const t of tokens) {
+    if (!t) continue;
+    const canonical = MOD_ALIASES[t] || t;
+    if (MOD_SET.has(canonical)) mods.add(canonical);
+    else key = t === "space" ? " " : t;
+  }
+  return { mods, key };
+}
+
+function formatBinding(binding) {
+  const { mods, key } = parseBinding(binding);
+  const parts = [];
+  for (const m of MOD_ORDER) {
+    if (mods.has(m)) parts.push(KEY_GLYPHS[m]);
+  }
+  if (key !== null) {
+    parts.push(KEY_GLYPHS[key] || (key.length === 1 ? key.toUpperCase() : key));
+  }
+  return parts.join("");
+}
+
+function bindingMatchesEvent(binding, event) {
+  const { mods, key } = parseBinding(binding);
+  if (key === null) return false;
+  if (event.key.toLowerCase() !== key) return false;
+  // Bare keys (no modifiers in the binding) match regardless of pressed
+  // modifiers, preserving the original single-key matching behavior.
+  if (mods.size === 0) return true;
+  return (
+    event.metaKey === mods.has("cmd") &&
+    event.ctrlKey === mods.has("ctrl") &&
+    event.altKey === mods.has("alt") &&
+    event.shiftKey === mods.has("shift")
+  );
+}
+
+function lookupBinding(mapping, event) {
+  // Prefer chord bindings (with modifiers) over bare-key bindings so that
+  // "cmd+s" wins over "s" when Cmd+S is pressed.
+  const entries = Object.entries(mapping);
+  for (const [binding, action] of entries) {
+    if (parseBinding(binding).mods.size > 0 && bindingMatchesEvent(binding, event)) {
+      return { binding, action };
+    }
+  }
+  for (const [binding, action] of entries) {
+    if (parseBinding(binding).mods.size === 0 && bindingMatchesEvent(binding, event)) {
+      return { binding, action };
+    }
+  }
+  return null;
+}
+
 function render({ model, el }) {
   el.classList.add("annotation-widget");
 
@@ -138,7 +223,7 @@ function render({ model, el }) {
     }
     const kbItems = actionOrder
       .filter((a) => kbByAction[a])
-      .map((action) => `<div class="annotation-sc-row sc-${action}"><kbd>${kbByAction[action]}</kbd><span>${action}</span></div>`)
+      .map((action) => `<div class="annotation-sc-row sc-${action}"><kbd>${formatBinding(kbByAction[action])}</kbd><span>${action}</span></div>`)
       .join("");
 
     // Gamepad: reverse mapping, same action order
@@ -208,15 +293,14 @@ function render({ model, el }) {
   keyArea.addEventListener("keydown", (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const key = event.key.toLowerCase();
     const mapping = model.get("keyboard_mapping") || {};
-    const actionName = mapping[key];
-    if (actionName === "mic") {
+    const match = lookupBinding(mapping, event);
+    if (match && match.action === "mic") {
       // Hold-to-talk: keydown starts recording once; keyup stops it.
       if (event.repeat) return;
       if (!model.get("listening")) {
-        activeMicKey = key;
-        keyArea.textContent = key + " → mic (hold)";
+        activeMicKey = event.key.toLowerCase();
+        keyArea.textContent = formatBinding(match.binding) + " → mic (hold)";
         triggerAction("mic");
       }
       clearTimeout(keyFadeTimer);
@@ -225,9 +309,9 @@ function render({ model, el }) {
       }, 350);
       return;
     }
-    if (actionName) {
-      keyArea.textContent = key + " \u2192 " + actionName;
-      triggerAction(actionName);
+    if (match) {
+      keyArea.textContent = formatBinding(match.binding) + " \u2192 " + match.action;
+      triggerAction(match.action);
     } else {
       keyArea.textContent = "\u201C" + event.key + "\u201D not mapped";
     }
