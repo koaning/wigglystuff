@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `Paint.replace_with_pil(img)` replaces the canvas contents with a PIL Image after construction. Wipes any existing strokes (the canvas has no separate background layer); resizes to the widget's `(width, height)` if needed.
+
 ## [0.4.2] - 2026-05-12
 
 ### Added
