@@ -199,19 +199,30 @@ def _(mo):
 
 
 @app.cell
-def _(Image, ImageDraw, random):
+def _(mo):
+    # Cell size in pixels. Smaller = finer grid (slower per tick but more
+    # detail); larger = chunkier pixel-art feel. Changing this resets the
+    # canvas because grid coordinates are at the old resolution.
+    gol_resolution = mo.ui.slider(
+        start=4,
+        stop=16,
+        step=2,
+        value=8,
+        label="Cell size",
+        show_value=True,
+    )
+    return (gol_resolution,)
+
+
+@app.cell
+def _(Image, ImageChops, ImageDraw, gol_resolution, random):
     GOL_WIDTH = 512
     GOL_HEIGHT = 384
-    CELL_PX = 8
+    CELL_PX = gol_resolution.value
     COLS = GOL_WIDTH // CELL_PX
     ROWS = GOL_HEIGHT // CELL_PX
-    PALETTE = [
-        (31, 119, 180),
-        (255, 127, 14),
-        (44, 160, 44),
-        (214, 39, 40),
-        (148, 103, 189),
-    ]
+    PAINT_DIFF_THRESHOLD = 15
+    WHITE_IMAGE = Image.new("RGB", (GOL_WIDTH, GOL_HEIGHT), "white")
 
     def neighbors(r, c):
         for dr in (-1, 0, 1):
@@ -243,46 +254,8 @@ def _(Image, ImageDraw, random):
             )
         return next_grid
 
-    def seed_grid_from_image(image):
-        rgb = image.convert("RGB")
-        pixels = rgb.load()
-        grid = {}
-        for r in range(ROWS):
-            for c in range(COLS):
-                rs = gs = bs = count = 0
-                for y in range(r * CELL_PX, (r + 1) * CELL_PX):
-                    for x in range(c * CELL_PX, (c + 1) * CELL_PX):
-                        pr, pg, pb = pixels[x, y]
-                        # Any pixel that's meaningfully darker than the
-                        # white background in at least one channel — so
-                        # colored strokes (red, orange, blue, …) also seed.
-                        if min(pr, pg, pb) < 215:
-                            rs += pr
-                            gs += pg
-                            bs += pb
-                            count += 1
-                if count:
-                    grid[(r, c)] = (rs // count, gs // count, bs // count)
-        return grid
-
-    def default_seed():
-        grid = {}
-        # Glider drifting south-east
-        for dr, dc in [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]:
-            grid[(4 + dr, 6 + dc)] = PALETTE[0]
-        # Block still-life (stable, proves the rules)
-        for dr, dc in [(0, 0), (0, 1), (1, 0), (1, 1)]:
-            grid[(6 + dr, 22 + dc)] = PALETTE[1]
-        # R-pentomino (famously chaotic for ~1100 generations)
-        for dr, dc in [(0, 1), (0, 2), (1, 0), (1, 1), (2, 1)]:
-            grid[(22 + dr, 34 + dc)] = PALETTE[2]
-        # Second glider drifting north-west
-        for dr, dc in [(0, 1), (1, 0), (2, 0), (2, 1), (2, 2)]:
-            grid[(36 + dr, 50 + dc)] = PALETTE[3]
-        return grid
-
-    def grid_to_image(grid):
-        img = Image.new("RGB", (GOL_WIDTH, GOL_HEIGHT), "white")
+    def draw_cells_on(image, grid):
+        img = image.copy()
         draw = ImageDraw.Draw(img)
         for (r, c), color in grid.items():
             x0 = c * CELL_PX
@@ -293,14 +266,98 @@ def _(Image, ImageDraw, random):
             )
         return img
 
+    def grid_to_image(grid):
+        return draw_cells_on(WHITE_IMAGE, grid)
+
+    def fade_toward_white(image, alpha):
+        return ImageChops.blend(image, WHITE_IMAGE, alpha)
+
+    def seed_grid_from_image(image):
+        # Used by the "Seed from canvas" button: any pixel meaningfully
+        # darker than the white background seeds a cell with that block's
+        # mean color.
+        rgb = image.convert("RGB")
+        pixels = rgb.load()
+        grid = {}
+        for r in range(ROWS):
+            for c in range(COLS):
+                rs = gs = bs = count = 0
+                for y in range(r * CELL_PX, (r + 1) * CELL_PX):
+                    for x in range(c * CELL_PX, (c + 1) * CELL_PX):
+                        pr, pg, pb = pixels[x, y]
+                        if min(pr, pg, pb) < 215:
+                            rs += pr
+                            gs += pg
+                            bs += pb
+                            count += 1
+                if count:
+                    grid[(r, c)] = (rs // count, gs // count, bs // count)
+        return grid
+
+    def detect_user_paint(current, last):
+        # Returns a grid dict of cells the user painted since `last` was
+        # rendered. We diff against what we last pushed to the widget, so
+        # the canvas's faded trails don't register as new paint. Only
+        # scans the bbox of changed pixels so this stays cheap when the
+        # user isn't painting.
+        diff = ImageChops.difference(current, last)
+        bbox = diff.getbbox()
+        if bbox is None:
+            return {}
+        x0, y0, x1, y1 = bbox
+        r_start = max(0, y0 // CELL_PX)
+        r_end = min(ROWS, (y1 - 1) // CELL_PX + 1)
+        c_start = max(0, x0 // CELL_PX)
+        c_end = min(COLS, (x1 - 1) // CELL_PX + 1)
+        diff_px = diff.load()
+        curr_px = current.load()
+        grid = {}
+        for r in range(r_start, r_end):
+            for c in range(c_start, c_end):
+                rs = gs = bs = count = 0
+                for y in range(r * CELL_PX, (r + 1) * CELL_PX):
+                    for x in range(c * CELL_PX, (c + 1) * CELL_PX):
+                        dr_v, dg_v, db_v = diff_px[x, y]
+                        if max(dr_v, dg_v, db_v) > PAINT_DIFF_THRESHOLD:
+                            pr, pg, pb = curr_px[x, y]
+                            rs += pr
+                            gs += pg
+                            bs += pb
+                            count += 1
+                if count:
+                    grid[(r, c)] = (rs // count, gs // count, bs // count)
+        return grid
+
+    def default_seed():
+        # Start with a blank grid — the user paints to seed.
+        return {}
+
     return (
         GOL_HEIGHT,
         GOL_WIDTH,
         default_seed,
+        detect_user_paint,
+        draw_cells_on,
+        fade_toward_white,
         grid_to_image,
         seed_grid_from_image,
         step_grid,
     )
+
+
+@app.cell
+def _(mo):
+    # How much each tick blends the canvas toward white. Larger → trails
+    # die faster. 0 means cells stay forever; 0.5 wipes them in ~3 ticks.
+    gol_fade = mo.ui.slider(
+        start=0.0,
+        stop=0.5,
+        step=0.01,
+        value=0.15,
+        label="Fade",
+        show_value=True,
+    )
+    return (gol_fade,)
 
 
 @app.cell(hide_code=True)
@@ -314,13 +371,14 @@ def _(
     mo,
     seed_grid_from_image,
 ):
+    _initial_image = grid_to_image(default_seed())
     gol_paint_widget = Paint(
         width=GOL_WIDTH,
         height=GOL_HEIGHT,
         store_background=True,
-        init_image=grid_to_image(default_seed()),
+        init_image=_initial_image,
     )
-    gol_state = {"grid": default_seed()}
+    gol_state = {"grid": default_seed(), "last_rendered": _initial_image}
     gol_tick, gol_set_tick = mo.state(0)
     gol_is_playing, gol_set_is_playing = mo.state(False)
 
@@ -335,13 +393,15 @@ def _(
 
     def gol_reset(value):
         gol_state["grid"] = default_seed()
-        gol_paint_widget.base64 = image_to_base64(grid_to_image(gol_state["grid"]))
+        gol_state["last_rendered"] = grid_to_image(gol_state["grid"])
+        gol_paint_widget.base64 = image_to_base64(gol_state["last_rendered"])
         gol_set_is_playing(False)
         return value + 1
 
     def gol_seed_from_canvas(value):
         gol_state["grid"] = seed_grid_from_image(gol_paint_widget.get_pil())
-        gol_paint_widget.base64 = image_to_base64(grid_to_image(gol_state["grid"]))
+        gol_state["last_rendered"] = grid_to_image(gol_state["grid"])
+        gol_paint_widget.base64 = image_to_base64(gol_state["last_rendered"])
         return value + 1
 
     gol_paint = mo.ui.anywidget(gol_paint_widget)
@@ -380,9 +440,11 @@ def _(gol_paint):
 @app.cell(hide_code=True)
 def _(
     gol_auto_step,
+    gol_fade,
     gol_pause_button,
     gol_play_button,
     gol_reset_button,
+    gol_resolution,
     gol_seed_button,
     mo,
 ):
@@ -393,6 +455,8 @@ def _(
             gol_reset_button,
             gol_seed_button,
             gol_auto_step,
+            gol_fade,
+            gol_resolution,
         ],
         justify="start",
     )
@@ -401,16 +465,18 @@ def _(
 
 @app.cell
 def _(
+    detect_user_paint,
+    draw_cells_on,
+    fade_toward_white,
     gol_auto_step,
+    gol_fade,
     gol_is_playing,
     gol_paint_widget,
     gol_set_tick,
     gol_state,
     gol_tick,
-    grid_to_image,
     image_changed,
     image_to_base64,
-    seed_grid_from_image,
     step_grid,
 ):
     _ = gol_auto_step.value
@@ -423,14 +489,18 @@ def _(
             gol_paint_widget.base64 == _start_base64
             and not image_changed(_start_canvas, _current_canvas)
         ):
-            _expected = grid_to_image(gol_state["grid"])
-            if image_changed(_expected, _start_canvas):
-                _painted = seed_grid_from_image(_start_canvas)
+            _painted = detect_user_paint(_start_canvas, gol_state["last_rendered"])
+            if _painted:
                 _merged = dict(gol_state["grid"])
                 _merged.update(_painted)
                 gol_state["grid"] = _merged
             gol_state["grid"] = step_grid(gol_state["grid"])
-            gol_paint_widget.base64 = image_to_base64(grid_to_image(gol_state["grid"]))
+            _new_image = draw_cells_on(
+                fade_toward_white(_start_canvas, gol_fade.value),
+                gol_state["grid"],
+            )
+            gol_state["last_rendered"] = _new_image
+            gol_paint_widget.base64 = image_to_base64(_new_image)
             gol_set_tick(lambda current: current + 1)
     return
 
