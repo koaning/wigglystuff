@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added "Paint Scatter" example (`demos/paint-scatter.py`, linked from the docs gallery) showing a `Paint` canvas driven by a marimo `mo.ui.refresh` loop that scatters colorful dots around dark pixels each tick — turning hand-drawn strokes into a slowly blooming pointillist piece.
+- `Paint.replace_with_pil(img)` replaces the canvas contents with a PIL Image after construction. Wipes any existing strokes (the canvas has no separate background layer); resizes to the widget's `(width, height)` if needed.
 
 ## [0.4.2] - 2026-05-12
 
