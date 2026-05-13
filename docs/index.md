@@ -273,4 +273,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/steamdeck.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/steamdeck.py">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint-scatter.py" class="example-img"><img src="assets/gallery/paint-scatter.webp" alt="Paint Scatter"></a>
+<div class="example-content">
+<div class="example-title">Paint Scatter</div>
+<div class="example-desc">Draw on a Paint canvas and watch a marimo refresh-driven loop bloom colorful dots around every dark stroke — a pointillist animation built from Paint, mo.state, and mo.ui.refresh.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint-scatter.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/paint-scatter.py">Source</a></div>
+</div>
 </div>
