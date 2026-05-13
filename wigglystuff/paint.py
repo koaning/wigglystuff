@@ -84,6 +84,10 @@ def input_to_pil(input_data: Union[str, Path, "Image.Image", bytes, None]):
 class Paint(anywidget.AnyWidget):
     """Notebook-friendly drawing canvas with brush, marker, eraser, undo, and PIL helpers.
 
+    Pass ``rainbow_brush=True`` to add an extra spray-paint tool that scatters
+    randomly-colored particles around the cursor — handy for generating noisy,
+    multi-color masks for image models.
+
     Examples:
         ```python
         from wigglystuff import Paint
@@ -100,8 +104,9 @@ class Paint(anywidget.AnyWidget):
     height = traitlets.Int(DEFAULT_HEIGHT).tag(sync=True)
     width = traitlets.Int(DEFAULT_WIDTH).tag(sync=True)  # rough 16:9 ratio
     store_background = traitlets.Bool(True).tag(sync=True)
+    rainbow_brush = traitlets.Bool(False).tag(sync=True)
 
-    def __init__(self, height: int = DEFAULT_HEIGHT, width: int = DEFAULT_WIDTH, store_background: bool = True, init_image: Optional[Any] = None):
+    def __init__(self, height: int = DEFAULT_HEIGHT, width: int = DEFAULT_WIDTH, store_background: bool = True, init_image: Optional[Any] = None, rainbow_brush: bool = False):
         """Create a Paint widget.
 
         Args:
@@ -109,6 +114,7 @@ class Paint(anywidget.AnyWidget):
             width: Canvas width in pixels (ignored when ``init_image`` sets aspect ratio).
             store_background: Persist previous strokes when background changes.
             init_image: Optional path/URL/PIL image/bytes to preload.
+            rainbow_brush: Show an extra spray tool that paints randomly-colored particles.
         """
         super().__init__()
 
@@ -160,6 +166,7 @@ class Paint(anywidget.AnyWidget):
             ).split(",")[1]
 
         self.store_background = store_background
+        self.rainbow_brush = rainbow_brush
 
     def get_pil(self):
         """Return the current drawing as a PIL Image."""

@@ -30,6 +30,8 @@ Prepare a new wigglystuff release. Follow these steps:
 
 6. **Check dependencies**: Read `pyproject.toml` and verify that no 3rd party widget dependency (neo4j, torch, wandb, etc.) has been added to core `[project] dependencies`. These must only appear under `[project.optional-dependencies]` as extras. Core dependencies should only include packages needed by all widgets (anywidget, numpy, pillow, python-dotenv). If a 3rd party dep has leaked into core dependencies, remove it.
 
-7. **Verify nothing is missed**: Check the git diff to make sure all new/changed widgets have corresponding updates in all locations listed above.
+7. **Bump demo `wigglystuff==X.Y.Z` pins**: Every `demos/*.py` notebook has a PEP 723 `# /// script` header pinning a published `wigglystuff` version. For any demo that was added or modified in this release (anything in `git diff origin/main -- demos/` since the previous tag), update its pin to the new version. Otherwise `uv run demos/<name>.py` will fetch the old release and the new feature will be missing. Grep `demos/ -l "wigglystuff=="` to find pins; you do not need to bump untouched demos.
 
-8. **Report** what was done and what still needs manual action (e.g., adding screenshots, replacing molab link placeholders).
+8. **Verify nothing is missed**: Check the git diff to make sure all new/changed widgets have corresponding updates in all locations listed above.
+
+9. **Report** what was done and what still needs manual action (e.g., adding screenshots, replacing molab link placeholders).

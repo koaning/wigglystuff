@@ -3,7 +3,7 @@
 # dependencies = [
 #     "marimo",
 #     "mohtml",
-#     "wigglystuff==0.3.1",
+#     "wigglystuff==0.4.3",
 # ]
 # ///
 
@@ -107,6 +107,27 @@ def _(swap):
     from PIL import Image
 
     swap.replace_with_pil(Image.new("RGB", (swap.width, swap.height), "tomato"))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    Pass `rainbow_brush=True` to add an extra spray tool to the toolbar. Each particle samples a random hue, which is handy when you want noisy, multi-color inputs for an image model.
+    """)
+    return
+
+
+@app.cell
+def _(Paint, mo):
+    rainbow = mo.ui.anywidget(Paint(height=300, width=400, rainbow_brush=True))
+    rainbow
+    return (rainbow,)
+
+
+@app.cell
+def _(rainbow):
+    rainbow.get_pil()
     return
 
 

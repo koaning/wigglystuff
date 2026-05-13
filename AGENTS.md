@@ -80,6 +80,14 @@ syncs back to Python.
 - New or changed features that haven't been released yet go under the
   `## [Unreleased]` section at the top of `CHANGELOG.md`. That section gets
   renamed to a versioned heading (e.g., `## [0.2.37]`) only at release time.
+- **At release time, also bump the `wigglystuff==X.Y.Z` pin in the script
+  header of every demo notebook that exercises an unreleased feature.** The
+  `demos/*.py` files use PEP 723 `# /// script` blocks that pin a published
+  version — if a demo uses APIs only present in the new release, leaving the
+  old pin means `uv run demos/<name>.py` (and anyone who downloads the demo)
+  will get the old wigglystuff and the feature will be missing. After bumping
+  `pyproject.toml`, grep `demos/` for the previous version and update the
+  pins on any demo touched in the release.
 - Each widget has a demo marimo notebook in the `demos/` folder (e.g.,
   `demos/colorpicker.py`). When adding a new widget, create a corresponding
   demo notebook. Run demos with `marimo edit demos/<widget>.py`.
