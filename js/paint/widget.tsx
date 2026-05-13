@@ -8,6 +8,9 @@ function Component() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState('#000000');
   const [tool, setTool] = useState('brush');
+  const [markerSize, setMarkerSize] = useState(8);
+  const [eraserSize, setEraserSize] = useState(20);
+  const [rainbowSize, setRainbowSize] = useState(14);
   let [base64, setBase64] = useModelState<string>("base64");
   let [height] = useModelState<number>("height");
   let [width] = useModelState<number>("width");
@@ -174,12 +177,11 @@ function Component() {
     }
   };
 
-  const sprayRainbowAt = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-    const PARTICLES = 12;
-    const RADIUS = 14;
-    for (let i = 0; i < PARTICLES; i++) {
+  const sprayRainbowAt = (ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) => {
+    const particles = Math.max(6, Math.round(radius * 0.9));
+    for (let i = 0; i < particles; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const dist = Math.random() * RADIUS;
+      const dist = Math.random() * radius;
       const px = x + Math.cos(angle) * dist;
       const py = y + Math.sin(angle) * dist;
       ctx.fillStyle = `hsl(${Math.random() * 360}, 90%, 55%)`;
@@ -196,7 +198,7 @@ function Component() {
     ctx.beginPath();
     ctx.moveTo(x, y);
     setIsDrawing(true);
-    if (tool === 'rainbow') sprayRainbowAt(ctx, x, y);
+    if (tool === 'rainbow') sprayRainbowAt(ctx, x, y, rainbowSize);
   };
 
   const drawAt = (x: number, y: number) => {
@@ -205,7 +207,7 @@ function Component() {
     if (!ctx) return;
 
     if (tool === 'rainbow') {
-      sprayRainbowAt(ctx, x, y);
+      sprayRainbowAt(ctx, x, y, rainbowSize);
       return;
     }
 
@@ -215,13 +217,13 @@ function Component() {
       ctx.save();
       ctx.globalCompositeOperation = 'destination-out';
       ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 20;
+      ctx.lineWidth = eraserSize;
       ctx.lineCap = 'round';
       ctx.stroke();
       ctx.restore();
     } else {
       ctx.strokeStyle = color;
-      ctx.lineWidth = tool === 'marker' ? 8 : 2;
+      ctx.lineWidth = tool === 'marker' ? markerSize : 2;
       ctx.lineCap = 'round';
       ctx.stroke();
     }
@@ -286,12 +288,12 @@ function Component() {
               onClick={() => setTool('rainbow')}
               title="Rainbow spray"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round">
-                <path d="M3 17a9 9 0 0 1 18 0" stroke="#e53935"/>
-                <path d="M5 17a7 7 0 0 1 14 0" stroke="#fb8c00"/>
-                <path d="M7 17a5 5 0 0 1 10 0" stroke="#fdd835"/>
-                <path d="M9 17a3 3 0 0 1 6 0" stroke="#43a047"/>
-                <path d="M11 17a1 1 0 0 1 2 0" stroke="#1e88e5"/>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M3 17a9 9 0 0 1 18 0"/>
+                <path d="M5 17a7 7 0 0 1 14 0"/>
+                <path d="M7 17a5 5 0 0 1 10 0"/>
+                <path d="M9 17a3 3 0 0 1 6 0"/>
+                <path d="M11 17a1 1 0 0 1 2 0"/>
               </svg>
             </button>
           )}
@@ -327,6 +329,25 @@ function Component() {
           onChange={e => setColor(e.target.value)}
           title="Color"
         />
+
+        {(tool === 'marker' || tool === 'eraser' || tool === 'rainbow') && (() => {
+          const sizeConfig = {
+            marker:  { value: markerSize,  setter: setMarkerSize,  min: 2, max: 24, label: 'Marker thickness'  },
+            eraser:  { value: eraserSize,  setter: setEraserSize,  min: 4, max: 60, label: 'Eraser thickness'  },
+            rainbow: { value: rainbowSize, setter: setRainbowSize, min: 4, max: 40, label: 'Rainbow thickness' },
+          }[tool as 'marker' | 'eraser' | 'rainbow'];
+          return (
+            <input
+              type="range"
+              className="paint-thickness"
+              min={sizeConfig.min}
+              max={sizeConfig.max}
+              value={sizeConfig.value}
+              onChange={e => sizeConfig.setter(Number(e.target.value))}
+              title={`${sizeConfig.label}: ${sizeConfig.value}px`}
+            />
+          );
+        })()}
       </div>
 
       <div className="paint-canvas-area" style={{ background: canvasBg }}>

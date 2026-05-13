@@ -120,6 +120,20 @@
     box-shadow: var(--paint-focus-ring);
 }
 
+.paint-toolbar input[type="range"].paint-thickness {
+    width: 6rem;
+    height: 2rem;
+    margin: 0 0.125rem;
+    cursor: pointer;
+    accent-color: var(--paint-text);
+}
+
+.paint-toolbar input[type="range"].paint-thickness:focus {
+    outline: none;
+    box-shadow: var(--paint-focus-ring);
+    border-radius: 0.375rem;
+}
+
 .paint-canvas-area {
     overflow: hidden;
     background-color: var(--paint-bg);

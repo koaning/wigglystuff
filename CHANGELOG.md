@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- `Paint` toolbar now shows a thickness slider next to the color picker when the marker, eraser, or rainbow tool is selected, so you can adjust stroke/spray size on the fly. The pencil/brush stays at a fixed thin stroke, and each tool remembers its own thickness. The rainbow tool icon is now monochrome (inherits `currentColor`) to match the rest of the toolbar.
+
 ## [0.4.3] - 2026-05-13
 
 ### Added
