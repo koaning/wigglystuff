@@ -12,6 +12,7 @@ import warnings
 
 import anywidget
 import traitlets
+from PIL import Image
 
 DEFAULT_HEIGHT = 500
 DEFAULT_WIDTH = 889
@@ -172,3 +173,13 @@ class Paint(anywidget.AnyWidget):
         if not self.base64:
             return ""
         return pil_to_base64(self.get_pil())
+
+    def replace_with_pil(self, img) -> None:
+        """Replace the canvas contents with a PIL Image.
+
+        Wipes any existing strokes — the canvas has no separate background layer.
+        The image is resized to ``(self.width, self.height)`` if needed.
+        """
+        if img.size != (self.width, self.height):
+            img = img.resize((self.width, self.height), Image.LANCZOS)
+        self.base64 = pil_to_base64(img).split(",")[1]

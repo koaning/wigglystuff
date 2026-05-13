@@ -85,6 +85,31 @@ def _(div, img, transparent):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    You can also swap the canvas image after construction with `replace_with_pil(...)`. This wipes any existing strokes — the canvas has no separate background layer — and resizes the image to the widget's `(width, height)` if needed.
+
+    This is handy when you want to keep drawing on top of the output of an image model: feed the current canvas into a model (e.g. via `get_pil()`), then pipe the model's PIL output back in with `replace_with_pil(...)` to continue iterating.
+    """)
+    return
+
+
+@app.cell
+def _(Paint, mo):
+    swap = mo.ui.anywidget(Paint(height=200, width=300))
+    swap
+    return (swap,)
+
+
+@app.cell
+def _(swap):
+    from PIL import Image
+
+    swap.replace_with_pil(Image.new("RGB", (swap.width, swap.height), "tomato"))
+    return
+
+
 @app.cell
 def _():
     return
