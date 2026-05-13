@@ -12,6 +12,7 @@ function Component() {
   let [height] = useModelState<number>("height");
   let [width] = useModelState<number>("width");
   let [storeBackground] = useModelState<boolean>("store_background");
+  let [rainbowBrush] = useModelState<boolean>("rainbow_brush");
 
   const originalImageRef = useRef<string>("");
   const lastLoadedBase64Ref = useRef<string>("");
@@ -173,6 +174,21 @@ function Component() {
     }
   };
 
+  const sprayRainbowAt = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
+    const PARTICLES = 12;
+    const RADIUS = 14;
+    for (let i = 0; i < PARTICLES; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = Math.random() * RADIUS;
+      const px = x + Math.cos(angle) * dist;
+      const py = y + Math.sin(angle) * dist;
+      ctx.fillStyle = `hsl(${Math.random() * 360}, 90%, 55%)`;
+      ctx.beginPath();
+      ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  };
+
   const startDrawingAt = (x: number, y: number) => {
     const ctx = getContext();
     if (!ctx) return;
@@ -180,12 +196,18 @@ function Component() {
     ctx.beginPath();
     ctx.moveTo(x, y);
     setIsDrawing(true);
+    if (tool === 'rainbow') sprayRainbowAt(ctx, x, y);
   };
 
   const drawAt = (x: number, y: number) => {
     if (!isDrawing) return;
     const ctx = getContext();
     if (!ctx) return;
+
+    if (tool === 'rainbow') {
+      sprayRainbowAt(ctx, x, y);
+      return;
+    }
 
     ctx.lineTo(x, y);
 
@@ -258,6 +280,21 @@ function Component() {
               <path d="m5 11 9 9"/>
             </svg>
           </button>
+          {rainbowBrush && (
+            <button
+              className={tool === 'rainbow' ? 'active' : ''}
+              onClick={() => setTool('rainbow')}
+              title="Rainbow spray"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round">
+                <path d="M3 17a9 9 0 0 1 18 0" stroke="#e53935"/>
+                <path d="M5 17a7 7 0 0 1 14 0" stroke="#fb8c00"/>
+                <path d="M7 17a5 5 0 0 1 10 0" stroke="#fdd835"/>
+                <path d="M9 17a3 3 0 0 1 6 0" stroke="#43a047"/>
+                <path d="M11 17a1 1 0 0 1 2 0" stroke="#1e88e5"/>
+              </svg>
+            </button>
+          )}
         </div>
 
         <div className="paint-divider" />
