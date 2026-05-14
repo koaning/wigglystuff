@@ -5,13 +5,16 @@ from __future__ import annotations
 import base64
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional, Union
 import urllib.request
 
 import warnings
 
 import anywidget
 import traitlets
+
+if TYPE_CHECKING:
+    from PIL import Image
 
 DEFAULT_HEIGHT = 500
 DEFAULT_WIDTH = 889
@@ -43,7 +46,7 @@ def create_empty_image(width: int = 500, height: int = 500, background_color=(25
     return Image.new("RGBA", (width, height), background_color)
 
 
-def input_to_pil(input_data: str | Path | bytes | None):
+def input_to_pil(input_data: Union[str, Path, Image.Image, bytes, None]):
     """Convert an input object (path, bytes, URL, etc.) into a PIL Image."""
     from PIL import Image
 
