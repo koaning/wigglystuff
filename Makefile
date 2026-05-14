@@ -33,45 +33,45 @@ pypi: clean
 	uv publish
 
 js-edgedraw:
-	./esbuild --watch=forever --bundle --format=esm --outfile=wigglystuff/static/edgedraw.js js/edgedraw.js
+	./esbuild --watch=forever --bundle --format=esm --minify --outfile=wigglystuff/static/edgedraw.js js/edgedraw.js
 
 js-gamepad:
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/gamepad-widget.js js/gamepad/widget.js
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/gamepad-widget.js js/gamepad/widget.js
 
 js-keystroke:
 	# build the keyboard shortcut widget bundle
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/keystroke-widget.js js/keystroke/widget.js
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/keystroke-widget.js js/keystroke/widget.js
 
 js-copybutton:
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/copybutton.js js/copybutton/widget.tsx
 
 js-talk:
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/talk-widget.js js/talk/widget.js
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/talk-widget.js js/talk/widget.js
 
 js-driver-tour:
 	cp js/driver-tour/styles.css wigglystuff/static/driver-tour.css
-	./esbuild --bundle --format=esm --loader:.css=text --outfile=wigglystuff/static/driver-tour.js js/driver-tour/widget.js
+	./esbuild --bundle --format=esm --minify --loader:.css=text --outfile=wigglystuff/static/driver-tour.js js/driver-tour/widget.js
 
 js-paint:
 	cp js/paint/styles.css wigglystuff/static/paint.css
 	./node_modules/.bin/esbuild js/paint/widget.tsx --bundle --format=esm --outfile=wigglystuff/static/paint.js --minify
 
 js-pulsar-chart:
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/pulsar-chart.js js/pulsar-chart/widget.js
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/pulsar-chart.js js/pulsar-chart/widget.js
 
 js-neo4j-widget:
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/neo4j-widget.js js/neo4j-widget/widget.js
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/neo4j-widget.js js/neo4j-widget/widget.js
 
 js-diff-viewer:
 	./esbuild --bundle --format=esm --outfile=wigglystuff/static/diff-viewer.js js/diff-viewer/widget.js --minify
 
 js-scatter-widget:
 	cp js/scatter-widget/styles.css wigglystuff/static/scatter-widget.css
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/scatter-widget.js js/scatter-widget/widget.js
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/scatter-widget.js js/scatter-widget/widget.js
 
 js-spline-draw:
 	cp js/spline-draw/styles.css wigglystuff/static/spline-draw.css
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/spline-draw.js js/spline-draw/widget.js
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/spline-draw.js js/spline-draw/widget.js
 
 js-parallel-coords:
 	cp js/parallel-coords/styles.css wigglystuff/static/parallel-coords.css
