@@ -59,8 +59,18 @@ syncs back to Python.
 - Several widgets expose helper methods (e.g., `Paint.get_pil()`,
   `EdgeDraw.get_adjacency_matrix()`)—lean on those rather than re-implementing
   conversions.
-- Check `wigglystuff/__init__.py` for the names that are re-exported at the
-  package root so you can keep imports consistent.
+- **Lazy loading:** `wigglystuff/__init__.py` uses `__getattr__` to defer
+  widget imports until first access. `import wigglystuff` only reads metadata;
+  individual widget modules (and their deps) load on demand. When adding a new
+  widget, add an entry to the `_LAZY_IMPORTS` dict in `__init__.py`—do not add
+  a top-level `from .module import Class` statement.
+- **numpy and pillow are optional dependencies.** They are listed under
+  `[project.optional-dependencies]` in `pyproject.toml`, not in the core
+  `dependencies`. Widgets that need numpy or pillow must import them inside
+  the method or function that uses them (never at module top-level). This
+  keeps `import wigglystuff` and widgets that don't need these libraries
+  working without them installed. Install with `pip install wigglystuff[all]`
+  to get both, or `wigglystuff[numpy]` / `wigglystuff[pillow]` individually.
 - The repo standardizes on [`uv`](https://github.com/astral-sh/uv) for Python
   workflows (`uv pip install -e .` etc.) and the standard library's `pathlib`
   for filesystem paths—mirror those choices in new agents to keep the codebase

@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any, Callable
 
 import anywidget
-import numpy as np
 import traitlets
 
 
@@ -113,6 +112,8 @@ class SplineDraw(anywidget.AnyWidget):
 
     def _recompute_curve(self, change: Any = None) -> None:
         """Call spline_fn per class on current data and update the curve traitlet."""
+        import numpy as np
+
         if len(self.data) < 2:
             self.curve = []
             self.curve_error = ""
@@ -146,12 +147,14 @@ class SplineDraw(anywidget.AnyWidget):
         self.curve_error = "; ".join(errors) if errors else ""
 
     @property
-    def curve_as_numpy(self) -> dict[str, tuple[np.ndarray, np.ndarray]]:
+    def curve_as_numpy(self):
         """Return fitted curves as a dict keyed by color.
 
         Each value is an ``(x_array, y_array)`` tuple of numpy arrays.
         With a single class the dict has one entry.
         """
+        import numpy as np
+
         result = {}
         for entry in self.curve:
             pts = entry.get("points", [])
@@ -163,8 +166,10 @@ class SplineDraw(anywidget.AnyWidget):
         return result
 
     @property
-    def data_as_numpy(self) -> tuple[np.ndarray, np.ndarray]:
+    def data_as_numpy(self):
         """Return the drawn points as ``(x_array, y_array)`` numpy arrays."""
+        import numpy as np
+
         if not self.data:
             return np.array([]), np.array([])
         return (
@@ -194,6 +199,8 @@ class SplineDraw(anywidget.AnyWidget):
         and y as target. With ``n_classes>1`` returns X of shape ``(n, 2)``
         and y as color strings.
         """
+        import numpy as np
+
         if self.n_classes == 1:
             if not self.data:
                 return np.empty((0, 1)), np.array([])

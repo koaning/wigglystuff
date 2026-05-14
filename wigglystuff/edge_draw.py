@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Iterable, List, Optional, Sequence, Tuple, Union
 
 import anywidget
-import numpy as np
 import traitlets
 
 
@@ -78,8 +77,10 @@ class EdgeDraw(anywidget.AnyWidget):
             links=self._coerce_links(links),
         )
 
-    def get_adjacency_matrix(self, directed: bool = False) -> np.ndarray:
+    def get_adjacency_matrix(self, directed: bool = False):
         """Create an adjacency matrix from links and node names."""
+        import numpy as np
+
         num_nodes = len(self.names)
         matrix = np.zeros((num_nodes, num_nodes))
         for source, target in self._iter_links(self._coerce_links(self.links)):
