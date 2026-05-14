@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, Callable
 
 import anywidget
 import traitlets
+
+if TYPE_CHECKING:
+    import numpy as np
 
 
 class SplineDraw(anywidget.AnyWidget):
@@ -147,7 +150,7 @@ class SplineDraw(anywidget.AnyWidget):
         self.curve_error = "; ".join(errors) if errors else ""
 
     @property
-    def curve_as_numpy(self):
+    def curve_as_numpy(self) -> dict[str, tuple[np.ndarray, np.ndarray]]:
         """Return fitted curves as a dict keyed by color.
 
         Each value is an ``(x_array, y_array)`` tuple of numpy arrays.
@@ -166,7 +169,7 @@ class SplineDraw(anywidget.AnyWidget):
         return result
 
     @property
-    def data_as_numpy(self):
+    def data_as_numpy(self) -> tuple[np.ndarray, np.ndarray]:
         """Return the drawn points as ``(x_array, y_array)`` numpy arrays."""
         import numpy as np
 
