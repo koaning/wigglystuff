@@ -1,4 +1,10 @@
-import * as d3 from "../d3.min.js";
+import { select } from "d3-selection";
+import { drag } from "d3-drag";
+import { min } from "d3-array";
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from "d3-force";
+import { scaleOrdinal } from "d3-scale";
+import { schemeTableau10 } from "d3-scale-chromatic";
+import { zoom } from "d3-zoom";
 
 const CYPHER_KEYWORDS = [
     "MATCH", "OPTIONAL MATCH", "WHERE", "RETURN", "WITH", "ORDER BY",
@@ -48,7 +54,7 @@ function render({ model, el }) {
     container.appendChild(errorBar);
 
     // Color scale for node labels
-    const colorScale = d3.scaleOrdinal(d3.schemeTableau10);
+    const colorScale = scaleOrdinal(schemeTableau10);
 
     // Schema bar
     const schemaBar = document.createElement("div");
@@ -102,7 +108,7 @@ function render({ model, el }) {
     svgEl.classList.add("neo4j-graph");
     container.appendChild(svgEl);
 
-    const svg = d3.select(svgEl);
+    const svg = select(svgEl);
 
     // Arrowhead marker
     svg.append("defs").append("marker")
@@ -120,7 +126,7 @@ function render({ model, el }) {
     // Zoom container wraps all graph elements
     const zoomGroup = svg.append("g").attr("class", "neo4j-zoom-group");
 
-    svg.call(d3.zoom()
+    svg.call(zoom()
         .scaleExtent([0.1, 5])
         .on("zoom", (event) => {
             zoomGroup.attr("transform", event.transform);
@@ -141,11 +147,11 @@ function render({ model, el }) {
     let selectedNodeIds = new Set();
     let selectedRelIds = new Set();
 
-    const simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().id(d => d.element_id).distance(120))
-        .force("charge", d3.forceManyBody().strength(-300))
-        .force("center", d3.forceCenter(width / 2, height / 2))
-        .force("collide", d3.forceCollide().radius(35))
+    const simulation = forceSimulation()
+        .force("link", forceLink().id(d => d.element_id).distance(120))
+        .force("charge", forceManyBody().strength(-300))
+        .force("center", forceCenter(width / 2, height / 2))
+        .force("collide", forceCollide().radius(35))
         .on("tick", ticked);
 
     simulation.stop();
@@ -241,7 +247,7 @@ function render({ model, el }) {
         const nodeEnter = nodeGSel.enter()
             .append("g")
             .attr("class", "neo4j-node-group")
-            .call(d3.drag()
+            .call(drag()
                 .on("start", dragStarted)
                 .on("drag", dragged)
                 .on("end", dragEnded))

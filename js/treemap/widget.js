@@ -1,4 +1,6 @@
-import * as d3 from "../d3.min.js";
+import { color } from "d3-color";
+import { interpolateRgb } from "d3-interpolate";
+import { hierarchy, treemap } from "d3-hierarchy";
 
 const STYLE = `
 .wiggly-treemap {
@@ -236,7 +238,7 @@ function paletteColor(index) {
   const safeIndex = Math.max(0, index || 0);
   const cycle = Math.floor(safeIndex / DEFAULT_PALETTE.length);
   const base = DEFAULT_PALETTE[safeIndex % DEFAULT_PALETTE.length] || NEUTRAL_COLOR;
-  const color = d3.color(base) || d3.color(NEUTRAL_COLOR);
+  const color = color(base) || color(NEUTRAL_COLOR);
   return color.brighter(cycle * 0.18).formatHex();
 }
 
@@ -250,7 +252,7 @@ function colorForNodeInView(node, viewRoot) {
   if (!anchor) return NEUTRAL_COLOR;
 
   const anchorIndex = anchor._siblingIndex || 0;
-  const base = d3.color(paletteColor(anchorIndex)) || d3.color(DEFAULT_PALETTE[0]);
+  const base = color(paletteColor(anchorIndex)) || color(DEFAULT_PALETTE[0]);
   const relativeDepth = Math.max(0, node.depth - anchor.depth);
   const siblingShift = ((node._siblingIndex || 0) % 5) * 0.025;
   return base.brighter(Math.min(0.32, relativeDepth * 0.11 + siblingShift)).formatHex();
@@ -373,7 +375,7 @@ function render({ model, el }) {
   }
 
   function applyTreemap(width, height) {
-    d3.treemap()
+    treemap()
       .size([width, height])
       .paddingTop((node) => (node.children ? 20 : 0))
       .paddingInner(1)
@@ -408,7 +410,7 @@ function render({ model, el }) {
     const from = isDescendantOrSelf(node, colorTransition.fromView)
       ? colorForNodeInView(node, colorTransition.fromView)
       : to;
-    return d3.interpolateRgb(from, to)(colorTransition.progress);
+    return interpolateRgb(from, to)(colorTransition.progress);
   }
 
   function build() {
@@ -436,8 +438,7 @@ function render({ model, el }) {
       return;
     }
 
-    hierarchy = d3
-      .hierarchy(data)
+    hierarchy = hierarchy(data)
       .sum((d) =>
         d.children && d.children.length ? 0 : pickValue(d.value, valueCol)
       )
