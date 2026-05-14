@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- `__init__.py` now uses lazy loading (`__getattr__`) so `import wigglystuff` no longer eagerly imports every widget module and their dependencies.
 - `numpy` and `pillow` are now optional dependencies. Install `wigglystuff[all]` to get both, or `wigglystuff[numpy]` / `wigglystuff[pillow]` individually. Widgets that require these libraries import them at function scope.
 
 ## [0.4.4] - 2026-05-13

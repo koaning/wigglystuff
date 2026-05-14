@@ -59,11 +59,8 @@ syncs back to Python.
 - Several widgets expose helper methods (e.g., `Paint.get_pil()`,
   `EdgeDraw.get_adjacency_matrix()`)—lean on those rather than re-implementing
   conversions.
-- **Lazy loading:** `wigglystuff/__init__.py` uses `__getattr__` to defer
-  widget imports until first access. `import wigglystuff` only reads metadata;
-  individual widget modules (and their deps) load on demand. When adding a new
-  widget, add an entry to the `_LAZY_IMPORTS` dict in `__init__.py`—do not add
-  a top-level `from .module import Class` statement.
+- Check `wigglystuff/__init__.py` for the names that are re-exported at the
+  package root so you can keep imports consistent.
 - **numpy and pillow are optional dependencies.** They are listed under
   `[project.optional-dependencies]` in `pyproject.toml`, not in the core
   `dependencies`. Widgets that need numpy or pillow must import them inside
