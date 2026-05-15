@@ -16,11 +16,19 @@ classifiers = [
 dependencies = [
     "anywidget>=0.9.2",
     "drawdata",
-    "numpy",
-    "pillow",
 ]
 
 [project.optional-dependencies]
+numpy = [
+    "numpy",
+]
+pillow = [
+    "pillow",
+]
+all = [
+    "numpy",
+    "pillow",
+]
 wandb = [
     "wandb>=0.15.0",
 ]
