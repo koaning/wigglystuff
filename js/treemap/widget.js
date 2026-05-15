@@ -1,6 +1,6 @@
-import { color } from "d3-color";
+import { color as d3Color } from "d3-color";
 import { interpolateRgb } from "d3-interpolate";
-import { hierarchy, treemap } from "d3-hierarchy";
+import { hierarchy as d3Hierarchy, treemap } from "d3-hierarchy";
 
 const STYLE = `
 .wiggly-treemap {
@@ -238,7 +238,7 @@ function paletteColor(index) {
   const safeIndex = Math.max(0, index || 0);
   const cycle = Math.floor(safeIndex / DEFAULT_PALETTE.length);
   const base = DEFAULT_PALETTE[safeIndex % DEFAULT_PALETTE.length] || NEUTRAL_COLOR;
-  const color = color(base) || color(NEUTRAL_COLOR);
+  const color = d3Color(base) || d3Color(NEUTRAL_COLOR);
   return color.brighter(cycle * 0.18).formatHex();
 }
 
@@ -252,7 +252,7 @@ function colorForNodeInView(node, viewRoot) {
   if (!anchor) return NEUTRAL_COLOR;
 
   const anchorIndex = anchor._siblingIndex || 0;
-  const base = color(paletteColor(anchorIndex)) || color(DEFAULT_PALETTE[0]);
+  const base = d3Color(paletteColor(anchorIndex)) || d3Color(DEFAULT_PALETTE[0]);
   const relativeDepth = Math.max(0, node.depth - anchor.depth);
   const siblingShift = ((node._siblingIndex || 0) % 5) * 0.025;
   return base.brighter(Math.min(0.32, relativeDepth * 0.11 + siblingShift)).formatHex();
@@ -438,7 +438,7 @@ function render({ model, el }) {
       return;
     }
 
-    hierarchy = hierarchy(data)
+    hierarchy = d3Hierarchy(data)
       .sum((d) =>
         d.children && d.children.length ? 0 : pickValue(d.value, valueCol)
       )
