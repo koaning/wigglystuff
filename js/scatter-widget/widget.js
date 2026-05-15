@@ -1,4 +1,5 @@
-import * as d3 from "../d3.min.js";
+import { select, pointer } from "d3-selection";
+import { drag } from "d3-drag";
 
 function render({ model, el }) {
   // Full set of available colors and class names
@@ -204,7 +205,7 @@ function render({ model, el }) {
   // Determine a good aspect ratio that will work across environments
   const aspectRatio = currentWidth / currentHeight;
   
-  let svg = d3.select(svg_container)
+  let svg = select(svg_container)
               .append("svg")
               .attr("preserveAspectRatio", "xMidYMid meet")
               .attr("viewBox", `0 0 ${currentWidth} ${currentHeight}`)
@@ -220,7 +221,7 @@ function render({ model, el }) {
 
   // Add event handlers with proper bindings
   svg.attr("class", "dd-scatter-svg")
-     .call(d3.drag()
+     .call(drag()
         .on("start", drag_start)
         .on("drag", dragged)
         .on("end", drag_end))
@@ -345,14 +346,14 @@ function render({ model, el }) {
 
   function mousemove(event) {
     // Get pointer coordinates
-    const [x, y] = d3.pointer(event, svg.node());
+    const [x, y] = pointer(event, svg.node());
     update_brush(x, y);
   }
 
   function mouseclick(event) {
     if (!isDragging) {
       // Use d3.pointer for more reliable coordinate detection
-      const [x, y] = d3.pointer(event, svg.node());
+      const [x, y] = pointer(event, svg.node());
       let size = parseInt(size_input.value, 10) * brushScale();
       let new_x = x + (Math.random() - 0.5) * size;
       let new_y = y + (Math.random() - 0.5) * size;
@@ -416,7 +417,7 @@ function render({ model, el }) {
   function dragged(event) {
     isDragging = true;
     // Use d3.pointer for more reliable coordinate detection
-    const [x, y] = d3.pointer(event, svg.node());
+    const [x, y] = pointer(event, svg.node());
     let size = parseInt(size_input.value, 10) * brushScale();
     let new_x = x + (Math.random() - 0.5) * size;
     let new_y = y + (Math.random() - 0.5) * size;
@@ -482,7 +483,7 @@ function render({ model, el }) {
   }
 
   return () => {
-    d3.select(container).remove();
+    select(container).remove();
   };
 }
 

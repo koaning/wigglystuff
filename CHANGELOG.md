@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - `numpy` and `pillow` are now optional dependencies. Install `wigglystuff[all]` to get both, or `wigglystuff[numpy]` / `wigglystuff[pillow]` individually. Widgets that require these libraries import them at function scope.
+- Widgets that use d3 (`Treemap`, `EdgeDraw`, `Neo4jWidget`, `ScatterWidget`, `SplineDraw`, and the pulsar chart) now import only the specific `d3-*` submodules they need instead of bundling the full `d3.min.js`. Total shipped JS for these widgets drops from ~2.7 MB to ~225 KB (–92%).
+
+### Fixed
+
+- `Treemap` no longer fails to render with `Error rendering anywidget: h is not a function`. The tree-shaking rewrite left two local variables (`hierarchy`, `color`) shadowing same-named d3 imports inside `js/treemap/widget.js`; the imports are now aliased so the d3 functions are reachable at the call sites.
 
 ## [0.4.4] - 2026-05-13
 

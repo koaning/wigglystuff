@@ -1,4 +1,8 @@
-import * as d3 from "../d3.min.js";
+import { select } from "d3-selection";
+import { min, max } from "d3-array";
+import { scaleLinear, scaleBand } from "d3-scale";
+import { axisBottom, axisLeft } from "d3-axis";
+import { line, area } from "d3-shape";
 
 function render({ model, el }) {
     // Create container
@@ -33,8 +37,7 @@ function render({ model, el }) {
     const innerHeight = height - margin.top - margin.bottom;
 
     // Create SVG
-    const svg = d3
-        .select(container)
+    const svg = select(container)
         .append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -94,12 +97,11 @@ function render({ model, el }) {
         const maxPoints = Math.max(...data.map((d) => d.values.length));
 
         // X scale: horizontal position based on point index
-        const x = d3.scaleLinear().domain([0, maxPoints - 1]).range([0, innerWidth]);
+        const x = scaleLinear().domain([0, maxPoints - 1]).range([0, innerWidth]);
 
         // Y band scale for row positioning (maps row indices to vertical positions)
         const rowIndices = data.map((d) => d.index);
-        const yBand = d3
-            .scaleBand()
+        const yBand = scaleBand()
             .domain(rowIndices)
             .range([innerHeight, 0])
             .padding(0);
@@ -110,15 +112,14 @@ function render({ model, el }) {
 
         // Y scale: for amplitude within each row
         const allValues = data.flatMap((d) => d.values);
-        const minVal = d3.min(allValues) || 0;
-        const maxVal = d3.max(allValues) || 1;
+        const minVal = min(allValues) || 0;
+        const maxVal = max(allValues) || 1;
         const range = maxVal - minVal || 1;
 
         // Y scale maps amplitude to displacement within the row
         // peakScale controls how tall the peaks can be (1.0 = 40% of row height, 2.0 = 80%, etc.)
         const amplitudeRange = rowHeight * 0.4 * peakScale;
-        const yAmplitude = d3
-            .scaleLinear()
+        const yAmplitude = scaleLinear()
             .domain([minVal - range * 0.1, maxVal + range * 0.1])
             .range([amplitudeRange, -amplitudeRange]);
 
@@ -143,7 +144,7 @@ function render({ model, el }) {
         // Draw Y-axis with row indices
         // Position ticks at the baseline of each waveform (where y=0 maps to)
         const baselineOffset = yAmplitude(0);  // Where the baseline sits within the row
-        const yAxis = d3.axisLeft(yBand).tickSize(0).tickPadding(10);
+        const yAxis = axisLeft(yBand).tickSize(0).tickPadding(10);
         yAxisGroup.call(yAxis);
         yAxisGroup.select(".domain").remove();
 
@@ -159,7 +160,7 @@ function render({ model, el }) {
         const xAxisOffset = rowHeight * 0.5;
         xAxisGroup.attr("transform", `translate(0, ${innerHeight + xAxisOffset})`);
         xAxisGroup.selectAll("*").remove();
-        const xAxis = d3.axisBottom(x).ticks(10);
+        const xAxis = axisBottom(x).ticks(10);
         xAxisGroup.call(xAxis);
         xAxisGroup.select(".domain").remove();
 
@@ -170,15 +171,13 @@ function render({ model, el }) {
         svg.attr("height", height + xAxisOffset);
 
         // Line generator
-        const line = d3
-            .line()
+        const lineGen = line()
             .defined((d) => !isNaN(d))
             .x((d, i) => x(i))
             .y((d) => yAmplitude(d));
 
         // Area generator (for fill beneath line)
-        const area = d3
-            .area()
+        const areaGen = area()
             .defined((d) => !isNaN(d))
             .x((d, i) => x(i))
             .y0(rowHeight * 0.5)
@@ -203,18 +202,18 @@ function render({ model, el }) {
                     // Add area (fill) - no pointer events
                     g.append("path")
                         .attr("class", "pulsar-area")
-                        .attr("d", (d) => area(d.values))
+                        .attr("d", (d) => areaGen(d.values))
                         .style("opacity", fillOpacity);
 
                     // Add invisible thick stroke for easier click targeting
                     g.append("path")
                         .attr("class", "pulsar-line-hitbox")
-                        .attr("d", (d) => line(d.values));
+                        .attr("d", (d) => lineGen(d.values));
 
                     // Add visible line (stroke)
                     g.append("path")
                         .attr("class", "pulsar-line")
-                        .attr("d", (d) => line(d.values))
+                        .attr("d", (d) => lineGen(d.values))
                         .style("stroke-width", strokeWidth);
 
                     return g;
@@ -227,12 +226,12 @@ function render({ model, el }) {
                         })
                         .call((g) => {
                             g.select(".pulsar-area")
-                                .attr("d", (d) => area(d.values))
+                                .attr("d", (d) => areaGen(d.values))
                                 .style("opacity", fillOpacity);
                             g.select(".pulsar-line-hitbox")
-                                .attr("d", (d) => line(d.values));
+                                .attr("d", (d) => lineGen(d.values));
                             g.select(".pulsar-line")
-                                .attr("d", (d) => line(d.values))
+                                .attr("d", (d) => lineGen(d.values))
                                 .style("stroke-width", strokeWidth);
                         }),
                 (exit) => exit.remove()
@@ -250,7 +249,7 @@ function render({ model, el }) {
 
     function handleMouseEnter(event, d) {
         // Navigate to parent row group and add hover class
-        d3.select(this.parentNode).classed("pulsar-row-hover", true);
+        select(this.parentNode).classed("pulsar-row-hover", true);
         // Highlight corresponding y-axis label
         yAxisGroup.selectAll(".tick text")
             .classed("pulsar-y-label-hover", (tickData) => tickData === d.index);
@@ -258,7 +257,7 @@ function render({ model, el }) {
 
     function handleMouseLeave(event, d) {
         // Navigate to parent row group and remove hover class
-        d3.select(this.parentNode).classed("pulsar-row-hover", false);
+        select(this.parentNode).classed("pulsar-row-hover", false);
         // Remove highlight from y-axis label
         yAxisGroup.selectAll(".tick text")
             .classed("pulsar-y-label-hover", false);

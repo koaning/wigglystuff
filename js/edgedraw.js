@@ -1,4 +1,7 @@
-import * as d3 from "./d3.min.js";
+import { select } from "d3-selection";
+import { drag } from "d3-drag";
+import { min } from "d3-array";
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from "d3-force";
 
 function render({model, el}){
 
@@ -30,7 +33,7 @@ function render({model, el}){
     // Set up the SVG
     const width = 600;
     const height = 400;
-    const svg = d3.select(container)
+    const svg = select(container)
         .append("svg")
         .attr("width", width)
         .attr("height", height);
@@ -51,11 +54,11 @@ function render({model, el}){
     // Force simulation with gentler forces
     links = hydrateLinks(model.get("links"));
 
-    const simulation = d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => d.id).distance(100))
-        .force("charge", d3.forceManyBody().strength(-50))
-        .force("center", d3.forceCenter(width / 2, height / 2))
-        .force("collide", d3.forceCollide().radius(30))
+    const simulation = forceSimulation(nodes)
+        .force("link", forceLink(links).id(d => d.id).distance(100))
+        .force("charge", forceManyBody().strength(-50))
+        .force("center", forceCenter(width / 2, height / 2))
+        .force("collide", forceCollide().radius(30))
         .on("tick", ticked);
 
     // Create the link group and node group
@@ -174,14 +177,14 @@ function render({model, el}){
     }
 
     // Add drag behavior just for repositioning
-    const drag = d3.drag()
+    const nodeDrag = drag()
         .on("drag", function(event, d) {
             d.x = event.x;
             d.y = event.y;
             simulation.alpha(0.1).restart();
         });
 
-    node.call(drag);
+    node.call(nodeDrag);
 
     model.on("change:directed", () => {
         directed = model.get("directed");
