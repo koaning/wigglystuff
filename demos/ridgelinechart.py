@@ -8,9 +8,10 @@
 #     "wigglystuff==0.5.0",
 # ]
 # ///
+
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.23.6"
 app = marimo.App(width="medium")
 
 
@@ -39,14 +40,14 @@ def _():
 
         # Create pulse shape (combination of gaussians for irregular peaks)
         x = np.arange(n_points)
-        pulse = pulse_height * np.exp(-((x - pulse_center) ** 2) / (2 * pulse_width ** 2))
+        pulse = pulse_height * np.exp(-((x - pulse_center) ** 2) / (2 * pulse_width**2))
 
         # Add secondary peaks for more interesting shape
         for _ in range(np.random.randint(1, 4)):
             offset = np.random.randint(-20, 20)
             width = np.random.uniform(5, 15)
             height = np.random.uniform(0.1, 0.5) * 10
-            pulse += height * np.exp(-((x - pulse_center - offset) ** 2) / (2 * width ** 2))
+            pulse += height * np.exp(-((x - pulse_center - offset) ** 2) / (2 * width**2))
 
         y += pulse
         rows.append(y)
@@ -60,17 +61,17 @@ def _():
             height=600,
             overlap=0.85,
             stroke_width=1.0,
-            peak_scale=2.5, 
+            peak_scale=2.5,
             x_label="Pulse Phase",
-            y_label="Pulse Number", 
+            y_label="Pulse Number",
         )
     )
     return mo, widget
 
 
 @app.cell
-def _():
-    # widget
+def _(widget):
+    widget
     return
 
 
@@ -86,6 +87,7 @@ def _(mo, widget):
 def _(widget):
     import matplotlib.pyplot as plt
 
+
     def make_plot(selected_row):
         if not selected_row:
             return None
@@ -98,16 +100,14 @@ def _(widget):
         plt.close(fig)
         return fig
 
+
     plot = make_plot(widget.value.get("selected_row"))
     return (plot,)
 
 
 @app.cell
 def _(mo, plot, widget):
-    mo.hstack([
-        widget, 
-        plot
-    ], align="start")
+    mo.hstack([widget, plot], align="start")
     return
 
 
