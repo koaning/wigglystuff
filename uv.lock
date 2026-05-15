@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.12' and sys_platform == 'linux'",
@@ -3785,12 +3785,14 @@ source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
     { name = "drawdata" },
+]
+
+[package.optional-dependencies]
+all = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pillow" },
 ]
-
-[package.optional-dependencies]
 docs = [
     { name = "altair" },
     { name = "black" },
@@ -3802,6 +3804,13 @@ docs = [
 ]
 neo4j = [
     { name = "neo4j" },
+]
+numpy = [
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+]
+pillow = [
+    { name = "pillow" },
 ]
 test = [
     { name = "marimo" },
@@ -3843,10 +3852,12 @@ requires-dist = [
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.25.1" },
     { name = "mohtml", marker = "extra == 'docs'", specifier = ">=0.1.11" },
     { name = "neo4j", marker = "extra == 'neo4j'", specifier = ">=5.0.0" },
-    { name = "numpy" },
+    { name = "numpy", marker = "extra == 'all'" },
+    { name = "numpy", marker = "extra == 'numpy'" },
     { name = "pandas", marker = "extra == 'docs'", specifier = ">=2.3.3" },
     { name = "pandas", marker = "extra == 'test'", specifier = ">=2.3.3" },
-    { name = "pillow" },
+    { name = "pillow", marker = "extra == 'all'" },
+    { name = "pillow", marker = "extra == 'pillow'" },
     { name = "polars", marker = "extra == 'docs'", specifier = ">=1.36.1" },
     { name = "polars", marker = "extra == 'test'", specifier = ">=1.36.1" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.3.3" },
@@ -3857,7 +3868,7 @@ requires-dist = [
     { name = "torch", marker = "extra == 'torch'", specifier = ">=2.10.0" },
     { name = "wandb", marker = "extra == 'wandb'", specifier = ">=0.15.0" },
 ]
-provides-extras = ["wandb", "torch", "neo4j", "test", "test-browser", "docs"]
+provides-extras = ["numpy", "pillow", "all", "wandb", "torch", "neo4j", "test", "test-browser", "docs"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "zensical", specifier = ">=0.0.38" }]

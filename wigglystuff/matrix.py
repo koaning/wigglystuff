@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Any, List, Optional
 
 import anywidget
-import numpy as np
 import traitlets
 
 from ._marimo_notice import warn_if_in_marimo
@@ -83,6 +82,8 @@ class Matrix(anywidget.AnyWidget):
             "<code>marimo.ui.matrix</code></a> instead.",
         )
         if matrix is not None:
+            import numpy as np
+
             matrix_array = np.array(matrix)
             if matrix_array.min() < min_value:
                 raise ValueError(

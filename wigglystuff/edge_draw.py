@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Iterable, List, Optional, Sequence, Tuple, Union
+from typing import TYPE_CHECKING, Iterable, List, Optional, Sequence, Tuple, Union
 
 import anywidget
-import numpy as np
 import traitlets
+
+if TYPE_CHECKING:
+    import numpy as np
 
 
 class EdgeDraw(anywidget.AnyWidget):
@@ -80,6 +84,8 @@ class EdgeDraw(anywidget.AnyWidget):
 
     def get_adjacency_matrix(self, directed: bool = False) -> np.ndarray:
         """Create an adjacency matrix from links and node names."""
+        import numpy as np
+
         num_nodes = len(self.names)
         matrix = np.zeros((num_nodes, num_nodes))
         for source, target in self._iter_links(self._coerce_links(self.links)):

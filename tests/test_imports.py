@@ -84,5 +84,5 @@ def test_no_unexpected_dependencies():
         d.split(">")[0].split("<")[0].split("=")[0].split("[")[0].strip()
         for d in data["project"]["dependencies"]
     }
-    allowed = {"anywidget", "drawdata", "numpy", "pillow"}
+    allowed = {"anywidget", "drawdata"}
     assert deps == allowed, f"Unexpected dependencies: {deps - allowed}"

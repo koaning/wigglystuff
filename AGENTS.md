@@ -61,6 +61,13 @@ syncs back to Python.
   conversions.
 - Check `wigglystuff/__init__.py` for the names that are re-exported at the
   package root so you can keep imports consistent.
+- **numpy and pillow are optional dependencies.** They are listed under
+  `[project.optional-dependencies]` in `pyproject.toml`, not in the core
+  `dependencies`. Widgets that need numpy or pillow must import them inside
+  the method or function that uses them (never at module top-level). This
+  keeps `import wigglystuff` and widgets that don't need these libraries
+  working without them installed. Install with `pip install wigglystuff[all]`
+  to get both, or `wigglystuff[numpy]` / `wigglystuff[pillow]` individually.
 - The repo standardizes on [`uv`](https://github.com/astral-sh/uv) for Python
   workflows (`uv pip install -e .` etc.) and the standard library's `pathlib`
   for filesystem paths—mirror those choices in new agents to keep the codebase
