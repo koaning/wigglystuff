@@ -22,7 +22,7 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [ImageRefreshWidget](image-refresh.md)
 - [HTMLRefreshWidget](html-refresh.md)
 - [ProgressBar](progress-bar.md)
-- [PulsarChart](pulsar-chart.md)
+- [RidgelineChart](ridgeline-chart.md)
 - [TextCompare](text-compare.md)
 - [EnvConfig](env-config.md)
 - [Utils](utils.md)
