@@ -11,7 +11,6 @@ from .chart_multi_select import ChartMultiSelect
 from .chart_select import ChartSelect
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
-from .diff_viewer import DiffViewer
 from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
@@ -26,7 +25,7 @@ from .nested_table import NestedTable
 from .paint import Paint
 from .parallel_coords import ParallelCoordinates
 from .play_slider import PlaySlider
-from .pulsar_chart import PulsarChart
+from .ridgeline_chart import RidgelineChart
 from drawdata import ScatterWidget
 from .slider2d import Slider2D
 from .spline_draw import SplineDraw
@@ -52,7 +51,6 @@ __all__ = [
     "ChartSelect",
     "ColorPicker",
     "CopyToClipboard",
-    "DiffViewer",
     "DriverTour",
     "EdgeDraw",
     "EnvConfig",
@@ -65,7 +63,7 @@ __all__ = [
     "Paint",
     "ParallelCoordinates",
     "PlaySlider",
-    "PulsarChart",
+    "RidgelineChart",
     "ScatterWidget",
     "Slider2D",
     "SplineDraw",

@@ -118,9 +118,9 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/progressbar.py/wasm">molab</a><a href="reference/progress-bar/">API</a><a href="reference/progress-bar.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">PulsarChart</div>
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pulsarchart.py/wasm" class="gallery-img"><img src="assets/gallery/pulsarchart.webp" alt="PulsarChart widget"></a>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pulsarchart.py/wasm">molab</a><a href="reference/pulsar-chart/">API</a><a href="reference/pulsar-chart.md">MD</a></div>
+<div class="gallery-title">RidgelineChart</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/ridgelinechart.py/wasm" class="gallery-img"><img src="assets/gallery/ridgelinechart.webp" alt="RidgelineChart widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/ridgelinechart.py/wasm">molab</a><a href="reference/ridgeline-chart/">API</a><a href="reference/ridgeline-chart.md">MD</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">TextCompare</div>
@@ -161,11 +161,6 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-title">ScatterWidget</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scatterwidget.py/wasm" class="gallery-img"><img src="assets/gallery/scatterwidget.webp" alt="ScatterWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scatterwidget.py/wasm">molab</a><a href="reference/scatter-widget/">API</a><a href="reference/scatter-widget.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">DiffViewer</div>
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/diffviewer.py/wasm" class="gallery-img"><img src="assets/gallery/diffviewer.webp" alt="DiffViewer"></a>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/diffviewer.py/wasm">molab</a><a href="reference/diff-viewer/">API</a><a href="reference/diff-viewer.md">MD</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">SplineDraw</div>

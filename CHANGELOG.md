@@ -4,10 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-05-15
+
+### Removed
+
+- **Breaking:** `DiffViewer` widget has been removed. The `@pierre/diffs` library it depended on embedded 298 TextMate grammars, making `diff-viewer.js` 9.3 MB (62% of all static assets). The wheel drops from ~3.1 MB to ~1.5 MB compressed as a result. (Issue #217)
+
 ### Changed
 
+- **Breaking:** `PulsarChart` has been renamed to `RidgelineChart` — the conventional name for stacked-waveform "Joy Division" plots. The module also moved from `wigglystuff.pulsar_chart` to `wigglystuff.ridgeline_chart`. Update imports accordingly: `from wigglystuff import RidgelineChart`. (Issue #87)
 - `numpy` and `pillow` are now optional dependencies. Install `wigglystuff[all]` to get both, or `wigglystuff[numpy]` / `wigglystuff[pillow]` individually. Widgets that require these libraries import them at function scope.
-- Widgets that use d3 (`Treemap`, `EdgeDraw`, `Neo4jWidget`, `ScatterWidget`, `SplineDraw`, and the pulsar chart) now import only the specific `d3-*` submodules they need instead of bundling the full `d3.min.js`. Total shipped JS for these widgets drops from ~2.7 MB to ~225 KB (–92%).
+- Widgets that use d3 (`Treemap`, `EdgeDraw`, `Neo4jWidget`, `ScatterWidget`, `SplineDraw`, and `RidgelineChart`) now import only the specific `d3-*` submodules they need instead of bundling the full `d3.min.js`. Total shipped JS for these widgets drops from ~2.7 MB to ~225 KB (–92%).
 
 ### Fixed
 

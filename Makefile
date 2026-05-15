@@ -56,14 +56,11 @@ js-paint:
 	cp js/paint/styles.css wigglystuff/static/paint.css
 	./node_modules/.bin/esbuild js/paint/widget.tsx --bundle --format=esm --outfile=wigglystuff/static/paint.js --minify
 
-js-pulsar-chart:
-	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/pulsar-chart.js js/pulsar-chart/widget.js
+js-ridgeline-chart:
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/ridgeline-chart.js js/ridgeline-chart/widget.js
 
 js-neo4j-widget:
 	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/neo4j-widget.js js/neo4j-widget/widget.js
-
-js-diff-viewer:
-	./esbuild --bundle --format=esm --outfile=wigglystuff/static/diff-viewer.js js/diff-viewer/widget.js --minify
 
 js-scatter-widget:
 	cp js/scatter-widget/styles.css wigglystuff/static/scatter-widget.css

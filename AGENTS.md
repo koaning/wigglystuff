@@ -46,8 +46,8 @@ syncs back to Python.
 | Neo4jWidget | `wigglystuff.neo4j_widget.Neo4jWidget` | `nodes`, `relationships`, `schema`, `error`, `query_running`, `selected_nodes`, `selected_relationships`, `width`, `height` | Interactive Neo4j graph explorer with Cypher query input |
 | SplineDraw | `wigglystuff.spline_draw.SplineDraw` | `data`, `curve`, `curve_error`, `brushsize`, `n_classes`, `width`, `height` | Draw scatter points with Python-computed spline curve fitting |
 | ScatterWidget | re-exported from [`drawdata`](https://github.com/koaning/drawdata) | `data`, `brushsize`, `width`, `height`, `n_classes` | Paint multi-class 2D scatter data with brush |
-| DiffViewer | `wigglystuff.diff_viewer.DiffViewer` | `old_name`, `old_contents`, `new_name`, `new_contents`, `diff_style`, `expand_unchanged` | Rich file diff viewer with split/unified modes |
 | PlaySlider | `wigglystuff.play_slider.PlaySlider` | `value`, `min_value`, `max_value`, `step`, `interval_ms`, `playing`, `loop`, `width` | Slider with play/pause button for auto-advancing values |
+| RidgelineChart | `wigglystuff.ridgeline_chart.RidgelineChart` | `data`, `x_values`, `width`, `height`, `overlap`, `stroke_width`, `fill_opacity`, `peak_scale`, `x_label`, `y_label`, `selected_index`, `selected_row` | Stacked waveform "Joy Division" visualization with clickable rows |
 | Treemap | `wigglystuff.treemap.Treemap` | `data`, `width`, `height`, `max_depth`, `value_col`, `selected_path`, `clicked_path`, `hovered_path` | Zoomable hierarchical treemap with breadcrumbs |
 
 ## Patterns to remember
