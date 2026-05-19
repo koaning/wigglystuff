@@ -62,6 +62,9 @@ js-ridgeline-chart:
 js-neo4j-widget:
 	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/neo4j-widget.js js/neo4j-widget/widget.js
 
+js-graph-widget:
+	./node_modules/.bin/esbuild js/graph-widget/widget.js --bundle --format=esm --outfile=wigglystuff/static/graph-widget.js --minify
+
 js-scatter-widget:
 	cp js/scatter-widget/styles.css wigglystuff/static/scatter-widget.css
 	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/scatter-widget.js js/scatter-widget/widget.js

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `GraphWidget` for programmatic force-directed graph visualization. Nodes and edges can be supplied from Python with optional names, sizes, colors, and metadata; browser interactions support zoom, pan, drag, hover tooltips, bounded or unbounded layouts, and selection synced back to Python.
+- `GraphWidget.attach_node(...)` for adding a new or existing node together with its connecting edge, plus `detach_node(...)` for removing attached edges while optionally deleting the node. The frontend now initializes newly connected nodes near their existing endpoint and restarts the force simulation gently, avoiding full-layout jumps for incremental graph updates.
+
 ## [0.5.0] - 2026-05-15
 
 ### Removed

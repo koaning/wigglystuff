@@ -15,6 +15,7 @@ from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
 from .gamepad import GamepadWidget
+from .graph_widget import GraphWidget
 from .hover_zoom import HoverZoom
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
@@ -55,6 +56,7 @@ __all__ = [
     "EdgeDraw",
     "EnvConfig",
     "GamepadWidget",
+    "GraphWidget",
     "KeystrokeWidget",
     "Matrix",
     "ModuleTreeWidget",
