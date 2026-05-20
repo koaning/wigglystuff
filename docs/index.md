@@ -289,4 +289,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypercube.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/hypercube.py">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py/wasm" class="example-img"><img src="assets/gallery/mcnugget.webp" alt="McNugget Graph"></a>
+<div class="example-content">
+<div class="example-title">McNugget Graph</div>
+<div class="example-desc">Step through a breadth-first search of which integers you can reach by summing McNugget box sizes (6, 9, 20), visualized with GraphWidget and driven by PlaySlider.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py">Source</a></div>
+</div>
 </div>
