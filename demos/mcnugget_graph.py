@@ -47,7 +47,7 @@ def _(mo):
     return denominations_text, limit
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(denominations_text):
     denominations = []
     for part in denominations_text.value.split(","):
@@ -64,7 +64,7 @@ def _(denominations_text):
     return (denominations,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(deque):
     def build_mcnugget_steps(denominations=(6, 9, 20), limit=60):
         queue = deque([0])
@@ -129,7 +129,6 @@ def _(PlaySlider, max_step, mo):
             step=1,
             interval_ms=500,
             loop=False,
-            width=720,
         )
     )
     play
