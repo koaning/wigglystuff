@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking:** `GraphWidget` sizing semantics now match the trait names. `width` defaults to `None` (the SVG fills its container's width and reflows when the container resizes); passing an integer pins it to that exact pixel size regardless of container. `height` defaults to `400` and is always an exact pixel height. Previously `width=800, height=600` only set an aspect-ratio hint because the CSS forced `max-width: 100%; height: auto` over the JS-set dimensions.
+
 ## [0.5.1] - 2026-05-20
 
 ### Added

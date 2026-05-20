@@ -10,8 +10,8 @@
 | `edges` | `list[dict]` | Edge dicts with normalized `id`, `source`, `target`, and optional `name`, `width`, `color`, and `data`. |
 | `directed` | `bool` | Draw directed edges when true. |
 | `bounded` | `bool` | Keep nodes inside the visible SVG bounds when true. Disable it for graphs that should spread beyond the viewport and be explored with pan/zoom. |
-| `width` | `int` | Canvas width in pixels. |
-| `height` | `int` | Canvas height in pixels. |
+| `width` | `int \| None` | Canvas width in pixels. `None` (default) makes the widget fill its container's width and reflow when the container resizes. |
+| `height` | `int` | Canvas height in pixels (default `400`). |
 | `selected_nodes` | `list[str]` | IDs of currently selected nodes. |
 | `selected_edges` | `list[str]` | IDs of currently selected edges. |
 

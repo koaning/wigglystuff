@@ -64,17 +64,18 @@ function render({ model, el }) {
         });
     svg.call(zoomBehavior);
 
-    let width = model.get("width") || 800;
-    let height = model.get("height") || 600;
+    let height = numberOr(model.get("height"), 400);
+    let effectiveWidth = numberOr(model.get("width"), container.clientWidth || 600);
     let simNodes = [];
     let simEdges = [];
     let selectedNodes = new Set(model.get("selected_nodes") || []);
     let selectedEdges = new Set(model.get("selected_edges") || []);
+    let resizeObserver = null;
 
     const simulation = forceSimulation()
         .force("link", forceLink().id((d) => d.id).distance(95).strength(0.9))
         .force("charge", forceManyBody().strength(-220))
-        .force("center", forceCenter(width / 2, height / 2))
+        .force("center", forceCenter(effectiveWidth / 2, height / 2))
         .force("collide", forceCollide().radius((d) => nodeRadius(d) + 8))
         .on("tick", ticked);
 
@@ -92,14 +93,44 @@ function render({ model, el }) {
         return d.id;
     }
 
-    function resize() {
-        width = model.get("width") || 800;
-        height = model.get("height") || 600;
-        svgEl.setAttribute("width", width);
+    function applySize() {
+        svgEl.setAttribute("width", effectiveWidth);
         svgEl.setAttribute("height", height);
-        svgEl.setAttribute("viewBox", `0 0 ${width} ${height}`);
-        simulation.force("center", forceCenter(width / 2, height / 2));
+        svgEl.setAttribute("viewBox", `0 0 ${effectiveWidth} ${height}`);
+        simulation.force("center", forceCenter(effectiveWidth / 2, height / 2));
         simulation.alpha(0.2).restart();
+    }
+
+    function resize() {
+        const rawWidth = model.get("width");
+        const explicitWidth = Number.isFinite(Number(rawWidth)) ? Number(rawWidth) : null;
+        height = numberOr(model.get("height"), 400);
+
+        if (explicitWidth !== null) {
+            if (resizeObserver) {
+                resizeObserver.disconnect();
+                resizeObserver = null;
+            }
+            container.style.display = "";
+            container.style.width = "";
+            svgEl.style.width = "";
+            effectiveWidth = explicitWidth;
+        } else {
+            container.style.display = "block";
+            container.style.width = "100%";
+            svgEl.style.width = "100%";
+            effectiveWidth = container.clientWidth || effectiveWidth || 600;
+            if (!resizeObserver && typeof ResizeObserver !== "undefined") {
+                resizeObserver = new ResizeObserver(() => {
+                    const next = container.clientWidth;
+                    if (!next || next === effectiveWidth) return;
+                    effectiveWidth = next;
+                    applySize();
+                });
+                resizeObserver.observe(container);
+            }
+        }
+        applySize();
     }
 
     function restartSimulation() {
@@ -179,7 +210,7 @@ function render({ model, el }) {
             const angle = index * 2.399963229728653;
             const radius = 24 + index * 3;
             return {
-                x: width / 2 + Math.cos(angle) * radius,
+                x: effectiveWidth / 2 + Math.cos(angle) * radius,
                 y: height / 2 + Math.sin(angle) * radius,
             };
         }
@@ -280,7 +311,7 @@ function render({ model, el }) {
             const padding = 18;
             simNodes.forEach((node) => {
                 const radius = nodeRadius(node);
-                node.x = Math.max(padding + radius, Math.min(width - padding - radius, node.x));
+                node.x = Math.max(padding + radius, Math.min(effectiveWidth - padding - radius, node.x));
                 node.y = Math.max(padding + radius, Math.min(height - padding - radius, node.y));
             });
         }
@@ -389,6 +420,10 @@ function render({ model, el }) {
 
     return () => {
         simulation.stop();
+        if (resizeObserver) {
+            resizeObserver.disconnect();
+            resizeObserver = null;
+        }
         model.off("change:nodes", rebuildGraph);
         model.off("change:edges", rebuildGraph);
         model.off("change:directed", updateVisuals);
