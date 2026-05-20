@@ -277,8 +277,16 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint-scatter.py/wasm" class="example-img"><img src="assets/gallery/paint-scatter.webp" alt="Paint Scatter"></a>
 <div class="example-content">
 <div class="example-title">Paint Scatter</div>
-<div class="example-desc">Draw on a Paint canvas and watch a marimo refresh-driven loop bloom colorful dots around every dark stroke — a pointillist animation built from Paint, mo.state, and mo.ui.refresh. The same notebook also includes a colored Conway's Game of Life that seeds from your strokes and drifts each cell's color toward the mean of its live neighbors.</div>
+<div class="example-desc">Draw on a Paint canvas and watch a marimo refresh-driven loop bloom colorful dots around every dark stroke also includes a colored Conway's Game of Life.</div>
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint-scatter.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/paint-scatter.py">Source</a></div>
+</div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypercube.py/wasm" class="example-img"><img src="assets/gallery/hypercube.webp" alt="Hypercube"></a>
+<div class="example-content">
+<div class="example-title">Hypercube</div>
+<div class="example-desc">Generate the n-dimensional hypercubeprogrammatically and watch GraphWidget's force layout unfurl it.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypercube.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/hypercube.py">Source</a></div>
 </div>
 </div>

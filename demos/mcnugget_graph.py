@@ -2,7 +2,7 @@
 # requires-python = ">=3.14"
 # dependencies = [
 #     "marimo>=0.19.7",
-#     "wigglystuff==0.5.0",
+#     "wigglystuff==0.5.1",
 # ]
 # ///
 
@@ -137,6 +137,12 @@ def _(PlaySlider, max_step, mo):
 
 
 @app.cell
+def _(graph):
+    graph
+    return
+
+
+@app.cell
 def _(max_step, play, steps):
     step_index = int(play.value.get("value", 0))
     step_index = max(0, min(step_index, max_step))
@@ -156,7 +162,6 @@ def _(GraphWidget, limit, mo):
             height=460,
         )
     )
-    graph
     return (graph,)
 
 
