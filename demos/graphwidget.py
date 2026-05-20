@@ -69,13 +69,13 @@ def _(widget):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(add_node, mo):
     mo.ui.button(label="Add node from Python", on_click=add_node)
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo, widget):
     mo.vstack(
         [
@@ -131,7 +131,7 @@ def _(mo):
     return num_nodes, regenerate_button
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(num_nodes, regenerate_button):
     import random
 
@@ -182,7 +182,7 @@ def _(num_nodes, regenerate_button):
     return max_step, steps
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(PlaySlider, max_step, mo):
     play = mo.ui.anywidget(
         PlaySlider(
@@ -191,14 +191,13 @@ def _(PlaySlider, max_step, mo):
             step=1,
             interval_ms=300,
             loop=False,
-            width=720,
         )
     )
     play
     return (play,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(max_step, play, steps):
     step_index = int(play.value.get("value", 0))
     step_index = max(0, min(step_index, max_step))
@@ -206,7 +205,7 @@ def _(max_step, play, steps):
     return step, step_index
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(GraphWidget, mo):
     growth_graph = mo.ui.anywidget(
         GraphWidget(

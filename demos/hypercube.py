@@ -53,7 +53,7 @@ def _(mo):
     return dim, node_size
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
     NODE_PALETTE = [
         "#1e40af",
@@ -108,7 +108,7 @@ def _():
     return (build_hypercube,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(GraphWidget, mo):
     hypercube = mo.ui.anywidget(
         GraphWidget(
