@@ -1,0 +1,120 @@
+.graph-widget {
+  --graph-bg: #ffffff;
+  --graph-fg: #1f2937;
+  --graph-muted: #6b7280;
+  --graph-edge: #9ca3af;
+  --graph-edge-label-bg: rgba(255, 255, 255, 0.86);
+  --graph-node-stroke: #ffffff;
+  --graph-selected: #111827;
+  --graph-tooltip-bg: #111827;
+  --graph-tooltip-fg: #f9fafb;
+  color-scheme: light dark;
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--graph-fg);
+}
+
+:host([data-theme="dark"]) .graph-widget,
+.dark .graph-widget,
+.dark-theme .graph-widget,
+[data-theme="dark"] .graph-widget {
+  --graph-bg: #101214;
+  --graph-fg: #f3f4f6;
+  --graph-muted: #a1a1aa;
+  --graph-edge: #71717a;
+  --graph-edge-label-bg: rgba(16, 18, 20, 0.86);
+  --graph-node-stroke: #18181b;
+  --graph-selected: #f8fafc;
+  --graph-tooltip-bg: #f4f4f5;
+  --graph-tooltip-fg: #18181b;
+}
+
+.graph-widget-svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  overflow: hidden;
+  background: var(--graph-bg);
+  border: 1px solid color-mix(in srgb, var(--graph-edge), transparent 45%);
+  border-radius: 8px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.graph-widget-svg:active {
+  cursor: grabbing;
+}
+
+.graph-widget-edge {
+  fill: none;
+  stroke-linecap: round;
+  stroke-opacity: 0.72;
+  cursor: pointer;
+}
+
+.graph-widget-edge.is-selected {
+  stroke: var(--graph-selected);
+  stroke-opacity: 1;
+}
+
+.graph-widget-arrow {
+  fill: var(--graph-edge);
+}
+
+.graph-widget-edge-label {
+  paint-order: stroke;
+  stroke: var(--graph-edge-label-bg);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+  fill: var(--graph-muted);
+  font-size: 11px;
+  pointer-events: none;
+  text-anchor: middle;
+  user-select: none;
+}
+
+.graph-widget-node-group {
+  cursor: pointer;
+}
+
+.graph-widget-node {
+  stroke: var(--graph-node-stroke);
+  stroke-width: 2px;
+}
+
+.graph-widget-node.is-selected {
+  stroke: var(--graph-selected);
+  stroke-width: 3px;
+}
+
+.graph-widget-node-name {
+  fill: var(--graph-fg);
+  font-size: 12px;
+  font-weight: 500;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: var(--graph-bg);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  user-select: none;
+}
+
+.graph-widget-tooltip {
+  position: absolute;
+  z-index: 2;
+  max-width: 260px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--graph-tooltip-bg);
+  color: var(--graph-tooltip-fg);
+  font-size: 12px;
+  line-height: 1.45;
+  pointer-events: none;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+}
+
+.graph-widget-tooltip-key {
+  color: color-mix(in srgb, var(--graph-tooltip-fg), transparent 35%);
+}

@@ -167,6 +167,7 @@ Untitled.ipynb
 .DS_Store
 .specstory/
 .cursorindexingignore
+.antigravitycli/
 **/__marimo__/**
 !**/__marimo__/session/
 !**/__marimo__/session/**

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-05-20
+
+### Added
+
+- `GraphWidget` for programmatic force-directed graph visualization. Nodes and edges can be supplied from Python with optional names, sizes, colors, and metadata; browser interactions support zoom, pan, drag, hover tooltips, bounded or unbounded layouts, and selection synced back to Python.
+- `GraphWidget.attach_node(...)` for adding a new or existing node together with its connecting edge, plus `detach_node(...)` for removing attached edges while optionally deleting the node. The frontend now initializes newly connected nodes near their existing endpoint and restarts the force simulation gently, avoiding full-layout jumps for incremental graph updates.
+- `GraphWidget.hovered_node` traitlet exposes the id of the node currently under the cursor (`None` when no node is hovered), so Python can react to hover without needing a click.
+- Added the `McNugget sums` demo (`demos/mcnugget_graph.py`) — a `GraphWidget` + `PlaySlider` notebook that breadth-first-searches reachable totals from a configurable set of box sizes.
+- Added a "Random growth graph" section to `demos/graphwidget.py` — at each step a new node is added and connected to a random existing node, scrubbed with `PlaySlider`.
+- Added the `Hypercube` example (`demos/hypercube.py`, linked from the docs gallery Examples section) showing how the force layout unfurls $Q_n$ — $Q_3$ snaps into a cube, $Q_4$ projects into a tesseract. Sliders pick dimension $n$ and node size; nodes are colored by popcount, edges by which bit position the endpoints differ in.
+
 ## [0.5.0] - 2026-05-15
 
 ### Removed

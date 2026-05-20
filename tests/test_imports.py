@@ -29,6 +29,10 @@ def test_import_gamepad():
     from wigglystuff.gamepad import GamepadWidget
 
 
+def test_import_graph_widget():
+    from wigglystuff.graph_widget import GraphWidget
+
+
 def test_import_keystroke():
     from wigglystuff.keystroke import KeystrokeWidget
 
