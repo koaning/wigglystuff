@@ -214,3 +214,12 @@ def test_adjacency_matrix_respects_directed_flag():
 
     np.testing.assert_array_equal(directed, np.array([[0, 1], [0, 0]]))
     np.testing.assert_array_equal(undirected, np.array([[0, 1], [1, 0]]))
+
+
+def test_hovered_node_defaults_to_none_and_can_be_set():
+    widget = GraphWidget(nodes=["A"])
+    assert widget.hovered_node is None
+
+    widget.hovered_node = "A"
+    assert widget.hovered_node == "A"
+

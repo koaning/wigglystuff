@@ -33,6 +33,7 @@ class GraphWidget(anywidget.AnyWidget):
     height = traitlets.Int(600).tag(sync=True)
     selected_nodes = traitlets.List([]).tag(sync=True)
     selected_edges = traitlets.List([]).tag(sync=True)
+    hovered_node = traitlets.Unicode(None, allow_none=True).tag(sync=True)
 
     def __init__(
         self,

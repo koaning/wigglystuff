@@ -249,8 +249,16 @@ function render({ model, el }) {
                 .on("drag", dragged)
                 .on("end", dragEnded))
             .on("click", handleNodeClick)
-            .on("mouseenter", (event, d) => showTooltip(event, d, "node"))
-            .on("mouseleave", hideTooltip);
+            .on("mouseenter", (event, d) => {
+                showTooltip(event, d, "node");
+                model.set("hovered_node", d.id);
+                model.save_changes();
+            })
+            .on("mouseleave", (event, d) => {
+                hideTooltip();
+                model.set("hovered_node", null);
+                model.save_changes();
+            });
 
         nodeEnter.append("circle").attr("class", "graph-widget-node");
         nodeEnter.append("text")
