@@ -22,6 +22,7 @@ nav = [
         { Paint = "reference/paint.md" },
         { ThreeWidget = "reference/three-widget.md" },
         { EdgeDraw = "reference/edge-draw.md" },
+        { GraphWidget = "reference/graph-widget.md" },
         { KeystrokeWidget = "reference/keystroke.md" },
         { WebkitSpeechToText = "reference/talk.md" },
         { ColorPicker = "reference/color-picker.md" },
