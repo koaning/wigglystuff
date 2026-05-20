@@ -79,6 +79,7 @@ def _(add_node, mo):
 def _(mo, widget):
     mo.vstack(
         [
+            mo.md(f"**Hovered node:** `{widget.hovered_node}`"),
             mo.md(f"**Selected nodes:** `{widget.selected_nodes}`"),
             mo.md(f"**Selected edges:** `{widget.selected_edges}`"),
         ]
