@@ -17,6 +17,7 @@ function escapeHtml(value) {
 }
 
 function numberOr(value, fallback) {
+    if (value === null || value === undefined || value === "") return fallback;
     const num = Number(value);
     return Number.isFinite(num) ? num : fallback;
 }
@@ -103,7 +104,11 @@ function render({ model, el }) {
 
     function resize() {
         const rawWidth = model.get("width");
-        const explicitWidth = Number.isFinite(Number(rawWidth)) ? Number(rawWidth) : null;
+        let explicitWidth = null;
+        if (rawWidth !== null && rawWidth !== undefined && rawWidth !== "") {
+            const num = Number(rawWidth);
+            if (Number.isFinite(num) && num > 0) explicitWidth = num;
+        }
         height = numberOr(model.get("height"), 400);
 
         if (explicitWidth !== null) {
