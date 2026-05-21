@@ -4,9 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-05-21
+
 ### Changed
 
 - **Breaking:** `GraphWidget` sizing semantics now match the trait names. `width` defaults to `None` (the SVG fills its container's width and reflows when the container resizes); passing an integer pins it to that exact pixel size regardless of container. `height` defaults to `400` and is always an exact pixel height. Previously `width=800, height=600` only set an aspect-ratio hint because the CSS forced `max-width: 100%; height: auto` over the JS-set dimensions.
+- McNugget demo (`demos/mcnugget_graph.py`): hover path now brackets totals (`0 → +6 → [6] → +9 → [15]`) so they read distinctly from the `+box` deltas. Added two control checkboxes: _Color arcs by box size_ (per-denomination palette) and _Color nodes by inbound arcs_ (light→dark gradient by in-degree). Node payload now carries `in_degree` in `data`.
 
 ## [0.5.1] - 2026-05-20
 
