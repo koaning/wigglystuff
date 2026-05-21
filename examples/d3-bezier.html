@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>D3 Bezier Curve</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #fbfaf7;
+      --ink: #27241f;
+      --muted: #706a60;
+      --panel: #ffffff;
+      --line: #ddd6c8;
+      --control: #9b9284;
+      --curve: #c43d73;
+      --trace: #1f8a70;
+      --first: #d4972b;
+      --second: #247ba0;
+      --point: #2f2b27;
+      --point-active: #c43d73;
+      --shadow: 0 18px 45px rgb(39 36 31 / 0.12);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #171512;
+        --ink: #f4eee4;
+        --muted: #b8afa1;
+        --panel: #211f1b;
+        --line: #3d3932;
+        --control: #928879;
+        --curve: #ff78a8;
+        --trace: #6ad6bb;
+        --first: #f4b247;
+        --second: #6fc2e6;
+        --point: #f7efe3;
+        --point-active: #ff78a8;
+        --shadow: 0 18px 45px rgb(0 0 0 / 0.35);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 12%, rgb(196 61 115 / 0.10), transparent 34rem),
+        radial-gradient(circle at 85% 18%, rgb(31 138 112 / 0.12), transparent 30rem),
+        var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      width: min(1100px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    p {
+      max-width: 42rem;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 0 14px;
+      font: inherit;
+      cursor: pointer;
+      box-shadow: 0 1px 0 rgb(0 0 0 / 0.04);
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--trace), transparent 55%);
+      outline-offset: 2px;
+    }
+
+    .stage {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--panel), transparent 4%);
+      box-shadow: var(--shadow);
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      touch-action: none;
+    }
+
+    .axis {
+      stroke: var(--line);
+      stroke-width: 1;
+    }
+
+    .control-path {
+      fill: none;
+      stroke: var(--control);
+      stroke-width: 1.5;
+      stroke-dasharray: 6 7;
+    }
+
+    .curve {
+      fill: none;
+      stroke: var(--curve);
+      stroke-width: 5;
+      stroke-linecap: round;
+    }
+
+    .trace {
+      fill: none;
+      stroke: var(--trace);
+      stroke-width: 5;
+      stroke-linecap: round;
+    }
+
+    .construction.first {
+      stroke: var(--first);
+    }
+
+    .construction.second {
+      stroke: var(--second);
+    }
+
+    .construction.third {
+      stroke: var(--trace);
+    }
+
+    .construction {
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      opacity: 0.85;
+    }
+
+    .point {
+      fill: var(--panel);
+      stroke: var(--point);
+      stroke-width: 3;
+      cursor: grab;
+    }
+
+    .point:active {
+      cursor: grabbing;
+    }
+
+    .point-label {
+      fill: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      paint-order: stroke;
+      stroke: var(--panel);
+      stroke-width: 5;
+      stroke-linejoin: round;
+    }
+
+    .moving-point {
+      fill: var(--point-active);
+      stroke: var(--panel);
+      stroke-width: 3;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      border-top: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      background: var(--panel);
+      padding: 0 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .swatch {
+      width: 22px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--swatch);
+    }
+
+    .scrubber {
+      display: grid;
+      grid-template-columns: auto minmax(160px, 1fr) 54px;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-top: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--trace);
+    }
+
+    .readout {
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      color: var(--ink);
+    }
+
+    @media (max-width: 720px) {
+      main {
+        width: min(100vw - 20px, 1100px);
+        padding: 20px 0;
+      }
+
+      header {
+        display: block;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+        margin-top: 18px;
+      }
+
+      .legend {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .scrubber {
+        grid-template-columns: 1fr;
+      }
+
+      .readout {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Bezier Curve</h1>
+        <p>Drag the four control points and scrub t to see the cubic curve emerge from repeated linear interpolation.</p>
+      </div>
+      <div class="toolbar" aria-label="Demo controls">
+        <button id="play" type="button">Pause</button>
+        <button id="reset" type="button">Reset</button>
+      </div>
+    </header>
+
+    <section class="stage" aria-label="Interactive D3 Bezier curve demo">
+      <svg id="chart" viewBox="0 0 960 560" role="img" aria-labelledby="chart-title chart-desc">
+        <title id="chart-title">Animated cubic Bezier construction</title>
+        <desc id="chart-desc">A D3 SVG showing a cubic Bezier curve with draggable control points, construction lines, and the point at parameter t.</desc>
+      </svg>
+      <div class="legend" aria-label="Legend">
+        <div class="legend-item"><span class="swatch" style="--swatch: var(--curve)"></span>Full curve</div>
+        <div class="legend-item"><span class="swatch" style="--swatch: var(--trace)"></span>Traced curve</div>
+        <div class="legend-item"><span class="swatch" style="--swatch: var(--first)"></span>First interpolation</div>
+        <div class="legend-item"><span class="swatch" style="--swatch: var(--second)"></span>Second interpolation</div>
+      </div>
+      <label class="scrubber">
+        <span>t</span>
+        <input id="t" type="range" min="0" max="1" step="0.001" value="0">
+        <span id="readout" class="readout">0.000</span>
+      </label>
+    </section>
+  </main>
+
+  <script>
+    const width = 960;
+    const height = 560;
+    const margin = 44;
+
+    const defaults = [
+      { id: "P0", x: 130, y: 420 },
+      { id: "P1", x: 250, y: 90 },
+      { id: "P2", x: 700, y: 90 },
+      { id: "P3", x: 830, y: 420 }
+    ];
+
+    let points = defaults.map((point) => ({ ...point }));
+    let t = 0;
+    let playing = true;
+    let lastTime = performance.now();
+
+    const svg = d3.select("#chart");
+    const slider = d3.select("#t");
+    const readout = d3.select("#readout");
+    const playButton = d3.select("#play");
+
+    svg.append("g")
+      .attr("class", "grid")
+      .selectAll("line")
+      .data(d3.range(margin, width, 80).map((x) => ({ x1: x, y1: margin, x2: x, y2: height - margin }))
+        .concat(d3.range(margin, height, 80).map((y) => ({ x1: margin, y1: y, x2: width - margin, y2: y }))))
+      .join("line")
+      .attr("class", "axis")
+      .attr("x1", (d) => d.x1)
+      .attr("y1", (d) => d.y1)
+      .attr("x2", (d) => d.x2)
+      .attr("y2", (d) => d.y2);
+
+    const controlPath = svg.append("path").attr("class", "control-path");
+    const fullCurve = svg.append("path").attr("class", "curve");
+    const traceCurve = svg.append("path").attr("class", "trace");
+
+    const firstLines = svg.append("g").selectAll("line")
+      .data([0, 1])
+      .join("line")
+      .attr("class", "construction first");
+
+    const secondLines = svg.append("g").selectAll("line")
+      .data([0])
+      .join("line")
+      .attr("class", "construction second");
+
+    const thirdLine = svg.append("line").attr("class", "construction third");
+
+    const movingPoints = svg.append("g").selectAll("circle")
+      .data(["Q0", "Q1", "Q2", "R0", "R1", "B"])
+      .join("circle")
+      .attr("class", "moving-point")
+      .attr("r", (d) => d === "B" ? 8 : 5)
+      .attr("opacity", (d) => d === "B" ? 1 : 0.85);
+
+    const pointLayer = svg.append("g");
+    const labelLayer = svg.append("g");
+
+    const linePath = d3.line()
+      .x((d) => d.x)
+      .y((d) => d.y);
+
+    function lerp(a, b, amount) {
+      return {
+        x: a.x + (b.x - a.x) * amount,
+        y: a.y + (b.y - a.y) * amount
+      };
+    }
+
+    function cubicAt(amount) {
+      const q0 = lerp(points[0], points[1], amount);
+      const q1 = lerp(points[1], points[2], amount);
+      const q2 = lerp(points[2], points[3], amount);
+      const r0 = lerp(q0, q1, amount);
+      const r1 = lerp(q1, q2, amount);
+      const b = lerp(r0, r1, amount);
+      return { q0, q1, q2, r0, r1, b };
+    }
+
+    function cubicPath() {
+      const [p0, p1, p2, p3] = points;
+      return `M${p0.x},${p0.y} C${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`;
+    }
+
+    function tracePath() {
+      const step = Math.max(0.006, t / 80);
+      const samples = d3.range(0, t, step).map((value) => cubicAt(value).b);
+      samples.push(cubicAt(t).b);
+      return linePath(samples);
+    }
+
+    function setLine(selection, a, b) {
+      selection
+        .attr("x1", a.x)
+        .attr("y1", a.y)
+        .attr("x2", b.x)
+        .attr("y2", b.y);
+    }
+
+    function render() {
+      const construction = cubicAt(t);
+      const first = [construction.q0, construction.q1, construction.q2];
+      const second = [construction.r0, construction.r1];
+
+      controlPath.attr("d", linePath(points));
+      fullCurve.attr("d", cubicPath());
+      traceCurve.attr("d", tracePath());
+
+      firstLines.each(function(index) {
+        setLine(d3.select(this), first[index], first[index + 1]);
+      });
+
+      secondLines.each(function() {
+        setLine(d3.select(this), second[0], second[1]);
+      });
+
+      setLine(thirdLine, second[0], construction.b);
+
+      const moving = [
+        construction.q0,
+        construction.q1,
+        construction.q2,
+        construction.r0,
+        construction.r1,
+        construction.b
+      ];
+
+      movingPoints
+        .data(moving)
+        .attr("cx", (d) => d.x)
+        .attr("cy", (d) => d.y);
+
+      pointLayer.selectAll("circle")
+        .data(points, (d) => d.id)
+        .join("circle")
+        .attr("class", "point")
+        .attr("r", 10)
+        .attr("cx", (d) => d.x)
+        .attr("cy", (d) => d.y)
+        .call(d3.drag()
+          .on("start", function() {
+            playing = false;
+            playButton.text("Play");
+            d3.select(this).attr("stroke", "var(--point-active)");
+          })
+          .on("drag", function(event, d) {
+            d.x = Math.max(margin, Math.min(width - margin, event.x));
+            d.y = Math.max(margin, Math.min(height - margin, event.y));
+            render();
+          })
+          .on("end", function() {
+            d3.select(this).attr("stroke", null);
+          }));
+
+      labelLayer.selectAll("text")
+        .data(points, (d) => d.id)
+        .join("text")
+        .attr("class", "point-label")
+        .attr("x", (d) => d.x + 16)
+        .attr("y", (d) => d.y - 14)
+        .text((d) => d.id);
+
+      slider.property("value", t);
+      readout.text(t.toFixed(3));
+    }
+
+    function tick(now) {
+      if (playing) {
+        const elapsed = now - lastTime;
+        t = (t + elapsed / 5000) % 1;
+        render();
+      }
+      lastTime = now;
+      requestAnimationFrame(tick);
+    }
+
+    slider.on("input", (event) => {
+      playing = false;
+      playButton.text("Play");
+      t = Number(event.target.value);
+      render();
+    });
+
+    playButton.on("click", () => {
+      playing = !playing;
+      playButton.text(playing ? "Pause" : "Play");
+      lastTime = performance.now();
+    });
+
+    d3.select("#reset").on("click", () => {
+      points = defaults.map((point) => ({ ...point }));
+      t = 0;
+      playing = true;
+      playButton.text("Pause");
+      render();
+    });
+
+    render();
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

@@ -73,6 +73,10 @@ js-spline-draw:
 	cp js/spline-draw/styles.css wigglystuff/static/spline-draw.css
 	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/spline-draw.js js/spline-draw/widget.js
 
+js-bezier-curve:
+	cp js/bezier-curve/styles.css wigglystuff/static/bezier-curve.css
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/bezier-curve.js js/bezier-curve/widget.js
+
 js-parallel-coords:
 	cp js/parallel-coords/styles.css wigglystuff/static/parallel-coords.css
 	./node_modules/.bin/esbuild js/parallel-coords/widget.jsx --bundle --format=esm --outfile=wigglystuff/static/parallel-coords.js --minify --loader:.jsx=jsx

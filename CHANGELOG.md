@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `BezierCurve` widget for editing arbitrary-degree Bezier curves in notebooks. Drag control points, double-click to add points, optionally close the curve, and play through `t` with loop-aware playback.
+
 ## [0.5.2] - 2026-05-21
 
 ### Changed

@@ -9,6 +9,10 @@ def test_import_cell_tour():
     from wigglystuff.cell_tour import CellTour
 
 
+def test_import_bezier_curve():
+    from wigglystuff.bezier_curve import BezierCurve
+
+
 def test_import_color_picker():
     from wigglystuff.color_picker import ColorPicker
 
