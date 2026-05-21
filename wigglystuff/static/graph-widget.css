@@ -33,8 +33,6 @@
 
 .graph-widget-svg {
   display: block;
-  max-width: 100%;
-  height: auto;
   overflow: hidden;
   background: var(--graph-bg);
   border: 1px solid color-mix(in srgb, var(--graph-edge), transparent 45%);

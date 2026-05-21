@@ -2,7 +2,7 @@
 # requires-python = ">=3.14"
 # dependencies = [
 #     "marimo>=0.19.7",
-#     "wigglystuff==0.5.1",
+#     "wigglystuff==0.5.2",
 # ]
 # ///
 
@@ -55,7 +55,6 @@ def _(GraphWidget, mo):
                 {"source": "gamma", "target": "7", "name": "scores"},
                 ("Delta", "Alpha"),
             ],
-            width=720,
             height=420,
             directed=False
         )

@@ -18,6 +18,11 @@ class GraphWidget(anywidget.AnyWidget):
     strings, numbers, or dicts. Edges may be ``(source, target)`` pairs or dicts
     with ``source`` and ``target`` keys.
 
+    ``width=None`` (the default) makes the widget fill its container's width
+    and reflow when the container resizes. Passing an integer ``width`` pins
+    the SVG to that exact pixel size. ``height`` is always an exact pixel
+    height (default 400).
+
     Example:
         ``GraphWidget(nodes=["Alpha", "Beta"], edges=[("Alpha", "Beta")])``
     """
@@ -29,8 +34,8 @@ class GraphWidget(anywidget.AnyWidget):
     edges = traitlets.List([]).tag(sync=True)
     directed = traitlets.Bool(True).tag(sync=True)
     bounded = traitlets.Bool(True).tag(sync=True)
-    width = traitlets.Int(800).tag(sync=True)
-    height = traitlets.Int(600).tag(sync=True)
+    width = traitlets.Int(None, allow_none=True).tag(sync=True)
+    height = traitlets.Int(400).tag(sync=True)
     selected_nodes = traitlets.List([]).tag(sync=True)
     selected_edges = traitlets.List([]).tag(sync=True)
     hovered_node = traitlets.Unicode(None, allow_none=True).tag(sync=True)
@@ -42,8 +47,8 @@ class GraphWidget(anywidget.AnyWidget):
         *,
         directed: bool = True,
         bounded: bool = True,
-        width: int = 800,
-        height: int = 600,
+        width: int | None = None,
+        height: int = 400,
         **kwargs: Any,
     ) -> None:
         prepared_nodes = self._coerce_nodes(nodes or [])

@@ -2,7 +2,7 @@
 # requires-python = ">=3.14"
 # dependencies = [
 #     "marimo>=0.19.7",
-#     "wigglystuff==0.5.1",
+#     "wigglystuff==0.5.2",
 # ]
 # ///
 
@@ -42,9 +42,11 @@ def _(mo):
 @app.cell
 def _(mo):
     denominations_text = mo.ui.text(value="6, 9, 20", label="Box sizes")
-    limit = mo.ui.slider(start=30, stop=150, step=5, value=80, label="Limit")
-    mo.hstack([denominations_text, limit])
-    return denominations_text, limit
+    limit = mo.ui.slider(start=30, stop=500, step=5, value=80, label="Limit")
+    color_arcs = mo.ui.checkbox(value=False, label="Color arcs by box size")
+    color_nodes = mo.ui.checkbox(value=False, label="Color nodes by inbound arcs")
+    mo.hstack([denominations_text, limit, color_arcs, color_nodes])
+    return color_arcs, color_nodes, denominations_text, limit
 
 
 @app.cell(hide_code=True)
@@ -127,7 +129,7 @@ def _(PlaySlider, max_step, mo):
             min_value=0,
             max_value=max_step,
             step=1,
-            interval_ms=500,
+            interval_ms=200,
             loop=False,
         )
     )
@@ -138,6 +140,45 @@ def _(PlaySlider, max_step, mo):
 @app.cell
 def _(graph):
     graph
+    return
+
+
+@app.cell
+def _(graph, mo, step):
+    hovered = graph.hovered_node
+    if hovered is None:
+        path_md = "_Hover a node to see its shortest path from 0._"
+    else:
+        try:
+            target = int(hovered)
+        except (TypeError, ValueError):
+            target = None
+
+        parents = {}
+        for src, dst, box in step["edges"]:
+            if dst not in parents and dst != 0:
+                parents[dst] = (src, box)
+
+        if target is None:
+            path_md = ""
+        elif target == 0:
+            path_md = "**Path to `0`:** `0` (start)"
+        elif target not in parents:
+            path_md = f"**Path to `{target}`:** not reachable yet."
+        else:
+            chain = []
+            cur = target
+            while cur in parents:
+                src, box = parents[cur]
+                chain.append((src, box, cur))
+                cur = src
+            chain.reverse()
+            parts = [str(chain[0][0])]
+            for src, box, dst in chain:
+                parts.append(f"+{box}")
+                parts.append(f"[{dst}]")
+            path_md = f"**Path to `{target}`:** `" + " → ".join(parts) + "`"
+    mo.md(path_md)
     return
 
 
@@ -158,36 +199,52 @@ def _(GraphWidget, limit, mo):
             directed=True,
             bounded=False,
             width=720,
-            height=460,
+            height=760,
         )
     )
     return (graph,)
 
 
 @app.cell
-def _(denominations, graph, limit, step):
+def _(color_arcs, color_nodes, denominations, graph, limit, step):
     reachable = set(step["nodes"])
+    indegree = {}
+    for _src, _dst, _box in step["edges"]:
+        indegree[_dst] = indegree.get(_dst, 0) + 1
+    indeg_palette = ["#e2e8f0", "#bae6fd", "#7dd3fc", "#0ea5e9", "#0369a1", "#082f49"]
+
+    def node_color(total):
+        if color_nodes.value:
+            deg = indegree.get(total, 0)
+            return indeg_palette[min(deg, len(indeg_palette) - 1)]
+        if total == 0:
+            return "#7c3aed"
+        if total in reachable:
+            return "#334155"
+        return "#cbd5e1"
+
     nodes = [
         {
             "name": total,
             "size": 12 if total == 0 else 7 + min(total / 16, 10),
-            "color": (
-                "#7c3aed"
-                if total == 0
-                else "#334155"
-                if total in reachable
-                else "#cbd5e1"
-            ),
-            "data": {"reachable": total in reachable},
+            "color": node_color(total),
+            "data": {
+                "reachable": total in reachable,
+                "in_degree": indegree.get(total, 0),
+            },
         }
         for total in range(limit.value + 1)
     ]
+    arc_palette = ["#0f766e", "#2563eb", "#dc2626", "#ca8a04", "#7c3aed", "#0891b2"]
+    box_color = {
+        box: arc_palette[i % len(arc_palette)] for i, box in enumerate(denominations)
+    }
     edges = [
         {
             "source": source,
             "target": target,
             "name": f"+{box}",
-            "color": "#0f766e" if box == min(denominations) else "#2563eb",
+            "color": box_color[box] if color_arcs.value else "#94a3b8",
         }
         for source, target, box in step["edges"]
     ]
