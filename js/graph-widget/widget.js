@@ -113,21 +113,20 @@ function render({ model, el }) {
             }
             container.style.display = "";
             container.style.width = "";
-            svgEl.style.width = "";
             effectiveWidth = explicitWidth;
         } else {
             container.style.display = "block";
             container.style.width = "100%";
-            svgEl.style.width = "100%";
-            effectiveWidth = container.clientWidth || effectiveWidth || 600;
+            const measured = el.clientWidth || container.clientWidth;
+            effectiveWidth = measured || effectiveWidth || 600;
             if (!resizeObserver && typeof ResizeObserver !== "undefined") {
                 resizeObserver = new ResizeObserver(() => {
-                    const next = container.clientWidth;
+                    const next = el.clientWidth || container.clientWidth;
                     if (!next || next === effectiveWidth) return;
                     effectiveWidth = next;
                     applySize();
                 });
-                resizeObserver.observe(container);
+                resizeObserver.observe(el);
             }
         }
         applySize();
