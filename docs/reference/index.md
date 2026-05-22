@@ -4,6 +4,7 @@ Browse widget-specific reference pages below. Each page is generated automatical
 
 - [Slider2D](slider2d.md)
 - [BezierCurve](bezier-curve.md)
+- [CurveEditor](curve-editor.md)
 - [ChartPuck](chart-puck.md)
 - [ChartSelect](chart-select.md)
 - [ParallelCoordinates](parallel-coords.md)

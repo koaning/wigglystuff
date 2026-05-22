@@ -77,6 +77,10 @@ js-bezier-curve:
 	cp js/bezier-curve/styles.css wigglystuff/static/bezier-curve.css
 	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/bezier-curve.js js/bezier-curve/widget.js
 
+js-curve-editor:
+	cp js/curve-editor/styles.css wigglystuff/static/curve-editor.css
+	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/curve-editor.js js/curve-editor/widget.js
+
 js-parallel-coords:
 	cp js/parallel-coords/styles.css wigglystuff/static/parallel-coords.css
 	./node_modules/.bin/esbuild js/parallel-coords/widget.jsx --bundle --format=esm --outfile=wigglystuff/static/parallel-coords.js --minify --loader:.jsx=jsx

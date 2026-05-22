@@ -12,6 +12,7 @@ from .chart_multi_select import ChartMultiSelect
 from .chart_select import ChartSelect
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
+from .curve_editor import CurveEditor
 from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
@@ -54,6 +55,7 @@ __all__ = [
     "ChartSelect",
     "ColorPicker",
     "CopyToClipboard",
+    "CurveEditor",
     "DriverTour",
     "EdgeDraw",
     "EnvConfig",

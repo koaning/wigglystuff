@@ -1,0 +1,228 @@
+.curve-editor-wrapper {
+  color-scheme: light dark;
+  display: inline-block;
+  max-width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--curve-editor-text);
+
+  --curve-editor-bg: #ffffff;
+  --curve-editor-panel: #ffffff;
+  --curve-editor-text: #111827;
+  --curve-editor-muted: #6b7280;
+  --curve-editor-border: #d1d5db;
+  --curve-editor-grid: #e5e7eb;
+  --curve-editor-curve: #2563eb;
+  --curve-editor-trace: #0f766e;
+  --curve-editor-point: #111827;
+  --curve-editor-point-fill: #ffffff;
+  --curve-editor-accent: #0f766e;
+  --curve-editor-track: #d1d5db;
+  --curve-editor-thumb-bg: #ffffff;
+}
+
+.dark .curve-editor-wrapper,
+.dark-theme .curve-editor-wrapper,
+[data-theme="dark"] .curve-editor-wrapper {
+  --curve-editor-bg: #111827;
+  --curve-editor-panel: #1f2937;
+  --curve-editor-text: #f9fafb;
+  --curve-editor-muted: #d1d5db;
+  --curve-editor-border: #4b5563;
+  --curve-editor-grid: #374151;
+  --curve-editor-curve: #60a5fa;
+  --curve-editor-trace: #5eead4;
+  --curve-editor-point: #f9fafb;
+  --curve-editor-point-fill: #111827;
+  --curve-editor-accent: #5eead4;
+  --curve-editor-track: #4b5563;
+  --curve-editor-thumb-bg: #111827;
+}
+
+.curve-editor-controls,
+.curve-editor-timeline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  color: var(--curve-editor-text);
+}
+
+.curve-editor-controls {
+  padding: 0 0 8px;
+}
+
+.curve-editor-timeline {
+  padding: 8px 0 0;
+}
+
+.curve-editor-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--curve-editor-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.curve-editor-select {
+  min-width: 128px;
+  height: 28px;
+  border: 1px solid var(--curve-editor-border);
+  border-radius: 6px;
+  background: var(--curve-editor-panel);
+  color: var(--curve-editor-text);
+  font: inherit;
+}
+
+.curve-editor-range {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--curve-editor-track);
+  outline: none;
+}
+
+.curve-editor-small-range {
+  width: 112px;
+}
+
+.curve-editor-progress {
+  flex: 1 1 160px;
+  min-width: 110px;
+}
+
+.curve-editor-range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--curve-editor-accent);
+  border-radius: 50%;
+  background: var(--curve-editor-thumb-bg);
+  cursor: pointer;
+}
+
+.curve-editor-range::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--curve-editor-accent);
+  border-radius: 50%;
+  background: var(--curve-editor-thumb-bg);
+  cursor: pointer;
+}
+
+.curve-editor-value,
+.curve-editor-readout {
+  color: var(--curve-editor-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.curve-editor-value {
+  min-width: 4ch;
+}
+
+.curve-editor-readout {
+  min-width: 4ch;
+  font-size: 13px;
+}
+
+.curve-editor-svg {
+  display: block;
+  max-width: 100%;
+  border: 1px solid var(--curve-editor-border);
+  border-radius: 6px;
+  background: var(--curve-editor-bg);
+  touch-action: none;
+}
+
+.curve-editor-hitbox {
+  fill: transparent;
+  pointer-events: all;
+}
+
+.curve-editor-grid line {
+  stroke: var(--curve-editor-grid);
+  stroke-width: 1;
+}
+
+.curve-editor-path,
+.curve-editor-trace {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.curve-editor-path {
+  stroke: var(--curve-editor-curve);
+  stroke-width: 3;
+}
+
+.curve-editor-trace {
+  stroke: var(--curve-editor-trace);
+  stroke-width: 4;
+}
+
+.curve-editor-current {
+  fill: var(--curve-editor-trace);
+  stroke: var(--curve-editor-bg);
+  stroke-width: 2;
+}
+
+.curve-editor-point {
+  fill: var(--curve-editor-point-fill);
+  stroke: var(--curve-editor-point);
+  stroke-width: 2;
+  cursor: grab;
+}
+
+.curve-editor-point.is-selected,
+.curve-editor-point.is-dragging {
+  stroke: var(--curve-editor-accent);
+}
+
+.curve-editor-point.is-dragging {
+  cursor: grabbing;
+}
+
+.curve-editor-play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--curve-editor-border);
+  border-radius: 6px;
+  background: var(--curve-editor-panel);
+  color: var(--curve-editor-text);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.curve-editor-play svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.curve-editor-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--curve-editor-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.curve-editor-check input {
+  accent-color: var(--curve-editor-accent);
+}
+
+@media (max-width: 560px) {
+  .curve-editor-controls,
+  .curve-editor-timeline {
+    flex-wrap: wrap;
+  }
+}
