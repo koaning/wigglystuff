@@ -13,7 +13,7 @@ def _():
         BezierCurve(
             closed=False,
             loop=False,
-            width=560,
+            width=340,
             height=340,
             duration_ms=12000,
         )

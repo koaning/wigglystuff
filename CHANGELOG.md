@@ -2,11 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.3] - 2026-05-22
 
 ### Added
 
-- `CurveEditor` widget for editing chart-space knots with D3 curve interpolators. Points are stored in x order and can render with linear, step, basis, natural, cardinal, Catmull-Rom, monotone-x, and bump-x curves. A bottom progress control emits `t`, `x`, and `y` from the rendered path, with optional closed-path and loop playback controls.
+- `CurveEditor` widget for editing chart-space knots with D3 curve interpolators. Open curves store points in x order, while closed curves preserve drawing order so double-clicked points are appended to the loop. Curves can render with linear, step, basis, natural, cardinal, Catmull-Rom, monotone-x, and bump-x curves. A bottom progress control emits `t`, `x`, and `y` from the rendered path, with optional closed-path and loop playback controls.
 - `BezierCurve` widget for editing arbitrary-degree Bezier curves in notebooks. Drag control points, double-click to add points, optionally close the curve, and play through `t` with loop-aware playback.
 
 ## [0.5.2] - 2026-05-21

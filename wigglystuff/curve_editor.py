@@ -42,13 +42,19 @@ def _coerce_point(point: dict[str, Any]) -> dict[str, float]:
         raise traitlets.TraitError("Point x and y values must be numeric.") from exc
 
 
-def _coerce_points(points: Iterable[dict[str, Any]] | None) -> list[dict[str, float]]:
+def _coerce_points(
+    points: Iterable[dict[str, Any]] | None,
+    *,
+    sort_by_x: bool = True,
+) -> list[dict[str, float]]:
     if points is None:
         points = DEFAULT_POINTS
     coerced = [_coerce_point(point) for point in points]
     if len(coerced) < 2:
         raise traitlets.TraitError("CurveEditor requires at least two points.")
-    return sorted(coerced, key=lambda point: point["x"])
+    if sort_by_x:
+        return sorted(coerced, key=lambda point: point["x"])
+    return coerced
 
 
 def _clamp01(value: float) -> float:
@@ -98,8 +104,9 @@ class CurveEditor(anywidget.AnyWidget):
     """Chart-space curve editor powered by D3 line interpolators.
 
     Drag knots on an x/y chart and switch among D3's chart-oriented curve
-    factories. Points are stored in x order so step, monotone, and bump curves
-    behave like normal chart lines instead of freeform paths.
+    factories. Open curves store points in x order so step, monotone, and bump
+    curves behave like normal chart lines instead of freeform paths. Closed
+    curves preserve point order so they can be edited as drawn loops.
 
     Examples:
         ```python
@@ -165,7 +172,8 @@ class CurveEditor(anywidget.AnyWidget):
 
         Args:
             points: Initial knots as ``{"x": float, "y": float}`` dicts.
-                Points are stored sorted by x-coordinate.
+                Open curves store points sorted by x-coordinate. Closed curves
+                preserve point order.
             curve: D3 curve name. One of ``linear``, ``step``,
                 ``step_before``, ``step_after``, ``basis``, ``natural``,
                 ``cardinal``, ``catmull_rom``, ``monotone_x``, or ``bump_x``.
@@ -182,15 +190,16 @@ class CurveEditor(anywidget.AnyWidget):
             interval_ms: Milliseconds between browser playback ticks.
             duration_ms: Milliseconds for one full ``t=0`` to ``t=1`` traversal.
             sync_throttle_ms: Minimum milliseconds between playback updates synced to Python.
-            selected_index: Selected point index in sorted point order, or ``-1``.
+            selected_index: Selected point index, or ``-1``.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
-        coerced_points = _coerce_points(points)
+        coerced_points = _coerce_points(points, sort_by_x=not closed)
         initial_t = _clamp01(t)
         initial_x, initial_y = _point_at_t(
             _effective_points(coerced_points, closed), initial_t
         )
         super().__init__(
+            closed=closed,
             points=coerced_points,
             x=initial_x,
             y=initial_y,
@@ -202,7 +211,6 @@ class CurveEditor(anywidget.AnyWidget):
             height=height,
             tension=tension,
             alpha=alpha,
-            closed=closed,
             playing=playing,
             loop=loop,
             interval_ms=interval_ms,
@@ -212,12 +220,13 @@ class CurveEditor(anywidget.AnyWidget):
             **kwargs,
         )
         self.observe(self._refresh_current_point, names=["points", "t", "closed"])
+        self.observe(self._sort_points_when_opened, names=["closed"])
 
     @traitlets.validate("points")
     def _validate_points(
         self, proposal: traitlets.Bunch
     ) -> list[dict[str, float]]:
-        return _coerce_points(proposal.value)
+        return _coerce_points(proposal.value, sort_by_x=not self.closed)
 
     @traitlets.validate("curve")
     def _validate_curve(self, proposal: traitlets.Bunch) -> str:
@@ -294,3 +303,21 @@ class CurveEditor(anywidget.AnyWidget):
         x, y = self.current_point()
         self.set_trait("x", x)
         self.set_trait("y", y)
+
+    def _sort_points_when_opened(self, change: traitlets.Bunch) -> None:
+        if change.new:
+            return
+        selected_point = None
+        if 0 <= self.selected_index < len(self.points):
+            selected_point = self.points[self.selected_index]
+
+        sorted_points = _coerce_points(self.points, sort_by_x=True)
+        if sorted_points == self.points:
+            return
+
+        self.set_trait("points", sorted_points)
+        if selected_point is not None:
+            try:
+                self.set_trait("selected_index", sorted_points.index(selected_point))
+            except ValueError:
+                self.set_trait("selected_index", -1)

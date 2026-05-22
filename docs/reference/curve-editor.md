@@ -6,7 +6,7 @@
 
 | Traitlet | Type | Notes |
 | --- | --- | --- |
-| `points` | `list[dict]` | Chart knots as `{"x": float, "y": float}` in data coordinates, stored sorted by x-coordinate. |
+| `points` | `list[dict]` | Chart knots as `{"x": float, "y": float}` in data coordinates. Open curves store points sorted by x-coordinate; closed curves preserve drawing order. |
 | `x` | `float` | Current rendered path x-coordinate at `t`. |
 | `y` | `float` | Current rendered path y-coordinate at `t`. |
 | `t` | `float` | Path progress, clamped to `[0, 1]`. |
@@ -19,7 +19,7 @@
 | `interval_ms` | `int` | Milliseconds between browser playback ticks. |
 | `duration_ms` | `int` | Milliseconds for one full `t=0` to `t=1` traversal. |
 | `sync_throttle_ms` | `int` | Minimum milliseconds between playback updates synced to Python. |
-| `selected_index` | `int` | Selected point index in sorted point order, or `-1` when no point is selected. |
+| `selected_index` | `int` | Selected point index, or `-1` when no point is selected. |
 | `x_bounds` | `tuple[float, float]` | Data-coordinate x bounds. |
 | `y_bounds` | `tuple[float, float]` | Data-coordinate y bounds. |
 | `width` | `int` | SVG width in pixels. |

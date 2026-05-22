@@ -36,6 +36,56 @@ def test_points_are_coerced_and_sorted_by_x():
     ]
 
 
+def test_closed_points_preserve_drawing_order():
+    widget = CurveEditor(
+        closed=True,
+        points=[
+            {"x": 1, "y": "10"},
+            {"x": 0, "y": 0},
+            {"x": 0.5, "y": 5},
+        ],
+    )
+
+    assert widget.points == [
+        {"x": 1.0, "y": 10.0},
+        {"x": 0.0, "y": 0.0},
+        {"x": 0.5, "y": 5.0},
+    ]
+
+    widget.points = [
+        {"x": 0.75, "y": 7.5},
+        {"x": 0.25, "y": 2.5},
+        {"x": 1.0, "y": 10.0},
+    ]
+
+    assert widget.points == [
+        {"x": 0.75, "y": 7.5},
+        {"x": 0.25, "y": 2.5},
+        {"x": 1.0, "y": 10.0},
+    ]
+
+
+def test_opening_closed_curve_sorts_points_by_x_and_keeps_selection():
+    widget = CurveEditor(
+        closed=True,
+        selected_index=1,
+        points=[
+            {"x": 1, "y": 10},
+            {"x": 0, "y": 0},
+            {"x": 0.5, "y": 5},
+        ],
+    )
+
+    widget.closed = False
+
+    assert widget.points == [
+        {"x": 0.0, "y": 0.0},
+        {"x": 0.5, "y": 5.0},
+        {"x": 1.0, "y": 10.0},
+    ]
+    assert widget.selected_index == 0
+
+
 def test_points_are_validated():
     with pytest.raises(traitlets.TraitError, match="at least two"):
         CurveEditor(points=[{"x": 0, "y": 0}])

@@ -15,6 +15,7 @@ def _():
             loop=True,
             width=450,
             height=450,
+            sync_throttle_ms=250,
             points=[
                 {"x": 0.0, "y": 0.12},
                 {"x": 0.15, "y": 0.32},
@@ -35,6 +36,8 @@ def _(mo):
 
     Edit chart-space knots and switch between D3 curve interpolators.
     Use the progress control to emit the current path position as `x` and `y`.
+    Set `sync_throttle_ms` on construction to control how often playback syncs
+    those values back to Python.
     """)
     return
 
@@ -55,6 +58,7 @@ def _(editor, mo):
     mo.callout(
         f"curve = {editor.curve}; t = {editor.t:.3f}; "
         f"current = ({editor.x:.3f}, {editor.y:.3f}); {len(editor.points)} knots; "
+        f"sync throttle = {editor.widget.sync_throttle_ms} ms; "
         f"selected = {selected if selected is not None else 'none'}"
     )
     return

@@ -53,6 +53,13 @@ function sortPoints(points) {
     .map(({ __index, ...point }) => point);
 }
 
+function orderedPoints(points, closed = false) {
+  if (closed) {
+    return points.map(coercePoint);
+  }
+  return sortPoints(points);
+}
+
 function effectivePoints(points, closed, curveName) {
   if (closed && points.length > 0 && !hasClosedCurve(curveName)) {
     return [...points, { ...points[0] }];
@@ -197,6 +204,7 @@ function render({ model, el }) {
 
   let intervalId = null;
   let lastSync = 0;
+  let renderedButtonPlaying = null;
 
   function width() {
     return model.get("width") || 600;
@@ -222,7 +230,7 @@ function render({ model, el }) {
   }
 
   function points() {
-    return sortPoints(model.get("points") || []);
+    return orderedPoints(model.get("points") || [], model.get("closed"));
   }
 
   function pathPoints() {
@@ -262,7 +270,7 @@ function render({ model, el }) {
   }
 
   function syncPoints(nextPoints, selectedPoint = null) {
-    const sorted = sortPoints(nextPoints);
+    const sorted = orderedPoints(nextPoints, model.get("closed"));
     let nextSelected = -1;
     if (selectedPoint) {
       nextSelected = sorted.findIndex(
@@ -309,7 +317,13 @@ function render({ model, el }) {
   }
 
   function renderButton() {
-    playButton.innerHTML = model.get("playing") ? PAUSE_ICON : PLAY_ICON;
+    const playing = intervalId !== null || Boolean(model.get("playing"));
+    if (renderedButtonPlaying !== playing) {
+      playButton.innerHTML = playing ? PAUSE_ICON : PLAY_ICON;
+      renderedButtonPlaying = playing;
+    }
+    playButton.setAttribute("aria-label", playing ? "Pause" : "Play");
+    playButton.setAttribute("aria-pressed", playing ? "true" : "false");
   }
 
   function renderControls() {
@@ -466,8 +480,11 @@ function render({ model, el }) {
     syncCurrent(forceSync);
   }
 
-  function startPlaying() {
-    if (intervalId !== null) return;
+  function startTimer() {
+    if (intervalId !== null) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
     intervalId = setInterval(() => {
       const duration = model.get("duration_ms") || 12000;
       const next = model.get("t") + model.get("interval_ms") / duration;
@@ -482,18 +499,32 @@ function render({ model, el }) {
         setT(next, false);
       }
     }, model.get("interval_ms"));
-    model.set("playing", true);
-    model.save_changes();
     renderButton();
   }
 
-  function stopPlaying() {
+  function stopTimer() {
     if (intervalId !== null) {
       clearInterval(intervalId);
       intervalId = null;
     }
-    model.set("playing", false);
+    renderButton();
+  }
+
+  function setPlayingTrait(value) {
+    if (model.get("playing") === value) return;
+    model.set("playing", value);
     model.save_changes();
+  }
+
+  function startPlaying() {
+    setPlayingTrait(true);
+    if (intervalId === null) startTimer();
+    renderButton();
+  }
+
+  function stopPlaying() {
+    setPlayingTrait(false);
+    stopTimer();
     renderButton();
   }
 
@@ -516,7 +547,7 @@ function render({ model, el }) {
   });
 
   playButton.addEventListener("click", () => {
-    if (model.get("playing")) {
+    if (intervalId !== null) {
       stopPlaying();
     } else {
       startPlaying();
@@ -531,8 +562,14 @@ function render({ model, el }) {
 
   closedInput.addEventListener("change", () => {
     stopPlaying();
+    const currentPoints = points();
+    const selectedPoint = currentPoints[selectedIndex()] ?? null;
     model.set("closed", closedInput.checked);
-    model.save_changes();
+    if (closedInput.checked) {
+      model.save_changes();
+    } else {
+      syncPoints(currentPoints, selectedPoint);
+    }
     renderFrame(true);
   });
 
@@ -559,19 +596,17 @@ function render({ model, el }) {
 
   model.on("change:playing", () => {
     const playing = model.get("playing");
-    if (playing && intervalId === null) {
-      startPlaying();
-    } else if (!playing && intervalId !== null) {
-      stopPlaying();
+    if (playing) {
+      startTimer();
+    } else {
+      stopTimer();
     }
     renderButton();
   });
 
   model.on("change:interval_ms", () => {
     if (intervalId !== null) {
-      clearInterval(intervalId);
-      intervalId = null;
-      if (model.get("playing")) startPlaying();
+      startTimer();
     }
   });
 

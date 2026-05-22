@@ -103,6 +103,7 @@ function render({ model, el }) {
 
   let intervalId = null;
   let lastSync = 0;
+  let renderedButtonPlaying = null;
 
   function svgPointer(event) {
     return pointer(event.sourceEvent || event, svgNode);
@@ -203,7 +204,13 @@ function render({ model, el }) {
   }
 
   function renderButton() {
-    playButton.innerHTML = model.get("playing") ? PAUSE_ICON : PLAY_ICON;
+    const playing = intervalId !== null || Boolean(model.get("playing"));
+    if (renderedButtonPlaying !== playing) {
+      playButton.innerHTML = playing ? PAUSE_ICON : PLAY_ICON;
+      renderedButtonPlaying = playing;
+    }
+    playButton.setAttribute("aria-label", playing ? "Pause" : "Play");
+    playButton.setAttribute("aria-pressed", playing ? "true" : "false");
   }
 
   function renderFrame() {
@@ -332,7 +339,7 @@ function render({ model, el }) {
   }
 
   playButton.addEventListener("click", () => {
-    if (model.get("playing")) {
+    if (intervalId !== null) {
       stopPlaying();
     } else {
       startPlaying();
