@@ -1,0 +1,184 @@
+.bezier-curve-wrapper {
+  color-scheme: light dark;
+  display: inline-block;
+  max-width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--bezier-text);
+
+  --bezier-bg: #ffffff;
+  --bezier-panel: #ffffff;
+  --bezier-text: #111827;
+  --bezier-muted: #6b7280;
+  --bezier-border: #d1d5db;
+  --bezier-control: #9ca3af;
+  --bezier-curve: #2563eb;
+  --bezier-trace: #0f766e;
+  --bezier-construction: #6b7280;
+  --bezier-point: #111827;
+  --bezier-accent: #2563eb;
+  --bezier-track: #d1d5db;
+  --bezier-thumb-bg: #ffffff;
+}
+
+.dark .bezier-curve-wrapper,
+.dark-theme .bezier-curve-wrapper,
+[data-theme="dark"] .bezier-curve-wrapper {
+  --bezier-bg: #111827;
+  --bezier-panel: #1f2937;
+  --bezier-text: #f9fafb;
+  --bezier-muted: #d1d5db;
+  --bezier-border: #4b5563;
+  --bezier-control: #9ca3af;
+  --bezier-curve: #60a5fa;
+  --bezier-trace: #5eead4;
+  --bezier-construction: #9ca3af;
+  --bezier-point: #f9fafb;
+  --bezier-accent: #60a5fa;
+  --bezier-track: #4b5563;
+  --bezier-thumb-bg: #111827;
+}
+
+.bezier-curve-svg {
+  display: block;
+  max-width: 100%;
+  border: 1px solid var(--bezier-border);
+  border-radius: 6px;
+  background: var(--bezier-bg);
+  touch-action: none;
+}
+
+.bezier-curve-control-path {
+  fill: none;
+  stroke: var(--bezier-control);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 6;
+}
+
+.bezier-curve-path,
+.bezier-curve-trace {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bezier-curve-path {
+  stroke: var(--bezier-curve);
+  stroke-width: 3;
+}
+
+.bezier-curve-trace {
+  stroke: var(--bezier-trace);
+  stroke-width: 4;
+}
+
+.bezier-curve-construction line {
+  stroke: var(--bezier-construction);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.bezier-curve-current {
+  fill: var(--bezier-trace);
+  stroke: var(--bezier-bg);
+  stroke-width: 2;
+}
+
+.bezier-curve-point {
+  fill: var(--bezier-panel);
+  stroke: var(--bezier-point);
+  stroke-width: 2;
+  cursor: grab;
+}
+
+.bezier-curve-point.is-dragging {
+  cursor: grabbing;
+  stroke: var(--bezier-trace);
+}
+
+.bezier-curve-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 0;
+  color: var(--bezier-text);
+}
+
+.bezier-curve-play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--bezier-border);
+  border-radius: 6px;
+  background: var(--bezier-panel);
+  color: var(--bezier-text);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.bezier-curve-play svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.bezier-curve-range {
+  flex: 1 1 120px;
+  min-width: 90px;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bezier-track);
+  outline: none;
+}
+
+.bezier-curve-range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--bezier-accent);
+  border-radius: 50%;
+  background: var(--bezier-thumb-bg);
+  cursor: pointer;
+}
+
+.bezier-curve-range::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--bezier-accent);
+  border-radius: 50%;
+  background: var(--bezier-thumb-bg);
+  cursor: pointer;
+}
+
+.bezier-curve-readout {
+  min-width: 4ch;
+  color: var(--bezier-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.bezier-curve-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--bezier-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.bezier-curve-check input {
+  accent-color: var(--bezier-accent);
+}
+
+@media (max-width: 520px) {
+  .bezier-curve-controls {
+    flex-wrap: wrap;
+  }
+}

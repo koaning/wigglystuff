@@ -3,6 +3,8 @@
 Browse widget-specific reference pages below. Each page is generated automatically via mkdocstrings, so docstrings and trait metadata from the source stay in sync with every release.
 
 - [Slider2D](slider2d.md)
+- [BezierCurve](bezier-curve.md)
+- [CurveEditor](curve-editor.md)
 - [ChartPuck](chart-puck.md)
 - [ChartSelect](chart-select.md)
 - [ParallelCoordinates](parallel-coords.md)

@@ -38,6 +38,16 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/slider2d.py/wasm">molab</a><a href="reference/slider2d/">API</a><a href="reference/slider2d.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">BezierCurve</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/beziercurve.py/wasm" class="gallery-img"><img src="assets/gallery/beziercurve.webp" alt="BezierCurve widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/beziercurve.py/wasm">molab</a><a href="reference/bezier-curve/">API</a><a href="reference/bezier-curve.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title">CurveEditor</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curveeditor.py/wasm" class="gallery-img"><img src="assets/gallery/curveeditor.webp" alt="CurveEditor widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curveeditor.py/wasm">molab</a><a href="reference/curve-editor/">API</a><a href="reference/curve-editor.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">Matrix</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/matrix.py/wasm" class="gallery-img"><img src="assets/gallery/matrix.webp" alt="Matrix widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/matrix.py/wasm">molab</a><a href="reference/matrix/">API</a><a href="reference/matrix.md">MD</a></div>

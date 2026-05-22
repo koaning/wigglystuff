@@ -5,12 +5,14 @@ import importlib.metadata
 from .annotation import AnnotationWidget
 from .altair_widget import AltairWidget
 from .api_doc import ApiDoc
+from .bezier_curve import BezierCurve
 from .cell_tour import CellTour
 from .chart_puck import ChartPuck
 from .chart_multi_select import ChartMultiSelect
 from .chart_select import ChartSelect
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
+from .curve_editor import CurveEditor
 from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
@@ -46,12 +48,14 @@ __all__ = [
     "AnnotationWidget",
     "AltairWidget",
     "ApiDoc",
+    "BezierCurve",
     "CellTour",
     "ChartPuck",
     "ChartMultiSelect",
     "ChartSelect",
     "ColorPicker",
     "CopyToClipboard",
+    "CurveEditor",
     "DriverTour",
     "EdgeDraw",
     "EnvConfig",
