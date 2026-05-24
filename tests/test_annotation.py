@@ -38,14 +38,6 @@ def test_annotation_default_keyboard_mapping_follows_actions():
         "m": "mic",
     }
 
-    widget.actions = ["accept", "defer"]
-    assert widget.keyboard_mapping == {
-        "1": "accept",
-        "2": "defer",
-        "s": "save",
-        "m": "mic",
-    }
-
 
 def test_annotation_custom_keyboard_mapping_does_not_follow_actions():
     widget = AnnotationWidget(

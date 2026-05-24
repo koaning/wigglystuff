@@ -80,10 +80,14 @@ class AnnotationWidget(anywidget.AnyWidget):
         **kwargs: Any,
     ) -> None:
         init_kwargs: dict[str, Any] = {}
+        action_list = list(actions) if actions is not None else list(DEFAULT_ACTIONS)
         if actions is not None:
-            init_kwargs["actions"] = list(actions)
-        if keyboard_mapping is not None:
-            init_kwargs["keyboard_mapping"] = dict(keyboard_mapping)
+            init_kwargs["actions"] = action_list
+        init_kwargs["keyboard_mapping"] = (
+            _default_keyboard_mapping(action_list)
+            if keyboard_mapping is None
+            else dict(keyboard_mapping)
+        )
         if gamepad_mapping is not None:
             init_kwargs["gamepad_mapping"] = dict(gamepad_mapping)
         if debounce_ms is not None:
@@ -91,23 +95,3 @@ class AnnotationWidget(anywidget.AnyWidget):
         if width is not None:
             init_kwargs["width"] = width
         super().__init__(**init_kwargs, **kwargs)
-        self._keyboard_mapping_is_default = keyboard_mapping is None
-        if self._keyboard_mapping_is_default:
-            self._set_default_keyboard_mapping()
-
-    def _set_default_keyboard_mapping(self) -> None:
-        self._setting_default_keyboard_mapping = True
-        self.keyboard_mapping = _default_keyboard_mapping(self.actions or [])
-        self._setting_default_keyboard_mapping = False
-
-    @traitlets.observe("actions")
-    def _update_default_keyboard_mapping(self, change: dict[str, Any]) -> None:
-        if getattr(self, "_keyboard_mapping_is_default", False):
-            self._set_default_keyboard_mapping()
-
-    @traitlets.observe("keyboard_mapping")
-    def _mark_custom_keyboard_mapping(self, change: dict[str, Any]) -> None:
-        if getattr(self, "_setting_default_keyboard_mapping", False):
-            return
-        if hasattr(self, "_keyboard_mapping_is_default"):
-            self._keyboard_mapping_is_default = False
