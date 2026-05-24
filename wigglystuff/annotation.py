@@ -4,6 +4,17 @@ from typing import Any, Optional, Sequence
 import anywidget
 import traitlets
 
+DEFAULT_ACTIONS = ["previous", "accept", "fail", "defer"]
+DEFAULT_EXTRA_KEYBOARD_MAPPING = {"s": "save", "m": "mic"}
+
+
+def _default_keyboard_mapping(actions: Sequence[str]) -> dict[str, str]:
+    mapping = {
+        str(index): action
+        for index, action in enumerate(actions[:9], start=1)
+    }
+    return {**mapping, **DEFAULT_EXTRA_KEYBOARD_MAPPING}
+
 
 class AnnotationWidget(anywidget.AnyWidget):
     """Annotation input widget with buttons, keyboard shortcuts, gamepad, and speech-to-text.
@@ -39,19 +50,10 @@ class AnnotationWidget(anywidget.AnyWidget):
     # --- Configuration traitlets ---
     actions = traitlets.List(
         traitlets.Unicode(),
-        default_value=["previous", "accept", "fail", "defer"],
+        default_value=DEFAULT_ACTIONS,
     ).tag(sync=True)
 
-    keyboard_mapping = traitlets.Dict(
-        default_value={
-            "1": "previous",
-            "2": "accept",
-            "3": "fail",
-            "4": "defer",
-            "s": "save",
-            "m": "mic",
-        },
-    ).tag(sync=True)
+    keyboard_mapping = traitlets.Dict(default_value={}).tag(sync=True)
 
     gamepad_mapping = traitlets.Dict(
         default_value={
@@ -89,3 +91,23 @@ class AnnotationWidget(anywidget.AnyWidget):
         if width is not None:
             init_kwargs["width"] = width
         super().__init__(**init_kwargs, **kwargs)
+        self._keyboard_mapping_is_default = keyboard_mapping is None
+        if self._keyboard_mapping_is_default:
+            self._set_default_keyboard_mapping()
+
+    def _set_default_keyboard_mapping(self) -> None:
+        self._setting_default_keyboard_mapping = True
+        self.keyboard_mapping = _default_keyboard_mapping(self.actions or [])
+        self._setting_default_keyboard_mapping = False
+
+    @traitlets.observe("actions")
+    def _update_default_keyboard_mapping(self, change: dict[str, Any]) -> None:
+        if getattr(self, "_keyboard_mapping_is_default", False):
+            self._set_default_keyboard_mapping()
+
+    @traitlets.observe("keyboard_mapping")
+    def _mark_custom_keyboard_mapping(self, change: dict[str, Any]) -> None:
+        if getattr(self, "_setting_default_keyboard_mapping", False):
+            return
+        if hasattr(self, "_keyboard_mapping_is_default"):
+            self._keyboard_mapping_is_default = False

@@ -265,6 +265,9 @@ function render({ model, el }) {
   // --- Action trigger ---
   function canTriggerAction(name) {
     if (name === "save" && !model.get("show_save")) return false;
+    if (name !== "save" && name !== "mic" && !(model.get("actions") || []).includes(name)) {
+      return false;
+    }
     if (model.get("disabled") && name !== "previous" && name !== "save") return false;
     return true;
   }
