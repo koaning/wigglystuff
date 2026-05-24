@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `AnnotationWidget.actions` now only describes the main action buttons (`previous`, `accept`, `fail`, `defer` by default). Save remains a separate footer control governed by `show_save`; when `show_save=False`, save shortcuts are hidden and ignored.
+
 ## [0.5.3] - 2026-05-22
 
 ### Added

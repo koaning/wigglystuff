@@ -50,7 +50,13 @@ def _(mo):
 
 @app.cell
 def _(AnnotationWidget, mo):
-    annot_widget = mo.ui.anywidget(AnnotationWidget(show_save=False, width=1200))
+    annot_widget = mo.ui.anywidget(
+        AnnotationWidget(
+            actions=["previous", "accept", "fail", "defer"],
+            show_save=False,
+            width=1200,
+        )
+    )
     return (annot_widget,)
 
 
@@ -184,12 +190,6 @@ def _(mo, widget):
     **Current note:** `{widget.note or "---"}`
     """)
     return
-
-
-@app.cell
-def _():
-    return
-
 
 if __name__ == "__main__":
     app.run()

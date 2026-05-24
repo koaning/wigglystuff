@@ -39,7 +39,7 @@ class AnnotationWidget(anywidget.AnyWidget):
     # --- Configuration traitlets ---
     actions = traitlets.List(
         traitlets.Unicode(),
-        default_value=["previous", "accept", "fail", "defer", "save"],
+        default_value=["previous", "accept", "fail", "defer"],
     ).tag(sync=True)
 
     keyboard_mapping = traitlets.Dict(
