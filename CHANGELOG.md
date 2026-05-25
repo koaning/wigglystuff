@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `AnnotationWidget.actions` now only describes the main action buttons (`previous`, `accept`, `fail`, `defer` by default). Save remains a separate footer control governed by `show_save`; when `show_save=False`, save shortcuts are hidden and ignored.
+- `AnnotationWidget` now derives the default keyboard mapping from `actions`, assigning action buttons to number keys in order while keeping `s` for save and `m` for mic.
+- `AnnotationWidget` now derives the default gamepad mapping from `actions`, assigning action buttons to gamepad indices in order followed by save and mic.
+
 ## [0.5.3] - 2026-05-22
 
 ### Added

@@ -11,10 +11,9 @@
 | `note` | `str` | Free-form note text, populated by typing or speech-to-text. |
 | `listening` | `bool` | `True` while speech-to-text is actively transcribing. |
 | `disabled` | `bool` | When `True`, all input controls are inert. |
-| `show_save` | `bool` | Toggles visibility of the Save button. |
-| `actions` | `list[str]` | Ordered list of action button labels. Defaults to `["previous", "accept", "fail", "defer", "save"]`. |
-| `keyboard_mapping` | `dict[str, str]` | Maps keys to action names. The special target `mic` toggles the speech-to-text microphone. |
-| `gamepad_mapping` | `dict[str, str]` | Maps gamepad button indices (as strings) to action names. The `mic` target works here too. |
+| `show_save` | `bool` | Toggles visibility and availability of the footer Save button. |
+| `actions` | `list[str]` | Ordered list of main action button labels. Defaults to `["previous", "accept", "fail", "defer"]`. |
+| `keyboard_mapping` | `dict[str, str]` | Maps keys to action names. By default, action buttons are mapped to number keys in order (`1`, `2`, ...), with `s` for save and `m` for mic. The special target `mic` toggles the speech-to-text microphone. |
+| `gamepad_mapping` | `dict[str, str]` | Maps gamepad button indices (as strings) to action names. By default, action buttons are mapped to gamepad buttons in order (`0`, `1`, ...), followed by save and mic. The `mic` target works here too. |
 | `debounce_ms` | `int` | Minimum interval between accepted action triggers, in milliseconds. |
 | `width` | `int` | Widget width in pixels. |
-

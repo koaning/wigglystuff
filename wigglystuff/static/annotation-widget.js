@@ -2,6 +2,12 @@
 const ICONS = {
   previous:
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
+  left:
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+  middle:
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>',
+  right:
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
   accept:
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
   fail:
@@ -211,9 +217,8 @@ function render({ model, el }) {
   }
 
   function updateShortcuts() {
-    // Desired action order (filter save when hidden)
-    const actionOrder = ["previous", "accept", "fail", "defer", "mic", "save"]
-      .filter((a) => a !== "save" || model.get("show_save"));
+    const actionOrder = [...(model.get("actions") || []), "mic"];
+    if (model.get("show_save")) actionOrder.push("save");
 
     // Reverse keyboard mapping: action -> key
     const kbMapping = model.get("keyboard_mapping") || {};
@@ -258,11 +263,20 @@ function render({ model, el }) {
   model.on("change:disabled", applyDisabled);
 
   // --- Action trigger ---
+  function canTriggerAction(name) {
+    if (name === "save" && !model.get("show_save")) return false;
+    if (name !== "save" && name !== "mic" && !(model.get("actions") || []).includes(name)) {
+      return false;
+    }
+    if (model.get("disabled") && name !== "previous" && name !== "save") return false;
+    return true;
+  }
+
   function triggerAction(name) {
-    if (model.get("disabled") && name !== "previous" && name !== "save") return;
+    if (!canTriggerAction(name)) return false;
     if (name === "mic") {
       toggleListening();
-      return;
+      return true;
     }
     model.set("action", name);
     model.set("action_timestamp", Date.now());
@@ -274,6 +288,7 @@ function render({ model, el }) {
       btn.classList.add("is-flash");
       setTimeout(() => btn.classList.remove("is-flash"), 200);
     }
+    return true;
   }
 
   // --- Keyboard handling (click-to-focus) ---
@@ -300,8 +315,12 @@ function render({ model, el }) {
       if (event.repeat) return;
       if (!model.get("listening")) {
         activeMicKey = event.key.toLowerCase();
-        keyArea.textContent = formatBinding(match.binding) + " → mic (hold)";
-        triggerAction("mic");
+        if (triggerAction("mic")) {
+          keyArea.textContent = formatBinding(match.binding) + " → mic (hold)";
+        } else {
+          activeMicKey = null;
+          keyArea.textContent = "\u201C" + event.key + "\u201D not mapped";
+        }
       }
       clearTimeout(keyFadeTimer);
       keyFadeTimer = setTimeout(() => {
@@ -310,8 +329,10 @@ function render({ model, el }) {
       return;
     }
     if (match) {
-      keyArea.textContent = formatBinding(match.binding) + " \u2192 " + match.action;
-      triggerAction(match.action);
+      const didTrigger = triggerAction(match.action);
+      keyArea.textContent = didTrigger
+        ? formatBinding(match.binding) + " \u2192 " + match.action
+        : "\u201C" + event.key + "\u201D not mapped";
     } else {
       keyArea.textContent = "\u201C" + event.key + "\u201D not mapped";
     }

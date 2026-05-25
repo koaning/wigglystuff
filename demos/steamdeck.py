@@ -133,7 +133,6 @@ def _(mo):
 def _(AnnotationWidget, mo):
     annot_widget = mo.ui.anywidget(
         AnnotationWidget(
-            actions=["previous", "accept", "fail", "defer"],
             keyboard_mapping={
                 "arrowup": "accept",
                 "arrowdown": "fail",

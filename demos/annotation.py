@@ -6,9 +6,10 @@
 #     "wigglystuff==0.3.1",
 # ]
 # ///
+
 import marimo
 
-__generated_with = "0.20.4"
+__generated_with = "0.23.8"
 app = marimo.App()
 
 
@@ -50,7 +51,13 @@ def _(mo):
 
 @app.cell
 def _(AnnotationWidget, mo):
-    annot_widget = mo.ui.anywidget(AnnotationWidget(show_save=False, width=1200))
+    annot_widget = mo.ui.anywidget(
+        AnnotationWidget(
+            actions=["previous", "accept", "left", "right", "defer"],
+            show_save=False,
+            width=1200,
+        )
+    )
     return (annot_widget,)
 
 
@@ -183,11 +190,6 @@ def _(mo, widget):
 
     **Current note:** `{widget.note or "---"}`
     """)
-    return
-
-
-@app.cell
-def _():
     return
 
 
