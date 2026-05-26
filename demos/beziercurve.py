@@ -1,6 +1,13 @@
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "marimo",
+#     "wigglystuff==0.5.3",
+# ]
+# ///
 import marimo
 
-__generated_with = "0.23.6"
+__generated_with = "0.23.7"
 app = marimo.App(width="medium")
 
 
@@ -55,7 +62,7 @@ def _(curve):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(curve, mo):
     first = curve.samples[0] if curve.samples else {"x": float("nan"), "y": float("nan")}
     last = curve.samples[-1] if curve.samples else {"x": float("nan"), "y": float("nan")}
