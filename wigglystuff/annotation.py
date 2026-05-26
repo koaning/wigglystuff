@@ -4,6 +4,28 @@ from typing import Any, Optional, Sequence
 import anywidget
 import traitlets
 
+DEFAULT_ACTIONS = ["previous", "accept", "fail", "defer"]
+DEFAULT_EXTRA_KEYBOARD_MAPPING = {"s": "save", "m": "mic"}
+
+
+def _default_keyboard_mapping(actions: Sequence[str]) -> dict[str, str]:
+    mapping = {
+        str(index): action
+        for index, action in enumerate(actions[:9], start=1)
+    }
+    return {**mapping, **DEFAULT_EXTRA_KEYBOARD_MAPPING}
+
+
+def _default_gamepad_mapping(actions: Sequence[str]) -> dict[str, str]:
+    mapping = {
+        str(index): action
+        for index, action in enumerate(actions)
+    }
+    next_button = len(mapping)
+    mapping[str(next_button)] = "save"
+    mapping[str(next_button + 1)] = "mic"
+    return mapping
+
 
 class AnnotationWidget(anywidget.AnyWidget):
     """Annotation input widget with buttons, keyboard shortcuts, gamepad, and speech-to-text.
@@ -39,30 +61,12 @@ class AnnotationWidget(anywidget.AnyWidget):
     # --- Configuration traitlets ---
     actions = traitlets.List(
         traitlets.Unicode(),
-        default_value=["previous", "accept", "fail", "defer", "save"],
+        default_value=DEFAULT_ACTIONS,
     ).tag(sync=True)
 
-    keyboard_mapping = traitlets.Dict(
-        default_value={
-            "1": "previous",
-            "2": "accept",
-            "3": "fail",
-            "4": "defer",
-            "s": "save",
-            "m": "mic",
-        },
-    ).tag(sync=True)
+    keyboard_mapping = traitlets.Dict(default_value={}).tag(sync=True)
 
-    gamepad_mapping = traitlets.Dict(
-        default_value={
-            "0": "accept",
-            "1": "fail",
-            "2": "defer",
-            "3": "previous",
-            "4": "save",
-            "5": "mic",
-        },
-    ).tag(sync=True)
+    gamepad_mapping = traitlets.Dict(default_value={}).tag(sync=True)
 
     debounce_ms = traitlets.Int(200).tag(sync=True)
     width = traitlets.Int(400).tag(sync=True)
@@ -78,12 +82,19 @@ class AnnotationWidget(anywidget.AnyWidget):
         **kwargs: Any,
     ) -> None:
         init_kwargs: dict[str, Any] = {}
+        action_list = list(actions) if actions is not None else list(DEFAULT_ACTIONS)
         if actions is not None:
-            init_kwargs["actions"] = list(actions)
-        if keyboard_mapping is not None:
-            init_kwargs["keyboard_mapping"] = dict(keyboard_mapping)
-        if gamepad_mapping is not None:
-            init_kwargs["gamepad_mapping"] = dict(gamepad_mapping)
+            init_kwargs["actions"] = action_list
+        init_kwargs["keyboard_mapping"] = (
+            _default_keyboard_mapping(action_list)
+            if keyboard_mapping is None
+            else dict(keyboard_mapping)
+        )
+        init_kwargs["gamepad_mapping"] = (
+            _default_gamepad_mapping(action_list)
+            if gamepad_mapping is None
+            else dict(gamepad_mapping)
+        )
         if debounce_ms is not None:
             init_kwargs["debounce_ms"] = debounce_ms
         if width is not None:

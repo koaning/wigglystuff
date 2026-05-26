@@ -9,6 +9,12 @@ All notable changes to this project will be documented in this file.
 - `BezierCurve` and `CurveEditor`: new `show_axes` trait toggles numeric tick marks and labels on the x and y axes (off by default — no visual change for existing users). When enabled, margins expand to fit the labels and ticks are auto-picked from the configured `x_bounds` / `y_bounds`.
 - `BezierCurve` and `CurveEditor`: new `samples` trait emits a `[{x, y}, ...]` list of `n_samples` points along the rendered curve in data coordinates, throttled by the existing `sync_throttle_ms`. `n_samples` defaults to 100 and must be at least 2. Useful for iterating over the curve in Python without re-deriving the interpolation.
 
+### Fixed
+
+- `AnnotationWidget.actions` now only describes the main action buttons (`previous`, `accept`, `fail`, `defer` by default). Save remains a separate footer control governed by `show_save`; when `show_save=False`, save shortcuts are hidden and ignored.
+- `AnnotationWidget` now derives the default keyboard mapping from `actions`, assigning action buttons to number keys in order while keeping `s` for save and `m` for mic.
+- `AnnotationWidget` now derives the default gamepad mapping from `actions`, assigning action buttons to gamepad indices in order followed by save and mic.
+
 ## [0.5.3] - 2026-05-22
 
 ### Added
