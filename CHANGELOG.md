@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `BezierCurve` and `CurveEditor`: editing the curve (dragging a control point, double-clicking to add or remove a point, or toggling `closed`) no longer pauses playback. The playhead now continues across the new curve shape, matching the existing behaviour when changing the curve type or tension. Progress-slider scrubbing still pauses, since scrubbing `t` directly fights the timer.
+
 ## [0.5.4] - 2026-05-26
 
 ### Added
