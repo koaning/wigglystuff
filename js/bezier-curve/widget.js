@@ -470,7 +470,6 @@ function render({ model, el }) {
       .attr("cy", (d) => yScale(d.y))
       .on("dblclick", (event, d) => {
         event.stopPropagation();
-        stopPlaying();
         const next = pts
           .filter((point) => point !== d)
           .map((point) => ({ x: point.x, y: point.y }));
@@ -482,7 +481,6 @@ function render({ model, el }) {
       })
       .call(drag()
         .on("start", function () {
-          stopPlaying();
           select(this).classed("is-dragging", true);
         })
         .on("drag", function (event, d) {

@@ -599,7 +599,6 @@ function render({ model, el }) {
       })
       .on("dblclick", (event, d) => {
         event.stopPropagation();
-        stopPlaying();
         if (pts.length <= 2) return;
         const next = pts.filter((point) => point !== d);
         syncPoints(next, null);
@@ -607,7 +606,6 @@ function render({ model, el }) {
       })
       .call(drag()
         .on("start", function (event, d) {
-          stopPlaying();
           select(this).classed("is-dragging", true);
           model.set("selected_index", pts.indexOf(d));
           model.save_changes();
@@ -719,7 +717,6 @@ function render({ model, el }) {
   });
 
   closedInput.addEventListener("change", () => {
-    stopPlaying();
     const currentPoints = points();
     const selectedPoint = currentPoints[selectedIndex()] ?? null;
     model.set("closed", closedInput.checked);
@@ -751,7 +748,6 @@ function render({ model, el }) {
   svg.on("dblclick", (event) => {
     if (panMoved) { panMoved = false; return; }
     if (event.target?.classList?.contains("curve-editor-point")) return;
-    stopPlaying();
     const [px, py] = pointer(event, svgNode);
     const added = { x: xInvert(px), y: yInvert(py) };
     syncPoints([...points(), added], added);
