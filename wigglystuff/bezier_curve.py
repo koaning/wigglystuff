@@ -45,6 +45,20 @@ def _effective_points(
     return points
 
 
+def _sample_points(
+    points: list[dict[str, float]], closed: bool, n: int
+) -> list[dict[str, float]]:
+    effective = _effective_points(points, closed)
+    if not effective or n < 2:
+        return []
+    samples = []
+    for index in range(n):
+        t = index / (n - 1)
+        x, y = _de_casteljau(effective, t)
+        samples.append({"x": x, "y": y})
+    return samples
+
+
 def _de_casteljau(
     points: list[dict[str, float]], t: float
 ) -> tuple[float, float]:
@@ -84,6 +98,7 @@ class BezierCurve(anywidget.AnyWidget):
     _css = Path(__file__).parent / "static" / "bezier-curve.css"
 
     points = traitlets.List(traitlets.Dict(), default_value=[]).tag(sync=True)
+    samples = traitlets.List(traitlets.Dict(), default_value=[]).tag(sync=True)
     x = traitlets.Float(0.0).tag(sync=True)
     y = traitlets.Float(0.0).tag(sync=True)
     t = traitlets.Float(0.0).tag(sync=True)
@@ -93,6 +108,8 @@ class BezierCurve(anywidget.AnyWidget):
     interval_ms = traitlets.Int(30).tag(sync=True)
     duration_ms = traitlets.Int(12000).tag(sync=True)
     sync_throttle_ms = traitlets.Int(250).tag(sync=True)
+    show_axes = traitlets.Bool(False).tag(sync=True)
+    n_samples = traitlets.Int(100).tag(sync=True)
     x_bounds = (
         traitlets.Tuple(
             traitlets.Float(), traitlets.Float(), default_value=(0.0, 1.0)
@@ -121,6 +138,8 @@ class BezierCurve(anywidget.AnyWidget):
         interval_ms: int = 30,
         duration_ms: int = 12000,
         sync_throttle_ms: int = 250,
+        show_axes: bool = False,
+        n_samples: int = 100,
         **kwargs: Any,
     ) -> None:
         """Create a BezierCurve widget.
@@ -138,6 +157,10 @@ class BezierCurve(anywidget.AnyWidget):
             interval_ms: Milliseconds between browser playback ticks.
             duration_ms: Milliseconds for one full ``t=0`` to ``t=1`` traversal.
             sync_throttle_ms: Minimum milliseconds between playback syncs.
+            show_axes: Whether to render numeric tick marks and labels on the
+                x and y axes.
+            n_samples: Number of points emitted on the ``samples`` traitlet.
+                Must be at least 2.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         coerced_points = _coerce_points(points)
@@ -145,8 +168,12 @@ class BezierCurve(anywidget.AnyWidget):
         initial_x, initial_y = _de_casteljau(
             _effective_points(coerced_points, closed), initial_t
         )
+        if int(n_samples) < 2:
+            raise traitlets.TraitError("n_samples must be at least 2.")
+        initial_samples = _sample_points(coerced_points, closed, int(n_samples))
         super().__init__(
             points=coerced_points,
+            samples=initial_samples,
             x=initial_x,
             y=initial_y,
             t=initial_t,
@@ -160,6 +187,8 @@ class BezierCurve(anywidget.AnyWidget):
             interval_ms=interval_ms,
             duration_ms=duration_ms,
             sync_throttle_ms=sync_throttle_ms,
+            show_axes=show_axes,
+            n_samples=int(n_samples),
             **kwargs,
         )
         self.observe(self._refresh_current_point, names=["points", "t", "closed"])
@@ -209,6 +238,13 @@ class BezierCurve(anywidget.AnyWidget):
         value = proposal.value
         if value < 0:
             raise traitlets.TraitError("sync_throttle_ms must be non-negative.")
+        return value
+
+    @traitlets.validate("n_samples")
+    def _validate_n_samples(self, proposal: traitlets.Bunch) -> int:
+        value = int(proposal.value)
+        if value < 2:
+            raise traitlets.TraitError("n_samples must be at least 2.")
         return value
 
     def current_point(self) -> tuple[float, float]:

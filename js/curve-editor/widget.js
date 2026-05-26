@@ -21,7 +21,18 @@ import {
 
 const PLAY_ICON = '<svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>';
 const PAUSE_ICON = '<svg viewBox="0 0 16 16"><rect x="3" y="2" width="4" height="12"/><rect x="9" y="2" width="4" height="12"/></svg>';
-const MARGIN = { top: 18, right: 18, bottom: 18, left: 18 };
+const MARGIN_TIGHT = { top: 18, right: 18, bottom: 18, left: 18 };
+const MARGIN_WITH_AXES = { top: 12, right: 16, bottom: 32, left: 44 };
+const TICK_LENGTH = 5;
+
+function formatTick(value) {
+  if (!Number.isFinite(value)) return "";
+  if (value === 0) return "0";
+  const abs = Math.abs(value);
+  if (abs >= 1000 || abs < 0.01) return value.toExponential(1).replace("e+", "e");
+  const fixed = value.toFixed(3);
+  return fixed.replace(/\.?0+$/, "");
+}
 const CURVE_OPTIONS = [
   ["linear", "Linear"],
   ["step", "Step"],
@@ -196,6 +207,7 @@ function render({ model, el }) {
 
   const svg = select(svgNode);
   const gridGroup = svg.append("g").attr("class", "curve-editor-grid");
+  const axisGroup = svg.append("g").attr("class", "curve-editor-axis");
   const path = svg.append("path").attr("class", "curve-editor-path");
   const tracePath = svg.append("path").attr("class", "curve-editor-trace");
   const hitbox = svg.append("rect").attr("class", "curve-editor-hitbox");
@@ -204,6 +216,7 @@ function render({ model, el }) {
 
   let intervalId = null;
   let lastSync = 0;
+  let lastSampleSync = 0;
   let renderedButtonPlaying = null;
 
   function width() {
@@ -214,12 +227,18 @@ function render({ model, el }) {
     return model.get("height") || 360;
   }
 
+  function margins() {
+    return model.get("show_axes") ? MARGIN_WITH_AXES : MARGIN_TIGHT;
+  }
+
   function innerWidth() {
-    return Math.max(1, width() - MARGIN.left - MARGIN.right);
+    const m = margins();
+    return Math.max(1, width() - m.left - m.right);
   }
 
   function innerHeight() {
-    return Math.max(1, height() - MARGIN.top - MARGIN.bottom);
+    const m = margins();
+    return Math.max(1, height() - m.top - m.bottom);
   }
 
   function bounds() {
@@ -239,21 +258,24 @@ function render({ model, el }) {
 
   function scales() {
     const chartBounds = bounds();
+    const m = margins();
     return {
-      x: scaleLinear().domain(chartBounds.x).range([MARGIN.left, MARGIN.left + innerWidth()]),
-      y: scaleLinear().domain(chartBounds.y).range([MARGIN.top + innerHeight(), MARGIN.top]),
+      x: scaleLinear().domain(chartBounds.x).range([m.left, m.left + innerWidth()]),
+      y: scaleLinear().domain(chartBounds.y).range([m.top + innerHeight(), m.top]),
     };
   }
 
   function xInvert(px) {
     const { x } = scales();
-    const clamped = Math.max(MARGIN.left, Math.min(MARGIN.left + innerWidth(), px));
+    const m = margins();
+    const clamped = Math.max(m.left, Math.min(m.left + innerWidth(), px));
     return x.invert(clamped);
   }
 
   function yInvert(py) {
     const { y } = scales();
-    const clamped = Math.max(MARGIN.top, Math.min(MARGIN.top + innerHeight(), py));
+    const m = margins();
+    const clamped = Math.max(m.top, Math.min(m.top + innerHeight(), py));
     return y.invert(clamped);
   }
 
@@ -283,19 +305,20 @@ function render({ model, el }) {
   }
 
   function drawGrid(xScale, yScale) {
+    const m = margins();
     const vertical = xScale.ticks(6).map((tick) => ({
       axis: "x",
       value: tick,
       x1: xScale(tick),
       x2: xScale(tick),
-      y1: MARGIN.top,
-      y2: MARGIN.top + innerHeight(),
+      y1: m.top,
+      y2: m.top + innerHeight(),
     }));
     const horizontal = yScale.ticks(5).map((tick) => ({
       axis: "y",
       value: tick,
-      x1: MARGIN.left,
-      x2: MARGIN.left + innerWidth(),
+      x1: m.left,
+      x2: m.left + innerWidth(),
       y1: yScale(tick),
       y2: yScale(tick),
     }));
@@ -307,6 +330,84 @@ function render({ model, el }) {
       .attr("x2", (d) => d.x2)
       .attr("y1", (d) => d.y1)
       .attr("y2", (d) => d.y2);
+  }
+
+  function drawAxes(xScale, yScale) {
+    if (!model.get("show_axes")) {
+      axisGroup.selectAll("*").remove();
+      return;
+    }
+    const w = width();
+    const h = height();
+    const m = margins();
+    const baseY = h - m.bottom;
+    const baseX = m.left;
+    const xTicks = xScale.ticks(6);
+    const yTicks = yScale.ticks(5);
+
+    axisGroup.selectAll("*").remove();
+
+    const xAxis = axisGroup.append("g").attr("class", "curve-editor-axis-x");
+    xAxis.append("line")
+      .attr("class", "curve-editor-axis-domain")
+      .attr("x1", m.left).attr("x2", w - m.right)
+      .attr("y1", baseY).attr("y2", baseY);
+    const xTick = xAxis.selectAll("g.tick")
+      .data(xTicks)
+      .join("g")
+      .attr("class", "tick")
+      .attr("transform", (d) => `translate(${xScale(d)},${baseY})`);
+    xTick.append("line").attr("y2", TICK_LENGTH);
+    xTick.append("text")
+      .attr("y", TICK_LENGTH + 10)
+      .attr("text-anchor", "middle")
+      .text((d) => formatTick(d));
+
+    const yAxis = axisGroup.append("g").attr("class", "curve-editor-axis-y");
+    yAxis.append("line")
+      .attr("class", "curve-editor-axis-domain")
+      .attr("x1", baseX).attr("x2", baseX)
+      .attr("y1", m.top).attr("y2", h - m.bottom);
+    const yTick = yAxis.selectAll("g.tick")
+      .data(yTicks)
+      .join("g")
+      .attr("class", "tick")
+      .attr("transform", (d) => `translate(${baseX},${yScale(d)})`);
+    yTick.append("line").attr("x2", -TICK_LENGTH);
+    yTick.append("text")
+      .attr("x", -TICK_LENGTH - 4)
+      .attr("dy", "0.32em")
+      .attr("text-anchor", "end")
+      .text((d) => formatTick(d));
+  }
+
+  function syncSamples(force = false) {
+    const node = path.node();
+    if (!node) return;
+    let length = 0;
+    try {
+      length = node.getTotalLength();
+    } catch {
+      return;
+    }
+    if (!Number.isFinite(length) || length <= 0) {
+      model.set("samples", []);
+      model.save_changes();
+      return;
+    }
+    const now = performance.now();
+    const throttle = model.get("sync_throttle_ms") ?? 250;
+    if (!force && throttle > 0 && now - lastSampleSync < throttle) return;
+
+    const n = Math.max(2, Number(model.get("n_samples")) || 100);
+    const samples = new Array(n);
+    for (let i = 0; i < n; i++) {
+      const point = node.getPointAtLength((length * i) / (n - 1));
+      samples[i] = { x: xInvert(point.x), y: yInvert(point.y) };
+    }
+    model.set("samples", samples);
+    model.save_changes();
+    lastSampleSync = now;
   }
 
   function syncSliderFill(input, value) {
@@ -384,6 +485,7 @@ function render({ model, el }) {
   function renderFrame(sync = true) {
     const w = width();
     const h = height();
+    const m = margins();
     const pts = points();
     const effective = pathPoints();
     const { x, y } = scales();
@@ -398,10 +500,11 @@ function render({ model, el }) {
 
     renderControls();
     drawGrid(x, y);
+    drawAxes(x, y);
 
     hitbox
-      .attr("x", MARGIN.left)
-      .attr("y", MARGIN.top)
+      .attr("x", m.left)
+      .attr("y", m.top)
       .attr("width", innerWidth())
       .attr("height", innerHeight());
 
@@ -471,7 +574,10 @@ function render({ model, el }) {
           select(this).classed("is-dragging", false);
         }));
 
-    if (sync) syncCurrent(true);
+    if (sync) {
+      syncCurrent(true);
+      syncSamples(true);
+    }
   }
 
   function setT(value, forceSync = false) {
@@ -620,9 +726,12 @@ function render({ model, el }) {
     "height",
     "x_bounds",
     "y_bounds",
+    "show_axes",
   ].forEach((name) => {
     model.on(`change:${name}`, () => renderFrame(true));
   });
+
+  model.on("change:n_samples", () => syncSamples(true));
 
   model.on("change:t", () => {
     renderFrame(false);

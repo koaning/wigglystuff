@@ -121,9 +121,12 @@ class CurveEditor(anywidget.AnyWidget):
     _css = Path(__file__).parent / "static" / "curve-editor.css"
 
     points = traitlets.List(traitlets.Dict(), default_value=[]).tag(sync=True)
+    samples = traitlets.List(traitlets.Dict(), default_value=[]).tag(sync=True)
     x = traitlets.Float(0.0).tag(sync=True)
     y = traitlets.Float(0.0).tag(sync=True)
     t = traitlets.Float(0.0).tag(sync=True)
+    show_axes = traitlets.Bool(False).tag(sync=True)
+    n_samples = traitlets.Int(100).tag(sync=True)
     curve = traitlets.Unicode("natural").tag(sync=True)
     tension = traitlets.Float(0.0).tag(sync=True)
     alpha = traitlets.Float(0.5).tag(sync=True)
@@ -166,6 +169,8 @@ class CurveEditor(anywidget.AnyWidget):
         duration_ms: int = 12000,
         sync_throttle_ms: int = 250,
         selected_index: int = -1,
+        show_axes: bool = False,
+        n_samples: int = 100,
         **kwargs: Any,
     ) -> None:
         """Create a CurveEditor widget.
@@ -191,6 +196,10 @@ class CurveEditor(anywidget.AnyWidget):
             duration_ms: Milliseconds for one full ``t=0`` to ``t=1`` traversal.
             sync_throttle_ms: Minimum milliseconds between playback updates synced to Python.
             selected_index: Selected point index, or ``-1``.
+            show_axes: Whether to render numeric tick marks and labels on the
+                x and y axes.
+            n_samples: Number of points emitted on the ``samples`` traitlet by
+                the browser after each render. Must be at least 2.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         coerced_points = _coerce_points(points, sort_by_x=not closed)
@@ -198,6 +207,8 @@ class CurveEditor(anywidget.AnyWidget):
         initial_x, initial_y = _point_at_t(
             _effective_points(coerced_points, closed), initial_t
         )
+        if int(n_samples) < 2:
+            raise traitlets.TraitError("n_samples must be at least 2.")
         super().__init__(
             closed=closed,
             points=coerced_points,
@@ -217,6 +228,8 @@ class CurveEditor(anywidget.AnyWidget):
             duration_ms=duration_ms,
             sync_throttle_ms=sync_throttle_ms,
             selected_index=selected_index,
+            show_axes=show_axes,
+            n_samples=int(n_samples),
             **kwargs,
         )
         self.observe(self._refresh_current_point, names=["points", "t", "closed"])
@@ -279,6 +292,13 @@ class CurveEditor(anywidget.AnyWidget):
         value = proposal.value
         if value < 0:
             raise traitlets.TraitError("sync_throttle_ms must be non-negative.")
+        return value
+
+    @traitlets.validate("n_samples")
+    def _validate_n_samples(self, proposal: traitlets.Bunch) -> int:
+        value = int(proposal.value)
+        if value < 2:
+            raise traitlets.TraitError("n_samples must be at least 2.")
         return value
 
     @traitlets.validate("selected_index")

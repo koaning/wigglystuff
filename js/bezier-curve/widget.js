@@ -3,8 +3,35 @@ import { drag } from "d3-drag";
 
 const PLAY_ICON = '<svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>';
 const PAUSE_ICON = '<svg viewBox="0 0 16 16"><rect x="3" y="2" width="4" height="12"/><rect x="9" y="2" width="4" height="12"/></svg>';
-const MARGIN = 24;
+const MARGIN_TIGHT = { top: 24, right: 24, bottom: 24, left: 24 };
+const MARGIN_WITH_AXES = { top: 12, right: 16, bottom: 32, left: 44 };
+const TICK_LENGTH = 5;
 const SAMPLE_COUNT = 120;
+
+function niceTicks(min, max, count = 5) {
+  if (!Number.isFinite(min) || !Number.isFinite(max) || min === max) return [];
+  const range = max - min;
+  const rough = range / Math.max(1, count);
+  const exp = Math.floor(Math.log10(rough));
+  const base = Math.pow(10, exp);
+  const candidates = [1, 2, 2.5, 5, 10].map((mult) => mult * base);
+  const step = candidates.find((value) => range / value <= count * 1.5) ?? candidates[candidates.length - 1];
+  const ticks = [];
+  const start = Math.ceil(min / step) * step;
+  for (let value = start; value <= max + step * 1e-9; value += step) {
+    ticks.push(Number((Math.round(value / step) * step).toFixed(12)));
+  }
+  return ticks;
+}
+
+function formatTick(value) {
+  if (!Number.isFinite(value)) return "";
+  if (value === 0) return "0";
+  const abs = Math.abs(value);
+  if (abs >= 1000 || abs < 0.01) return value.toExponential(1).replace("e+", "e");
+  const fixed = value.toFixed(3);
+  return fixed.replace(/\.?0+$/, "");
+}
 
 function clamp01(value) {
   return Math.max(0, Math.min(1, Number(value)));
@@ -94,6 +121,7 @@ function render({ model, el }) {
   el.appendChild(wrapper);
 
   const svg = select(svgNode);
+  const axisGroup = svg.append("g").attr("class", "bezier-curve-axis");
   const controlPath = svg.append("path").attr("class", "bezier-curve-control-path");
   const curvePath = svg.append("path").attr("class", "bezier-curve-path");
   const tracePath = svg.append("path").attr("class", "bezier-curve-trace");
@@ -103,6 +131,7 @@ function render({ model, el }) {
 
   let intervalId = null;
   let lastSync = 0;
+  let lastSampleSync = 0;
   let renderedButtonPlaying = null;
 
   function svgPointer(event) {
@@ -124,30 +153,38 @@ function render({ model, el }) {
     };
   }
 
+  function margins() {
+    return model.get("show_axes") ? MARGIN_WITH_AXES : MARGIN_TIGHT;
+  }
+
   function points() {
     return (model.get("points") || []).map(coercePoint);
   }
 
   function xScale(value) {
     const [min, max] = bounds().x;
-    return MARGIN + ((value - min) / (max - min)) * (width() - MARGIN * 2);
+    const m = margins();
+    return m.left + ((value - min) / (max - min)) * (width() - m.left - m.right);
   }
 
   function yScale(value) {
     const [min, max] = bounds().y;
-    return MARGIN + ((max - value) / (max - min)) * (height() - MARGIN * 2);
+    const m = margins();
+    return m.top + ((max - value) / (max - min)) * (height() - m.top - m.bottom);
   }
 
   function xInvert(px) {
     const [min, max] = bounds().x;
-    const clamped = Math.max(MARGIN, Math.min(width() - MARGIN, px));
-    return min + ((clamped - MARGIN) / (width() - MARGIN * 2)) * (max - min);
+    const m = margins();
+    const clamped = Math.max(m.left, Math.min(width() - m.right, px));
+    return min + ((clamped - m.left) / (width() - m.left - m.right)) * (max - min);
   }
 
   function yInvert(py) {
     const [min, max] = bounds().y;
-    const clamped = Math.max(MARGIN, Math.min(height() - MARGIN, py));
-    return max - ((clamped - MARGIN) / (height() - MARGIN * 2)) * (max - min);
+    const m = margins();
+    const clamped = Math.max(m.top, Math.min(height() - m.bottom, py));
+    return max - ((clamped - m.top) / (height() - m.top - m.bottom)) * (max - min);
   }
 
   function sampled(amount = 1) {
@@ -190,6 +227,29 @@ function render({ model, el }) {
     lastSync = now;
   }
 
+  function syncSamples(force = false) {
+    const now = performance.now();
+    const throttle = model.get("sync_throttle_ms") ?? 100;
+    if (!force && throttle > 0 && now - lastSampleSync < throttle) return;
+
+    const pts = effectivePoints(points(), model.get("closed"));
+    if (!pts.length) {
+      model.set("samples", []);
+      model.save_changes();
+      lastSampleSync = now;
+      return;
+    }
+    const n = Math.max(2, Number(model.get("n_samples")) || 100);
+    const samples = new Array(n);
+    for (let i = 0; i < n; i++) {
+      const p = deCasteljau(pts, i / (n - 1));
+      samples[i] = { x: p.x, y: p.y };
+    }
+    model.set("samples", samples);
+    model.save_changes();
+    lastSampleSync = now;
+  }
+
   function setT(value, forceSync = false) {
     model.set("t", clamp01(value));
     syncCurrent(forceSync);
@@ -211,6 +271,57 @@ function render({ model, el }) {
     }
     playButton.setAttribute("aria-label", playing ? "Pause" : "Play");
     playButton.setAttribute("aria-pressed", playing ? "true" : "false");
+  }
+
+  function drawAxes() {
+    if (!model.get("show_axes")) {
+      axisGroup.selectAll("*").remove();
+      return;
+    }
+    const w = width();
+    const h = height();
+    const m = margins();
+    const { x: xb, y: yb } = bounds();
+    const xTicks = niceTicks(xb[0], xb[1], 5);
+    const yTicks = niceTicks(yb[0], yb[1], 5);
+
+    const baseY = h - m.bottom;
+    const baseX = m.left;
+
+    axisGroup.selectAll("*").remove();
+
+    const xGroup = axisGroup.append("g").attr("class", "bezier-curve-axis-x");
+    xGroup.append("line")
+      .attr("class", "bezier-curve-axis-domain")
+      .attr("x1", m.left).attr("x2", w - m.right)
+      .attr("y1", baseY).attr("y2", baseY);
+    const xTick = xGroup.selectAll("g.tick")
+      .data(xTicks)
+      .join("g")
+      .attr("class", "tick")
+      .attr("transform", (d) => `translate(${xScale(d)},${baseY})`);
+    xTick.append("line").attr("y2", TICK_LENGTH);
+    xTick.append("text")
+      .attr("y", TICK_LENGTH + 10)
+      .attr("text-anchor", "middle")
+      .text((d) => formatTick(d));
+
+    const yGroup = axisGroup.append("g").attr("class", "bezier-curve-axis-y");
+    yGroup.append("line")
+      .attr("class", "bezier-curve-axis-domain")
+      .attr("x1", baseX).attr("x2", baseX)
+      .attr("y1", m.top).attr("y2", h - m.bottom);
+    const yTick = yGroup.selectAll("g.tick")
+      .data(yTicks)
+      .join("g")
+      .attr("class", "tick")
+      .attr("transform", (d) => `translate(${baseX},${yScale(d)})`);
+    yTick.append("line").attr("x2", -TICK_LENGTH);
+    yTick.append("text")
+      .attr("x", -TICK_LENGTH - 4)
+      .attr("dy", "0.32em")
+      .attr("text-anchor", "end")
+      .text((d) => formatTick(d));
   }
 
   function renderFrame() {
@@ -235,6 +346,7 @@ function render({ model, el }) {
     syncSliderFill();
     renderButton();
 
+    drawAxes();
     controlPath.attr("d", pathFromPixels(effective, xScale, yScale));
     curvePath.attr("d", pathFromPixels(sampled(1), xScale, yScale));
     tracePath.attr("d", pathFromPixels(sampled(t), xScale, yScale));
@@ -284,6 +396,7 @@ function render({ model, el }) {
           .map((point) => ({ x: point.x, y: point.y }));
         model.set("points", next);
         syncCurrent(true);
+        syncSamples(true);
         model.save_changes();
         renderFrame();
       })
@@ -299,10 +412,12 @@ function render({ model, el }) {
           const next = pts.map((point) => ({ x: point.x, y: point.y }));
           model.set("points", next);
           syncCurrent(true);
+          syncSamples(false);
           renderFrame();
         })
         .on("end", function () {
           select(this).classed("is-dragging", false);
+          syncSamples(true);
           model.save_changes();
         }));
   }
@@ -355,6 +470,7 @@ function render({ model, el }) {
   closedInput.addEventListener("change", () => {
     model.set("closed", closedInput.checked);
     syncCurrent(true);
+    syncSamples(true);
     model.save_changes();
     renderFrame();
   });
@@ -370,6 +486,7 @@ function render({ model, el }) {
     const next = [...points(), { x: xInvert(px), y: yInvert(py) }];
     model.set("points", next);
     syncCurrent(true);
+    syncSamples(true);
     model.save_changes();
     renderFrame();
   });
@@ -404,12 +521,17 @@ function render({ model, el }) {
   ].forEach((name) => {
     model.on(`change:${name}`, () => {
       if (name !== "loop") syncCurrent(name !== "t");
+      if (name !== "t" && name !== "loop") syncSamples(true);
       renderFrame();
     });
   });
 
+  model.on("change:show_axes", renderFrame);
+  model.on("change:n_samples", () => syncSamples(true));
+
   renderFrame();
   syncCurrent(true);
+  syncSamples(true);
   if (model.get("playing")) startPlaying();
 
   return () => {

@@ -77,6 +77,22 @@
   stroke-linecap: round;
 }
 
+.bezier-curve-axis line {
+  stroke: var(--bezier-muted);
+  stroke-width: 1;
+}
+
+.bezier-curve-axis .bezier-curve-axis-domain {
+  stroke: var(--bezier-border);
+}
+
+.bezier-curve-axis text {
+  fill: var(--bezier-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
 .bezier-curve-current {
   fill: var(--bezier-trace);
   stroke: var(--bezier-bg);

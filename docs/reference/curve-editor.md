@@ -7,6 +7,7 @@
 | Traitlet | Type | Notes |
 | --- | --- | --- |
 | `points` | `list[dict]` | Chart knots as `{"x": float, "y": float}` in data coordinates. Open curves store points sorted by x-coordinate; closed curves preserve drawing order. |
+| `samples` | `list[dict]` | `n_samples` points along the rendered curve in data coordinates, emitted by the browser after each render. |
 | `x` | `float` | Current rendered path x-coordinate at `t`. |
 | `y` | `float` | Current rendered path y-coordinate at `t`. |
 | `t` | `float` | Path progress, clamped to `[0, 1]`. |
@@ -20,6 +21,8 @@
 | `duration_ms` | `int` | Milliseconds for one full `t=0` to `t=1` traversal. |
 | `sync_throttle_ms` | `int` | Minimum milliseconds between playback updates synced to Python. |
 | `selected_index` | `int` | Selected point index, or `-1` when no point is selected. |
+| `show_axes` | `bool` | Whether to render numeric tick marks and labels on the x and y axes. |
+| `n_samples` | `int` | Number of points emitted on the `samples` traitlet. Must be at least 2. |
 | `x_bounds` | `tuple[float, float]` | Data-coordinate x bounds. |
 | `y_bounds` | `tuple[float, float]` | Data-coordinate y bounds. |
 | `width` | `int` | SVG width in pixels. |
