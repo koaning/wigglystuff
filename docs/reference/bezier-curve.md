@@ -7,6 +7,7 @@
 | Traitlet | Type | Notes |
 | --- | --- | --- |
 | `points` | `list[dict]` | Control points as `{"x": float, "y": float}` in data coordinates. |
+| `samples` | `list[dict]` | `n_samples` points along the rendered curve in data coordinates. |
 | `x` | `float` | Current Bezier point x-coordinate at `t`. |
 | `y` | `float` | Current Bezier point y-coordinate at `t`. |
 | `t` | `float` | Curve parameter, clamped to `[0, 1]`. |
@@ -16,6 +17,8 @@
 | `interval_ms` | `int` | Milliseconds between browser playback ticks. |
 | `duration_ms` | `int` | Milliseconds for one full `t=0` to `t=1` traversal. |
 | `sync_throttle_ms` | `int` | Minimum milliseconds between playback updates synced to Python. |
+| `show_axes` | `bool` | Whether to render numeric tick marks and labels on the x and y axes. |
+| `n_samples` | `int` | Number of points emitted on the `samples` traitlet. Must be at least 2. |
 | `x_bounds` | `tuple[float, float]` | Data-coordinate x bounds. |
 | `y_bounds` | `tuple[float, float]` | Data-coordinate y bounds. |
 | `width` | `int` | SVG width in pixels. |

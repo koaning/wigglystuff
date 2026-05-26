@@ -175,3 +175,5 @@ docs/examples/*
 !docs/examples/.demo-hashes.json
 
 wandb/**
+
+*.mp4

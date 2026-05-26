@@ -147,6 +147,22 @@
   stroke-width: 1;
 }
 
+.curve-editor-axis line {
+  stroke: var(--curve-editor-muted);
+  stroke-width: 1;
+}
+
+.curve-editor-axis .curve-editor-axis-domain {
+  stroke: var(--curve-editor-border);
+}
+
+.curve-editor-axis text {
+  fill: var(--curve-editor-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
 .curve-editor-path,
 .curve-editor-trace {
   fill: none;
