@@ -121,18 +121,29 @@ function render({ model, el }) {
   el.appendChild(wrapper);
 
   const svg = select(svgNode);
+  const clipId = `bezier-clip-${Math.random().toString(36).slice(2)}`;
+  const clipRect = svg.append("defs")
+    .append("clipPath").attr("id", clipId)
+    .append("rect");
+  const gridGroup = svg.append("g")
+    .attr("class", "bezier-curve-grid")
+    .attr("clip-path", `url(#${clipId})`);
   const axisGroup = svg.append("g").attr("class", "bezier-curve-axis");
-  const controlPath = svg.append("path").attr("class", "bezier-curve-control-path");
-  const curvePath = svg.append("path").attr("class", "bezier-curve-path");
-  const tracePath = svg.append("path").attr("class", "bezier-curve-trace");
-  const constructionGroup = svg.append("g").attr("class", "bezier-curve-construction");
-  const currentPoint = svg.append("circle").attr("class", "bezier-curve-current").attr("r", 5);
-  const pointGroup = svg.append("g").attr("class", "bezier-curve-points");
+  const plotGroup = svg.append("g")
+    .attr("class", "bezier-curve-plot")
+    .attr("clip-path", `url(#${clipId})`);
+  const controlPath = plotGroup.append("path").attr("class", "bezier-curve-control-path");
+  const curvePath = plotGroup.append("path").attr("class", "bezier-curve-path");
+  const tracePath = plotGroup.append("path").attr("class", "bezier-curve-trace");
+  const constructionGroup = plotGroup.append("g").attr("class", "bezier-curve-construction");
+  const currentPoint = plotGroup.append("circle").attr("class", "bezier-curve-current").attr("r", 5);
+  const pointGroup = plotGroup.append("g").attr("class", "bezier-curve-points");
 
   let intervalId = null;
   let lastSync = 0;
   let lastSampleSync = 0;
   let renderedButtonPlaying = null;
+  const view = { tx: 0, ty: 0, k: 1 };
 
   function svgPointer(event) {
     return pointer(event.sourceEvent || event, svgNode);
@@ -161,30 +172,48 @@ function render({ model, el }) {
     return (model.get("points") || []).map(coercePoint);
   }
 
-  function xScale(value) {
+  function baseXScale(value) {
     const [min, max] = bounds().x;
     const m = margins();
     return m.left + ((value - min) / (max - min)) * (width() - m.left - m.right);
   }
 
-  function yScale(value) {
+  function baseYScale(value) {
     const [min, max] = bounds().y;
     const m = margins();
     return m.top + ((max - value) / (max - min)) * (height() - m.top - m.bottom);
   }
 
+  function xScale(value) {
+    return view.tx + view.k * baseXScale(value);
+  }
+
+  function yScale(value) {
+    return view.ty + view.k * baseYScale(value);
+  }
+
   function xInvert(px) {
     const [min, max] = bounds().x;
     const m = margins();
-    const clamped = Math.max(m.left, Math.min(width() - m.right, px));
-    return min + ((clamped - m.left) / (width() - m.left - m.right)) * (max - min);
+    const ux = (px - view.tx) / view.k;
+    return min + ((ux - m.left) / (width() - m.left - m.right)) * (max - min);
   }
 
   function yInvert(py) {
     const [min, max] = bounds().y;
     const m = margins();
-    const clamped = Math.max(m.top, Math.min(height() - m.bottom, py));
-    return max - ((clamped - m.top) / (height() - m.top - m.bottom)) * (max - min);
+    const uy = (py - view.ty) / view.k;
+    return max - ((uy - m.top) / (height() - m.top - m.bottom)) * (max - min);
+  }
+
+  function visibleBounds() {
+    const m = margins();
+    const w = width();
+    const h = height();
+    return {
+      x: [xInvert(m.left), xInvert(w - m.right)],
+      y: [yInvert(h - m.bottom), yInvert(m.top)],
+    };
   }
 
   function sampled(amount = 1) {
@@ -281,9 +310,15 @@ function render({ model, el }) {
     const w = width();
     const h = height();
     const m = margins();
-    const { x: xb, y: yb } = bounds();
-    const xTicks = niceTicks(xb[0], xb[1], 5);
-    const yTicks = niceTicks(yb[0], yb[1], 5);
+    const { x: xb, y: yb } = visibleBounds();
+    const xPxMin = m.left;
+    const xPxMax = w - m.right;
+    const yPxMin = m.top;
+    const yPxMax = h - m.bottom;
+    const xTicks = niceTicks(xb[0], xb[1], 5)
+      .filter((d) => xScale(d) >= xPxMin - 0.5 && xScale(d) <= xPxMax + 0.5);
+    const yTicks = niceTicks(yb[0], yb[1], 5)
+      .filter((d) => yScale(d) >= yPxMin - 0.5 && yScale(d) <= yPxMax + 0.5);
 
     const baseY = h - m.bottom;
     const baseX = m.left;
@@ -324,6 +359,43 @@ function render({ model, el }) {
       .text((d) => formatTick(d));
   }
 
+  function drawGrid() {
+    if (!model.get("show_axes")) {
+      gridGroup.selectAll("*").remove();
+      return;
+    }
+    const w = width();
+    const h = height();
+    const m = margins();
+    const { x: xb, y: yb } = visibleBounds();
+    const xPxMin = m.left;
+    const xPxMax = w - m.right;
+    const yPxMin = m.top;
+    const yPxMax = h - m.bottom;
+    const xTicks = niceTicks(xb[0], xb[1], 5)
+      .filter((d) => xScale(d) >= xPxMin - 0.5 && xScale(d) <= xPxMax + 0.5);
+    const yTicks = niceTicks(yb[0], yb[1], 5)
+      .filter((d) => yScale(d) >= yPxMin - 0.5 && yScale(d) <= yPxMax + 0.5);
+
+    gridGroup.selectAll("line.bezier-curve-grid-x")
+      .data(xTicks)
+      .join("line")
+      .attr("class", "bezier-curve-grid-x")
+      .attr("x1", (d) => xScale(d))
+      .attr("x2", (d) => xScale(d))
+      .attr("y1", yPxMin)
+      .attr("y2", yPxMax);
+
+    gridGroup.selectAll("line.bezier-curve-grid-y")
+      .data(yTicks)
+      .join("line")
+      .attr("class", "bezier-curve-grid-y")
+      .attr("x1", xPxMin)
+      .attr("x2", xPxMax)
+      .attr("y1", (d) => yScale(d))
+      .attr("y2", (d) => yScale(d));
+  }
+
   function renderFrame() {
     const w = width();
     const h = height();
@@ -346,6 +418,14 @@ function render({ model, el }) {
     syncSliderFill();
     renderButton();
 
+    const m = margins();
+    clipRect
+      .attr("x", m.left)
+      .attr("y", m.top)
+      .attr("width", Math.max(0, w - m.left - m.right))
+      .attr("height", Math.max(0, h - m.top - m.bottom));
+
+    drawGrid();
     drawAxes();
     controlPath.attr("d", pathFromPixels(effective, xScale, yScale));
     curvePath.attr("d", pathFromPixels(sampled(1), xScale, yScale));
@@ -488,6 +568,46 @@ function render({ model, el }) {
     model.save_changes();
     renderFrame();
   });
+
+  svgNode.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    const [px, py] = pointer(event, svgNode);
+    const factor = Math.exp(-event.deltaY * 0.001);
+    const newK = Math.max(0.1, Math.min(50, view.k * factor));
+    const ratio = newK / view.k;
+    view.tx = px - (px - view.tx) * ratio;
+    view.ty = py - (py - view.ty) * ratio;
+    view.k = newK;
+    renderFrame();
+  }, { passive: false });
+
+  let panPointerId = null;
+  let panLast = null;
+  svgNode.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    if (event.target?.classList?.contains("bezier-curve-point")) return;
+    panPointerId = event.pointerId;
+    panLast = pointer(event, svgNode);
+    svgNode.setPointerCapture(panPointerId);
+    svgNode.classList.add("is-panning");
+  });
+  svgNode.addEventListener("pointermove", (event) => {
+    if (panPointerId === null || event.pointerId !== panPointerId) return;
+    const [px, py] = pointer(event, svgNode);
+    view.tx += px - panLast[0];
+    view.ty += py - panLast[1];
+    panLast = [px, py];
+    renderFrame();
+  });
+  const endPan = (event) => {
+    if (panPointerId === null || event.pointerId !== panPointerId) return;
+    try { svgNode.releasePointerCapture(panPointerId); } catch (_) {}
+    panPointerId = null;
+    panLast = null;
+    svgNode.classList.remove("is-panning");
+  };
+  svgNode.addEventListener("pointerup", endPan);
+  svgNode.addEventListener("pointercancel", endPan);
 
   model.on("change:playing", () => {
     const playing = model.get("playing");

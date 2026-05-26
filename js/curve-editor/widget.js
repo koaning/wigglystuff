@@ -206,18 +206,28 @@ function render({ model, el }) {
   el.appendChild(wrapper);
 
   const svg = select(svgNode);
-  const gridGroup = svg.append("g").attr("class", "curve-editor-grid");
+  const clipId = `curve-editor-clip-${Math.random().toString(36).slice(2)}`;
+  const clipRect = svg.append("defs")
+    .append("clipPath").attr("id", clipId)
+    .append("rect");
+  const gridGroup = svg.append("g")
+    .attr("class", "curve-editor-grid")
+    .attr("clip-path", `url(#${clipId})`);
   const axisGroup = svg.append("g").attr("class", "curve-editor-axis");
-  const path = svg.append("path").attr("class", "curve-editor-path");
-  const tracePath = svg.append("path").attr("class", "curve-editor-trace");
-  const hitbox = svg.append("rect").attr("class", "curve-editor-hitbox");
-  const currentPoint = svg.append("circle").attr("class", "curve-editor-current").attr("r", 5);
-  const pointGroup = svg.append("g").attr("class", "curve-editor-points");
+  const plotGroup = svg.append("g")
+    .attr("class", "curve-editor-plot")
+    .attr("clip-path", `url(#${clipId})`);
+  const path = plotGroup.append("path").attr("class", "curve-editor-path");
+  const tracePath = plotGroup.append("path").attr("class", "curve-editor-trace");
+  const hitbox = plotGroup.append("rect").attr("class", "curve-editor-hitbox");
+  const currentPoint = plotGroup.append("circle").attr("class", "curve-editor-current").attr("r", 5);
+  const pointGroup = plotGroup.append("g").attr("class", "curve-editor-points");
 
   let intervalId = null;
   let lastSync = 0;
   let lastSampleSync = 0;
   let renderedButtonPlaying = null;
+  const view = { tx: 0, ty: 0, k: 1 };
 
   function width() {
     return model.get("width") || 600;
@@ -256,7 +266,7 @@ function render({ model, el }) {
     return effectivePoints(points(), model.get("closed"), model.get("curve"));
   }
 
-  function scales() {
+  function baseScales() {
     const chartBounds = bounds();
     const m = margins();
     return {
@@ -265,18 +275,32 @@ function render({ model, el }) {
     };
   }
 
+  function xScale(value) {
+    const { x } = baseScales();
+    return view.tx + view.k * x(value);
+  }
+
+  function yScale(value) {
+    const { y } = baseScales();
+    return view.ty + view.k * y(value);
+  }
+
   function xInvert(px) {
-    const { x } = scales();
-    const m = margins();
-    const clamped = Math.max(m.left, Math.min(m.left + innerWidth(), px));
-    return x.invert(clamped);
+    const { x } = baseScales();
+    return x.invert((px - view.tx) / view.k);
   }
 
   function yInvert(py) {
-    const { y } = scales();
+    const { y } = baseScales();
+    return y.invert((py - view.ty) / view.k);
+  }
+
+  function visibleBounds() {
     const m = margins();
-    const clamped = Math.max(m.top, Math.min(m.top + innerHeight(), py));
-    return y.invert(clamped);
+    return {
+      x: [xInvert(m.left), xInvert(m.left + innerWidth())],
+      y: [yInvert(m.top + innerHeight()), yInvert(m.top)],
+    };
   }
 
   function selectedIndex() {
@@ -284,7 +308,7 @@ function render({ model, el }) {
     return Number.isInteger(selected) ? selected : -1;
   }
 
-  function lineGenerator(xScale, yScale) {
+  function lineGenerator() {
     return line()
       .x((d) => xScale(d.x))
       .y((d) => yScale(d.y))
@@ -304,21 +328,31 @@ function render({ model, el }) {
     model.save_changes();
   }
 
-  function drawGrid(xScale, yScale) {
+  function drawGrid() {
     const m = margins();
-    const vertical = xScale.ticks(6).map((tick) => ({
+    const vb = visibleBounds();
+    const xPxMin = m.left;
+    const xPxMax = m.left + innerWidth();
+    const yPxMin = m.top;
+    const yPxMax = m.top + innerHeight();
+    const xTicks = scaleLinear().domain(vb.x).ticks(6)
+      .filter((d) => xScale(d) >= xPxMin - 0.5 && xScale(d) <= xPxMax + 0.5);
+    const yTicks = scaleLinear().domain(vb.y).ticks(5)
+      .filter((d) => yScale(d) >= yPxMin - 0.5 && yScale(d) <= yPxMax + 0.5);
+
+    const vertical = xTicks.map((tick) => ({
       axis: "x",
       value: tick,
       x1: xScale(tick),
       x2: xScale(tick),
-      y1: m.top,
-      y2: m.top + innerHeight(),
+      y1: yPxMin,
+      y2: yPxMax,
     }));
-    const horizontal = yScale.ticks(5).map((tick) => ({
+    const horizontal = yTicks.map((tick) => ({
       axis: "y",
       value: tick,
-      x1: m.left,
-      x2: m.left + innerWidth(),
+      x1: xPxMin,
+      x2: xPxMax,
       y1: yScale(tick),
       y2: yScale(tick),
     }));
@@ -332,7 +366,7 @@ function render({ model, el }) {
       .attr("y2", (d) => d.y2);
   }
 
-  function drawAxes(xScale, yScale) {
+  function drawAxes() {
     if (!model.get("show_axes")) {
       axisGroup.selectAll("*").remove();
       return;
@@ -342,8 +376,15 @@ function render({ model, el }) {
     const m = margins();
     const baseY = h - m.bottom;
     const baseX = m.left;
-    const xTicks = xScale.ticks(6);
-    const yTicks = yScale.ticks(5);
+    const vb = visibleBounds();
+    const xPxMin = m.left;
+    const xPxMax = m.left + innerWidth();
+    const yPxMin = m.top;
+    const yPxMax = m.top + innerHeight();
+    const xTicks = scaleLinear().domain(vb.x).ticks(6)
+      .filter((d) => xScale(d) >= xPxMin - 0.5 && xScale(d) <= xPxMax + 0.5);
+    const yTicks = scaleLinear().domain(vb.y).ticks(5)
+      .filter((d) => yScale(d) >= yPxMin - 0.5 && yScale(d) <= yPxMax + 0.5);
 
     axisGroup.selectAll("*").remove();
 
@@ -488,8 +529,7 @@ function render({ model, el }) {
     const m = margins();
     const pts = points();
     const effective = pathPoints();
-    const { x, y } = scales();
-    const generator = lineGenerator(x, y);
+    const generator = lineGenerator();
 
     wrapper.style.width = `${w}px`;
     svg
@@ -499,8 +539,15 @@ function render({ model, el }) {
       .style("aspect-ratio", `${w} / ${h}`);
 
     renderControls();
-    drawGrid(x, y);
-    drawAxes(x, y);
+
+    clipRect
+      .attr("x", m.left)
+      .attr("y", m.top)
+      .attr("width", Math.max(0, innerWidth()))
+      .attr("height", Math.max(0, innerHeight()));
+
+    drawGrid();
+    drawAxes();
 
     hitbox
       .attr("x", m.left)
@@ -519,6 +566,11 @@ function render({ model, el }) {
         tracePath
           .attr("d", path.attr("d"))
           .attr("stroke-dasharray", `${dash} ${Math.max(0, traceLength - dash)}`);
+        const dotPt = traceNode.getPointAtLength(traceLength * t);
+        currentPoint
+          .attr("cx", dotPt.x)
+          .attr("cy", dotPt.y)
+          .attr("display", null);
       } catch {
         tracePath.attr("d", "");
         currentPoint.attr("display", "none");
@@ -537,8 +589,8 @@ function render({ model, el }) {
           : "curve-editor-point"
       ))
       .attr("r", 6)
-      .attr("cx", (d) => x(d.x))
-      .attr("cy", (d) => y(d.y))
+      .attr("cx", (d) => xScale(d.x))
+      .attr("cy", (d) => yScale(d.y))
       .on("click", (event, d) => {
         event.stopPropagation();
         model.set("selected_index", pts.indexOf(d));
@@ -682,19 +734,65 @@ function render({ model, el }) {
     renderControls();
   });
 
+  let panPointerId = null;
+  let panLast = null;
+  let panMoved = false;
+
   svg.on("click", () => {
+    if (panMoved) { panMoved = false; return; }
     model.set("selected_index", -1);
     model.save_changes();
     renderFrame(false);
   });
 
   svg.on("dblclick", (event) => {
+    if (panMoved) { panMoved = false; return; }
     if (event.target?.classList?.contains("curve-editor-point")) return;
     const [px, py] = pointer(event, svgNode);
     const added = { x: xInvert(px), y: yInvert(py) };
     syncPoints([...points(), added], added);
     renderFrame(true);
   });
+
+  svgNode.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    const [px, py] = pointer(event, svgNode);
+    const factor = Math.exp(-event.deltaY * 0.001);
+    const newK = Math.max(0.1, Math.min(50, view.k * factor));
+    const ratio = newK / view.k;
+    view.tx = px - (px - view.tx) * ratio;
+    view.ty = py - (py - view.ty) * ratio;
+    view.k = newK;
+    renderFrame(false);
+  }, { passive: false });
+
+  svgNode.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    if (event.target?.classList?.contains("curve-editor-point")) return;
+    panPointerId = event.pointerId;
+    panLast = pointer(event, svgNode);
+    panMoved = false;
+    svgNode.setPointerCapture(panPointerId);
+    svgNode.classList.add("is-panning");
+  });
+  svgNode.addEventListener("pointermove", (event) => {
+    if (panPointerId === null || event.pointerId !== panPointerId) return;
+    const [px, py] = pointer(event, svgNode);
+    view.tx += px - panLast[0];
+    view.ty += py - panLast[1];
+    panLast = [px, py];
+    panMoved = true;
+    renderFrame(false);
+  });
+  const endPan = (event) => {
+    if (panPointerId === null || event.pointerId !== panPointerId) return;
+    try { svgNode.releasePointerCapture(panPointerId); } catch (_) {}
+    panPointerId = null;
+    panLast = null;
+    svgNode.classList.remove("is-panning");
+  };
+  svgNode.addEventListener("pointerup", endPan);
+  svgNode.addEventListener("pointercancel", endPan);
 
   model.on("change:playing", () => {
     const playing = model.get("playing");
