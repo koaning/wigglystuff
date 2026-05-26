@@ -307,4 +307,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curve_normal.py" class="example-img"><img src="assets/gallery/curve_normal.webp" alt="Curve Normal"></a>
+<div class="example-content">
+<div class="example-title">Curve Normal</div>
+<div class="example-desc">Treat the CurveEditor's chart space as the (μ, σ) parameter space of a normal distribution — drag knots through it and watch the family of densities update from the samples traitlet.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curve_normal.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/curve_normal.py">Source</a></div>
+</div>
 </div>
