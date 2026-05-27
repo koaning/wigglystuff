@@ -281,7 +281,7 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 <div class="example-title">Steam Deck Annotations</div>
 <div class="example-desc">Use Steam Input to map Steam Deck buttons to keyboard keys, then drive AnnotationWidget through its keyboard_mapping — with a KeystrokeWidget section for inspecting what each button emits.</div>
 </div>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/steamdeck.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/steamdeck.py">Source</a></div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/steamdeck.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/steamdeck.py/wasm">Source</a></div>
 </div>
 <div class="example-item">
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint-scatter.py/wasm" class="example-img"><img src="assets/gallery/paint-scatter.webp" alt="Paint Scatter"></a>
@@ -289,7 +289,7 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 <div class="example-title">Paint Scatter</div>
 <div class="example-desc">Draw on a Paint canvas and watch a marimo refresh-driven loop bloom colorful dots around every dark stroke also includes a colored Conway's Game of Life.</div>
 </div>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint-scatter.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/paint-scatter.py">Source</a></div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint-scatter.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/paint-scatter.pywasm">Source</a></div>
 </div>
 <div class="example-item">
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypercube.py/wasm" class="example-img"><img src="assets/gallery/hypercube.webp" alt="Hypercube"></a>
@@ -297,7 +297,7 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 <div class="example-title">Hypercube</div>
 <div class="example-desc">Generate the n-dimensional hypercubeprogrammatically and watch GraphWidget's force layout unfurl it.</div>
 </div>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypercube.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/hypercube.py">Source</a></div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypercube.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/hypercube.py/wasm">Source</a></div>
 </div>
 <div class="example-item">
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py/wasm" class="example-img"><img src="assets/gallery/mcnugget.webp" alt="McNugget Graph"></a>
@@ -305,7 +305,7 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 <div class="example-title">McNugget Graph</div>
 <div class="example-desc">Step through a breadth-first search of which integers you can reach by summing McNugget box sizes (6, 9, 20), visualized with GraphWidget and driven by PlaySlider.</div>
 </div>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py">Source</a></div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py/wasm">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py/wasm">Source</a></div>
 </div>
 <div class="example-item">
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curve_normal.py" class="example-img"><img src="assets/gallery/curve_normal.webp" alt="Curve Normal"></a>
@@ -313,6 +313,6 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 <div class="example-title">Curve Normal</div>
 <div class="example-desc">Treat the CurveEditor's chart space as the (μ, σ) parameter space of a normal distribution — drag knots through it and watch the family of densities update from the samples traitlet.</div>
 </div>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curve_normal.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/curve_normal.py">Source</a></div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curve_normal.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/curve_normal.py/wasm">Source</a></div>
 </div>
 </div>
