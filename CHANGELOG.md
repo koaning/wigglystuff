@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.5] - 2026-05-27
+
+### Added
+
+- `BezierCurve` and `CurveEditor`: drag empty space inside the axes frame to pan and use the mouse wheel to zoom toward the cursor. The view transform is pixel-space only — `x_bounds` / `y_bounds` are unchanged and no view state is synced to Python. Grid lines and axis ticks recompute against the visible range as you zoom, and the curve is clipped to the plot area so it no longer spills past the axes.
+
 ### Fixed
 
 - `BezierCurve` and `CurveEditor`: editing the curve (dragging a control point, double-clicking to add or remove a point, or toggling `closed`) no longer pauses playback. The playhead now continues across the new curve shape, matching the existing behaviour when changing the curve type or tension. Progress-slider scrubbing still pauses, since scrubbing `t` directly fights the timer.
