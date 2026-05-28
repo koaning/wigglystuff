@@ -80,6 +80,9 @@ uv pip install wigglystuff
 <td align="center"><b>Treemap</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/treemap.py/wasm"><img src="./docs/assets/gallery/treemap.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/treemap.py/wasm">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/treemap/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/treemap.md">MD</a></td>
 <td align="center"><b>NestedTable</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/nested_table.py/wasm"><img src="./docs/assets/gallery/nested_table.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/nested_table.py/wasm">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/nested-table/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/nested-table.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>CircularSlider</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm"><img src="./docs/assets/gallery/circle-slider.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/circular-slider/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/circular-slider.md">MD</a></td>
+</tr>
 </table>
 
 ## 3rd party widgets

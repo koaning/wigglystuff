@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.6] - 2026-05-28
+
+### Added
+
+- `CircularSlider` and `CircularRangeSlider`: new dial-style widgets for picking a value or a span on a full circle. The API mirrors `mo.ui.slider` / `mo.ui.range_slider` (`start`, `stop`, `step`, `value`) and the ring is configurable via `size`, `thickness`, `show_value`, and `color`. Dragging inside the filled arc of a range slider translates the whole `(low, high)` window, wrapping freely around the 12 o'clock seam — a wrap-around range is represented as a tuple where `low > high`. Dragging either handle past the other also wraps (no swap). Construction tolerates `(high, low)` for backwards-compatible "min/max" calls by sorting on init. The numeric readout is rendered below the dial. Construction raises `ValueError` when `size < 2 * thickness + 30` so callers don't get a silently broken render. The `color` traitlet accepts any CSS color string (`"#ef4444"`, `"tomato"`, etc.) and recolors the fill arc and handle border; leave it empty to follow the light/dark theme. The `label` traitlet places a text label above the dial — matching the `label=` parameter on `mo.ui.slider`.
+
 ## [0.5.5] - 2026-05-27
 
 ### Added

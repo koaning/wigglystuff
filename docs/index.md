@@ -198,6 +198,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/play_slider.py/wasm">molab</a><a href="reference/play-slider/">API</a><a href="reference/play-slider.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">CircularSlider</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm" class="gallery-img"><img src="assets/gallery/circle-slider.webp" alt="CircularSlider"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm">molab</a><a href="reference/circular-slider/">API</a><a href="reference/circular-slider.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">ForecastChart</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm" class="gallery-img"><img src="assets/gallery/forecast-chart.webp" alt="ForecastChart"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm">molab</a><a href="reference/utils/">API</a><a href="reference/utils.md">MD</a></div>

@@ -10,6 +10,7 @@ from .cell_tour import CellTour
 from .chart_puck import ChartPuck
 from .chart_multi_select import ChartMultiSelect
 from .chart_select import ChartSelect
+from .circular_slider import CircularRangeSlider, CircularSlider
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
 from .curve_editor import CurveEditor
@@ -53,6 +54,8 @@ __all__ = [
     "ChartPuck",
     "ChartMultiSelect",
     "ChartSelect",
+    "CircularRangeSlider",
+    "CircularSlider",
     "ColorPicker",
     "CopyToClipboard",
     "CurveEditor",
