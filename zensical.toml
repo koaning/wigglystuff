@@ -47,6 +47,7 @@ nav = [
         { AltairWidget = "reference/altair-widget.md" },
         { ApiDoc = "reference/api-doc.md" },
         { PlaySlider = "reference/play-slider.md" },
+        { CircularSlider = "reference/circular-slider.md" },
         { HoverZoom = "reference/hover-zoom.md" },
         { Treemap = "reference/treemap.md" },
         { NestedTable = "reference/nested-table.md" },

@@ -1,0 +1,56 @@
+.circular-slider-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: light dark;
+  padding: 6px;
+
+  --cs-track: #e5e7eb;
+  --cs-fill: #3b82f6;
+  --cs-handle: #ffffff;
+  --cs-handle-border: #1d4ed8;
+  --cs-text: #111827;
+}
+
+.dark .circular-slider-wrapper,
+.dark-theme .circular-slider-wrapper,
+[data-theme="dark"] .circular-slider-wrapper {
+  --cs-track: #334155;
+  --cs-fill: #60a5fa;
+  --cs-handle: #0f172a;
+  --cs-handle-border: #60a5fa;
+  --cs-text: #f1f5f9;
+}
+
+.circular-slider-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cs-text);
+  opacity: 0.85;
+  margin-bottom: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.circular-slider-canvas {
+  display: block;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.circular-slider-canvas:active {
+  cursor: grabbing;
+}
+
+.circular-slider-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cs-text);
+  font-variant-numeric: tabular-nums;
+  margin-top: 6px;
+  text-align: center;
+  white-space: nowrap;
+}
