@@ -34,15 +34,32 @@
   white-space: nowrap;
 }
 
-.circular-slider-canvas {
+.circular-slider-svg {
   display: block;
   cursor: grab;
   user-select: none;
   touch-action: none;
 }
 
-.circular-slider-canvas:active {
+.circular-slider-svg:active {
   cursor: grabbing;
+}
+
+.circular-slider-track {
+  stroke: var(--cs-track);
+  fill: none;
+}
+
+.circular-slider-fill {
+  stroke: var(--cs-fill);
+  fill: none;
+  stroke-linecap: round;
+}
+
+.circular-slider-handle {
+  fill: var(--cs-handle);
+  stroke: var(--cs-handle-border);
+  stroke-width: 2;
 }
 
 .circular-slider-label {

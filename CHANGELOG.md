@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.7] - 2026-05-28
+
+### Fixed
+
+- `CircularSlider` and `CircularRangeSlider`: rewrite the front end in SVG instead of canvas. Removes a same-color residue artifact where previous arc positions stayed visible on the track, caused by re-renders stacking canvases on top of one another.
+
 ## [0.5.6] - 2026-05-28
 
 ### Added

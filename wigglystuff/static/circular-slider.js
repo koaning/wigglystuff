@@ -1,5 +1,6 @@
 const TAU = Math.PI * 2;
 const HALF_PI = Math.PI / 2;
+const SVG_NS = "http://www.w3.org/2000/svg";
 
 function getPrecision(step) {
   const s = String(step);
@@ -17,26 +18,45 @@ function formatValue(value, step) {
   return value.toFixed(getPrecision(step));
 }
 
-// Map a value in [start, stop] to a fraction in [0, 1].
 function valueToFraction(value, start, stop) {
   return (value - start) / (stop - start);
 }
 
-// Map a fraction in [0, 1] to a canvas angle (radians).
 // fraction 0 is at 12 o'clock; increases clockwise.
 function fractionToAngle(fraction) {
   return -HALF_PI + fraction * TAU;
 }
 
-// Map a canvas angle (radians) to a fraction in [0, 1] using the
-// "12 o'clock, clockwise" convention.
 function angleToFraction(angle) {
   let f = (angle + HALF_PI) / TAU;
   f = ((f % 1) + 1) % 1;
   return f;
 }
 
+function arcPath(cx, cy, r, fracA, fracB) {
+  if (fracA === fracB) return "";
+  const a = fractionToAngle(fracA);
+  let b = fractionToAngle(fracB);
+  if (b <= a) b += TAU;
+  const sweep = b - a;
+  const x1 = cx + r * Math.cos(a);
+  const y1 = cy + r * Math.sin(a);
+  // A single SVG arc command can't draw a full circle (endpoints coincide
+  // and the renderer skips it). Split into two semicircles.
+  if (sweep >= TAU - 1e-6) {
+    const xm = cx + r * Math.cos(a + Math.PI);
+    const ym = cy + r * Math.sin(a + Math.PI);
+    return `M ${x1} ${y1} A ${r} ${r} 0 1 1 ${xm} ${ym} A ${r} ${r} 0 1 1 ${x1} ${y1}`;
+  }
+  const x2 = cx + r * Math.cos(b);
+  const y2 = cy + r * Math.sin(b);
+  const largeArc = sweep > Math.PI ? 1 : 0;
+  return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`;
+}
+
 function render({ model, el }) {
+  el.innerHTML = "";
+
   const wrapper = document.createElement("div");
   wrapper.className = "circular-slider-wrapper";
 
@@ -44,9 +64,26 @@ function render({ model, el }) {
   title.className = "circular-slider-title";
   wrapper.appendChild(title);
 
-  const canvas = document.createElement("canvas");
-  canvas.className = "circular-slider-canvas";
-  wrapper.appendChild(canvas);
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("class", "circular-slider-svg");
+
+  const track = document.createElementNS(SVG_NS, "circle");
+  track.setAttribute("class", "circular-slider-track");
+  svg.appendChild(track);
+
+  const fill = document.createElementNS(SVG_NS, "path");
+  fill.setAttribute("class", "circular-slider-fill");
+  svg.appendChild(fill);
+
+  const handleA = document.createElementNS(SVG_NS, "circle");
+  handleA.setAttribute("class", "circular-slider-handle");
+  svg.appendChild(handleA);
+
+  const handleB = document.createElementNS(SVG_NS, "circle");
+  handleB.setAttribute("class", "circular-slider-handle");
+  svg.appendChild(handleB);
+
+  wrapper.appendChild(svg);
 
   const label = document.createElement("div");
   label.className = "circular-slider-label";
@@ -54,9 +91,8 @@ function render({ model, el }) {
 
   el.appendChild(wrapper);
 
-  const ctx = canvas.getContext("2d");
   let dragging = null; // null | "single" | "low" | "high" | "range-translate"
-  let translateState = null; // { lastFraction: number } when dragging === "range-translate"
+  let translateState = null;
 
   function sizePx() {
     return model.get("size");
@@ -70,66 +106,67 @@ function render({ model, el }) {
     return sizePx() / 2 - thicknessPx() / 2 - 2;
   }
 
-  function resizeCanvas() {
-    const px = sizePx();
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = px * dpr;
-    canvas.height = px * dpr;
-    canvas.style.width = px + "px";
-    canvas.style.height = px + "px";
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    wrapper.style.width = px + "px";
+  function handleRadiusPx() {
+    return Math.max(8, thicknessPx() * 0.55);
   }
 
-  function readColor(name) {
-    return getComputedStyle(wrapper).getPropertyValue(name).trim();
+  function getMode() {
+    return model.get("_mode");
   }
 
-  function drawTrack() {
-    const cx = sizePx() / 2;
-    const cy = sizePx() / 2;
-    const r = radiusPx();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, TAU);
-    ctx.strokeStyle = readColor("--cs-track");
-    ctx.lineWidth = thicknessPx();
-    ctx.lineCap = "butt";
-    ctx.stroke();
-  }
-
-  function drawFillArc(fracA, fracB) {
-    if (fracA === fracB) return;
-    const cx = sizePx() / 2;
-    const cy = sizePx() / 2;
-    const r = radiusPx();
-    const a = fractionToAngle(fracA);
-    let b = fractionToAngle(fracB);
-    // Ensure we always sweep clockwise from a to b, wrapping through the
-    // 12 o'clock seam if fracB < fracA.
-    if (b <= a) b += TAU;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, a, b);
-    ctx.strokeStyle = readColor("--cs-fill");
-    ctx.lineWidth = thicknessPx();
-    ctx.lineCap = "round";
-    ctx.stroke();
-  }
-
-  function drawHandle(fraction) {
+  function setHandle(node, fraction, visible) {
+    if (!visible) {
+      node.setAttribute("display", "none");
+      return;
+    }
+    node.removeAttribute("display");
     const cx = sizePx() / 2;
     const cy = sizePx() / 2;
     const r = radiusPx();
     const angle = fractionToAngle(fraction);
-    const hx = cx + r * Math.cos(angle);
-    const hy = cy + r * Math.sin(angle);
-    const handleRadius = Math.max(8, thicknessPx() * 0.55);
-    ctx.beginPath();
-    ctx.arc(hx, hy, handleRadius, 0, TAU);
-    ctx.fillStyle = readColor("--cs-handle");
-    ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = readColor("--cs-handle-border");
-    ctx.stroke();
+    node.setAttribute("cx", cx + r * Math.cos(angle));
+    node.setAttribute("cy", cy + r * Math.sin(angle));
+    node.setAttribute("r", handleRadiusPx());
+  }
+
+  function updateGeometry() {
+    const px = sizePx();
+    svg.setAttribute("width", px);
+    svg.setAttribute("height", px);
+    svg.setAttribute("viewBox", `0 0 ${px} ${px}`);
+    wrapper.style.width = px + "px";
+
+    const cx = px / 2;
+    const cy = px / 2;
+    const r = radiusPx();
+    const t = thicknessPx();
+
+    track.setAttribute("cx", cx);
+    track.setAttribute("cy", cy);
+    track.setAttribute("r", r);
+    track.setAttribute("stroke-width", t);
+
+    fill.setAttribute("stroke-width", t);
+
+    const start = model.get("start");
+    const stop = model.get("stop");
+    const mode = getMode();
+
+    if (mode === "range") {
+      const v = model.get("value");
+      const fa = valueToFraction(v[0], start, stop);
+      const fb = valueToFraction(v[1], start, stop);
+      fill.setAttribute("d", arcPath(cx, cy, r, fa, fb));
+      setHandle(handleA, fa, true);
+      setHandle(handleB, fb, true);
+    } else {
+      const v = model.get("value");
+      const fb = valueToFraction(v, start, stop);
+      fill.setAttribute("d", fb > 0.0001 ? arcPath(cx, cy, r, 0, fb) : "");
+      setHandle(handleA, fb, true);
+      setHandle(handleB, 0, false);
+    }
+    updateLabel();
   }
 
   function updateTitle() {
@@ -159,42 +196,13 @@ function render({ model, el }) {
     }
   }
 
-  function getMode() {
-    return model.get("_mode");
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawTrack();
-
-    const start = model.get("start");
-    const stop = model.get("stop");
-    const mode = getMode();
-
-    if (mode === "range") {
-      const v = model.get("value");
-      const fa = valueToFraction(v[0], start, stop);
-      const fb = valueToFraction(v[1], start, stop);
-      drawFillArc(fa, fb);
-      drawHandle(fa);
-      drawHandle(fb);
-    } else {
-      const v = model.get("value");
-      const fb = valueToFraction(v, start, stop);
-      if (fb > 0.0001) drawFillArc(0, fb);
-      drawHandle(fb);
-    }
-    updateLabel();
-  }
-
   function pointFraction(event) {
-    const rect = canvas.getBoundingClientRect();
+    const rect = svg.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
     const dx = event.clientX - cx;
     const dy = event.clientY - cy;
-    const angle = Math.atan2(dy, dx);
-    return angleToFraction(angle);
+    return angleToFraction(Math.atan2(dy, dx));
   }
 
   function fractionToValue(fraction) {
@@ -223,29 +231,22 @@ function render({ model, el }) {
     let hi = current[1];
     if (which === "low") lo = snapped;
     else hi = snapped;
-    // No swap — let the range cross the 12 o'clock seam so dragging
-    // either handle past the other wraps naturally.
     model.set("value", [lo, hi]);
     model.save_changes();
   }
 
-  // Smallest distance between two fractions on the unit circle.
   function circularDist(a, b) {
     const d = Math.abs(a - b);
     return Math.min(d, 1 - d);
   }
 
-  // Handle radius in fraction units — clicks within this of a handle pick that
-  // handle even if they technically land in the fill arc.
+  // Handle radius in fraction units.
   function handleFractionRadius() {
     const r = radiusPx();
     if (r <= 0) return 0;
-    const handlePx = Math.max(8, thicknessPx() * 0.55);
-    return handlePx / (TAU * r);
+    return handleRadiusPx() / (TAU * r);
   }
 
-  // Is `fraction` inside the fill arc that sweeps clockwise from fLow to fHigh?
-  // Handles the wrap-around case where fLow > fHigh.
   function isInsideFillArc(fraction, fLow, fHigh) {
     if (fLow === fHigh) return false;
     if (fLow < fHigh) {
@@ -268,19 +269,16 @@ function render({ model, el }) {
       const distHigh = circularDist(fraction, fHigh);
       const handleR = handleFractionRadius();
 
-      // If close enough to a handle, drag that handle.
       if (distLow <= handleR || distHigh <= handleR) {
         dragging = distLow <= distHigh ? "low" : "high";
         setRangeFromFraction(dragging, fraction);
         return;
       }
-      // Otherwise, if the click is inside the fill arc, translate the whole span.
       if (isInsideFillArc(fraction, fLow, fHigh)) {
         dragging = "range-translate";
         translateState = { lastFraction: fraction };
         return;
       }
-      // Click landed on bare track outside the fill — move the closer handle there.
       dragging = distLow <= distHigh ? "low" : "high";
       setRangeFromFraction(dragging, fraction);
     } else {
@@ -290,7 +288,6 @@ function render({ model, el }) {
   }
 
   function translateRange(fraction) {
-    // Wrap-aware delta in fraction units.
     let delta = fraction - translateState.lastFraction;
     if (delta > 0.5) delta -= 1;
     if (delta < -0.5) delta += 1;
@@ -338,11 +335,11 @@ function render({ model, el }) {
     translateState = null;
   }
 
-  canvas.addEventListener("mousedown", startDrag);
+  svg.addEventListener("mousedown", startDrag);
   window.addEventListener("mousemove", moveDrag);
   window.addEventListener("mouseup", endDrag);
 
-  canvas.addEventListener("touchstart", (e) => {
+  svg.addEventListener("touchstart", (e) => {
     if (e.touches.length === 0) return;
     startDrag(e.touches[0]);
   }, { passive: false });
@@ -364,26 +361,19 @@ function render({ model, el }) {
     }
   }
 
-  model.on("change:value", draw);
-  model.on("change:start", draw);
-  model.on("change:stop", draw);
-  model.on("change:step", draw);
-  model.on("change:show_value", draw);
-  model.on("change:thickness", draw);
-  model.on("change:color", () => {
-    applyColor();
-    draw();
-  });
+  model.on("change:value", updateGeometry);
+  model.on("change:start", updateGeometry);
+  model.on("change:stop", updateGeometry);
+  model.on("change:step", updateGeometry);
+  model.on("change:show_value", updateGeometry);
+  model.on("change:thickness", updateGeometry);
+  model.on("change:size", updateGeometry);
+  model.on("change:color", applyColor);
   model.on("change:label", updateTitle);
-  model.on("change:size", () => {
-    resizeCanvas();
-    draw();
-  });
 
   applyColor();
   updateTitle();
-  resizeCanvas();
-  draw();
+  updateGeometry();
 
   return () => {
     window.removeEventListener("mousemove", moveDrag);
