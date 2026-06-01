@@ -288,12 +288,13 @@ function Component() {
               onClick={() => setTool('rainbow')}
               title="Rainbow spray"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                <path d="M3 17a9 9 0 0 1 18 0"/>
-                <path d="M5 17a7 7 0 0 1 14 0"/>
-                <path d="M7 17a5 5 0 0 1 10 0"/>
-                <path d="M9 17a3 3 0 0 1 6 0"/>
-                <path d="M11 17a1 1 0 0 1 2 0"/>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <circle cx="6"    cy="7"    r="2.4" fill="#ef4444"/>
+                <circle cx="13"   cy="5"    r="1.8" fill="#f97316"/>
+                <circle cx="18.5" cy="9.5"  r="2.2" fill="#eab308"/>
+                <circle cx="8"    cy="13.5" r="2"   fill="#22c55e"/>
+                <circle cx="14.5" cy="14"   r="2.6" fill="#3b82f6"/>
+                <circle cx="18.5" cy="18.5" r="1.7" fill="#a855f7"/>
               </svg>
             </button>
           )}
@@ -323,12 +324,14 @@ function Component() {
 
         <div className="paint-divider" />
 
-        <input
-          type="color"
-          value={color}
-          onChange={e => setColor(e.target.value)}
-          title="Color"
-        />
+        {tool !== 'eraser' && tool !== 'rainbow' && (
+          <input
+            type="color"
+            value={color}
+            onChange={e => setColor(e.target.value)}
+            title="Color"
+          />
+        )}
 
         {(tool === 'marker' || tool === 'eraser' || tool === 'rainbow') && (() => {
           const sizeConfig = {
