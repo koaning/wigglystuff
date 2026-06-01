@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- New `Space-Filling Curves` example notebook (`demos/curve-filling.py`) added to the docs gallery. It uses `CircularRangeSlider` to drive a matplotlib explorer comparing Morton, Hilbert, and Moore curves — drag the seamless dial to highlight a wrapping window of ranks along the curve.
+
 ## [0.5.7] - 2026-05-28
 
 ### Fixed

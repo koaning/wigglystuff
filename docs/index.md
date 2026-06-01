@@ -320,4 +320,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curve_normal.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/curve_normal.py/wasm">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curve-filling.py" class="example-img"><img src="assets/gallery/curve-filling.webp" alt="Space-Filling Curves"></a>
+<div class="example-content">
+<div class="example-title">Space-Filling Curves</div>
+<div class="example-desc">Compare Morton, Hilbert, and Moore curves, then drag the seamless CircularRangeSlider to highlight a wrapping window of ranks along the curve.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curve-filling.py">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/curve-filling.py/wasm">Source</a></div>
+</div>
 </div>
