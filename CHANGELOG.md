@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- New `Space-Filling Curves` example notebook (`demos/curve-filling.py`) added to the docs gallery. It uses `CircularRangeSlider` to drive a matplotlib explorer comparing Morton, Hilbert, and Moore curves — drag the seamless dial to highlight a wrapping window of ranks along the curve.
+
 ### Changed
 
 - `Paint`: the color swatch is now hidden while the eraser or rainbow-spray tool is active, since neither uses a chosen color (the eraser removes pixels and the rainbow tool randomizes hue per particle). The thickness slider still shows for those tools. The rainbow tool's toolbar icon is now a cluster of scattered multi-colored dots instead of mono-color concentric arcs, so it reads as "rainbow" at a glance.
