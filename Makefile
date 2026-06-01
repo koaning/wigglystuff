@@ -56,6 +56,12 @@ js-paint:
 	cp js/paint/styles.css wigglystuff/static/paint.css
 	./node_modules/.bin/esbuild js/paint/widget.tsx --bundle --format=esm --outfile=wigglystuff/static/paint.js --minify
 
+js-excalidraw:
+	# Excalidraw + React (~8MB) are loaded from a CDN at render time rather than
+	# bundled, so this is just a tiny loader — NOT bundled (the runtime import()s
+	# of CDN URLs must survive), only minified.
+	./node_modules/.bin/esbuild js/excalidraw/widget.js --format=esm --outfile=wigglystuff/static/excalidraw.js --minify
+
 js-ridgeline-chart:
 	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/ridgeline-chart.js js/ridgeline-chart/widget.js
 

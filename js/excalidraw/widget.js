@@ -1,0 +1,266 @@
+// Excalidraw widget loader.
+//
+// Excalidraw + React are ~8MB bundled, so instead of shipping that blob inside
+// the wheel we load them from a CDN (esm.sh) the first time a widget renders.
+// Trade-off: this needs network access on first render and does NOT work fully
+// offline or under WASM (molab). Everything is pinned by version below.
+
+const EXCALIDRAW_VERSION = "0.18.1";
+const REACT_VERSION = "19.0.0";
+const CDN = "https://esm.sh";
+// Where Excalidraw fetches its fonts/icons from at runtime.
+const ASSET_PATH = `${CDN}/@excalidraw/excalidraw@${EXCALIDRAW_VERSION}/dist/prod/`;
+const CSS_URL = `https://unpkg.com/@excalidraw/excalidraw@${EXCALIDRAW_VERSION}/dist/prod/index.css`;
+
+let libPromise = null;
+function loadLib() {
+  if (libPromise) return libPromise;
+  libPromise = (async () => {
+    // Tell Excalidraw where to fetch fonts/icons from before it initializes.
+    if (typeof window !== "undefined" && !window.EXCALIDRAW_ASSET_PATH) {
+      window.EXCALIDRAW_ASSET_PATH = ASSET_PATH;
+    }
+    // Pin React via ?deps so Excalidraw's internal react import resolves to the
+    // same esm.sh URL we import directly — one shared React instance, no
+    // "invalid hook call".
+    const deps = `react@${REACT_VERSION},react-dom@${REACT_VERSION}`;
+    const [react, reactDomClient, excal] = await Promise.all([
+      import(/* @vite-ignore */ `${CDN}/react@${REACT_VERSION}`),
+      import(/* @vite-ignore */ `${CDN}/react-dom@${REACT_VERSION}/client`),
+      import(/* @vite-ignore */ `${CDN}/@excalidraw/excalidraw@${EXCALIDRAW_VERSION}?deps=${deps}`),
+    ]);
+    return {
+      React: react.default ?? react,
+      createRoot: reactDomClient.createRoot,
+      Excalidraw: excal.Excalidraw,
+      serializeAsJSON: excal.serializeAsJSON,
+      exportToBlob: excal.exportToBlob,
+    };
+  })();
+  return libPromise;
+}
+
+let cssTextPromise = null;
+function getCssText() {
+  if (!cssTextPromise) {
+    cssTextPromise = fetch(CSS_URL).then((r) => (r.ok ? r.text() : ""));
+  }
+  return cssTextPromise;
+}
+
+async function injectCss(root) {
+  // marimo mounts anywidget inside a shadow root, so Excalidraw's CSS must live
+  // inside that root; document.head covers the portals Excalidraw mounts onto
+  // document.body.
+  const css = await getCssText();
+  if (!css) return;
+  // Hide UI that isn't useful on a notebook sketch surface: the "Library"
+  // (shape library) trigger and the top-left hamburger main menu (its
+  // file/export/theme actions don't apply in an embedded widget — use
+  // get_pil()/save() and the notebook theme instead).
+  const extra =
+    "\n.excalidraw .default-sidebar-trigger," +
+    '\n.excalidraw [data-testid="main-menu-trigger"],' +
+    "\n.excalidraw .main-menu-trigger," +
+    '\n.excalidraw [data-testid="toolbar-more-tools"],' +
+    "\n.excalidraw .App-toolbar__extra-tools-trigger{display:none !important;}\n";
+  for (const target of [root, document.head]) {
+    if (!target || !("querySelector" in target)) continue;
+    if (target.querySelector("style[data-wigglystuff-excalidraw]")) continue;
+    const style = document.createElement("style");
+    style.setAttribute("data-wigglystuff-excalidraw", "");
+    style.textContent = css + extra;
+    target.appendChild(style);
+  }
+}
+
+// Detect the notebook's dark mode by walking up from the widget element,
+// crossing the shadow boundary, looking for the usual markers; fall back to the
+// OS preference.
+function detectDark(el) {
+  let node = el;
+  while (node) {
+    if (node.nodeType === 1) {
+      const cl = node.classList;
+      if (cl && (cl.contains("dark") || cl.contains("dark-theme"))) return true;
+      if (node.getAttribute && node.getAttribute("data-theme") === "dark") return true;
+    }
+    node = node.parentNode || node.host || null;
+  }
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+}
+
+function blobToDataURL(blob) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
+
+function makeApp(React, Excalidraw, serializeAsJSON, exportToBlob, model, el) {
+  return function App() {
+    const apiRef = React.useRef(null);
+    const saveTimer = React.useRef(null);
+    const pending = React.useRef(null);
+    const throttleMs = model.get("sync_throttle_ms") || 1000;
+
+    // theme: explicit `theme` traitlet wins ("light"/"dark"); otherwise follow
+    // the notebook and react to live theme toggles.
+    const forced = model.get("theme");
+    const [dark, setDark] = React.useState(() =>
+      forced ? forced === "dark" : detectDark(el),
+    );
+    React.useEffect(() => {
+      if (forced) return; // pinned by the user, don't track the notebook
+      const update = () => setDark(detectDark(el));
+      const obs = new MutationObserver(update);
+      const opts = { attributes: true, attributeFilter: ["class", "data-theme"], subtree: true };
+      obs.observe(document.documentElement, opts);
+      const host = el.getRootNode && el.getRootNode().host;
+      if (host) obs.observe(host, opts);
+      const mq = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+      if (mq && mq.addEventListener) mq.addEventListener("change", update);
+      return () => {
+        obs.disconnect();
+        if (mq && mq.removeEventListener) mq.removeEventListener("change", update);
+      };
+    }, [forced]);
+
+    // Excalidraw doesn't always re-theme from the `theme` prop after mount, so
+    // also push it imperatively whenever the detected theme flips.
+    React.useEffect(() => {
+      if (apiRef.current) {
+        apiRef.current.updateScene({ appState: { theme: dark ? "dark" : "light" } });
+      }
+    }, [dark]);
+
+    // Excalidraw maps pointer -> canvas using its container's position, which it
+    // measures on mount. In a notebook the widget sits well down the page, so
+    // that initial measurement is stale and drawings land offset from the
+    // cursor. refresh() recomputes it; re-run on scroll/resize (capture: true so
+    // we catch the notebook's own scroll container, not just window).
+    React.useEffect(() => {
+      const refresh = () => apiRef.current && apiRef.current.refresh();
+      const t = setTimeout(refresh, 100);
+      window.addEventListener("scroll", refresh, true);
+      window.addEventListener("resize", refresh);
+      return () => {
+        clearTimeout(t);
+        window.removeEventListener("scroll", refresh, true);
+        window.removeEventListener("resize", refresh);
+      };
+    }, []);
+
+    // Capture the starting scene once; we don't push later Python edits back
+    // into the live canvas (that would fight an in-progress drawing).
+    // Defaults: a normal (non-hand-drawn) font, straight (non-rough) strokes,
+    // and a closed filled-triangle arrowhead. FONT_FAMILY.Nunito === 6
+    // ("Normal"), ROUGHNESS.ARCHITECT === 0, "triangle" is the filled head.
+    const baseAppState = {
+      currentItemFontFamily: 6,
+      currentItemRoughness: 0,
+      currentItemEndArrowhead: "triangle",
+      currentItemArrowType: "elbow",
+    };
+    const scene = model.get("scene");
+    const initialData =
+      scene && Object.keys(scene).length
+        ? {
+            elements: scene.elements ?? [],
+            appState: { ...baseAppState, ...(scene.appState ?? {}) },
+            files: scene.files ?? {},
+          }
+        : { appState: baseAppState };
+
+    const onChange = React.useCallback((elements, appState, files) => {
+      pending.current = { elements, appState, files };
+      if (saveTimer.current) return; // already scheduled
+      saveTimer.current = setTimeout(async () => {
+        saveTimer.current = null;
+        const p = pending.current;
+        pending.current = null;
+        if (!p) return;
+        model.set(
+          "scene",
+          JSON.parse(serializeAsJSON(p.elements, p.appState, p.files, "local")),
+        );
+        // Also export a PNG of the drawing so Python can grab it via get_pil().
+        // Excalidraw keeps erased elements in the array flagged `isDeleted`, so
+        // count live ones — otherwise an all-erased scene looks non-empty and
+        // exportToBlob throws, leaving get_pil() showing a stale image.
+        try {
+          const live = p.elements.filter((e) => !e.isDeleted);
+          if (live.length) {
+            const blob = await exportToBlob({
+              elements: p.elements,
+              appState: p.appState,
+              files: p.files,
+              mimeType: "image/png",
+            });
+            model.set("image_base64", await blobToDataURL(blob));
+          } else {
+            model.set("image_base64", "");
+          }
+        } catch (e) {
+          /* export is best-effort; keep the scene sync regardless */
+        }
+        model.save_changes();
+      }, throttleMs);
+    }, []);
+
+    React.useEffect(
+      () => () => {
+        if (saveTimer.current) clearTimeout(saveTimer.current);
+      },
+      [],
+    );
+
+    return React.createElement(Excalidraw, {
+      excalidrawAPI: (api) => {
+        apiRef.current = api;
+      },
+      initialData,
+      onChange,
+      theme: dark ? "dark" : "light",
+    });
+  };
+}
+
+async function render({ model, el }) {
+  el.style.display = "block";
+  el.style.height = `${model.get("height") || 600}px`;
+
+  const mount = document.createElement("div");
+  mount.style.cssText = "width:100%;height:100%";
+  // Stop marimo / Jupyter from swallowing Excalidraw's keyboard shortcuts.
+  mount.addEventListener("keydown", (e) => e.stopPropagation());
+  mount.addEventListener("keyup", (e) => e.stopPropagation());
+  el.appendChild(mount);
+
+  let root = null;
+  try {
+    const { React, createRoot, Excalidraw, serializeAsJSON, exportToBlob } =
+      await loadLib();
+    await injectCss(el.getRootNode());
+    const App = makeApp(React, Excalidraw, serializeAsJSON, exportToBlob, model, el);
+    root = createRoot(mount);
+    root.render(React.createElement(App));
+    requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+  } catch (err) {
+    mount.textContent =
+      "Failed to load Excalidraw from CDN. This widget needs network access " +
+      "on first render and does not work fully offline. (" + err + ")";
+    mount.style.cssText = "padding:1rem;color:#b00;font-family:sans-serif";
+  }
+
+  return () => {
+    if (root) root.unmount();
+  };
+}
+
+export default { render };
