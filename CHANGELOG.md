@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- `Paint`: the color swatch is now hidden while the eraser or rainbow-spray tool is active, since neither uses a chosen color (the eraser removes pixels and the rainbow tool randomizes hue per particle). The thickness slider still shows for those tools. The rainbow tool's toolbar icon is now a cluster of scattered multi-colored dots instead of mono-color concentric arcs, so it reads as "rainbow" at a glance.
+
 ## [0.5.7] - 2026-05-28
 
 ### Fixed
