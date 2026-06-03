@@ -59,6 +59,10 @@ js-paint:
 js-ridgeline-chart:
 	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/ridgeline-chart.js js/ridgeline-chart/widget.js
 
+js-sound-spectrograph:
+	cp js/sound-spectrograph/styles.css wigglystuff/static/sound-spectrograph.css
+	./node_modules/.bin/esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/sound-spectrograph.js js/sound-spectrograph/widget.js
+
 js-neo4j-widget:
 	./esbuild --bundle --format=esm --minify --outfile=wigglystuff/static/neo4j-widget.js js/neo4j-widget/widget.js
 

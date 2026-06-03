@@ -241,6 +241,11 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py" class="gallery-img"><img src="assets/gallery/altairwidget.webp" alt="AltairWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py">molab</a><a href="reference/altair-widget/">API</a><a href="reference/altair-widget.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">SoundSpectrograph</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/soundspectrograph.py" class="gallery-img"><img src="assets/gallery/soundspectrograph.webp" alt="SoundSpectrograph widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/soundspectrograph.py">molab</a><a href="reference/sound-spectrograph/">API</a><a href="reference/sound-spectrograph.md">MD</a></div>
+</div>
 </div>
 
 ## Examples

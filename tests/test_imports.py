@@ -53,6 +53,10 @@ def test_import_slider2d():
     from wigglystuff.slider2d import Slider2D
 
 
+def test_import_sound_spectrograph():
+    from wigglystuff.sound_spectrograph import SoundSpectrograph
+
+
 def test_import_sortable_list():
     from wigglystuff.sortable_list import SortableList
 

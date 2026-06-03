@@ -1,0 +1,164 @@
+.sound-spectrograph {
+  --sound-spectrograph-bg: #f8fafc;
+  --sound-spectrograph-panel: #ffffff;
+  --sound-spectrograph-border: #cbd5e1;
+  --sound-spectrograph-text: #0f172a;
+  --sound-spectrograph-muted: #64748b;
+  --sound-spectrograph-active: #0891b2;
+  --sound-spectrograph-error: #dc2626;
+  color: var(--sound-spectrograph-text);
+  color-scheme: light dark;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 100%;
+  font: 13px/1.4 ui-sans-serif, system-ui, sans-serif;
+}
+
+.dark .sound-spectrograph,
+.dark-theme .sound-spectrograph,
+[data-theme="dark"] .sound-spectrograph {
+  --sound-spectrograph-bg: #020617;
+  --sound-spectrograph-panel: #0f172a;
+  --sound-spectrograph-border: #334155;
+  --sound-spectrograph-text: #e2e8f0;
+  --sound-spectrograph-muted: #94a3b8;
+  --sound-spectrograph-active: #22d3ee;
+  --sound-spectrograph-error: #f87171;
+}
+
+.sound-spectrograph-toolbar,
+.sound-spectrograph-groups {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.sound-spectrograph-toolbar {
+  background: var(--sound-spectrograph-panel);
+  border: 1px solid var(--sound-spectrograph-border);
+  border-radius: 4px 4px 0 0;
+  padding: 4px 6px;
+}
+
+.sound-spectrograph-separator {
+  background: var(--sound-spectrograph-border);
+  height: 16px;
+  margin: 0 2px;
+  width: 1px;
+}
+
+.sound-spectrograph-button {
+  background: var(--sound-spectrograph-panel);
+  border: 1px solid var(--sound-spectrograph-border);
+  border-radius: 6px;
+  color: var(--sound-spectrograph-text);
+  cursor: pointer;
+  font: inherit;
+  min-height: 30px;
+  padding: 4px 10px;
+}
+
+.sound-spectrograph-mode-btn,
+.sound-spectrograph-action-btn {
+  align-items: center;
+  background: var(--sound-spectrograph-bg);
+  border: 1px solid var(--sound-spectrograph-border);
+  border-radius: 3px;
+  color: var(--sound-spectrograph-text);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  gap: 3px;
+  min-height: 24px;
+  padding: 2px 6px;
+}
+
+.sound-spectrograph-action-btn {
+  color: var(--sound-spectrograph-muted);
+  justify-content: center;
+  padding: 2px 4px;
+}
+
+.sound-spectrograph-action-btn--label {
+  color: var(--sound-spectrograph-text);
+  padding: 2px 6px;
+}
+
+.sound-spectrograph-mode-btn:hover,
+.sound-spectrograph-mode-btn.active,
+.sound-spectrograph-action-btn:hover {
+  border-color: var(--sound-spectrograph-active);
+  color: var(--sound-spectrograph-active);
+}
+
+.sound-spectrograph-mode-btn.active {
+  background: color-mix(in srgb, var(--sound-spectrograph-active) 14%, transparent);
+}
+
+.sound-spectrograph-icon {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.sound-spectrograph-icon svg {
+  display: block;
+}
+
+.sound-spectrograph-label {
+  font-size: 10px;
+}
+
+.sound-spectrograph-button:hover,
+.sound-spectrograph-button.is-active {
+  border-color: var(--sound-spectrograph-active);
+  color: var(--sound-spectrograph-active);
+}
+
+.sound-spectrograph-group {
+  align-items: center;
+  border-left: 4px solid var(--region-color, var(--sound-spectrograph-active));
+  display: inline-flex;
+  gap: 4px;
+}
+
+.sound-spectrograph-group-name {
+  border-left: 4px solid var(--region-color, var(--sound-spectrograph-active));
+}
+
+.sound-spectrograph-toggle.is-off {
+  color: var(--sound-spectrograph-muted);
+  opacity: 0.72;
+}
+
+.sound-spectrograph-status {
+  color: var(--sound-spectrograph-muted);
+  min-height: 20px;
+}
+
+.sound-spectrograph-status.is-error {
+  color: var(--sound-spectrograph-error);
+}
+
+.sound-spectrograph-canvas-wrap {
+  background: var(--sound-spectrograph-bg);
+  border: 1px solid var(--sound-spectrograph-border);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.sound-spectrograph-canvas {
+  cursor: crosshair;
+  display: block;
+  max-width: 100%;
+  touch-action: none;
+}
+
+.sound-spectrograph-audio {
+  display: none;
+}

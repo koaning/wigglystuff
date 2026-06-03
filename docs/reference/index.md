@@ -26,6 +26,7 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [HTMLRefreshWidget](html-refresh.md)
 - [ProgressBar](progress-bar.md)
 - [RidgelineChart](ridgeline-chart.md)
+- [SoundSpectrograph](sound-spectrograph.md)
 - [TextCompare](text-compare.md)
 - [EnvConfig](env-config.md)
 - [Utils](utils.md)

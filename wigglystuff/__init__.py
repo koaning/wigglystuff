@@ -32,6 +32,7 @@ from .play_slider import PlaySlider
 from .ridgeline_chart import RidgelineChart
 from drawdata import ScatterWidget
 from .slider2d import Slider2D
+from .sound_spectrograph import SoundSpectrograph
 from .spline_draw import SplineDraw
 from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget
@@ -75,6 +76,7 @@ __all__ = [
     "RidgelineChart",
     "ScatterWidget",
     "Slider2D",
+    "SoundSpectrograph",
     "SplineDraw",
     "SortableList",
     "TangleChoice",

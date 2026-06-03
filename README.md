@@ -95,4 +95,7 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 <td align="center"><b>Neo4jWidget</b><br><a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU"><img src="./docs/assets/gallery/neo4j-widget.webp" width="260"></a><br><a href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/neo4j-widget/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/neo4j-widget.md">MD</a></td>
 <td align="center"><b>AltairWidget</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py"><img src="./docs/assets/gallery/altairwidget.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/altair-widget/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/altair-widget.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>SoundSpectrograph</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/soundspectrograph.py"><img src="./docs/assets/gallery/soundspectrograph.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/soundspectrograph.py">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/sound-spectrograph/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/sound-spectrograph.md">MD</a></td>
+</tr>
 </table>

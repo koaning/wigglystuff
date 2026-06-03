@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `SoundSpectrograph`: new audio widget that loads paths, bytes, or arrays; renders a `librosa` STFT spectrogram; supports persistent grouped box/lasso selections with on/off region toggles; plays the full audio when no selections exist; and reconstructs playback from the combined enabled time-frequency bins once regions are drawn. Playback progress is shown directly on the spectrogram with play, pause, stop, a draggable vertical playhead, and a dimmed unplayed area. Log-frequency spectrogram rendering now matches log-frequency selection coordinates. `librosa` is available via the new `audio` optional extra and remains outside core dependencies.
+
 ## [0.5.7] - 2026-05-28
 
 ### Fixed

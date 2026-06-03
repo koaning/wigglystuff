@@ -53,6 +53,7 @@ syncs back to Python.
 | CircularSlider | `wigglystuff.circular_slider.CircularSlider` | `value`, `start`, `stop`, `step`, `size`, `thickness`, `show_value`, `color`, `label` | Circular dial slider for picking a single value |
 | CircularRangeSlider | `wigglystuff.circular_slider.CircularRangeSlider` | `value` (`(low, high)`), `start`, `stop`, `step`, `size`, `thickness`, `show_value`, `color`, `label` | Circular dial slider for picking a span of values (wraps the seam) |
 | RidgelineChart | `wigglystuff.ridgeline_chart.RidgelineChart` | `data`, `x_values`, `width`, `height`, `overlap`, `stroke_width`, `fill_opacity`, `peak_scale`, `x_label`, `y_label`, `selected_index`, `selected_row` | Stacked waveform "Joy Division" visualization with clickable rows |
+| SoundSpectrograph | `wigglystuff.sound_spectrograph.SoundSpectrograph` | `spectrogram_base64`, `mode`, `modes`, `selection_groups`, `active_group_index`, `selections`, `selected_index`, `play_request_id`, `selected_audio_base64`, `selected_audio_duration`, `playback_error`, `width`, `height`, `duration`, `sample_rate`, `time_bounds`, `frequency_bounds` | Audio spectrogram with grouped box/lasso selections and STFT playback reconstruction |
 | Treemap | `wigglystuff.treemap.Treemap` | `data`, `width`, `height`, `max_depth`, `value_col`, `selected_path`, `clicked_path`, `hovered_path` | Zoomable hierarchical treemap with breadcrumbs |
 
 ## Patterns to remember
@@ -66,13 +67,14 @@ syncs back to Python.
   conversions.
 - Check `wigglystuff/__init__.py` for the names that are re-exported at the
   package root so you can keep imports consistent.
-- **numpy and pillow are optional dependencies.** They are listed under
+- **numpy, pillow, and librosa are optional dependencies.** They are listed under
   `[project.optional-dependencies]` in `pyproject.toml`, not in the core
-  `dependencies`. Widgets that need numpy or pillow must import them inside
+  `dependencies`. Widgets that need numpy, pillow, or librosa must import them inside
   the method or function that uses them (never at module top-level). This
   keeps `import wigglystuff` and widgets that don't need these libraries
   working without them installed. Install with `pip install wigglystuff[all]`
-  to get both, or `wigglystuff[numpy]` / `wigglystuff[pillow]` individually.
+  to get all optional extras, or `wigglystuff[numpy]` / `wigglystuff[pillow]` /
+  `wigglystuff[audio]` individually.
 - The repo standardizes on [`uv`](https://github.com/astral-sh/uv) for Python
   workflows (`uv pip install -e .` etc.) and the standard library's `pathlib`
   for filesystem paths—mirror those choices in new agents to keep the codebase

@@ -52,3 +52,4 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 - [AltairWidget](https://koaning.github.io/wigglystuff/reference/altair-widget.md): Flicker-free Altair chart rendering with smooth data updates via the Vega View API
 - [ModuleTreeWidget](https://koaning.github.io/wigglystuff/reference/module-tree.md): Interactive tree viewer for PyTorch nn.Module architecture
 - [Neo4jWidget](https://koaning.github.io/wigglystuff/reference/neo4j-widget.md): Interactive Neo4j graph explorer with Cypher query input, autocomplete, and lasso selection
+- [SoundSpectrograph](https://koaning.github.io/wigglystuff/reference/sound-spectrograph.md): Audio spectrogram widget with grouped box/lasso selections, on/off region toggles, and STFT-mask playback reconstruction

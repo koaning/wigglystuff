@@ -25,7 +25,11 @@ numpy = [
 pillow = [
     "pillow",
 ]
+audio = [
+    "librosa>=0.10.0",
+]
 all = [
+    "librosa>=0.10.0",
     "numpy",
     "pillow",
 ]
@@ -41,7 +45,9 @@ neo4j = [
 test = [
     "pytest>=8.3.3",
     "pytest-check-links>=0.10.0",
+    "librosa>=0.10.0",
     "marimo>=0.23.3",
+    "numpy",
     "scikit-learn>=1.0",
     "matplotlib>=3.0",
     "pandas>=2.3.3",
