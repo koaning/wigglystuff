@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.8] - 2026-06-04
 
 ### Added
 
@@ -12,10 +12,6 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - `Paint`: the color swatch is now hidden while the eraser or rainbow-spray tool is active, since neither uses a chosen color (the eraser removes pixels and the rainbow tool randomizes hue per particle). The thickness slider still shows for those tools. The rainbow tool's toolbar icon is now a cluster of scattered multi-colored dots instead of mono-color concentric arcs, so it reads as "rainbow" at a glance.
-
-### Fixed
-
-- `Excalidraw`: fix a "split brain" where drawing or undoing quickly left the emitted PNG (`image_base64` / `get_pil()`) out of sync with the live canvas and the `scene`. The array Excalidraw passes to `onChange` is its live, mutable scene array, and the PNG export is async — so the old code read it once for the scene and again, after the await, for the PNG, letting a fast undo land between the two reads and produce a scene and a PNG describing different drawings. Each sync now takes a single immutable snapshot up front and drives both the scene and the PNG from it, so they can never disagree.
 
 ## [0.5.7] - 2026-05-28
 
