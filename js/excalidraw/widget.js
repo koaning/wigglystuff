@@ -107,6 +107,12 @@ function makeApp(React, Excalidraw, serializeAsJSON, exportToBlob, model, el) {
     const apiRef = React.useRef(null);
     const saveTimer = React.useRef(null);
     const pending = React.useRef(null);
+    // True while a flush is mid-export. exportToBlob is async, so without this
+    // guard a fast burst of edits would kick off several overlapping exports;
+    // whichever finished last would win image_base64 — possibly an older one —
+    // leaving the PNG out of sync with the (synchronously written) scene. The
+    // flush below drains serially so scene and PNG always describe the same edit.
+    const flushing = React.useRef(false);
     const throttleMs = model.get("sync_throttle_ms") || 1000;
 
     // theme: explicit `theme` traitlet wins ("light"/"dark"); otherwise follow
@@ -179,37 +185,61 @@ function makeApp(React, Excalidraw, serializeAsJSON, exportToBlob, model, el) {
 
     const onChange = React.useCallback((elements, appState, files) => {
       pending.current = { elements, appState, files };
-      if (saveTimer.current) return; // already scheduled
+      // Skip if a sync is already scheduled (saveTimer) or in progress
+      // (flushing). Either way the latest edit now lives in pending.current and
+      // the in-flight flush below will pick it up — we never want two flushes
+      // running at once (see the flushing ref's comment for why).
+      if (saveTimer.current || flushing.current) return;
       saveTimer.current = setTimeout(async () => {
         saveTimer.current = null;
-        const p = pending.current;
-        pending.current = null;
-        if (!p) return;
-        model.set(
-          "scene",
-          JSON.parse(serializeAsJSON(p.elements, p.appState, p.files, "local")),
-        );
-        // Also export a PNG of the drawing so Python can grab it via get_pil().
-        // Excalidraw keeps erased elements in the array flagged `isDeleted`, so
-        // count live ones — otherwise an all-erased scene looks non-empty and
-        // exportToBlob throws, leaving get_pil() showing a stale image.
+        // Drain pending.current to completion. Each iteration writes the scene
+        // and its matching PNG together, so the two traitlets can never
+        // disagree. Edits that land mid-export update pending.current and get
+        // handled on the next loop turn instead of racing this one — draw
+        // quickly and the last edit still wins both scene and image_base64.
+        flushing.current = true;
         try {
-          const live = p.elements.filter((e) => !e.isDeleted);
-          if (live.length) {
-            const blob = await exportToBlob({
-              elements: p.elements,
-              appState: p.appState,
-              files: p.files,
-              mimeType: "image/png",
-            });
-            model.set("image_base64", await blobToDataURL(blob));
-          } else {
-            model.set("image_base64", "");
+          while (pending.current) {
+            const p = pending.current;
+            pending.current = null;
+            // The `elements` Excalidraw hands onChange is a reference to its
+            // LIVE, mutable scene array — undo/redo mutate it in place. If we
+            // read it once for the scene and again for the PNG (which we must,
+            // because exportToBlob is async), a fast undo landing between those
+            // two reads makes the scene and the PNG describe different drawings
+            // — the "split brain" where get_pil() disagrees with the canvas.
+            // So snapshot ONCE up front and drive both traitlets from it.
+            // serializeAsJSON deep-copies and strips deleted elements, so the
+            // snapshot is frozen: nothing the user does during the export await
+            // can change what we've already committed to `scene`.
+            const snapshot = JSON.parse(
+              serializeAsJSON(p.elements, p.appState, p.files, "local"),
+            );
+            model.set("scene", snapshot);
+            // Export a PNG of the same snapshot so Python can grab it via
+            // get_pil(). snapshot.elements already excludes deleted ones, so an
+            // empty length means an erased canvas — skip exportToBlob (it throws
+            // on empty) and clear the image to match.
+            try {
+              if (snapshot.elements.length) {
+                const blob = await exportToBlob({
+                  elements: snapshot.elements,
+                  appState: snapshot.appState,
+                  files: snapshot.files,
+                  mimeType: "image/png",
+                });
+                model.set("image_base64", await blobToDataURL(blob));
+              } else {
+                model.set("image_base64", "");
+              }
+            } catch (e) {
+              /* export is best-effort; keep the scene sync regardless */
+            }
+            model.save_changes();
           }
-        } catch (e) {
-          /* export is best-effort; keep the scene sync regardless */
+        } finally {
+          flushing.current = false;
         }
-        model.save_changes();
       }, throttleMs);
     }, []);
 
