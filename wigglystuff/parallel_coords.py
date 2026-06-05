@@ -36,6 +36,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import ParallelCoordinates
         import polars as pl
 
@@ -44,7 +45,7 @@ class ParallelCoordinates(anywidget.AnyWidget):
             "y": [5, 4, 3, 2, 1],
             "label": ["a", "a", "b", "b", "b"],
         })
-        widget = ParallelCoordinates(df, color_by="label", color_map={"a": "red"})
+        widget = mo.ui.anywidget(ParallelCoordinates(df, color_by="label", color_map={"a": "red"}))
         widget
         ```
     """

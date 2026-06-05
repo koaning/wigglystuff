@@ -46,15 +46,18 @@ class Treemap(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import Treemap
 
-        Treemap.from_paths(
-            {
-                "analytics/cluster/Agg": {"hours": 10, "count": 5},
-                "analytics/graph/Shortest": {"hours": 6, "count": 2},
-                "animate/Easing": {"hours": 4, "count": 8},
-            },
-            value_col="hours",
+        mo.ui.anywidget(
+            Treemap.from_paths(
+                {
+                    "analytics/cluster/Agg": {"hours": 10, "count": 5},
+                    "analytics/graph/Shortest": {"hours": 6, "count": 2},
+                    "animate/Easing": {"hours": 4, "count": 8},
+                },
+                value_col="hours",
+            )
         )
         ```
     """
@@ -130,15 +133,18 @@ class Treemap(anywidget.AnyWidget):
 
         Examples:
             ```python
+            import marimo as mo
             from wigglystuff import Treemap
 
-            Treemap.from_paths(
-                {
-                    "analytics/cluster/Agg": {"hours": 10, "count": 5},
-                    "analytics/graph/Shortest": {"hours": 6, "count": 2},
-                    "animate/Easing": {"hours": 4, "count": 8},
-                },
-                value_col="hours",
+            mo.ui.anywidget(
+                Treemap.from_paths(
+                    {
+                        "analytics/cluster/Agg": {"hours": 10, "count": 5},
+                        "analytics/graph/Shortest": {"hours": 6, "count": 2},
+                        "animate/Easing": {"hours": 4, "count": 8},
+                    },
+                    value_col="hours",
+                )
             )
             ```
         """
@@ -158,16 +164,19 @@ class Treemap(anywidget.AnyWidget):
 
         Examples:
             ```python
+            import marimo as mo
             from wigglystuff import Treemap
 
-            Treemap.from_records(
-                [
-                    {"team": "analytics", "project": "cluster", "hours": 10},
-                    {"team": "analytics", "project": "graph", "hours": 6},
-                    {"team": "animate", "project": "easing", "hours": 4},
-                ],
-                path_cols=["team", "project"],
-                value_cols="hours",
+            mo.ui.anywidget(
+                Treemap.from_records(
+                    [
+                        {"team": "analytics", "project": "cluster", "hours": 10},
+                        {"team": "analytics", "project": "graph", "hours": 6},
+                        {"team": "animate", "project": "easing", "hours": 4},
+                    ],
+                    path_cols=["team", "project"],
+                    value_cols="hours",
+                )
             )
             ```
         """
@@ -191,6 +200,7 @@ class Treemap(anywidget.AnyWidget):
 
         Examples:
             ```python
+            import marimo as mo
             import pandas as pd
             from wigglystuff import Treemap
 
@@ -201,10 +211,12 @@ class Treemap(anywidget.AnyWidget):
                     "hours": [10, 6, 4],
                 }
             )
-            Treemap.from_dataframe(
-                df,
-                path_cols=["team", "project"],
-                value_cols="hours",
+            mo.ui.anywidget(
+                Treemap.from_dataframe(
+                    df,
+                    path_cols=["team", "project"],
+                    value_cols="hours",
+                )
             )
             ```
         """

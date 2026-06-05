@@ -38,9 +38,10 @@ class CircularSlider(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import CircularSlider
 
-        dial = CircularSlider(start=0, stop=100, step=1, value=42)
+        dial = mo.ui.anywidget(CircularSlider(start=0, stop=100, step=1, value=42))
         dial
         ```
     """
@@ -119,9 +120,10 @@ class CircularRangeSlider(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import CircularRangeSlider
 
-        span = CircularRangeSlider(start=0, stop=100, step=1, value=(20, 80))
+        span = mo.ui.anywidget(CircularRangeSlider(start=0, stop=100, step=1, value=(20, 80)))
         span
         ```
     """

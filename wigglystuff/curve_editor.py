@@ -110,9 +110,10 @@ class CurveEditor(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import CurveEditor
 
-        editor = CurveEditor(curve="catmull_rom", alpha=0.5)
+        editor = mo.ui.anywidget(CurveEditor(curve="catmull_rom", alpha=0.5))
         editor
         ```
     """

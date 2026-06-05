@@ -26,13 +26,14 @@ class ChartMultiSelect(AnyWidget):
         Basic usage:
 
         ```python
+        import marimo as mo
         import matplotlib.pyplot as plt
         from wigglystuff import ChartMultiSelect
 
         fig, ax = plt.subplots()
         ax.scatter(x_data, y_data)
 
-        ms = ChartMultiSelect(fig, n_classes=3)
+        ms = mo.ui.anywidget(ChartMultiSelect(fig, n_classes=3))
         # ms.selections is a list of selection dicts
         # ms.get_labels(x_data, y_data) returns class labels
         ```

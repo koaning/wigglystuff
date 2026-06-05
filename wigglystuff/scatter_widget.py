@@ -16,9 +16,10 @@ class ScatterWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import ScatterWidget
 
-        widget = ScatterWidget(n_classes=3)
+        widget = mo.ui.anywidget(ScatterWidget(n_classes=3))
         widget
         ```
     """

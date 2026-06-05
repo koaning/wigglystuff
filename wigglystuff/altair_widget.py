@@ -19,13 +19,14 @@ class AltairWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         import altair as alt
         import pandas as pd
         from wigglystuff import AltairWidget
 
         df = pd.DataFrame({"x": [1, 2, 3], "y": [4, 5, 6]})
         chart = alt.Chart(df).mark_point().encode(x="x", y="y")
-        widget = AltairWidget(chart)
+        widget = mo.ui.anywidget(AltairWidget(chart))
         widget
         ```
     """

@@ -21,17 +21,18 @@ class EnvConfig(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import EnvConfig
 
         # Simple usage - just check vars exist
-        config = EnvConfig(["OPENAI_API_KEY", "ANTHROPIC_API_KEY"])
+        config = mo.ui.anywidget(EnvConfig(["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]))
         config
 
         # With validators
-        config = EnvConfig({
+        config = mo.ui.anywidget(EnvConfig({
             "OPENAI_API_KEY": lambda k: openai.Client(api_key=k).models.list(),
             "ANTHROPIC_API_KEY": None,  # Just check existence
-        })
+        }))
 
         # Block until valid
         config.require_valid()

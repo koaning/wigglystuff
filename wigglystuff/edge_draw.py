@@ -15,9 +15,10 @@ class EdgeDraw(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import EdgeDraw
 
-        graph = EdgeDraw(names=["A", "B", "C", "D"])
+        graph = mo.ui.anywidget(EdgeDraw(names=["A", "B", "C", "D"]))
         graph
         ```
     """

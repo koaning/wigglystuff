@@ -21,16 +21,17 @@ class HoverZoom(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import HoverZoom
 
         # From a file path
-        widget = HoverZoom("photo.jpg", zoom_factor=3.0)
+        widget = mo.ui.anywidget(HoverZoom("photo.jpg", zoom_factor=3.0))
 
         # From a matplotlib figure
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         ax.scatter(x, y, s=5, alpha=0.5)
-        widget = HoverZoom(fig, zoom_factor=4.0)
+        widget = mo.ui.anywidget(HoverZoom(fig, zoom_factor=4.0))
         ```
     """
 

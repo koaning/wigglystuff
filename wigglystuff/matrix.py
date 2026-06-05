@@ -18,9 +18,10 @@ class Matrix(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import Matrix
 
-        matrix = Matrix(rows=3, cols=3, min_value=0, max_value=10)
+        matrix = mo.ui.anywidget(Matrix(rows=3, cols=3, min_value=0, max_value=10))
         matrix
         ```
     """

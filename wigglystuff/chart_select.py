@@ -32,13 +32,14 @@ class ChartSelect(AnyWidget):
         Basic usage:
 
         ```python
+        import marimo as mo
         import matplotlib.pyplot as plt
         from wigglystuff import ChartSelect
 
         fig, ax = plt.subplots()
         ax.scatter(x_data, y_data)
 
-        select = ChartSelect(fig)
+        select = mo.ui.anywidget(ChartSelect(fig))
         # select.selection contains the selection bounds/vertices
         # select.has_selection is True when a selection exists
         ```

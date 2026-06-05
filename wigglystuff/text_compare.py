@@ -16,12 +16,13 @@ class TextCompare(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import TextCompare
 
-        compare = TextCompare(
+        compare = mo.ui.anywidget(TextCompare(
             text_a="The quick brown fox jumps over the lazy dog.",
             text_b="A quick brown fox leaps over a lazy dog."
-        )
+        ))
         compare
         ```
     """

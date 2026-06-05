@@ -87,9 +87,10 @@ class BezierCurve(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import BezierCurve
 
-        curve = BezierCurve(closed=True, loop=True)
+        curve = mo.ui.anywidget(BezierCurve(closed=True, loop=True))
         curve
         ```
     """

@@ -20,6 +20,7 @@ class ImageRefreshWidget(anywidget.AnyWidget):
     Example:
 
     ```python
+    import marimo as mo
     from wigglystuff import ImageRefreshWidget
     from wigglystuff.utils import refresh_matplotlib
     import matplotlib.pylab as plt
@@ -29,7 +30,7 @@ class ImageRefreshWidget(anywidget.AnyWidget):
     def plot_data(data):
         plt.plot(np.arange(len(data)), np.cumsum(data))
 
-    widget = ImageRefreshWidget(src=plot_data([1, 2, 3, 4]))
+    widget = mo.ui.anywidget(ImageRefreshWidget(src=plot_data([1, 2, 3, 4])))
 
     # Update the widget with new data
     widget.src = plot_data([1, 2, 3, 4, 5, 6])
@@ -66,9 +67,10 @@ class HTMLRefreshWidget(anywidget.AnyWidget):
 
     ```python
     import time
+    import marimo as mo
     from wigglystuff import HTMLRefreshWidget
 
-    widget = HTMLRefreshWidget(html="<p>Hello!</p>")
+    widget = mo.ui.anywidget(HTMLRefreshWidget(html="<p>Hello!</p>"))
 
     # Update the widget with dynamic content
     for i in range(10):
@@ -115,9 +117,10 @@ class ProgressBar(anywidget.AnyWidget):
 
     ```python
     import time
+    import marimo as mo
     from wigglystuff import ProgressBar
 
-    progress = ProgressBar(value=0, max_value=100)
+    progress = mo.ui.anywidget(ProgressBar(value=0, max_value=100))
 
     for i in range(101):
         progress.value = i

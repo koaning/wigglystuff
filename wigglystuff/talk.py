@@ -12,9 +12,10 @@ class WebkitSpeechToTextWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import WebkitSpeechToTextWidget
 
-        speech = WebkitSpeechToTextWidget()
+        speech = mo.ui.anywidget(WebkitSpeechToTextWidget())
         speech
         ```
     """
