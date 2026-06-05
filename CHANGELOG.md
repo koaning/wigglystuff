@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `AttractorWidget`: GPU-accelerated renderer for 2D iterative-map attractors (Clifford, De Jong, or any user-supplied formula). Drag to pan, scroll to zoom; WebGL2 with a Canvas2D fallback.
+
+### Changed
+
+- `TangleSlider`: drag updates are now throttled (≈50 ms) instead of debounced, so reactive widgets re-render live as the user scrubs.
+
 ### Fixed
 
 - `BezierCurve` and `CurveEditor`: editing the curve (dragging a control point, double-clicking to add or remove a point, or toggling `closed`) no longer pauses playback. The playhead now continues across the new curve shape, matching the existing behaviour when changing the curve type or tension. Progress-slider scrubbing still pauses, since scrubbing `t` directly fights the timer.

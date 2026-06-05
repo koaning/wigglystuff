@@ -50,10 +50,26 @@ function render({model, el}) {
         model.save_changes();
     }
 
-    let updateTimeout;
-    function debouncedUpdateModel() {
-        clearTimeout(updateTimeout);
-        updateTimeout = setTimeout(updateModel, 50); // Debounce for 100ms
+    // Throttle drag updates so the model receives a steady stream of changes
+    // while the user is moving the mouse, rather than only firing on pause /
+    // release. The trailing call ensures the final value is delivered when
+    // movement stops.
+    let lastSent = 0;
+    let trailingTimeout;
+    function throttledUpdateModel() {
+        const now = performance.now();
+        const elapsed = now - lastSent;
+        const interval = 50;
+        if (elapsed >= interval) {
+            lastSent = now;
+            updateModel();
+        } else {
+            clearTimeout(trailingTimeout);
+            trailingTimeout = setTimeout(() => {
+                lastSent = performance.now();
+                updateModel();
+            }, interval - elapsed);
+        }
     }
 
     function startDragging(e) {
@@ -76,13 +92,15 @@ function render({model, el}) {
                                         startValue + pixelSteps * config.stepSize));
             }
             renderValue();
-            debouncedUpdateModel();
+            throttledUpdateModel();
         }
 
         function onMouseUp() {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
             element.style.cursor = 'ew-resize';
+            clearTimeout(trailingTimeout);
+            lastSent = performance.now();
             updateModel();
         }
 

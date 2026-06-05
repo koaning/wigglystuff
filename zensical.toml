@@ -50,6 +50,7 @@ nav = [
         { HoverZoom = "reference/hover-zoom.md" },
         { Treemap = "reference/treemap.md" },
         { NestedTable = "reference/nested-table.md" },
+        { AttractorWidget = "reference/attractor.md" },
         { Utils = "reference/utils.md" },
     ] },
 ]

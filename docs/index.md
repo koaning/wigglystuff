@@ -63,6 +63,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/threewidget.py/wasm">molab</a><a href="reference/three-widget/">API</a><a href="reference/three-widget.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">AttractorWidget</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/attractor.py/wasm" class="gallery-img"><img src="assets/gallery/attractor.webp" alt="AttractorWidget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/attractor.py/wasm">molab</a><a href="reference/attractor/">API</a><a href="reference/attractor.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">EdgeDraw</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/edgedraw.py/wasm" class="gallery-img"><img src="assets/gallery/edgedraw.webp" alt="EdgeDraw widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/edgedraw.py/wasm">molab</a><a href="reference/edge-draw/">API</a><a href="reference/edge-draw.md">MD</a></div>
