@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `CellTour`: now works in marimo app mode (`marimo run` / molab) in addition to edit mode. No behavior change in the widget itself — marimo `>= 0.23` started rendering `.marimo-cell` and `[data-cell-name]` on cell containers in app mode, which is what `CellTour`'s step selectors already target. The docstring, reference page, and bundled demo (`demos/celltour.py`) have been updated to reflect this; the demo is reworked so its tour steps point at cells with visible output (so it makes sense when opened via `marimo run`) and its PEP 723 header now pins `marimo>=0.23`.
+
 ## [0.5.8] - 2026-06-04
 
 ### Added
