@@ -10,9 +10,10 @@ class SortableList(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import SortableList
 
-        sortable = SortableList(value=["apple", "banana", "cherry"], removable=True)
+        sortable = mo.ui.anywidget(SortableList(value=["apple", "banana", "cherry"], removable=True))
         sortable
         ```
     """

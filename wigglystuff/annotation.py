@@ -39,9 +39,10 @@ class AnnotationWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import AnnotationWidget
 
-        widget = AnnotationWidget()
+        widget = mo.ui.anywidget(AnnotationWidget())
         widget
         ```
     """

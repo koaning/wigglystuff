@@ -20,9 +20,10 @@ class WebcamCapture(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import WebcamCapture
 
-        cam = WebcamCapture(interval_ms=1000)
+        cam = mo.ui.anywidget(WebcamCapture(interval_ms=1000))
         cam
         ```
     """

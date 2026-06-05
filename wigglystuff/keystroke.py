@@ -16,9 +16,10 @@ class KeystrokeWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import KeystrokeWidget
 
-        keystroke = KeystrokeWidget()
+        keystroke = mo.ui.anywidget(KeystrokeWidget())
         keystroke
         ```
     """

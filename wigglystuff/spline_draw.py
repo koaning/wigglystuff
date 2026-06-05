@@ -22,6 +22,7 @@ class SplineDraw(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import SplineDraw
         from sklearn.pipeline import make_pipeline
         from sklearn.preprocessing import SplineTransformer
@@ -34,7 +35,7 @@ class SplineDraw(anywidget.AnyWidget):
             x_curve = np.linspace(x.min(), x.max(), 200)
             return x_curve, pipe.predict(x_curve.reshape(-1, 1))
 
-        widget = SplineDraw(spline_fn=spline_fn)
+        widget = mo.ui.anywidget(SplineDraw(spline_fn=spline_fn))
         widget
         ```
     """

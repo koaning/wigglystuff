@@ -152,9 +152,10 @@ class ApiDoc(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import ApiDoc
 
-        ApiDoc(MyClass)
+        mo.ui.anywidget(ApiDoc(MyClass))
         ```
     """
 

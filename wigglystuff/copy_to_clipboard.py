@@ -10,9 +10,10 @@ class CopyToClipboard(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import CopyToClipboard
 
-        button = CopyToClipboard(text_to_copy="Hello, world!")
+        button = mo.ui.anywidget(CopyToClipboard(text_to_copy="Hello, world!"))
         button
         ```
     """

@@ -56,19 +56,22 @@ class ChartPuck(anywidget.AnyWidget):
     Examples:
         Single puck:
         ```python
+        import marimo as mo
         import matplotlib.pyplot as plt
         from wigglystuff import ChartPuck
 
         fig, ax = plt.subplots()
         ax.scatter([1, 2, 3], [1, 2, 3])
 
-        puck = ChartPuck(fig)
+        puck = mo.ui.anywidget(ChartPuck(fig))
         # puck.x, puck.y track the puck position in data coordinates
         ```
 
         Multiple pucks:
         ```python
-        puck = ChartPuck(fig, x=[0.5, 1.5, 2.5], y=[0.5, 1.5, 2.5])
+        import marimo as mo
+
+        puck = mo.ui.anywidget(ChartPuck(fig, x=[0.5, 1.5, 2.5], y=[0.5, 1.5, 2.5]))
         # puck.x, puck.y are lists of coordinates
         ```
     """

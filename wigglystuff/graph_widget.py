@@ -24,7 +24,13 @@ class GraphWidget(anywidget.AnyWidget):
     height (default 400).
 
     Example:
-        ``GraphWidget(nodes=["Alpha", "Beta"], edges=[("Alpha", "Beta")])``
+        ```python
+        import marimo as mo
+        from wigglystuff import GraphWidget
+
+        widget = mo.ui.anywidget(GraphWidget(nodes=["Alpha", "Beta"], edges=[("Alpha", "Beta")]))
+        widget
+        ```
     """
 
     _esm = Path(__file__).parent / "static" / "graph-widget.js"

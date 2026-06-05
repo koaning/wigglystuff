@@ -26,9 +26,10 @@ class Excalidraw(anywidget.AnyWidget):
 
     Example:
         ```python
+        import marimo as mo
         from wigglystuff import Excalidraw
 
-        draw = Excalidraw()
+        draw = mo.ui.anywidget(Excalidraw())
         draw
         ```
 

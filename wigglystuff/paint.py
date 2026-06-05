@@ -92,9 +92,10 @@ class Paint(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import Paint
 
-        paint = Paint(width=400, height=300)
+        paint = mo.ui.anywidget(Paint(width=400, height=300))
         paint
         ```
     """

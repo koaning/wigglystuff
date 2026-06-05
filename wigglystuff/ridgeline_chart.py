@@ -16,8 +16,10 @@ class RidgelineChart(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         import pandas as pd
         import numpy as np
+        from wigglystuff import RidgelineChart
 
         # Generate sample waveform data
         n_rows = 40
@@ -34,7 +36,7 @@ class RidgelineChart(anywidget.AnyWidget):
         df = pd.DataFrame(data)
         df.index = range(10, 10 + n_rows)  # Custom index
 
-        chart = RidgelineChart(df, x_label="Time", y_label="Channel")
+        chart = mo.ui.anywidget(RidgelineChart(df, x_label="Time", y_label="Channel"))
         chart
         ```
     """

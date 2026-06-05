@@ -147,6 +147,7 @@ class ModuleTreeWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         import torch.nn as nn
         from wigglystuff import ModuleTreeWidget
 
@@ -155,7 +156,7 @@ class ModuleTreeWidget(anywidget.AnyWidget):
             nn.ReLU(),
             nn.Linear(256, 10),
         )
-        ModuleTreeWidget(model, initial_expand_depth=2)
+        mo.ui.anywidget(ModuleTreeWidget(model, initial_expand_depth=2))
         ```
     """
 

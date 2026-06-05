@@ -45,9 +45,10 @@ class NestedTable(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import NestedTable
 
-        widget = NestedTable.from_paths(
+        widget = mo.ui.anywidget(NestedTable.from_paths(
             {
                 "analytics/cluster/Agg": {"hours": 12.5, "count": 5},
                 "analytics/graph/Shortest": {"hours": 6.0, "count": 2},
@@ -55,7 +56,7 @@ class NestedTable(anywidget.AnyWidget):
             },
             format={"hours": lambda v: f"{v:.1f}h"},
             show_percent=["hours"],
-        )
+        ))
         widget
         ```
     """
@@ -130,16 +131,17 @@ class NestedTable(anywidget.AnyWidget):
 
         Examples:
             ```python
+            import marimo as mo
             from wigglystuff import NestedTable
 
-            NestedTable.from_paths(
+            mo.ui.anywidget(NestedTable.from_paths(
                 {
                     "analytics/cluster/Agg": {"hours": 12.5, "count": 5},
                     "analytics/graph/Shortest": {"hours": 6.0, "count": 2},
                     "animate/Easing": {"hours": 4.25, "count": 8},
                 },
                 show_percent=["hours"],
-            )
+            ))
             ```
         """
         return cls(tree_from_paths(mapping, sep=sep, root_name=root_name), **kwargs)
@@ -158,9 +160,10 @@ class NestedTable(anywidget.AnyWidget):
 
         Examples:
             ```python
+            import marimo as mo
             from wigglystuff import NestedTable
 
-            NestedTable.from_records(
+            mo.ui.anywidget(NestedTable.from_records(
                 [
                     {"team": "analytics", "project": "cluster", "hours": 12.5},
                     {"team": "analytics", "project": "graph", "hours": 6.0},
@@ -168,7 +171,7 @@ class NestedTable(anywidget.AnyWidget):
                 ],
                 path_cols=["team", "project"],
                 value_cols="hours",
-            )
+            ))
             ```
         """
         tree = tree_from_records(
@@ -190,6 +193,7 @@ class NestedTable(anywidget.AnyWidget):
 
         Examples:
             ```python
+            import marimo as mo
             import pandas as pd
             from wigglystuff import NestedTable
 
@@ -201,11 +205,11 @@ class NestedTable(anywidget.AnyWidget):
                     "count": [5, 2, 8],
                 }
             )
-            NestedTable.from_dataframe(
+            mo.ui.anywidget(NestedTable.from_dataframe(
                 df,
                 path_cols=["team", "project"],
                 value_cols=["hours", "count"],
-            )
+            ))
             ```
         """
         tree = tree_from_dataframe(

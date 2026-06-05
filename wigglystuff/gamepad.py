@@ -12,9 +12,10 @@ class GamepadWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import GamepadWidget
 
-        gamepad = GamepadWidget()
+        gamepad = mo.ui.anywidget(GamepadWidget())
         gamepad
         ```
     """

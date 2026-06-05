@@ -16,24 +16,26 @@ class CellTour(DriverTour):
         Using cell indices:
 
         ```python
+        import marimo as mo
         from wigglystuff import CellTour
 
-        tour = CellTour(steps=[
+        tour = mo.ui.anywidget(CellTour(steps=[
             {"cell": 0, "title": "Imports", "description": "Load libraries"},
             {"cell": 2, "title": "Processing", "description": "Data transformation"},
-        ])
+        ]))
         tour
         ```
 
         Using cell names (requires naming cells in marimo):
 
         ```python
+        import marimo as mo
         from wigglystuff import CellTour
 
-        tour = CellTour(steps=[
+        tour = mo.ui.anywidget(CellTour(steps=[
             {"cell_name": "imports", "title": "Imports", "description": "Load libraries"},
             {"cell_name": "process", "title": "Processing", "description": "Transform data"},
-        ])
+        ]))
         tour
         ```
     """

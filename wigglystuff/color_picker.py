@@ -10,9 +10,10 @@ class ColorPicker(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from wigglystuff import ColorPicker
 
-        picker = ColorPicker(color="#ff5733")
+        picker = mo.ui.anywidget(ColorPicker(color="#ff5733"))
         picker
         ```
     """

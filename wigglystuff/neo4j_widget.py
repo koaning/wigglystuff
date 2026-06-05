@@ -10,11 +10,12 @@ class Neo4jWidget(anywidget.AnyWidget):
 
     Examples:
         ```python
+        import marimo as mo
         from neo4j import GraphDatabase
         from wigglystuff import Neo4jWidget
 
         driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "password"))
-        widget = Neo4jWidget(driver)
+        widget = mo.ui.anywidget(Neo4jWidget(driver))
         widget
         ```
     """
