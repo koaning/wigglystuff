@@ -5,7 +5,7 @@
 #     "matplotlib==3.10.9",
 #     "numpy==2.4.6",
 #     "pandas==3.0.3",
-#     "wigglystuff==0.5.7",
+#     "wigglystuff==0.5.8",
 # ]
 # requires-python = ">=3.14"
 # ///

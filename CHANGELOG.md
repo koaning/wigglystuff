@@ -2,10 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.8] - 2026-06-04
 
 ### Added
 
+- `Excalidraw`: a new widget that embeds an [Excalidraw](https://excalidraw.com) whiteboard. Sketch shapes, arrows, text, and freehand drawings on an infinite canvas; the scene (`elements` / `appState` / `files`) syncs back to Python on the `scene` traitlet (debounced via `sync_throttle_ms`), and `get_pil()` returns a PIL image of the drawing so you can pass it forward (e.g. into a multimodal model). The hamburger menu and shape Library are hidden (their file/export/library actions don't apply to an embedded surface), and the canvas theme defaults to light — pass `theme="dark"` to pin it dark, or `theme=""` to follow the notebook. Following the library's other drawing widgets, nothing is written to disk automatically — preload a scene with `Excalidraw(scene=...)`, persist with `save(path)`, and reload with `Excalidraw.from_file(path)`. Excalidraw + React (~8MB) are loaded from a CDN the first time the widget renders rather than bundled into the package, so the widget needs network access and does not work fully offline.
 - New `Space-Filling Curves` example notebook (`demos/curve-filling.py`) added to the docs gallery. It uses `CircularRangeSlider` to drive a matplotlib explorer comparing Morton, Hilbert, and Moore curves — drag the seamless dial to highlight a wrapping window of ranks along the curve.
 
 ### Changed

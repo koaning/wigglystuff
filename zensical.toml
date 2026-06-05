@@ -22,6 +22,7 @@ nav = [
         { Matrix = "reference/matrix.md" },
         { SortableList = "reference/sortable-list.md" },
         { Paint = "reference/paint.md" },
+        { Excalidraw = "reference/excalidraw.md" },
         { ThreeWidget = "reference/three-widget.md" },
         { EdgeDraw = "reference/edge-draw.md" },
         { GraphWidget = "reference/graph-widget.md" },

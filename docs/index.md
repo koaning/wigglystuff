@@ -58,6 +58,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint.py/wasm">molab</a><a href="reference/paint/">API</a><a href="reference/paint.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">Excalidraw</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/excalidraw.py/wasm" class="gallery-img"><img src="assets/gallery/excalidraw.webp" alt="Excalidraw widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/excalidraw.py/wasm">molab</a><a href="reference/excalidraw/">API</a><a href="reference/excalidraw.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">ThreeWidget</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/threewidget.py/wasm" class="gallery-img"><img src="assets/gallery/threewidget.webp" alt="ThreeWidget widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/threewidget.py/wasm">molab</a><a href="reference/three-widget/">API</a><a href="reference/three-widget.md">MD</a></div>
