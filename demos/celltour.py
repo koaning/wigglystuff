@@ -2,7 +2,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #     "anywidget==0.9.21",
-#     "marimo",
+#     "marimo>=0.23",
 #     "numpy==2.3.5",
 #     "wigglystuff==0.3.1",
 # ]
@@ -10,41 +10,40 @@
 
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.23.9"
 app = marimo.App(width="medium", sql_output="polars")
 
 
 @app.cell
-def foobar():
-    # Notice how this cell has a name?
+def setup():
     import marimo as mo
     from wigglystuff import CellTour
     return CellTour, mo
 
 
 @app.cell
-def _(CellTour, mo):
-    # CellTour provides a simpler API than DriverTour
-    # You can use cell indices OR cell names (data-cell-name attribute)
+def tour(CellTour, mo):
+    # The tour widget lives at the top of the notebook so the "Start Tour"
+    # button is reachable in both edit mode and app mode (`marimo run` /
+    # molab). Steps target other cells by their `cell_name` — which is the
+    # function name marimo uses for that cell.
     tour = mo.ui.anywidget(
         CellTour(
             steps=[
                 {
-                    # Use cell_name to target cells by their function name
-                    "cell_name": "foobar",
-                    "title": "Imports",
-                    "description": "First we import marimo and CellTour.",
+                    "cell_name": "intro",
+                    "title": "Welcome",
+                    "description": "CellTour highlights marimo cells one at a time. This works in both edit mode and app mode (since marimo 0.23).",
                 },
                 {
-                    "cell": 1,
-                    "title": "Tour Definition",
-                    "description": "This cell defines the tour using the simplified API.",
+                    "cell_name": "content",
+                    "title": "Target any named cell",
+                    "description": "Each step references a cell by `cell_name=` (its function name in marimo), which matches the `[data-cell-name]` attribute marimo renders on each cell.",
                 },
                 {
-                    # Use cell_name for the example cell
-                    "cell": 2,
-                    "title": "Example Code",
-                    "description": "This cell shows some example code.",
+                    "cell_name": "summary",
+                    "title": "That's it",
+                    "description": "Use CellTour to build short product tours for marimo apps you share — onboarding, walkthroughs, or guided demos.",
                 },
             ]
         )
@@ -54,11 +53,37 @@ def _(CellTour, mo):
 
 
 @app.cell
-def _():
-    # Example code cell
-    x = 1
-    y = 2
-    z = x + y
+def intro(mo):
+    mo.md("""
+    # CellTour demo
+
+    A small guided tour over the cells below. Press **Start Tour** above
+    to step through the highlights.
+    """)
+    return
+
+
+@app.cell
+def content(mo):
+    mo.md("""
+    ## The content cell
+
+    This cell has visible output, so it shows up as a tour target in
+    app mode. In `marimo run` / molab, only cells with output are
+    rendered — pointing a tour step at an imports-only cell would
+    leave nothing to highlight.
+    """)
+    return
+
+
+@app.cell
+def summary(mo):
+    mo.md("""
+    ## Wrap-up
+
+    The tour finishes here. You can rerun it any time by pressing the
+    **Start Tour** button at the top of the page.
+    """)
     return
 
 

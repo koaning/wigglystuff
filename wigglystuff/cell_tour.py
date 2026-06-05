@@ -7,7 +7,10 @@ class CellTour(DriverTour):
     """Simplified tour widget for marimo notebooks.
 
     Wraps ``DriverTour`` with cell-aware step helpers so you can reference
-    marimo cells by index or `data-cell-name` attributes.
+    marimo cells by index or `data-cell-name` attributes. Works in both
+    marimo edit mode and app mode (``marimo run`` / molab); the cell
+    selectors require marimo ``>= 0.23``, when app mode started rendering
+    ``.marimo-cell`` and ``[data-cell-name]`` on cell containers.
 
     Examples:
         Using cell indices:
