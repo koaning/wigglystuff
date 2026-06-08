@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `Excalidraw.save()` now remembers the path and can be called with no argument. Widgets created with `Excalidraw.from_file(...)` capture their source path, so a bare `save()` writes back to the file they were loaded from; passing a path saves there and remembers it for subsequent bare calls. `save()` now returns the absolute destination (shown as the cell output in marimo) so it's always clear where the file landed. The widget still never writes on its own — drop `save()` into its own marimo cell and marimo re-runs it whenever the widget changes, so the file tracks what you draw. There is no file-watching or bidirectional sync; the notebook stays the source of truth.
+
 ### Changed
 
 - Docs: every widget's reference example now shows the marimo idiom `mo.ui.anywidget(...)` (wrapping the widget so its state syncs reactively in marimo), matching how the `demos/` notebooks use these widgets. The examples are auto-generated from class docstrings, so the rendered reference pages stay in sync.

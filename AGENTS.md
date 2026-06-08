@@ -34,7 +34,7 @@ syncs back to Python.
 | EdgeDraw | `wigglystuff.edge_draw.EdgeDraw` | `names`, `links`, `directed`, `width`, `height` | Sketch node/link diagrams and query adjacency |
 | GraphWidget | `wigglystuff.graph_widget.GraphWidget` | `nodes`, `edges`, `directed`, `width`, `height`, `selected_nodes`, `selected_edges` | Programmatic force-directed graph visualization |
 | Paint | `wigglystuff.paint.Paint` | `base64`, `width`, `height`, `store_background` | MS-Paint-style canvas with PIL helpers |
-| Excalidraw | `wigglystuff.excalidraw.Excalidraw` | `scene`, `image_base64`, `theme`, `height`, `sync_throttle_ms` | Embedded Excalidraw whiteboard (loads from CDN); `get_pil`/`save`/`from_file` helpers |
+| Excalidraw | `wigglystuff.excalidraw.Excalidraw` | `scene`, `image_base64`, `theme`, `height`, `sync_throttle_ms` | Embedded Excalidraw whiteboard (loads from CDN); `get_pil`/`save`/`from_file` helpers (`save()` remembers the path) |
 | ParallelCoordinates | `wigglystuff.parallel_coords.ParallelCoordinates` | `data`, `color_by`, `height`, `filtered_indices`, `selected_indices`, `brush_extents`, `selections` | HiPlot-powered parallel coordinates with brush filtering and axis reordering |
 | ThreeWidget | `wigglystuff.three_widget.ThreeWidget` | `data`, `width`, `height`, `show_grid`, `show_axes`, `dark_mode`, `axis_labels`, `animate_updates`, `animation_duration_ms` | 3D scatter plot for point clouds |
 | WebcamCapture | `wigglystuff.webcam_capture.WebcamCapture` | `image_base64`, `capturing`, `interval_ms`, `facing_mode` | Webcam preview with snapshot capture |
