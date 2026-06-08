@@ -38,6 +38,8 @@ class Excalidraw(anywidget.AnyWidget):
         ```python
         draw.save("diagram.excalidraw")          # write to disk
         again = Excalidraw.from_file("diagram.excalidraw")  # load it back
+        again.save()                              # write back to diagram.excalidraw
+        again.save("other.excalidraw")            # save elsewhere (and remember it)
         ```
     """
 
@@ -64,6 +66,7 @@ class Excalidraw(anywidget.AnyWidget):
         self.height = height
         self.sync_throttle_ms = sync_throttle_ms
         self.theme = theme
+        self.source_path: Optional[Path] = None
         if scene is not None:
             self.scene = scene
 
@@ -96,12 +99,37 @@ class Excalidraw(anywidget.AnyWidget):
         """Return the current scene serialized as a JSON string."""
         return json.dumps(self.scene)
 
-    def save(self, path: Union[str, Path]) -> None:
-        """Write the current scene to ``path`` as a ``.excalidraw`` JSON file."""
-        Path(path).write_text(self.to_json(), encoding="utf-8")
+    def save(self, path: Optional[Union[str, Path]] = None) -> Path:
+        """Write the current scene to a ``.excalidraw`` JSON file and return where.
+
+        Pass ``path`` to choose the destination; it is remembered on
+        ``source_path``, so later calls — and widgets created via
+        :meth:`from_file` — can call ``save()`` with no argument to write back
+        to the same file. This widget never writes on its own: in marimo,
+        putting ``save()`` in its own cell makes it *effectively* autosave,
+        because marimo (not this method) re-runs that cell whenever the widget
+        changes, so the file tracks what you draw. The returned absolute path is
+        shown as the cell output, so it is always clear which file was written.
+        """
+        if path is not None:
+            self.source_path = Path(path)
+        if self.source_path is None:
+            raise ValueError(
+                "save() needs a path: either pass one, e.g. "
+                'save("diagram.excalidraw"), or create the widget with '
+                "Excalidraw.from_file(...) so the source path is known."
+            )
+        Path(self.source_path).write_text(self.to_json(), encoding="utf-8")
+        return Path(self.source_path).resolve()
 
     @classmethod
     def from_file(cls, path: Union[str, Path], **kwargs) -> "Excalidraw":
-        """Create an :class:`Excalidraw` preloaded with the scene at ``path``."""
+        """Create an :class:`Excalidraw` preloaded with the scene at ``path``.
+
+        The path is remembered on ``source_path`` so you can call
+        :meth:`save` with no argument to write edits back to the same file.
+        """
         scene = json.loads(Path(path).read_text(encoding="utf-8"))
-        return cls(scene=scene, **kwargs)
+        widget = cls(scene=scene, **kwargs)
+        widget.source_path = Path(path)
+        return widget

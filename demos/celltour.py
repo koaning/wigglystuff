@@ -4,7 +4,7 @@
 #     "anywidget==0.9.21",
 #     "marimo>=0.23",
 #     "numpy==2.3.5",
-#     "wigglystuff==0.3.1",
+#     "wigglystuff==0.5.9",
 # ]
 # ///
 
