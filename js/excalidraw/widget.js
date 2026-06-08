@@ -261,6 +261,86 @@ function makeApp(React, Excalidraw, serializeAsJSON, exportToBlob, model, el) {
   };
 }
 
+// --- Shadow-DOM clipboard shim --------------------------------------------
+// Excalidraw's copy/cut/paste handlers gate on "is Excalidraw focused / is the
+// pointer over the canvas?" using document.activeElement and
+// document.elementFromPoint(x, y). Neither pierces the shadow DOM that marimo
+// mounts anywidget in: activeElement returns the shadow HOST (<marimo-anywidget>)
+// and elementFromPoint stops at it. So those checks fail and copy/cut/paste
+// silently bail. Excalidraw is loaded prebuilt from a CDN, so we can't patch it
+// — instead we make those two document APIs shadow-aware while a widget is
+// mounted, which lets Excalidraw's existing checks succeed.
+//
+// Scoped on purpose: we only descend into a shadow root that actually hosts an
+// Excalidraw instance (.excalidraw). So document.activeElement /
+// elementFromPoint behave EXACTLY as before for everything else on the page
+// (marimo's own focus handling, code cells, other widgets) — they only change
+// when focus/pointer is genuinely inside an Excalidraw canvas. The shim is
+// reference-counted: installed once when the first widget mounts, fully restored
+// after the last one unmounts.
+let shimRefCount = 0;
+let restoreShim = null;
+
+function hasExcalidraw(shadowRoot) {
+  return (
+    shadowRoot &&
+    typeof shadowRoot.querySelector === "function" &&
+    shadowRoot.querySelector(".excalidraw")
+  );
+}
+
+function installShadowDomShim() {
+  shimRefCount += 1;
+  if (shimRefCount > 1) return; // another widget already installed it
+
+  // The native activeElement getter lives up the prototype chain (Document /
+  // DocumentOrShadowRoot), so walk up to grab it before shadowing it.
+  let proto = document;
+  let desc = null;
+  while (proto && !(desc = Object.getOwnPropertyDescriptor(proto, "activeElement"))) {
+    proto = Object.getPrototypeOf(proto);
+  }
+  const nativeActiveGet = desc && desc.get;
+
+  if (nativeActiveGet) {
+    Object.defineProperty(document, "activeElement", {
+      configurable: true,
+      get() {
+        let a = nativeActiveGet.call(document);
+        while (a && a.shadowRoot && a.shadowRoot.activeElement && hasExcalidraw(a.shadowRoot)) {
+          a = a.shadowRoot.activeElement;
+        }
+        return a;
+      },
+    });
+  }
+
+  const nativeEFP = document.elementFromPoint.bind(document);
+  document.elementFromPoint = function (x, y) {
+    let node = nativeEFP(x, y);
+    while (node && node.shadowRoot && hasExcalidraw(node.shadowRoot)) {
+      const inner = node.shadowRoot.elementFromPoint(x, y);
+      if (!inner || inner === node) break;
+      node = inner;
+    }
+    return node;
+  };
+
+  restoreShim = () => {
+    if (nativeActiveGet) delete document.activeElement; // re-expose prototype getter
+    document.elementFromPoint = nativeEFP;
+  };
+}
+
+function uninstallShadowDomShim() {
+  shimRefCount -= 1;
+  if (shimRefCount <= 0) {
+    shimRefCount = 0;
+    if (restoreShim) restoreShim();
+    restoreShim = null;
+  }
+}
+
 async function render({ model, el }) {
   el.style.display = "block";
   el.style.height = `${model.get("height") || 600}px`;
@@ -271,6 +351,13 @@ async function render({ model, el }) {
   mount.addEventListener("keydown", (e) => e.stopPropagation());
   mount.addEventListener("keyup", (e) => e.stopPropagation());
   el.appendChild(mount);
+
+  // Make document.activeElement / elementFromPoint shadow-aware so Excalidraw's
+  // clipboard handlers work inside marimo's shadow root (see shim comment above).
+  // Only needed when we're actually in a shadow root — light DOM (classic
+  // Jupyter) is left untouched.
+  const inShadow = el.getRootNode() instanceof ShadowRoot;
+  if (inShadow) installShadowDomShim();
 
   let root = null;
   try {
@@ -290,6 +377,7 @@ async function render({ model, el }) {
 
   return () => {
     if (root) root.unmount();
+    if (inShadow) uninstallShadowDomShim();
   };
 }
 
