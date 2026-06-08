@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- `Excalidraw`: copy/paste now works inside marimo. Excalidraw's clipboard handlers check focus and pointer position with `document.activeElement` and `document.elementFromPoint`, neither of which pierces the shadow DOM marimo mounts widgets in — so copy, cut, and paste (both into and out of the widget, including to/from excalidraw.com) silently bailed. The loader now installs a shadow-DOM-aware shim over those two APIs while a widget is mounted. It's scoped to shadow roots that actually host an Excalidraw instance, so focus/clipboard behavior elsewhere on the page (marimo code cells, other widgets) is unchanged. (#247)
+
 ### Changed
 
 - Docs: every widget's reference example now shows the marimo idiom `mo.ui.anywidget(...)` (wrapping the widget so its state syncs reactively in marimo), matching how the `demos/` notebooks use these widgets. The examples are auto-generated from class docstrings, so the rendered reference pages stay in sync.
