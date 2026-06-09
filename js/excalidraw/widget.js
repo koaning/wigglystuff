@@ -145,14 +145,42 @@ function makeApp(React, Excalidraw, serializeAsJSON, exportToBlob, model, el) {
       }
     }, [dark]);
 
+    const refresh = () => apiRef.current && apiRef.current.refresh();
+
     // Excalidraw maps pointer -> canvas using its container's position, which it
     // measures on mount. In a notebook the widget sits well down the page, so
     // that initial measurement is stale and drawings land offset from the
     // cursor. refresh() recomputes it; re-run on scroll/resize (capture: true so
     // we catch the notebook's own scroll container, not just window).
     React.useEffect(() => {
-      const refresh = () => apiRef.current && apiRef.current.refresh();
       const t = setTimeout(refresh, 100);
+      window.addEventListener("scroll", refresh, true);
+      window.addEventListener("resize", refresh);
+      return () => {
+        clearTimeout(t);
+        window.removeEventListener("scroll", refresh, true);
+        window.removeEventListener("resize", refresh);
+      };
+    }, []);
+
+
+    React.useEffect(() => {
+      const t = setTimeout(() => {
+        if (apiRef.current) {
+          apiRef.current.refresh();
+    
+          // Scroll/zoom to fit all elements, capped at 100%
+          const elements = apiRef.current.getSceneElements();
+          if (elements.length > 0) {
+            apiRef.current.scrollToContent(elements, {
+              fitToContent: true,
+              viewportZoomFactor: 1,   // max 100% — won't zoom *in* beyond this
+              animate: false,
+            });
+          }
+        }
+      }, 100);
+    
       window.addEventListener("scroll", refresh, true);
       window.addEventListener("resize", refresh);
       return () => {
