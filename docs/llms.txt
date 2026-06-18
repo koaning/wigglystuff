@@ -48,7 +48,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 
 ## 3rd party widgets
 
-These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io) because many of the dependencies are not compatible with WASM.
+These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io?utm_source=wigglystuff) because many of the dependencies are not compatible with WASM.
 
 - [AltairWidget](https://koaning.github.io/wigglystuff/reference/altair-widget.md): Flicker-free Altair chart rendering with smooth data updates via the Vega View API
 - [ModuleTreeWidget](https://koaning.github.io/wigglystuff/reference/module-tree.md): Interactive tree viewer for PyTorch nn.Module architecture

@@ -90,6 +90,11 @@ syncs back to Python.
   locations to keep them in sync. Screenshots are stored as `.webp` —
   if you only have a PNG, drop it in and run
   `uv run python scripts/png_to_webp.py` to convert and clean up.
+- **Every link to MoLab (`molab.marimo.io`) must carry `?utm_source=wigglystuff`**
+  so outbound traffic is attributable in analytics. This applies to the gallery
+  links in `README.md` and `docs/index.md` and any MoLab reference in
+  `docs/llms.txt`. When adding a new widget, append the param to its `molab`
+  demo links (e.g. `.../demos/<name>.py/wasm?utm_source=wigglystuff`).
 - New or changed features that haven't been released yet go under the
   `## [Unreleased]` section at the top of `CHANGELOG.md`. That section gets
   renamed to a versioned heading (e.g., `## [0.2.37]`) only at release time.
