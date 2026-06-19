@@ -11,7 +11,7 @@
 
 import marimo
 
-__generated_with = "0.21.0"
+__generated_with = "0.23.10"
 app = marimo.App()
 
 
@@ -61,7 +61,7 @@ def _(mo):
 
 @app.cell
 def _(mo, widget):
-    n_filtered = len(widget.filtered_indices)
+    n_filtered = len(widget.selected_indices)
     n_total = len(widget.data)
     selections = widget.selections
     lines = [f"**Filtered:** {n_filtered} / {n_total} rows"]
@@ -117,7 +117,7 @@ def _(ParallelCoordinates, mo, pl):
 
 @app.cell
 def _(mo, widget_lg):
-    n_filtered_large = len(widget_lg.filtered_indices)
+    n_filtered_large = len(widget_lg.selected_indices)
     n_total_large = len(widget_lg.data)
     mo.md(f"**Scale demo filtered:** {n_filtered_large} / {n_total_large} rows")
     return
