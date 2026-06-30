@@ -11,6 +11,7 @@ function render({model, el}) {
 
     let amount = model.get("amount");
     let steps = model.get("steps");
+    let editing = false;
 
     const container = document.createElement('div');
     container.classList.add("tangle-container");
@@ -29,7 +30,8 @@ function render({model, el}) {
             config.pixelsPerStep = model.get("pixels_per_step");
             amount = model.get("amount");
             steps = model.get("steps");
-            renderValue();
+            // Ignore external syncs while the user is typing a value.
+            if (!editing) renderValue();
         });
     });
 
@@ -63,9 +65,11 @@ function render({model, el}) {
         const startX = e.clientX;
         const startValue = parseFloat(element.textContent.replace(config.prefix, '').replace(config.suffix, ''));
         const startIndex = steps.length > 0 ? Math.max(0, steps.indexOf(amount)) : -1;
+        let moved = false;
 
         function onMouseMove(e) {
             const deltaX = e.clientX - startX;
+            if (Math.abs(deltaX) > 3) moved = true;
             const pixelSteps = Math.floor(deltaX / config.pixelsPerStep);
             if (steps.length > 0) {
                 const newIndex = Math.max(0, Math.min(steps.length - 1, startIndex + pixelSteps));
@@ -83,11 +87,76 @@ function render({model, el}) {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
             element.style.cursor = 'ew-resize';
-            updateModel();
+            // A click without a real drag enters edit mode (linear sliders only).
+            if (!moved && steps.length === 0) {
+                amount = startValue;
+                enterEditMode();
+            } else {
+                updateModel();
+            }
         }
 
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
+    }
+
+    function enterEditMode() {
+        editing = true;
+        const previous = amount;
+        let finished = false;
+
+        container.innerHTML = '';
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'tangle-input';
+        input.value = amount.toFixed(config.digits);
+        // Match the value's look and keep it inline so the layout doesn't jump.
+        input.style.color = '#0066cc';
+        input.style.font = 'inherit';
+        input.style.background = 'transparent';
+        input.style.border = 'none';
+        input.style.borderBottom = '1px solid #0066cc';
+        input.style.padding = '0';
+        input.style.margin = '0';
+        input.style.width = `${Math.max(input.value.length + 1, 2)}ch`;
+        container.appendChild(input);
+        input.focus();
+        input.select();
+
+        function finish(commit) {
+            if (finished) return;
+            finished = true;
+            editing = false;
+            if (commit) {
+                const parsed = parseFloat(input.value);
+                if (!isNaN(parsed)) {
+                    let next = Math.max(config.minValue, Math.min(config.maxValue, parsed));
+                    // Snap to the step grid anchored at min_value, then re-clamp.
+                    if (config.stepSize > 0) {
+                        next = config.minValue + Math.round((next - config.minValue) / config.stepSize) * config.stepSize;
+                        next = Math.max(config.minValue, Math.min(config.maxValue, next));
+                    }
+                    amount = next;
+                } else {
+                    amount = previous; // Non-numeric input: restore previous value.
+                }
+            } else {
+                amount = previous; // Escape / blur cancels.
+            }
+            renderValue();
+            updateModel();
+        }
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                finish(true);
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                finish(false);
+            }
+        });
+        input.addEventListener('blur', () => finish(false));
     }
 
     renderValue();
