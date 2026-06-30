@@ -5,13 +5,13 @@
 #     "marimo>=0.19.4",
 #     "numpy==2.4.1",
 #     "pandas==2.3.3",
-#     "wigglystuff==0.3.1",
+#     "wigglystuff==0.5.11",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.23.1"
+__generated_with = "0.23.3"
 app = marimo.App(width="medium")
 
 

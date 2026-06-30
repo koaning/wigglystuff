@@ -34,4 +34,6 @@ Prepare a new wigglystuff release. Follow these steps:
 
 8. **Verify nothing is missed**: Check the git diff to make sure all new/changed widgets have corresponding updates in all locations listed above.
 
-9. **Report** what was done and what still needs manual action (e.g., adding screenshots, replacing molab link placeholders).
+9. **Ship it — commit, push, and merge.** "Prepare a release" means the release actually lands on `main`; do NOT stop after the edits to ask whether to commit or merge. Run the mechanics without confirmation: commit the release changes, push the branch, open a PR against `main` (`gh pr create --base main`), and merge it (`gh pr merge`). Only pause if there's a genuine blocker (failing tests, merge conflicts, ambiguous diff) — not for the commit/PR/merge steps themselves.
+
+10. **Report** what was done and what still needs manual action (e.g., adding screenshots, replacing molab link placeholders).

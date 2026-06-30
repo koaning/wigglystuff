@@ -51,6 +51,31 @@ def test_tangle_slider_drag_updates_value(start_marimo, page: Page):
 
 
 @pytest.mark.e2e
+def test_tangle_slider_click_to_type(start_marimo, page: Page):
+    """Test that clicking (without dragging) opens an input to type a value."""
+    url = start_marimo(NOTEBOOK)
+    page.goto(url, wait_until="networkidle")
+
+    page.wait_for_selector(".tangle-value", timeout=TIMEOUT)
+    widget = page.locator(".tangle-value").first
+    expect(widget).to_be_visible()
+
+    # A plain click (mousedown + mouseup at the same spot) enters edit mode.
+    widget.click()
+
+    editor = page.locator(".tangle-input")
+    expect(editor).to_be_visible()
+
+    editor.fill("42")
+    editor.press("Enter")
+
+    page.wait_for_timeout(200)
+    value = page.locator(".tangle-value").first
+    expect(value).to_contain_text("42")
+    expect(value).to_contain_text("coffees")
+
+
+@pytest.mark.e2e
 def test_tangle_choice_renders_and_cycles(start_marimo, page: Page):
     """Test that TangleChoice renders and clicking cycles through choices."""
     url = start_marimo(NOTEBOOK)
