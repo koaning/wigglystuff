@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.10] - 2026-06-30
+
+### Added
+
+- `TangleSlider`: click the value to type it in directly. Clicking (without dragging) turns the value into an inline input — type a number, press `Enter` to confirm or `Escape` to cancel; clicking outside also cancels. The typed value respects the slider's `min_value`/`max_value` (out-of-range values are clamped) and `step` (snapped to the step grid); non-numeric input restores the previous value. Dragging still works exactly as before. Click-to-type is only enabled for linear sliders, not those built with an explicit `steps` list. (#255)
+
 ## [0.5.9] - 2026-06-08
 
 ### Added
