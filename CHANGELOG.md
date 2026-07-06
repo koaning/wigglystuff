@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `LiveEdit`: the source and trace columns now scroll independently inside a
+  fixed-height box, so the function stays visible while a long trace scrolls on
+  the right (previously the whole widget scrolled as one unit and the source
+  scrolled out of view). The default height now auto-fits the function's line
+  count with a 520px floor, and an explicit `height=` is honored as a hard box
+  size.
+
 ## [0.5.12] - 2026-07-06
 
 ### Added

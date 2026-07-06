@@ -130,6 +130,21 @@ def test_retrace_reports_argument_mismatch_without_crashing():
     assert widget.trace["returned"] is None
 
 
+def test_default_height_fits_source_with_floor():
+    short = LiveEdit("def f(x):\n    return x\n")
+    assert short.height == 520
+
+    long_source = (
+        "def f(x):\n"
+        + "\n".join(f"    x += {i}" for i in range(60))
+        + "\n    return x\n"
+    )
+    tall = LiveEdit(long_source)
+    assert tall.height > 520
+
+    assert LiveEdit(long_source, height=300).height == 300
+
+
 def test_module_level_inspect_run_alias():
     from wigglystuff import LiveEdit as RootLiveEdit
     from wigglystuff import inspect_run as root_inspect_run

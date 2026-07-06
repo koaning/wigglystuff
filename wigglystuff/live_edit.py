@@ -721,6 +721,7 @@ class LiveEdit(anywidget.AnyWidget):
         editable: bool = False,
         function_name: str | None = None,
         globalns: dict[str, Any] | None = None,
+        height: int | None = None,
         **widget_kwargs: Any,
     ) -> None:
         self._liveedit_args = tuple(args)
@@ -734,12 +735,20 @@ class LiveEdit(anywidget.AnyWidget):
             function_name=function_name,
             globalns=self._liveedit_globalns,
         )
+        if height is None:
+            # Fit the source by default: ~21px per rendered line (13px font *
+            # 1.55 line-height) plus top/bottom padding, floored at 520px so the
+            # trace panel keeps a roomy scroll area. Lines never wrap (they sit
+            # in an overflow-x panel), so a line-count estimate is accurate.
+            n_lines = len(code.splitlines()) or 1
+            height = max(520, n_lines * 21 + 40)
         super().__init__(
             code=code,
             trace=trace,
             annotations=annotations,
             error=error,
             editable=editable,
+            height=height,
             **widget_kwargs,
         )
 
