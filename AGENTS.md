@@ -42,6 +42,7 @@ syncs back to Python.
 | GamepadWidget | `wigglystuff.gamepad.GamepadWidget` | `axes`, `current_button_press`, `dpad_*`, `current_timestamp` | Streams browser Gamepad API events |
 | HoverZoom | `wigglystuff.hover_zoom.HoverZoom` | `image`, `zoom_factor`, `width`, `height`, `_crop` | Image hover zoom with magnified side panel |
 | KeystrokeWidget | `wigglystuff.keystroke.KeystrokeWidget` | `last_key` | Captures the latest keypress w/ modifiers |
+| LiveEdit | `wigglystuff.live_edit.LiveEdit` | `code`, `trace`, `annotations`, `error`, `editable`, `theme`, `width`, `height` | Source-linked loop trace for inspecting one Python function run |
 | WebkitSpeechToTextWidget | `wigglystuff.talk.WebkitSpeechToTextWidget` | `transcript`, `listening`, `trigger_listen` | WebKit speech recognition bridge |
 | DriverTour | `wigglystuff.driver_tour.DriverTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Guided product tours via Driver.js |
 | CellTour | `wigglystuff.cell_tour.CellTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Simplified cell-based tours for marimo |

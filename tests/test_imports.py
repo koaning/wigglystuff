@@ -45,6 +45,10 @@ def test_import_keystroke():
     from wigglystuff.keystroke import KeystrokeWidget
 
 
+def test_import_live_edit():
+    from wigglystuff.live_edit import LiveEdit, inspect_run
+
+
 def test_import_matrix():
     from wigglystuff.matrix import Matrix
 

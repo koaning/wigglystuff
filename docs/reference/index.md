@@ -16,6 +16,7 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [GridDraw](grid-draw.md)
 - [GraphWidget](graph-widget.md)
 - [KeystrokeWidget](keystroke.md)
+- [LiveEdit](live-edit.md)
 - [WebkitSpeechToTextWidget](talk.md)
 - [ColorPicker](color-picker.md)
 - [CopyToClipboard](copy-to-clipboard.md)
