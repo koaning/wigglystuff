@@ -17,6 +17,8 @@
   --liveedit-loop-rgb: 26, 127, 90;
   --liveedit-for: #0969da;
   --liveedit-while: #8250df;
+  --liveedit-error: #cf222e;
+  --liveedit-error-rgb: 207, 34, 46;
   color: var(--liveedit-code);
   color-scheme: light dark;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -44,6 +46,8 @@
   --liveedit-var-strong: rgba(245, 197, 24, 0.42);
   --liveedit-var-soft: rgba(245, 197, 24, 0.18);
   --liveedit-loop-rgb: 74, 222, 128;
+  --liveedit-error: #ff7b72;
+  --liveedit-error-rgb: 248, 81, 73;
 }
 
 .liveedit-card {
@@ -295,14 +299,44 @@ td.liveedit-html {
 }
 
 .liveedit-error {
-  background: rgba(207, 34, 46, 0.08);
-  border: 1px solid rgba(207, 34, 46, 0.28);
+  background: rgba(var(--liveedit-error-rgb), 0.08);
+  border: 1px solid rgba(var(--liveedit-error-rgb), 0.28);
   border-radius: 6px;
-  color: #cf222e;
+  color: var(--liveedit-error);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
   margin-bottom: 14px;
   padding: 8px 10px;
+}
+
+.liveedit-line-error {
+  background: rgba(var(--liveedit-error-rgb), 0.1);
+  box-shadow: inset 3px 0 0 var(--liveedit-error);
+}
+
+.liveedit-inline-error {
+  color: var(--liveedit-error);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12px;
+  padding: 2px 0 2px 12px;
+}
+
+.liveedit-pass-error > td {
+  background: rgba(var(--liveedit-error-rgb), 0.09);
+}
+
+.liveedit-pass-error > .liveedit-rowlabel {
+  box-shadow: inset 3px 0 0 var(--liveedit-error);
+  color: var(--liveedit-error);
+}
+
+.liveedit-return-raised {
+  color: var(--liveedit-error);
+}
+
+.liveedit-return-error {
+  color: var(--liveedit-error);
+  font-weight: 700;
 }
 
 @media (max-width: 760px) {

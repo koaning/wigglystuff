@@ -4,6 +4,7 @@ import ast
 import inspect
 import io
 import keyword
+import sys
 import textwrap
 import tokenize
 import traceback
@@ -164,6 +165,10 @@ class _Collector:
         pass_record = self.pass_stack[-1]
         pass_record["_snapshot"] = dict(self.global_values)
         pass_record["_snapshot_html"] = dict(self.global_html)
+        # exit_loop runs in the loop body's `finally`, so if an exception is
+        # unwinding through it right now this pass is on the failure path.
+        if sys.exc_info()[0] is not None:
+            pass_record["_failed"] = True
         self.loop_stack.pop()
         self.pass_stack.pop()
 
@@ -271,6 +276,7 @@ class _Collector:
             entry = {
                 "cells": cells,
                 "changed": list(pass_record["changed"]),
+                "failed": pass_record.get("_failed", False),
                 "children": [
                     self._serialize_loop(child)
                     for child in pass_record["children"]

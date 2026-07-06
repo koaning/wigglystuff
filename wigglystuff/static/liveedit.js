@@ -59,10 +59,16 @@ function kvRow(item) {
   return row;
 }
 
-function returnChip(returned) {
+function returnChip(returned, error) {
   const row = document.createElement("div");
   row.className = "liveedit-return";
   if (!returned) {
+    if (error) {
+      row.classList.add("liveedit-return-raised");
+      row.textContent = "raised ";
+      row.append(span("liveedit-return-error", error.type));
+      return row;
+    }
     row.textContent = "returned ";
     row.append(span("liveedit-muted", "None"));
     return row;
@@ -100,9 +106,10 @@ function tableForLoop(loop) {
   (loop.passes || []).forEach((pass, index) => {
     const row = document.createElement("tr");
     row.dataset.hover = `loop:${loop.loop_id}`;
+    if (pass.failed) row.classList.add("liveedit-pass-error");
     const label = document.createElement("td");
     label.className = "liveedit-rowlabel";
-    label.textContent = `pass ${index + 1}`;
+    label.textContent = pass.failed ? `✗ pass ${index + 1}` : `pass ${index + 1}`;
     row.append(label);
 
     for (const column of loop.columns || []) {
@@ -253,16 +260,30 @@ function draw({ model, root }) {
   const card = document.createElement("div");
   card.className = "liveedit-card";
 
+  const error = model.get("error");
+
   const codePanel = document.createElement("div");
   codePanel.className = "liveedit-code";
   const annotations = model.get("annotations") || { lines: [] };
+  const codeLines = [];
   for (const line of annotations.lines || []) {
-    codePanel.append(codeLine(line));
+    const row = codeLine(line);
+    codePanel.append(row);
+    codeLines.push(row);
+  }
+  if (error && error.lineno) {
+    const failingLine = codeLines[error.lineno - 1];
+    if (failingLine) {
+      failingLine.classList.add("liveedit-line-error");
+      const inline = document.createElement("div");
+      inline.className = "liveedit-inline-error";
+      inline.textContent = `${error.type}: ${error.message}`;
+      failingLine.after(inline);
+    }
   }
 
   const tracePanel = document.createElement("div");
   tracePanel.className = "liveedit-trace";
-  const error = model.get("error");
   if (error) {
     const errorBox = document.createElement("div");
     errorBox.className = "liveedit-error";
@@ -280,7 +301,7 @@ function draw({ model, root }) {
     tracePanel.append(loopBlock(loop));
   }
 
-  const returned = returnChip(trace.returned);
+  const returned = returnChip(trace.returned, error);
   if (trace.returned?.repr) {
     for (const line of annotations.lines || []) {
       for (const name of line.returns || []) {

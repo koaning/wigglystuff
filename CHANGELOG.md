@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - `LiveEdit`: trace values with a rich HTML representation now render inline in the trace panel instead of their plain `repr`. Setup variables, loop-pass cells, and the return value each check the value for marimo's `_display_`/`_mime_` protocols and IPython's `_repr_html_` (duck-typed, so no hard dependency on marimo/pandas/numpy) and, when found, render the HTML in the widget. Values without a rich representation are unchanged. Oversized payloads (>100 KB) fall back to `repr`.
 
+### Changed
+
+- `LiveEdit`: when a traced function raises, the failure is now anchored at the point where it happened instead of only floating in a summary box at the top. The failing source line is highlighted with an inline error message, the trace row (loop pass) where execution stopped is marked with a `✗`, and the return chip reads `raised <ErrorType>` rather than the misleading `returned None`. The compact top summary box is kept as well.
+
 ### Fixed
 
 - `LiveEdit`: the source and trace columns now scroll independently inside a

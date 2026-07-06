@@ -50,16 +50,19 @@ def test_inspect_run_traces_binary_search_top_to_bottom():
         {
             "cells": {"mid": "2", "value": "'c'", "low": "3", "high": "5"},
             "changed": ["mid", "value", "low"],
+            "failed": False,
             "children": [],
         },
         {
             "cells": {"mid": "4", "value": "'e'", "low": "3", "high": "3"},
             "changed": ["mid", "value", "high"],
+            "failed": False,
             "children": [],
         },
         {
             "cells": {"mid": "3", "value": "'d'", "low": "3", "high": "3"},
             "changed": ["mid", "value"],
+            "failed": False,
             "children": [],
         },
     ]
@@ -78,9 +81,9 @@ def test_nested_loops_attach_child_trace_to_outer_pass():
     first_inner = outer["passes"][0]["children"][0]
     assert first_inner["columns"] == ["c", "total"]
     assert first_inner["passes"] == [
-        {"cells": {"c": "0", "total": "0"}, "changed": ["c", "total"], "children": []},
-        {"cells": {"c": "1", "total": "1"}, "changed": ["c", "total"], "children": []},
-        {"cells": {"c": "2", "total": "3"}, "changed": ["c", "total"], "children": []},
+        {"cells": {"c": "0", "total": "0"}, "changed": ["c", "total"], "failed": False, "children": []},
+        {"cells": {"c": "1", "total": "1"}, "changed": ["c", "total"], "failed": False, "children": []},
+        {"cells": {"c": "2", "total": "3"}, "changed": ["c", "total"], "failed": False, "children": []},
     ]
 
     second_inner = outer["passes"][1]["children"][0]
@@ -128,6 +131,29 @@ def test_retrace_reports_argument_mismatch_without_crashing():
     assert widget.error["type"] == "TypeError"
     assert "arguments" in widget.error["message"]
     assert widget.trace["returned"] is None
+
+
+def insertion_sort(values):
+    values = values[:]
+    for i in range(1, len(values)):
+        key = values[i]
+        j = i - 1
+        while j >= 0 and values[j] > key:
+            values[j + 1] = values[j]
+            j = j - 1
+        values[j + 1] = key
+    return values
+
+
+def test_inspect_run_flags_failing_pass_and_line():
+    widget = LiveEdit.inspect_run(insertion_sort, [5, 2, 4, 3, 1, "a"])
+
+    assert widget.error["type"] == "TypeError"
+    assert widget.error["lineno"] == 6
+    assert widget.trace["returned"] is None
+
+    passes = widget.trace["body"][0]["passes"]
+    assert [p["failed"] for p in passes] == [False, False, False, False, True]
 
 
 def test_default_height_fits_source_with_floor():
