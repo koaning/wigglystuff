@@ -20,6 +20,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [Excalidraw](https://koaning.github.io/wigglystuff/reference/excalidraw.md): Embedded Excalidraw whiteboard for shapes, arrows, text, and freehand sketches
 - [ThreeWidget](https://koaning.github.io/wigglystuff/reference/three-widget.md): 3D visualization with Three.js
 - [EdgeDraw](https://koaning.github.io/wigglystuff/reference/edge-draw.md): Edge/graph drawing widget
+- [GridDraw](https://koaning.github.io/wigglystuff/reference/grid-draw.md): Drawable square grid for marking intersections and orthogonal unit segments
 - [GraphWidget](https://koaning.github.io/wigglystuff/reference/graph-widget.md): Programmatic force-directed graph visualization with named/sized/colored nodes and edges
 - [KeystrokeWidget](https://koaning.github.io/wigglystuff/reference/keystroke.md): Keyboard input capture
 - [WebkitSpeechToText](https://koaning.github.io/wigglystuff/reference/talk.md): Speech-to-text input

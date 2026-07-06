@@ -1,6 +1,7 @@
 {
   "scripts": {
     "setup": "make install",
-    "run": "uv run marimo edit --watch --no-token demos"
+    "run": "uv run marimo edit --watch --no-token demos",
+    "docs": "make docs-serve"
   }
 }

@@ -37,6 +37,10 @@ def test_import_graph_widget():
     from wigglystuff.graph_widget import GraphWidget
 
 
+def test_import_grid_draw():
+    from wigglystuff.grid_draw import GridDraw
+
+
 def test_import_keystroke():
     from wigglystuff.keystroke import KeystrokeWidget
 
