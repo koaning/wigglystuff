@@ -52,6 +52,8 @@
   border-radius: 8px;
   display: grid;
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  height: var(--liveedit-height);
   overflow: hidden;
 }
 
@@ -60,6 +62,7 @@
   font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
   font-size: 13px;
   line-height: 1.55;
+  min-height: 0;
   min-width: 0;
   padding: 16px 18px;
 }
@@ -67,12 +70,12 @@
 .liveedit-code {
   background: var(--liveedit-panel);
   border-right: 1px solid var(--liveedit-border);
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .liveedit-trace {
   background: var(--liveedit-card);
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .liveedit-line {
@@ -305,6 +308,14 @@ td.liveedit-html {
 @media (max-width: 760px) {
   .liveedit-card {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
+    height: auto;
+  }
+
+  .liveedit-code,
+  .liveedit-trace {
+    overflow-x: auto;
+    overflow-y: visible;
   }
 
   .liveedit-code {

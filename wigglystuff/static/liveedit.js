@@ -248,7 +248,7 @@ function draw({ model, root }) {
   root.className = "liveedit-root";
   root.dataset.theme = model.get("theme") || "auto";
   root.style.width = `${model.get("width")}px`;
-  root.style.maxHeight = `${model.get("height")}px`;
+  root.style.setProperty("--liveedit-height", `${model.get("height")}px`);
 
   const card = document.createElement("div");
   card.className = "liveedit-card";
