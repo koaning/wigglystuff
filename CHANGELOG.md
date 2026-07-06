@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `LiveEdit`: trace values with a rich HTML representation now render inline in the trace panel instead of their plain `repr`. Setup variables, loop-pass cells, and the return value each check the value for marimo's `_display_`/`_mime_` protocols and IPython's `_repr_html_` (duck-typed, so no hard dependency on marimo/pandas/numpy) and, when found, render the HTML in the widget. Values without a rich representation are unchanged. Oversized payloads (>100 KB) fall back to `repr`.
+
 ### Fixed
 
 - `LiveEdit`: the source and trace columns now scroll independently inside a
