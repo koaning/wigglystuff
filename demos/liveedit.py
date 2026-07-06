@@ -4,6 +4,7 @@
 #     "anywidget",
 #     "drawdata",
 #     "marimo",
+#     "numpy",
 #     "wigglystuff==0.5.13",
 # ]
 # ///
@@ -137,6 +138,8 @@ def _(LiveEdit):
 
 @app.cell
 def _(LiveEdit):
+    import numpy as np
+
     def gradient_descent(start, steps=12):
         x = start
         lr = 0.4
@@ -144,7 +147,7 @@ def _(LiveEdit):
             grad = 2 * (x - 3)
             x = x - lr * grad
             loss = (x - 3) ** 2
-            lr = lr * 0.85
+            lr = np.sin(step * np.pi / steps) * lr + 0.1
         return x
 
 
