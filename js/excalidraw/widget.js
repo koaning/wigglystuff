@@ -105,6 +105,7 @@ function blobToDataURL(blob) {
 function makeApp(React, Excalidraw, serializeAsJSON, exportToBlob, model, el) {
   return function App() {
     const apiRef = React.useRef(null);
+    const didFit = React.useRef(false);
     const saveTimer = React.useRef(null);
     const pending = React.useRef(null);
     // True while a flush is mid-export. exportToBlob is async, so without this
@@ -253,6 +254,28 @@ function makeApp(React, Excalidraw, serializeAsJSON, exportToBlob, model, el) {
     return React.createElement(Excalidraw, {
       excalidrawAPI: (api) => {
         apiRef.current = api;
+        // Fit the loaded scene into the viewport once, so a drawing saved while
+        // zoomed out reopens at the right scale instead of clipping. Anchored to
+        // the API becoming ready (not a fixed delay after mount) so a slow first
+        // CDN load doesn't miss the window. The short timeout lets Excalidraw
+        // finish measuring its canvas; refresh() recomputes container geometry
+        // first. fitToContent computes zoom = min(fitZoom * factor, 1): the *1
+        // cap means we only ever zoom *out* to show everything, never in past
+        // actual size; the 0.85 factor leaves a margin around the content. This
+        // matches Excalidraw's own "zoom to fit" (Shift+1): content is centered
+        // in the canvas, which the toolbar floats over.
+        if (didFit.current) return;
+        didFit.current = true;
+        setTimeout(() => {
+          api.refresh();
+          const elements = api.getSceneElements();
+          if (elements.length === 0) return;
+          api.scrollToContent(elements, {
+            fitToContent: true,
+            viewportZoomFactor: 0.85,
+            animate: false,
+          });
+        }, 100);
       },
       initialData,
       onChange,
