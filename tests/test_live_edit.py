@@ -205,6 +205,62 @@ def test_repr_snapshots_for_in_place_mutation():
     ]
 
 
+def test_numerics_include_only_all_numeric_columns():
+    widget = LiveEdit.inspect_run(binary_search, key="d", array=list("abcdef"))
+
+    numerics = widget.trace["body"][0]["numerics"]
+
+    # low/high/mid are numeric every pass; snapshot fallbacks stay numeric too.
+    assert numerics == {
+        "low": [3.0, 3.0, 3.0],
+        "high": [5.0, 3.0, 3.0],
+        "mid": [2.0, 4.0, 3.0],
+    }
+    # `value` holds strings ('c', 'e', 'd') so it is never chartable.
+    assert "value" not in numerics
+
+
+def test_numerics_emitted_for_nested_loops():
+    widget = LiveEdit.inspect_run(grid_sum, rows=2, cols=3)
+
+    inner = widget.trace["body"][0]["passes"][0]["children"][0]
+    assert inner["numerics"] == {"c": [0.0, 1.0, 2.0], "total": [0.0, 1.0, 3.0]}
+
+
+def test_float_precision_trims_floats_but_keeps_charts_and_ints_exact():
+    def sqrt_newton(x, steps=4):
+        guess = x / 2
+        for step in range(steps):
+            guess = 0.5 * (guess + x / guess)
+        return guess
+
+    widget = LiveEdit.inspect_run(sqrt_newton, 30, steps=4, float_precision=4)
+    loop = widget.trace["body"][0]
+
+    # Float cells rounded to 4 significant figures; the return chip too.
+    assert [pass_["cells"]["guess"] for pass_ in loop["passes"]] == [
+        "8.5",
+        "6.015",
+        "5.501",
+        "5.477",
+    ]
+    assert widget.trace["returned"] == {"repr": "5.477"}
+    # Charts keep full precision so plotted lines stay accurate.
+    assert loop["numerics"]["guess"][1] == 6.014705882352941
+    # Integer columns (step) are untouched by float rounding.
+    assert [pass_["cells"]["step"] for pass_ in loop["passes"]] == ["0", "1", "2", "3"]
+
+
+def test_visible_columns_defaults_to_show_all():
+    widget = LiveEdit.inspect_run(binary_search, key="d", array=list("abcdef"))
+    assert widget.visible_columns == []
+
+    widget = LiveEdit.inspect_run(
+        binary_search, key="d", array=list("abcdef"), visible_columns=["low", "high"]
+    )
+    assert widget.visible_columns == ["low", "high"]
+
+
 class _HtmlCell:
     def __init__(self, n):
         self.n = n

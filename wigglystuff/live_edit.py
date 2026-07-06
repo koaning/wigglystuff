@@ -134,13 +134,36 @@ def _unique(items: list[str]) -> list[str]:
     return out
 
 
+def _as_float(value: Any) -> float | None:
+    """Return a plottable float for ``value`` or ``None`` when it is not one.
+
+    Booleans and non-finite floats (nan/inf) are treated as non-numeric so
+    they never end up as chart data.
+    """
+    if isinstance(value, bool):
+        return None
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    if number != number or number in (float("inf"), float("-inf")):
+        return None
+    return number
+
+
 class _Collector:
-    def __init__(self, loop_meta: dict[str, dict[str, Any]]) -> None:
+    def __init__(
+        self,
+        loop_meta: dict[str, dict[str, Any]],
+        float_precision: int | None = None,
+    ) -> None:
         self.loop_meta = loop_meta
+        self.float_precision = float_precision
         self.setup_order: list[str] = []
         self.setup_values: dict[str, str] = {}
         self.setup_html: dict[str, str] = {}
         self.global_values: dict[str, str] = {}
+        self.global_numerics: dict[str, float | None] = {}
         self.global_html: dict[str, str] = {}
         self.body: list[dict[str, Any]] = []
         self.loop_stack: list[str] = []
@@ -150,7 +173,13 @@ class _Collector:
 
     def record_iter(self, loop_id: str) -> None:
         instance = self._loop_instance(loop_id)
-        pass_record = {"cells": {}, "cells_html": {}, "changed": [], "children": []}
+        pass_record = {
+            "cells": {},
+            "cells_html": {},
+            "changed": [],
+            "children": [],
+            "_numerics": {},
+        }
         pass_record["_instance"] = instance
         instance["passes"].append(pass_record)
         self.pending_passes[loop_id] = pass_record
@@ -164,6 +193,7 @@ class _Collector:
             return
         pass_record = self.pass_stack[-1]
         pass_record["_snapshot"] = dict(self.global_values)
+        pass_record["_snapshot_numerics"] = dict(self.global_numerics)
         pass_record["_snapshot_html"] = dict(self.global_html)
         # exit_loop runs in the loop body's `finally`, so if an exception is
         # unwinding through it right now this pass is on the failure path.
@@ -172,10 +202,20 @@ class _Collector:
         self.loop_stack.pop()
         self.pass_stack.pop()
 
+    def _format_value(self, value: Any) -> str:
+        # Trim only float scalars (numpy floats subclass float); ints, strings,
+        # arrays, etc. keep their exact repr. Charts use the raw floats, so this
+        # affects the displayed table cells only.
+        if self.float_precision is not None and isinstance(value, float):
+            return f"{value:.{self.float_precision}g}"
+        return repr(value)
+
     def record_assign(self, name: str, value: Any, lineno: int) -> None:
-        value_repr = repr(value)
+        value_repr = self._format_value(value)
+        numeric = _as_float(value)
         value_html = _render_html(value)
         self.global_values[name] = value_repr
+        self.global_numerics[name] = numeric
         if value_html is not None:
             self.global_html[name] = value_html
         else:
@@ -197,6 +237,7 @@ class _Collector:
         if name not in instance["_assignment_order"]:
             instance["_assignment_order"].append(name)
         pass_record["cells"][name] = value_repr
+        pass_record["_numerics"][name] = numeric
         if value_html is not None:
             pass_record["cells_html"][name] = value_html
         if name not in pass_record["changed"]:
@@ -207,7 +248,7 @@ class _Collector:
         return value
 
     def record_return(self, value: Any, lineno: int) -> Any:
-        self.returned = {"repr": repr(value)}
+        self.returned = {"repr": self._format_value(value)}
         value_html = _render_html(value)
         if value_html is not None:
             self.returned["html"] = value_html
@@ -291,7 +332,30 @@ class _Collector:
             "loop_type": loop["loop_type"],
             "columns": columns,
             "passes": passes,
+            "numerics": self._numerics_for(loop, columns),
         }
+
+    def _numerics_for(
+        self, loop: dict[str, Any], columns: list[str]
+    ) -> dict[str, list[float]]:
+        numerics: dict[str, list[float]] = {}
+        for name in columns:
+            values: list[float] = []
+            for pass_record in loop["passes"]:
+                snapshot = pass_record.get("_snapshot_numerics", {})
+                pass_numerics = pass_record.get("_numerics", {})
+                if name in pass_numerics:
+                    value = pass_numerics[name]
+                elif name in snapshot:
+                    value = snapshot[name]
+                else:
+                    value = None
+                if value is None:
+                    break
+                values.append(value)
+            if len(values) == len(loop["passes"]) and values:
+                numerics[name] = values
+        return numerics
 
 
 class _Instrumenter(ast.NodeTransformer):
@@ -711,6 +775,7 @@ def _trace_code(
     *,
     function_name: str | None = None,
     globalns: dict[str, Any] | None = None,
+    float_precision: int | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any] | None]:
     kwargs = {} if kwargs is None else dict(kwargs)
     try:
@@ -726,7 +791,7 @@ def _trace_code(
     instrumenter = _Instrumenter(target_name)
     transformed = instrumenter.visit(tree)
     ast.fix_missing_locations(transformed)
-    collector = _Collector(instrumenter.loop_meta)
+    collector = _Collector(instrumenter.loop_meta, float_precision)
     namespace = dict(globalns or {})
     namespace.update(
         {
@@ -792,8 +857,16 @@ class LiveEdit(anywidget.AnyWidget):
     error = traitlets.Dict(default_value=None, allow_none=True).tag(sync=True)
     editable = traitlets.Bool(False).tag(sync=True)
     theme = traitlets.Unicode("auto").tag(sync=True)
-    width = traitlets.Int(900).tag(sync=True)
+    # width: 0 means "grow to fit content" (host page scrolls); a positive value
+    # caps the width and shows an internal horizontal scrollbar instead.
+    width = traitlets.Int(0).tag(sync=True)
     height = traitlets.Int(520).tag(sync=True)
+    # Round float cells to this many significant figures (None = exact repr).
+    # Applied Python-side; charts keep full precision.
+    float_precision = traitlets.Int(default_value=None, allow_none=True)
+    # Show only these variables in the trace tables (empty = show all). Applied
+    # in the browser, so it updates without re-running the function.
+    visible_columns = traitlets.List(traitlets.Unicode()).tag(sync=True)
 
     def __init__(
         self,
@@ -805,6 +878,8 @@ class LiveEdit(anywidget.AnyWidget):
         function_name: str | None = None,
         globalns: dict[str, Any] | None = None,
         height: int | None = None,
+        float_precision: int | None = None,
+        visible_columns: list[str] | None = None,
         **widget_kwargs: Any,
     ) -> None:
         self._liveedit_args = tuple(args)
@@ -817,6 +892,7 @@ class LiveEdit(anywidget.AnyWidget):
             self._liveedit_kwargs,
             function_name=function_name,
             globalns=self._liveedit_globalns,
+            float_precision=float_precision,
         )
         if height is None:
             # Fit the source by default: ~21px per rendered line (13px font *
@@ -832,24 +908,41 @@ class LiveEdit(anywidget.AnyWidget):
             error=error,
             editable=editable,
             height=height,
+            float_precision=float_precision,
+            visible_columns=list(visible_columns or []),
             **widget_kwargs,
         )
 
-    @traitlets.observe("code")
-    def _retrace(self, change: dict[str, Any]) -> None:
+    def _recompute(self, code: str) -> None:
         trace, annotations, error = _trace_code(
-            change["new"],
+            code,
             self._liveedit_args,
             self._liveedit_kwargs,
             function_name=self._liveedit_function_name,
             globalns=self._liveedit_globalns,
+            float_precision=self.float_precision,
         )
         self.trace = trace
         self.annotations = annotations
         self.error = error
 
+    @traitlets.observe("code")
+    def _retrace(self, change: dict[str, Any]) -> None:
+        self._recompute(change["new"])
+
+    @traitlets.observe("float_precision")
+    def _reformat(self, change: dict[str, Any]) -> None:
+        self._recompute(self.code)
+
     @classmethod
-    def inspect_run(cls, fn: Any, *args: Any, **kwargs: Any) -> "LiveEdit":
+    def inspect_run(
+        cls,
+        fn: Any,
+        *args: Any,
+        float_precision: int | None = None,
+        visible_columns: list[str] | None = None,
+        **kwargs: Any,
+    ) -> "LiveEdit":
         code, function_name, globalns = _source_for(fn)
         return cls(
             code,
@@ -858,6 +951,8 @@ class LiveEdit(anywidget.AnyWidget):
             editable=False,
             function_name=function_name,
             globalns=globalns,
+            float_precision=float_precision,
+            visible_columns=visible_columns,
         )
 
 

@@ -5,7 +5,8 @@
 #     "dicekit",
 #     "drawdata",
 #     "marimo",
-#     "wigglystuff==0.5.12",
+#     "numpy",
+#     "wigglystuff==0.5.13",
 # ]
 # ///
 
@@ -38,7 +39,11 @@ def _(mo):
 
     `LiveEdit.inspect_run(...)` records one run of a Python function and shows
     how loop variables change pass by pass. Hover a variable or loop in either
-    panel to connect the code with the trace.
+    panel to connect the code with the trace. Click a numeric column header to
+    plot it across passes — plain click for a fresh chart, ⌘/Ctrl-click to
+    overlay on the same axes, Shift-click to stack a new chart below (shared
+    iteration axis). Pass `float_precision=` to trim wide float columns and
+    `visible_columns=` to show only the variables you care about.
     """)
     return
 
@@ -232,6 +237,28 @@ def _(LiveEdit):
         return total
 
     LiveEdit.inspect_run(sum_of_dice, 8)
+    return
+
+
+@app.cell
+def _(LiveEdit):
+    import numpy as np
+
+    def gradient_descent(start, steps=12):
+        x = start
+        lr = 0.4
+        for step in range(steps):
+            grad = 2 * (x - 3)
+            x = x - lr * grad
+            loss = (x - 3) ** 2
+            lr = np.sin(step * np.pi / steps) * lr + 0.1
+        return x
+
+
+    # `float_precision` keeps the table readable; charts still use full values.
+    # Click `loss` to watch it decay, then Shift-click `lr` to stack a second
+    # chart below it (same iteration axis, its own y-axis).
+    LiveEdit.inspect_run(gradient_descent, 12.0, steps=12, float_precision=4)
     return
 
 

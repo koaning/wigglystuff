@@ -80,9 +80,37 @@ function returnChip(returned, error) {
   return row;
 }
 
-function tableForLoop(loop) {
+const CHART_PALETTE_SIZE = 7;
+
+function chartIcon() {
+  const svg = svgEl("svg", {
+    class: "liveedit-chart-icon",
+    viewBox: "0 0 16 16",
+    width: 12,
+    height: 12,
+  });
+  svg.append(
+    svgEl("polyline", {
+      points: "1,11 5,7 8,9 15,2",
+      fill: "none",
+      "stroke-width": 1.6,
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+    })
+  );
+  return svg;
+}
+
+function tableForLoop(loop, chartState, colVisible, nested) {
   const table = document.createElement("table");
   table.className = "liveedit-table";
+
+  const numerics = loop.numerics || {};
+  const cols = (loop.columns || []).filter(colVisible);
+  // chartState maps a loop id to an array of panels; each panel is an array of
+  // column names. A column is "active" if it appears in any panel.
+  const panels = chartState.get(loop.loop_id) || [];
+  const charted = new Set(panels.flat());
 
   const thead = document.createElement("thead");
   const header = document.createElement("tr");
@@ -90,10 +118,21 @@ function tableForLoop(loop) {
   const rowLabel = document.createElement("th");
   rowLabel.className = "liveedit-rowlabel";
   header.append(rowLabel);
-  for (const column of loop.columns || []) {
+  for (const column of cols) {
     const th = document.createElement("th");
-    th.textContent = column;
     th.dataset.var = column;
+    // Only top-level loops support charting (nested loop data is sparser).
+    if (!nested && numerics[column]) {
+      th.classList.add("liveedit-chart-col");
+      th.dataset.chartCol = column;
+      th.dataset.loop = loop.loop_id;
+      th.title = `Plot ${column} — ⌘/Ctrl-click to overlay, Shift-click to stack below`;
+      if (charted.has(column)) th.classList.add("liveedit-chart-col-active");
+      th.append(span("liveedit-th-label", column));
+      th.append(chartIcon());
+    } else {
+      th.textContent = column;
+    }
     header.append(th);
   }
   const spacer = document.createElement("th");
@@ -112,7 +151,7 @@ function tableForLoop(loop) {
     label.textContent = pass.failed ? `✗ pass ${index + 1}` : `pass ${index + 1}`;
     row.append(label);
 
-    for (const column of loop.columns || []) {
+    for (const column of cols) {
       const cell = document.createElement("td");
       cell.dataset.var = column;
       const reprValue = pass.cells?.[column] ?? "";
@@ -138,10 +177,10 @@ function tableForLoop(loop) {
       const childRow = document.createElement("tr");
       childRow.className = "liveedit-child-row";
       const childCell = document.createElement("td");
-      childCell.colSpan = (loop.columns || []).length + 2;
+      childCell.colSpan = cols.length + 2;
       childCell.className = "liveedit-child-cell";
       for (const child of pass.children) {
-        childCell.append(loopBlock(child, true));
+        childCell.append(loopBlock(child, chartState, colVisible, true));
       }
       childRow.append(childCell);
       tbody.append(childRow);
@@ -151,7 +190,7 @@ function tableForLoop(loop) {
   return table;
 }
 
-function loopBlock(loop, nested = false) {
+function loopBlock(loop, chartState, colVisible, nested = false) {
   const block = document.createElement("div");
   block.className = nested ? "liveedit-loopblock liveedit-loopblock-nested" : "liveedit-loopblock";
   block.dataset.loop = loop.loop_id;
@@ -162,8 +201,215 @@ function loopBlock(loop, nested = false) {
   const badge = span(`liveedit-badge ${loop.loop_type === "for" ? "liveedit-for" : "liveedit-while"}`, `${loop.loop_type} loop`);
   badgeRow.append(badge);
   block.append(badgeRow);
-  block.append(tableForLoop(loop));
+
+  const table = tableForLoop(loop, chartState, colVisible, nested);
+  const numerics = loop.numerics || {};
+  const panels = chartState.get(loop.loop_id) || [];
+  // Keep only chartable, visible columns and drop panels that end up empty.
+  const activePanels = panels
+    .map((columns) => columns.filter((column) => numerics[column] && colVisible(column)))
+    .filter((columns) => columns.length);
+
+  if (!nested && activePanels.length) {
+    block.classList.add("liveedit-loopblock-charting");
+    const body = document.createElement("div");
+    body.className = "liveedit-loopbody";
+    body.append(table);
+    body.append(chartPanel(loop, activePanels));
+    block.append(body);
+  } else {
+    block.append(table);
+  }
   return block;
+}
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svgEl(tag, attrs) {
+  const node = document.createElementNS(SVG_NS, tag);
+  for (const [key, value] of Object.entries(attrs || {})) {
+    node.setAttribute(key, String(value));
+  }
+  return node;
+}
+
+function formatTick(value) {
+  if (Number.isInteger(value)) return String(value);
+  const abs = Math.abs(value);
+  if (abs >= 100) return value.toFixed(0);
+  if (abs >= 1) return value.toFixed(1);
+  return value.toFixed(2);
+}
+
+function chartLegend(columns) {
+  const legend = document.createElement("div");
+  legend.className = "liveedit-chart-legend";
+  columns.forEach((column, index) => {
+    const item = document.createElement("span");
+    item.className = `liveedit-chart-legend-item liveedit-chart-swatch-${index % CHART_PALETTE_SIZE}`;
+    item.textContent = column;
+    legend.append(item);
+  });
+  return legend;
+}
+
+function chartPanel(loop, activePanels) {
+  const panel = document.createElement("div");
+  panel.className = "liveedit-chart";
+
+  const close = document.createElement("button");
+  close.type = "button";
+  close.className = "liveedit-chart-close";
+  close.dataset.loop = loop.loop_id;
+  close.textContent = "×";
+  close.title = "Clear chart";
+  panel.append(close);
+
+  // One chart per panel, stacked vertically. They share the X pixel mapping, so
+  // iterations line up; only the bottom panel labels the shared X-axis.
+  const stack = document.createElement("div");
+  stack.className = "liveedit-chart-stack";
+  activePanels.forEach((columns, index) => {
+    const block = document.createElement("div");
+    block.className = "liveedit-chart-block";
+    block.append(chartSvg(loop, columns, index === activePanels.length - 1));
+    block.append(chartLegend(columns));
+    stack.append(block);
+  });
+  panel.append(stack);
+  return panel;
+}
+
+function chartSvg(loop, columns, showX) {
+  const width = 280;
+  const margin = { top: 10, right: 10, bottom: 22, left: 40 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = 110;
+  const height = margin.top + plotHeight + margin.bottom;
+
+  const series = columns.map((column) => loop.numerics[column]);
+  const passCount = series[0].length;
+
+  let min = Infinity;
+  let max = -Infinity;
+  for (const values of series) {
+    for (const value of values) {
+      if (value < min) min = value;
+      if (value > max) max = value;
+    }
+  }
+  if (!Number.isFinite(min) || !Number.isFinite(max)) {
+    min = 0;
+    max = 1;
+  }
+  if (min === max) {
+    min -= 1;
+    max += 1;
+  }
+  const yPad = (max - min) * 0.05;
+  min -= yPad;
+  max += yPad;
+
+  const xFor = (index) =>
+    margin.left + (passCount <= 1 ? plotWidth / 2 : (index / (passCount - 1)) * plotWidth);
+  const yFor = (value) =>
+    margin.top + plotHeight - ((value - min) / (max - min)) * plotHeight;
+
+  const svg = svgEl("svg", {
+    class: "liveedit-chart-svg",
+    width,
+    height,
+    viewBox: `0 0 ${width} ${height}`,
+  });
+
+  const baseY = margin.top + plotHeight;
+  const baseX = margin.left;
+
+  // Y ticks + gridlines.
+  const yTicks = 5;
+  for (let i = 0; i < yTicks; i++) {
+    const value = min + (i / (yTicks - 1)) * (max - min);
+    const y = yFor(value);
+    svg.append(
+      svgEl("line", {
+        class: "liveedit-chart-grid",
+        x1: baseX,
+        y1: y,
+        x2: baseX + plotWidth,
+        y2: y,
+      })
+    );
+    const label = svgEl("text", {
+      class: "liveedit-chart-axis-label",
+      x: baseX - 5,
+      y: y + 3,
+      "text-anchor": "end",
+    });
+    label.textContent = formatTick(value);
+    svg.append(label);
+  }
+
+  // X ticks: one per pass, thinned to at most 6 labels. Only the bottom panel
+  // in a stack labels the shared X-axis to keep the others compact.
+  if (showX) {
+    const stride = Math.max(1, Math.ceil(passCount / 6));
+    for (let i = 0; i < passCount; i++) {
+      if (i % stride !== 0 && i !== passCount - 1) continue;
+      const x = xFor(i);
+      svg.append(
+        svgEl("line", {
+          class: "liveedit-chart-tick",
+          x1: x,
+          y1: baseY,
+          x2: x,
+          y2: baseY + 3,
+        })
+      );
+      const label = svgEl("text", {
+        class: "liveedit-chart-axis-label",
+        x,
+        y: baseY + 14,
+        "text-anchor": "middle",
+      });
+      label.textContent = String(i + 1);
+      svg.append(label);
+    }
+  }
+
+  // Axis baselines.
+  svg.append(
+    svgEl("line", { class: "liveedit-chart-axis", x1: baseX, y1: margin.top, x2: baseX, y2: baseY })
+  );
+  svg.append(
+    svgEl("line", { class: "liveedit-chart-axis", x1: baseX, y1: baseY, x2: baseX + plotWidth, y2: baseY })
+  );
+
+  // One line + points per selected column.
+  series.forEach((values, seriesIndex) => {
+    const paletteIndex = seriesIndex % CHART_PALETTE_SIZE;
+    const points = values.map((value, index) => `${xFor(index)},${yFor(value)}`).join(" ");
+    svg.append(
+      svgEl("polyline", {
+        class: `liveedit-chart-line liveedit-chart-stroke-${paletteIndex}`,
+        points,
+        fill: "none",
+      })
+    );
+    values.forEach((value, index) => {
+      const dot = svgEl("circle", {
+        class: `liveedit-chart-dot liveedit-chart-fill-${paletteIndex}`,
+        cx: xFor(index),
+        cy: yFor(value),
+        r: 2.5,
+      });
+      const title = svgEl("title", {});
+      title.textContent = `${columns[seriesIndex]} · pass ${index + 1} = ${formatTick(value)}`;
+      dot.append(title);
+      svg.append(dot);
+    });
+  });
+
+  return svg;
 }
 
 function clearAll(root) {
@@ -250,11 +496,18 @@ function applyHover(root, target) {
   }
 }
 
-function draw({ model, root }) {
+function draw({ model, root, chartState }) {
   root.innerHTML = "";
   root.className = "liveedit-root";
   root.dataset.theme = model.get("theme") || "auto";
-  root.style.width = `${model.get("width")}px`;
+  // Grow horizontally to fit content (the host page scrolls); a positive width
+  // caps it and turns on an internal horizontal scrollbar instead. Height stays
+  // bounded via --liveedit-height so the code/trace panels scroll independently
+  // and the function stays visible while the trace scrolls.
+  const widthCap = model.get("width");
+  root.style.width = "max-content";
+  root.style.maxWidth = widthCap > 0 ? `${widthCap}px` : "none";
+  root.style.overflowX = widthCap > 0 ? "auto" : "visible";
   root.style.setProperty("--liveedit-height", `${model.get("height")}px`);
 
   const card = document.createElement("div");
@@ -297,8 +550,12 @@ function draw({ model, root }) {
   for (const item of trace.setup || []) setup.append(kvRow(item));
   tracePanel.append(setup);
 
+  // Empty visible_columns means "show everything".
+  const visible = new Set(model.get("visible_columns") || []);
+  const colVisible = (column) => visible.size === 0 || visible.has(column);
+
   for (const loop of trace.body || []) {
-    tracePanel.append(loopBlock(loop));
+    tracePanel.append(loopBlock(loop, chartState, colVisible));
   }
 
   const returned = returnChip(trace.returned, error);
@@ -321,8 +578,33 @@ function draw({ model, root }) {
 function render({ model, el }) {
   const root = document.createElement("div");
   el.append(root);
-  const redraw = () => draw({ model, root });
+  // loop_id -> Set of column names the user selected for charting.
+  const chartState = new Map();
+  const redraw = () => draw({ model, root, chartState });
   redraw();
+
+  // A full redraw rebuilds the DOM, which resets scroll. Preserve the scroll
+  // position of the panels so toggling a chart doesn't jump the view.
+  const redrawKeepingScroll = () => {
+    const selectors = [".liveedit-trace", ".liveedit-code"];
+    const saved = selectors.map((selector) => {
+      const el = root.querySelector(selector);
+      return el ? { selector, left: el.scrollLeft, top: el.scrollTop } : null;
+    });
+    const rootLeft = root.scrollLeft;
+    const rootTop = root.scrollTop;
+    redraw();
+    root.scrollLeft = rootLeft;
+    root.scrollTop = rootTop;
+    for (const entry of saved) {
+      if (!entry) continue;
+      const el = root.querySelector(entry.selector);
+      if (el) {
+        el.scrollLeft = entry.left;
+        el.scrollTop = entry.top;
+      }
+    }
+  };
 
   root.addEventListener("mouseover", (event) => {
     clearAll(root);
@@ -330,7 +612,50 @@ function render({ model, el }) {
   });
   root.addEventListener("mouseleave", () => clearAll(root));
 
-  ["code", "trace", "annotations", "error", "theme", "width", "height"].forEach((name) => {
+  root.addEventListener("click", (event) => {
+    const header = event.target.closest("th[data-chart-col]");
+    if (header) {
+      const loopId = header.dataset.loop;
+      const column = header.dataset.chartCol;
+      const panels = (chartState.get(loopId) || []).map((columns) => [...columns]);
+      if (event.shiftKey) {
+        // Shift-click: add a new chart stacked below, sharing the X-axis.
+        panels.push([column]);
+      } else if (event.metaKey || event.ctrlKey) {
+        // ⌘/Ctrl-click: overlay onto the current (bottom) chart, shared Y-axis.
+        const last = panels[panels.length - 1];
+        if (!last) {
+          panels.push([column]);
+        } else {
+          const at = last.indexOf(column);
+          if (at >= 0) last.splice(at, 1);
+          else last.push(column);
+          if (!last.length) panels.pop();
+        }
+      } else {
+        // Plain click: one fresh single-series chart (toggles off if it's the
+        // only series currently shown).
+        const isSole =
+          panels.length === 1 && panels[0].length === 1 && panels[0][0] === column;
+        panels.length = 0;
+        if (!isSole) panels.push([column]);
+      }
+      if (panels.length) chartState.set(loopId, panels);
+      else chartState.delete(loopId);
+      redrawKeepingScroll();
+      return;
+    }
+    const close = event.target.closest(".liveedit-chart-close");
+    if (close) {
+      chartState.delete(close.dataset.loop);
+      redrawKeepingScroll();
+    }
+  });
+
+  // Editing code changes loop ids/columns, so drop selections that no longer apply.
+  model.on("change:trace", () => chartState.clear());
+
+  ["code", "trace", "annotations", "error", "theme", "width", "height", "visible_columns"].forEach((name) => {
     model.on(`change:${name}`, redraw);
   });
 }
