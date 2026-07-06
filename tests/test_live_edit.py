@@ -50,16 +50,19 @@ def test_inspect_run_traces_binary_search_top_to_bottom():
         {
             "cells": {"mid": "2", "value": "'c'", "low": "3", "high": "5"},
             "changed": ["mid", "value", "low"],
+            "failed": False,
             "children": [],
         },
         {
             "cells": {"mid": "4", "value": "'e'", "low": "3", "high": "3"},
             "changed": ["mid", "value", "high"],
+            "failed": False,
             "children": [],
         },
         {
             "cells": {"mid": "3", "value": "'d'", "low": "3", "high": "3"},
             "changed": ["mid", "value"],
+            "failed": False,
             "children": [],
         },
     ]
@@ -78,9 +81,9 @@ def test_nested_loops_attach_child_trace_to_outer_pass():
     first_inner = outer["passes"][0]["children"][0]
     assert first_inner["columns"] == ["c", "total"]
     assert first_inner["passes"] == [
-        {"cells": {"c": "0", "total": "0"}, "changed": ["c", "total"], "children": []},
-        {"cells": {"c": "1", "total": "1"}, "changed": ["c", "total"], "children": []},
-        {"cells": {"c": "2", "total": "3"}, "changed": ["c", "total"], "children": []},
+        {"cells": {"c": "0", "total": "0"}, "changed": ["c", "total"], "failed": False, "children": []},
+        {"cells": {"c": "1", "total": "1"}, "changed": ["c", "total"], "failed": False, "children": []},
+        {"cells": {"c": "2", "total": "3"}, "changed": ["c", "total"], "failed": False, "children": []},
     ]
 
     second_inner = outer["passes"][1]["children"][0]
@@ -128,6 +131,44 @@ def test_retrace_reports_argument_mismatch_without_crashing():
     assert widget.error["type"] == "TypeError"
     assert "arguments" in widget.error["message"]
     assert widget.trace["returned"] is None
+
+
+def insertion_sort(values):
+    values = values[:]
+    for i in range(1, len(values)):
+        key = values[i]
+        j = i - 1
+        while j >= 0 and values[j] > key:
+            values[j + 1] = values[j]
+            j = j - 1
+        values[j + 1] = key
+    return values
+
+
+def test_inspect_run_flags_failing_pass_and_line():
+    widget = LiveEdit.inspect_run(insertion_sort, [5, 2, 4, 3, 1, "a"])
+
+    assert widget.error["type"] == "TypeError"
+    assert widget.error["lineno"] == 6
+    assert widget.trace["returned"] is None
+
+    passes = widget.trace["body"][0]["passes"]
+    assert [p["failed"] for p in passes] == [False, False, False, False, True]
+
+
+def test_default_height_fits_source_with_floor():
+    short = LiveEdit("def f(x):\n    return x\n")
+    assert short.height == 520
+
+    long_source = (
+        "def f(x):\n"
+        + "\n".join(f"    x += {i}" for i in range(60))
+        + "\n    return x\n"
+    )
+    tall = LiveEdit(long_source)
+    assert tall.height > 520
+
+    assert LiveEdit(long_source, height=300).height == 300
 
 
 def test_module_level_inspect_run_alias():
@@ -218,6 +259,80 @@ def test_visible_columns_defaults_to_show_all():
         binary_search, key="d", array=list("abcdef"), visible_columns=["low", "high"]
     )
     assert widget.visible_columns == ["low", "high"]
+
+
+class _HtmlCell:
+    def __init__(self, n):
+        self.n = n
+
+    def __repr__(self):
+        return f"Cell({self.n})"
+
+    def _repr_html_(self):
+        return f"<b>cell {self.n}</b>"
+
+
+class _MimeSummary:
+    def __init__(self, total):
+        self.total = total
+
+    def __repr__(self):
+        return f"Summary({self.total})"
+
+    def _mime_(self):
+        return ("text/html", f"<div>total={self.total}</div>")
+
+
+class _Displayable:
+    def __repr__(self):
+        return "Displayable()"
+
+    def _display_(self):
+        return _HtmlCell(99)
+
+
+def test_rich_html_captured_for_setup_and_return():
+    def build(x):
+        summary = _MimeSummary(x.n)
+        return summary
+
+    widget = LiveEdit.inspect_run(build, _HtmlCell(7))
+
+    setup = {item["name"]: item for item in widget.trace["setup"]}
+    assert setup["x"]["html"] == "<b>cell 7</b>"
+    assert setup["summary"]["html"] == "<div>total=7</div>"
+    assert widget.trace["returned"] == {
+        "repr": "Summary(7)",
+        "html": "<div>total=7</div>",
+    }
+
+
+def test_rich_html_captured_in_loop_cells_and_display_protocol():
+    def scan(cells):
+        marker = _Displayable()
+        for cell in cells:
+            marker = cell
+        return marker
+
+    widget = LiveEdit.inspect_run(scan, [_HtmlCell(1), _HtmlCell(2)])
+
+    assert widget.trace["setup"][-1]["html"] == "<b>cell 99</b>"  # _display_ path
+    loop = widget.trace["body"][0]
+    assert [p["cells_html"]["cell"] for p in loop["passes"]] == [
+        "<b>cell 1</b>",
+        "<b>cell 2</b>",
+    ]
+
+
+def test_plain_values_stay_repr_only():
+    def add(a, b):
+        total = a + b
+        return total
+
+    widget = LiveEdit.inspect_run(add, 2, 3)
+
+    assert all("html" not in item for item in widget.trace["setup"])
+    assert widget.trace["returned"] == {"repr": "5"}
 
 
 def test_auto_theme_follows_notebook_not_os_preference():

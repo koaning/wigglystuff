@@ -9,6 +9,21 @@ function span(className, value) {
   return node;
 }
 
+// Render a value that may carry a rich HTML representation. Falls back to the
+// plain-text repr when no html is present. innerHTML does not execute <script>,
+// and the widget lives in a shadow root so styles stay isolated.
+function valueNode(className, reprValue, html) {
+  const node = document.createElement("span");
+  node.className = className;
+  if (html != null && html !== "") {
+    node.classList.add("liveedit-html");
+    node.innerHTML = html;
+  } else {
+    node.textContent = reprValue == null ? "" : String(reprValue);
+  }
+  return node;
+}
+
 function codeLine(line) {
   const row = document.createElement("div");
   row.className = "liveedit-line";
@@ -40,20 +55,26 @@ function kvRow(item) {
   row.title = item.repr;
   row.append(span("liveedit-kv-name", item.name.padEnd(6, " ")));
   row.append(text(" = "));
-  row.append(span("liveedit-value", item.repr));
+  row.append(valueNode("liveedit-value", item.repr, item.html));
   return row;
 }
 
-function returnChip(returned) {
+function returnChip(returned, error) {
   const row = document.createElement("div");
   row.className = "liveedit-return";
   if (!returned) {
+    if (error) {
+      row.classList.add("liveedit-return-raised");
+      row.textContent = "raised ";
+      row.append(span("liveedit-return-error", error.type));
+      return row;
+    }
     row.textContent = "returned ";
     row.append(span("liveedit-muted", "None"));
     return row;
   }
   row.textContent = "returned ";
-  const value = span("liveedit-return-value", returned.repr);
+  const value = valueNode("liveedit-return-value", returned.repr, returned.html);
   row.append(value);
   row.title = returned.repr;
   return row;
@@ -124,16 +145,24 @@ function tableForLoop(loop, chartState, colVisible, nested) {
   (loop.passes || []).forEach((pass, index) => {
     const row = document.createElement("tr");
     row.dataset.hover = `loop:${loop.loop_id}`;
+    if (pass.failed) row.classList.add("liveedit-pass-error");
     const label = document.createElement("td");
     label.className = "liveedit-rowlabel";
-    label.textContent = `pass ${index + 1}`;
+    label.textContent = pass.failed ? `✗ pass ${index + 1}` : `pass ${index + 1}`;
     row.append(label);
 
     for (const column of cols) {
       const cell = document.createElement("td");
       cell.dataset.var = column;
-      cell.textContent = pass.cells?.[column] ?? "";
-      cell.title = pass.cells?.[column] ?? "";
+      const reprValue = pass.cells?.[column] ?? "";
+      const html = pass.cells_html?.[column];
+      if (html != null && html !== "") {
+        cell.classList.add("liveedit-html");
+        cell.innerHTML = html;
+      } else {
+        cell.textContent = reprValue;
+      }
+      cell.title = reprValue;
       if ((pass.changed || []).includes(column)) {
         cell.classList.add("liveedit-changed");
       }
@@ -471,28 +500,43 @@ function draw({ model, root, chartState }) {
   root.innerHTML = "";
   root.className = "liveedit-root";
   root.dataset.theme = model.get("theme") || "auto";
-  // By default the widget sizes to its content and the host page scrolls; a
-  // positive width/height turns that axis back into an internal scrollbar.
+  // Grow horizontally to fit content (the host page scrolls); a positive width
+  // caps it and turns on an internal horizontal scrollbar instead. Height stays
+  // bounded via --liveedit-height so the code/trace panels scroll independently
+  // and the function stays visible while the trace scrolls.
   const widthCap = model.get("width");
-  const heightCap = model.get("height");
   root.style.width = "max-content";
   root.style.maxWidth = widthCap > 0 ? `${widthCap}px` : "none";
-  root.style.maxHeight = heightCap > 0 ? `${heightCap}px` : "none";
-  root.style.overflow = widthCap > 0 || heightCap > 0 ? "auto" : "visible";
+  root.style.overflowX = widthCap > 0 ? "auto" : "visible";
+  root.style.setProperty("--liveedit-height", `${model.get("height")}px`);
 
   const card = document.createElement("div");
   card.className = "liveedit-card";
 
+  const error = model.get("error");
+
   const codePanel = document.createElement("div");
   codePanel.className = "liveedit-code";
   const annotations = model.get("annotations") || { lines: [] };
+  const codeLines = [];
   for (const line of annotations.lines || []) {
-    codePanel.append(codeLine(line));
+    const row = codeLine(line);
+    codePanel.append(row);
+    codeLines.push(row);
+  }
+  if (error && error.lineno) {
+    const failingLine = codeLines[error.lineno - 1];
+    if (failingLine) {
+      failingLine.classList.add("liveedit-line-error");
+      const inline = document.createElement("div");
+      inline.className = "liveedit-inline-error";
+      inline.textContent = `${error.type}: ${error.message}`;
+      failingLine.after(inline);
+    }
   }
 
   const tracePanel = document.createElement("div");
   tracePanel.className = "liveedit-trace";
-  const error = model.get("error");
   if (error) {
     const errorBox = document.createElement("div");
     errorBox.className = "liveedit-error";
@@ -514,7 +558,7 @@ function draw({ model, root, chartState }) {
     tracePanel.append(loopBlock(loop, chartState, colVisible));
   }
 
-  const returned = returnChip(trace.returned);
+  const returned = returnChip(trace.returned, error);
   if (trace.returned?.repr) {
     for (const line of annotations.lines || []) {
       for (const name of line.returns || []) {

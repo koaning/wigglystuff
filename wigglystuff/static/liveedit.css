@@ -27,6 +27,8 @@
   --liveedit-chart-line-4: #7c3aed;
   --liveedit-chart-line-5: #0d9488;
   --liveedit-chart-line-6: #db2777;
+  --liveedit-error: #cf222e;
+  --liveedit-error-rgb: 207, 34, 46;
   color: var(--liveedit-code);
   color-scheme: light dark;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -66,6 +68,8 @@
   --liveedit-chart-line-4: #c4b5fd;
   --liveedit-chart-line-5: #2dd4bf;
   --liveedit-chart-line-6: #f472b6;
+  --liveedit-error: #ff7b72;
+  --liveedit-error-rgb: 248, 81, 73;
 }
 
 .liveedit-card {
@@ -74,8 +78,12 @@
   border-radius: 8px;
   display: grid;
   /* Code panel is bounded (it scrolls its own long lines); the trace panel
-     grows to fit its table + chart so nothing scrolls inside the widget. */
+     grows to fit its table + chart so the widget widens instead of an inner
+     horizontal scrollbar. Height stays bounded and each panel scrolls, so the
+     function stays visible while the trace scrolls. */
   grid-template-columns: minmax(300px, 520px) max-content;
+  grid-template-rows: minmax(0, 1fr);
+  height: var(--liveedit-height);
   overflow: hidden;
 }
 
@@ -84,6 +92,7 @@
   font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
   font-size: 13px;
   line-height: 1.55;
+  min-height: 0;
   min-width: 0;
   padding: 16px 18px;
 }
@@ -91,12 +100,12 @@
 .liveedit-code {
   background: var(--liveedit-panel);
   border-right: 1px solid var(--liveedit-border);
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .liveedit-trace {
   background: var(--liveedit-card);
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .liveedit-line {
@@ -165,6 +174,31 @@
 
 .liveedit-value {
   color: var(--liveedit-code);
+}
+
+/* Rich HTML values: keep them scrollable and bounded so a DataFrame or figure
+   never overflows the panel. Applies to setup/return spans and loop cells. */
+.liveedit-value.liveedit-html,
+.liveedit-return-value.liveedit-html {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 260px;
+  overflow: auto;
+  vertical-align: top;
+  white-space: normal;
+}
+
+td.liveedit-html {
+  max-width: 320px;
+  text-align: left;
+  white-space: normal;
+}
+
+.liveedit-html img,
+.liveedit-html svg,
+.liveedit-html table {
+  height: auto;
+  max-width: 100%;
 }
 
 .liveedit-loopblock {
@@ -451,19 +485,57 @@
 }
 
 .liveedit-error {
-  background: rgba(207, 34, 46, 0.08);
-  border: 1px solid rgba(207, 34, 46, 0.28);
+  background: rgba(var(--liveedit-error-rgb), 0.08);
+  border: 1px solid rgba(var(--liveedit-error-rgb), 0.28);
   border-radius: 6px;
-  color: #cf222e;
+  color: var(--liveedit-error);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
   margin-bottom: 14px;
   padding: 8px 10px;
 }
 
+.liveedit-line-error {
+  background: rgba(var(--liveedit-error-rgb), 0.1);
+  box-shadow: inset 3px 0 0 var(--liveedit-error);
+}
+
+.liveedit-inline-error {
+  color: var(--liveedit-error);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12px;
+  padding: 2px 0 2px 12px;
+}
+
+.liveedit-pass-error > td {
+  background: rgba(var(--liveedit-error-rgb), 0.09);
+}
+
+.liveedit-pass-error > .liveedit-rowlabel {
+  box-shadow: inset 3px 0 0 var(--liveedit-error);
+  color: var(--liveedit-error);
+}
+
+.liveedit-return-raised {
+  color: var(--liveedit-error);
+}
+
+.liveedit-return-error {
+  color: var(--liveedit-error);
+  font-weight: 700;
+}
+
 @media (max-width: 760px) {
   .liveedit-card {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
+    height: auto;
+  }
+
+  .liveedit-code,
+  .liveedit-trace {
+    overflow-x: auto;
+    overflow-y: visible;
   }
 
   .liveedit-code {

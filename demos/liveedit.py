@@ -2,6 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "anywidget",
+#     "dicekit",
 #     "drawdata",
 #     "marimo",
 #     "numpy",
@@ -104,6 +105,35 @@ def _(LiveEdit):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    When a run raises, the trace stops at the failing pass. The failing source
+    line is highlighted with an inline message, the loop pass where execution
+    stopped is marked with a `✗`, and the widget reports `raised <ErrorType>`.
+    """)
+    return
+
+
+@app.cell
+def _(LiveEdit):
+    def insertion_sort_boom(values):
+        values = values[:]
+        for i in range(1, len(values)):
+            key = values[i]
+            j = i - 1
+            while j >= 0 and values[j] > key:
+                values[j + 1] = values[j]
+                j = j - 1
+            values[j + 1] = key
+        return values
+
+
+    # The trailing "a" makes `1 > "a"` raise a TypeError mid-run.
+    LiveEdit.inspect_run(insertion_sort_boom, [5, 2, 4, 3, 1, "a"])
+    return
+
+
 @app.cell
 def _(LiveEdit):
     def first_primes(limit):
@@ -132,7 +162,81 @@ def _(LiveEdit):
         return guess
 
 
-    LiveEdit.inspect_run(sqrt_newton, 30, steps=5)
+    LiveEdit.inspect_run(sqrt_newton, 30, steps=15)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Rich HTML values
+
+    When a traced value exposes a rich representation (`_repr_html_`, marimo's
+    `_mime_`/`_display_`), the trace panel renders that HTML inline instead of
+    the plain `repr`. Any value assigned to a variable or returned shows up —
+    no `print` needed.
+    """)
+    return
+
+
+@app.cell
+def _(LiveEdit):
+    class Bar:
+        """A value whose HTML repr is a little colored bar."""
+
+        def __init__(self, value):
+            self.value = value
+
+        def __repr__(self):
+            return f"Bar({self.value})"
+
+        def _repr_html_(self):
+            width = min(self.value, 100)
+            return (
+                '<div style="display:flex;align-items:center;gap:6px">'
+                f'<div style="background:#0969da;height:14px;'
+                f'border-radius:3px;width:{width}px"></div>'
+                f"<span>{self.value}</span>"
+                "</div>"
+            )
+
+    def running_totals(steps):
+        total = 0
+        bar = Bar(0)
+        for step in steps:
+            total = total + step
+            bar = Bar(total)
+        return bar
+
+    LiveEdit.inspect_run(running_totals, [10, 15, 30, 25])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ### Real-world showcase: `dicekit`
+
+    A [`dicekit`](https://github.com/koaning/dicekit) `Dice` has a boring
+    `repr` (just an object address) but a rich `_repr_html_` that draws its
+    probability distribution. As we add dice together, the trace shows the
+    running distribution chart for every pass — no `print`, just plain
+    assignments.
+    """)
+    return
+
+
+@app.cell
+def _(LiveEdit):
+    from dicekit import Dice
+
+    def sum_of_dice(n):
+        total = Dice.from_sides(6)
+        for _ in range(n - 1):
+            total = total + total
+        return total
+
+    LiveEdit.inspect_run(sum_of_dice, 8)
     return
 
 

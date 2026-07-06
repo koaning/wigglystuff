@@ -7,9 +7,18 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - `LiveEdit`: click a numeric loop-trace column header to plot that variable across passes (iteration on X, value on Y) as an inline line chart. A plain click starts a fresh single-series chart; ⌘/Ctrl-click overlays a column onto the current chart (shared Y-axis); Shift-click stacks a new chart below, sharing the X-axis so panels at different scales line up by iteration. A small `×` clears the chart. Only columns whose every pass parses to a finite float are chartable, and charts render as lightweight SVG with no new dependencies.
-- `LiveEdit`: the widget now sizes to its content by default so wide tables and charts make the whole widget grow (and the host page/marimo scrolls), instead of a cramped scrollbar inside the widget. Set a positive `width`/`height` to cap a dimension and get an internal scrollbar for that axis.
 - `LiveEdit`: new `float_precision` argument (and traitlet) rounds float cells to the given number of significant figures to keep wide tables readable; charts keep full precision. Defaults to `None` (exact `repr`).
 - `LiveEdit`: new `visible_columns` argument (and traitlet) restricts the trace tables to a chosen subset of variables; the default empty list shows everything. Applied in the browser, so it updates without re-running the traced function.
+- `LiveEdit`: trace values with a rich HTML representation now render inline in the trace panel instead of their plain `repr`. Setup variables, loop-pass cells, and the return value each check the value for marimo's `_display_`/`_mime_` protocols and IPython's `_repr_html_` (duck-typed, so no hard dependency on marimo/pandas/numpy) and, when found, render the HTML in the widget. Values without a rich representation are unchanged. Oversized payloads (>100 KB) fall back to `repr`.
+
+### Changed
+
+- `LiveEdit`: the widget now grows horizontally to fit its content by default so wide tables and charts widen the whole widget (and the host page/marimo scrolls) instead of a cramped inner horizontal scrollbar. Set a positive `width` to cap it. Height stays bounded so the source and trace columns scroll independently and the function stays visible while the trace scrolls.
+- `LiveEdit`: when a traced function raises, the failure is now anchored at the point where it happened instead of only floating in a summary box at the top. The failing source line is highlighted with an inline error message, the trace row (loop pass) where execution stopped is marked with a `✗`, and the return chip reads `raised <ErrorType>` rather than the misleading `returned None`. The compact top summary box is kept as well.
+
+### Fixed
+
+- `LiveEdit`: the default height now auto-fits the function's line count with a 520px floor, and an explicit `height=` is honored as a hard box size.
 
 ## [0.5.12] - 2026-07-06
 
