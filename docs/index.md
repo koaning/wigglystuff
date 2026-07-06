@@ -73,6 +73,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/edgedraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/edge-draw/">API</a><a href="reference/edge-draw.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">GridDraw</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/griddraw.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/griddraw.webp" alt="GridDraw widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/griddraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/grid-draw/">API</a><a href="reference/grid-draw.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">GraphWidget</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/graphwidget.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/graphwidget.webp" alt="GraphWidget widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/graphwidget.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/graph-widget/">API</a><a href="reference/graph-widget.md">MD</a></div>

@@ -13,6 +13,7 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [Paint](paint.md)
 - [ThreeWidget](three-widget.md)
 - [EdgeDraw](edge-draw.md)
+- [GridDraw](grid-draw.md)
 - [GraphWidget](graph-widget.md)
 - [KeystrokeWidget](keystroke.md)
 - [WebkitSpeechToTextWidget](talk.md)

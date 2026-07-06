@@ -6,6 +6,8 @@
     "dev-three-widget": "./node_modules/.bin/esbuild js/three-widget/widget.js --bundle --outfile=wigglystuff/static/three-widget.js --format=esm --watch --minify",
     "build-graph-widget": "./node_modules/.bin/esbuild js/graph-widget/widget.js --bundle --outfile=wigglystuff/static/graph-widget.js --format=esm --minify",
     "dev-graph-widget": "./node_modules/.bin/esbuild js/graph-widget/widget.js --bundle --outfile=wigglystuff/static/graph-widget.js --format=esm --watch --minify",
+    "build-griddraw": "./node_modules/.bin/esbuild js/grid-draw/widget.js --bundle --outfile=wigglystuff/static/griddraw.js --format=esm --minify",
+    "dev-griddraw": "./node_modules/.bin/esbuild js/grid-draw/widget.js --bundle --outfile=wigglystuff/static/griddraw.js --format=esm --watch --minify",
     "build-treemap": "./node_modules/.bin/esbuild js/treemap/widget.js --bundle --outfile=wigglystuff/static/treemap.js --format=esm --minify",
     "dev-treemap": "./node_modules/.bin/esbuild js/treemap/widget.js --bundle --outfile=wigglystuff/static/treemap.js --format=esm --watch --minify",
     "build-nested-table": "./node_modules/.bin/esbuild js/nested-table/widget.js --bundle --outfile=wigglystuff/static/nested-table.js --format=esm --minify",

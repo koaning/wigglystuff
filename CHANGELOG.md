@@ -4,13 +4,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `GridDraw`: new drawable square-grid widget for marking dots on grid intersections and orthogonal unit line segments between adjacent intersections. It supports dot, line, and eraser modes; click toggles a single item, drag paints a stroke, undo restores each completed gesture, clear is undoable, and a local theme toggle can force light/dark rendering. The synced data is plain Python-friendly structure: `dots` as `[[row, col], ...]` and `lines` as `{"from": [r, c], "to": [r, c], "width": int}` dictionaries. `line_width` accepts either a fixed integer or a list of widths that enables the toolbar picker.
+
 ### Changed
 
+- `GridDraw`: toolbar controls now show Lucide-style icons next to their text labels, keeping the labels visible while making the drawing modes and actions easier to scan.
 - `Excalidraw`: now fits the loaded scene to the viewport on open, so drawings
   saved while zoomed out reopen at the right scale instead of clipping. Capped at
   100% zoom — it zooms out to show everything but never zooms in past actual
   size — and leaves a small margin so content doesn't hug the canvas edges.
   (#252, closes #251)
+
+### Fixed
+
+- `GridDraw`: line and eraser drag strokes now trace the actual grid segments crossed by the pointer path, avoiding under- or over-extension when the cursor passes through segment centers or near intersections.
 
 ## [0.5.11] - 2026-06-30
 

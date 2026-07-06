@@ -20,6 +20,7 @@ from .env_config import EnvConfig
 from .excalidraw import Excalidraw
 from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
+from .grid_draw import GridDraw
 from .hover_zoom import HoverZoom
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
@@ -66,6 +67,7 @@ __all__ = [
     "Excalidraw",
     "GamepadWidget",
     "GraphWidget",
+    "GridDraw",
     "KeystrokeWidget",
     "Matrix",
     "ModuleTreeWidget",

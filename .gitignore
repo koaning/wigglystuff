@@ -177,3 +177,6 @@ docs/examples/*
 wandb/**
 
 *.mp4
+
+# brainstorming visual companion
+.superpowers/

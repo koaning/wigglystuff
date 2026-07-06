@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>inspect_run — mockup</title>
+<style>
+  :root {
+    --bg: #f4f4f5;
+    --card: #ffffff;
+    --border: #e2e2e6;
+    --code: #2b2b31;
+    --kw: #8250df;
+    --fn: #0969da;
+    --num: #0969da;
+    --str: #a1470b;
+    --muted: #8a8a94;
+    --accent: #0969da;
+    --var-strong: rgba(245,197,24,0.55);  /* YELLOW = a variable */
+    --var-soft:   rgba(245,197,24,0.26);
+    --loop-rgb: 26,127,90;                 /* GREEN = a loop (stacks by depth) */
+    --changed: #cf222e;                    /* RED = changed this pass (data, not hover) */
+    --for: #0969da;
+    --while: #8250df;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--code);
+    margin: 0;
+    padding: 32px;
+    line-height: 1.55;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; font-size: 14px; }
+  .legend {
+    font-size: 13px; color: var(--muted); margin: 0 0 24px;
+    display: flex; gap: 18px; flex-wrap: wrap; align-items: center;
+  }
+  .legend b { color: var(--code); font-weight: 600; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+  .swatch.var   { background: var(--var-strong); }
+  .swatch.loop  { border-radius: 0; background: rgba(var(--loop-rgb), 0.13); }
+  .swatch.loop2 { border-radius: 0; background: rgba(var(--loop-rgb), 0.26); }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 28px;
+    display: grid;
+    grid-template-columns: minmax(380px, 1fr) minmax(380px, 1fr);
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .call {
+    grid-column: 1 / -1;
+    font-family: "SF Mono", ui-monospace, Menlo, monospace;
+    font-size: 13px;
+    padding: 12px 18px;
+    background: #fafafb;
+    border-bottom: 1px solid var(--border);
+  }
+  .call .muted { color: var(--muted); }
+
+  .code, .trace {
+    font-family: "SF Mono", ui-monospace, Menlo, monospace;
+    font-size: 13.5px;
+    padding: 18px 20px;
+  }
+  .code { border-right: 1px solid var(--border); background: #fcfcfd; }
+  .trace { background: var(--card); }
+
+  /* A ROW is the unit of selection. Every row spans the full panel width. */
+  .line { white-space: pre; padding: 0 6px; margin: 0 -6px; cursor: default; }
+  .line.line-assign { background: var(--var-soft); border-radius: 4px; }   /* variable's lines (yellow) */
+  .line.loop-d1 { background: rgba(var(--loop-rgb), 0.10); }               /* loop body (green, square) */
+  .line.loop-d2 { background: rgba(var(--loop-rgb), 0.22); }               /* nested overlap = darker */
+
+  .kw { color: var(--kw); }
+  .fn { color: var(--fn); }
+  .num { color: var(--num); }
+  .str { color: var(--str); }
+  .var { border-radius: 3px; padding: 0 1px; transition: background 0.08s; }
+  .var.var-active { background: var(--var-strong); }
+  .loopkw { padding: 0 2px; text-decoration: underline dotted; text-underline-offset: 3px; }
+  .loopkw.loop-active { background: rgba(var(--loop-rgb), 0.20); }
+
+  .kv-block { margin-bottom: 18px; }
+  .kv { white-space: pre; border-radius: 4px; padding: 0 4px; margin: 0 -4px; }
+  .kv.var-active { background: var(--var-strong); }
+  .kvname { color: var(--muted); }
+
+  /* loop region on the trace side — square, translucent green, no border.
+     Nested blocks stack their backgrounds, so overlap reads darker. */
+  .loopblock { padding: 8px 10px; margin: 0 0 14px; }
+  .loopblock.loop-lit { background: rgba(var(--loop-rgb), 0.13); }
+
+  .badgerow { display: block; margin-bottom: 6px; }   /* full-width row → hovering anywhere lights the loop */
+  .badge {
+    display: inline-block; font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.05em; font-weight: 700; padding: 1px 7px; border-radius: 10px;
+  }
+  .badge.for   { color: var(--for);   background: #e3f0ff; }
+  .badge.while { color: var(--while); background: #f0e9fb; }
+
+  /* tables stretch to fill the row band; a trailing spacer keeps value columns tight */
+  table { border-collapse: collapse; margin: 2px 0 6px; font-size: 13px; width: 100%; }
+  th, td { border: 1px solid var(--border); padding: 4px 12px; text-align: right; min-width: 44px; }
+  td { background: var(--card); }               /* keep value cells light & readable under the loop tint */
+  th { background: #f7f7f9; color: var(--muted); font-weight: 600; }
+  /* label + spacer stay transparent so the green row-band still shows on both edges */
+  .rowlabel { border: none; background: transparent; color: var(--muted); font-size: 11.5px; text-align: right; padding-right: 10px; min-width: 0; }
+  .spacer { border: none; background: transparent; min-width: 0; width: 100%; padding: 0; }
+  td.changed { color: var(--changed); font-weight: 700; }
+  .col-active { background: var(--var-soft) !important; }
+
+  .ret { display: block; margin-top: 4px; color: var(--muted); border-radius: 4px; padding: 0 4px; margin-left: -4px; }
+  .ret.ret-active { background: var(--var-soft); }
+  .ret b { color: var(--accent); font-weight: 700; }
+
+  .outerpass { color: var(--muted); margin: 8px 0 2px; }
+  .outerpass .lead { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .indent { margin-left: 22px; padding-left: 12px; }
+</style>
+</head>
+<body>
+
+<h1>inspect_run — layout &amp; hover mockup (v6)</h1>
+<p class="sub">Time flows <b>top&nbsp;→&nbsp;bottom</b>. Selection is <b>line-based</b>: hover anywhere along a row (code line, key/value, pill, table row) to select its subject — a <b>variable</b> (yellow) or a <b>loop</b> (green). A token inside the row (a name, a cell) just refines it.</p>
+
+<div class="legend">
+  <span><span class="swatch var"></span>variable (name · lines · column · return)</span>
+  <span><span class="swatch loop"></span>loop</span>
+  <span><span class="swatch loop2"></span>nested (stacked)</span>
+  <span><b style="color:var(--changed)">bold red</b> = changed this pass</span>
+</div>
+
+<!-- ============ BINARY SEARCH (while) ============ -->
+<div class="card">
+  <div class="call">inspect_run(<span>binary_search</span>, <span class="muted">key=</span>'d', <span class="muted">array=</span>['a','b','c','d','e','f'])</div>
+
+  <div class="code">
+<div class="line"><span class="kw">def</span> <span class="fn">binary_search</span>(<span class="var" data-var="key">key</span>, <span class="var" data-var="array">array</span>):</div>
+<div class="line" data-hover="var:low" data-assigns="low">    <span class="var" data-var="low">low</span> = <span class="num">0</span></div>
+<div class="line" data-hover="var:high" data-assigns="high">    <span class="var" data-var="high">high</span> = <span class="fn">len</span>(<span class="var" data-var="array">array</span>) - <span class="num">1</span></div>
+<div class="line"></div>
+<div class="line" data-hover="loop:bs" data-loop-body="bs">    <span class="loopkw" data-loop="bs">while</span> <span class="var" data-var="low">low</span> &lt;= <span class="var" data-var="high">high</span>:</div>
+<div class="line" data-hover="var:mid" data-loop-body="bs" data-assigns="mid">        <span class="var" data-var="mid">mid</span> = (<span class="var" data-var="low">low</span> + <span class="var" data-var="high">high</span>) // <span class="num">2</span></div>
+<div class="line" data-hover="var:value" data-loop-body="bs" data-assigns="value">        <span class="var" data-var="value">value</span> = <span class="var" data-var="array">array</span>[<span class="var" data-var="mid">mid</span>]</div>
+<div class="line" data-hover="loop:bs" data-loop-body="bs">        <span class="kw">if</span> <span class="var" data-var="value">value</span> &lt; <span class="var" data-var="key">key</span>:</div>
+<div class="line" data-hover="var:low" data-loop-body="bs" data-assigns="low">            <span class="var" data-var="low">low</span> = <span class="var" data-var="mid">mid</span> + <span class="num">1</span></div>
+<div class="line" data-hover="loop:bs" data-loop-body="bs">        <span class="kw">elif</span> <span class="var" data-var="value">value</span> &gt; <span class="var" data-var="key">key</span>:</div>
+<div class="line" data-hover="var:high" data-loop-body="bs" data-assigns="high">            <span class="var" data-var="high">high</span> = <span class="var" data-var="mid">mid</span> - <span class="num">1</span></div>
+<div class="line" data-hover="loop:bs" data-loop-body="bs">        <span class="kw">else</span>:</div>
+<div class="line" data-hover="var:mid" data-loop-body="bs" data-return="mid">            <span class="kw">return</span> <span class="var" data-var="mid">mid</span></div>
+<div class="line"></div>
+<div class="line">    <span class="kw">return</span> -<span class="num">1</span></div>
+  </div>
+
+  <div class="trace">
+    <div class="kv-block">
+      <div class="kv" data-hover="var:key" data-var="key"><span class="kvname">key  </span> = <span class="str">'d'</span></div>
+      <div class="kv" data-hover="var:array" data-var="array"><span class="kvname">array</span> = <span class="str">['a','b','c','d','e','f']</span></div>
+      <div class="kv" data-hover="var:low" data-var="low"><span class="kvname">low  </span> = <span class="num">0</span></div>
+      <div class="kv" data-hover="var:high" data-var="high"><span class="kvname">high </span> = <span class="num">5</span></div>
+    </div>
+
+    <div class="loopblock" data-loop="bs">
+      <div class="badgerow" data-hover="loop:bs"><span class="badge while">while loop</span></div>
+      <table>
+        <thead>
+          <tr data-hover="loop:bs">
+            <th class="rowlabel"></th>
+            <th data-var="low">low</th><th data-var="high">high</th>
+            <th data-var="mid">mid</th><th data-var="value">value</th>
+            <th class="spacer"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-hover="loop:bs"><td class="rowlabel">pass 1</td><td class="changed" data-var="low">3</td><td data-var="high">5</td><td class="changed" data-var="mid">2</td><td class="changed" data-var="value">'c'</td><td class="spacer"></td></tr>
+          <tr data-hover="loop:bs"><td class="rowlabel">pass 2</td><td data-var="low">3</td><td class="changed" data-var="high">3</td><td class="changed" data-var="mid">4</td><td class="changed" data-var="value">'e'</td><td class="spacer"></td></tr>
+          <tr data-hover="loop:bs"><td class="rowlabel">pass 3</td><td data-var="low">3</td><td data-var="high">3</td><td class="changed" data-var="mid">3</td><td class="changed" data-var="value">'d'</td><td class="spacer"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ret" data-hover="var:mid" data-var="mid">returned <b>3</b> &nbsp;<span class="muted">(value == key on pass 3)</span></div>
+  </div>
+</div>
+
+<!-- ============ NESTED (for + for, both mutate) ============ -->
+<div class="card">
+  <div class="call">inspect_run(<span>grid_sum</span>, <span class="muted">rows=</span>2, <span class="muted">cols=</span>3)</div>
+
+  <div class="code">
+<div class="line"><span class="kw">def</span> <span class="fn">grid_sum</span>(<span class="var" data-var="rows">rows</span>, <span class="var" data-var="cols">cols</span>):</div>
+<div class="line" data-hover="var:total" data-assigns="total">    <span class="var" data-var="total">total</span> = <span class="num">0</span></div>
+<div class="line" data-hover="loop:out" data-loop-body="out">    <span class="loopkw" data-loop="out">for</span> <span class="var" data-var="r">r</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var" data-var="rows">rows</span>):</div>
+<div class="line" data-hover="var:rowbase" data-loop-body="out" data-assigns="rowbase">        <span class="var" data-var="rowbase">rowbase</span> = <span class="var" data-var="r">r</span> * <span class="num">100</span></div>
+<div class="line" data-hover="loop:out in" data-loop-body="out in">        <span class="loopkw" data-loop="in">for</span> <span class="var" data-var="c">c</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="var" data-var="cols">cols</span>):</div>
+<div class="line" data-hover="var:total" data-loop-body="out in" data-assigns="total">            <span class="var" data-var="total">total</span> = <span class="var" data-var="total">total</span> + <span class="var" data-var="rowbase">rowbase</span> + <span class="var" data-var="c">c</span></div>
+<div class="line"></div>
+<div class="line" data-hover="var:total" data-return="total">    <span class="kw">return</span> <span class="var" data-var="total">total</span></div>
+  </div>
+
+  <div class="trace">
+    <div class="kv-block">
+      <div class="kv" data-hover="var:rows" data-var="rows"><span class="kvname">rows </span> = <span class="num">2</span></div>
+      <div class="kv" data-hover="var:cols" data-var="cols"><span class="kvname">cols </span> = <span class="num">3</span></div>
+      <div class="kv" data-hover="var:total" data-var="total"><span class="kvname">total</span> = <span class="num">0</span></div>
+    </div>
+
+    <div class="loopblock" data-loop="out">
+      <div class="badgerow" data-hover="loop:out"><span class="badge for">for loop · outer</span></div>
+
+      <div class="outerpass" data-hover="loop:out"><span class="lead">outer pass 1 —</span> <span class="var" data-var="r">r</span>=<b class="changed">0</b> · <span class="var" data-var="rowbase">rowbase</span>=<b class="changed">0</b></div>
+      <div class="indent">
+        <div class="loopblock" data-loop="in">
+          <div class="badgerow" data-hover="loop:out in"><span class="badge for">for loop · inner</span></div>
+          <table>
+            <thead><tr data-hover="loop:out in"><th class="rowlabel"></th><th data-var="c">c</th><th data-var="total">total</th><th class="spacer"></th></tr></thead>
+            <tbody>
+              <tr data-hover="loop:out in"><td class="rowlabel">pass 1</td><td class="changed" data-var="c">0</td><td class="changed" data-var="total">0</td><td class="spacer"></td></tr>
+              <tr data-hover="loop:out in"><td class="rowlabel">pass 2</td><td class="changed" data-var="c">1</td><td class="changed" data-var="total">1</td><td class="spacer"></td></tr>
+              <tr data-hover="loop:out in"><td class="rowlabel">pass 3</td><td class="changed" data-var="c">2</td><td class="changed" data-var="total">3</td><td class="spacer"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="outerpass" data-hover="loop:out"><span class="lead">outer pass 2 —</span> <span class="var" data-var="r">r</span>=<b class="changed">1</b> · <span class="var" data-var="rowbase">rowbase</span>=<b class="changed">100</b></div>
+      <div class="indent">
+        <div class="loopblock" data-loop="in">
+          <div class="badgerow" data-hover="loop:out in"><span class="badge for">for loop · inner</span></div>
+          <table>
+            <thead><tr data-hover="loop:out in"><th class="rowlabel"></th><th data-var="c">c</th><th data-var="total">total</th><th class="spacer"></th></tr></thead>
+            <tbody>
+              <tr data-hover="loop:out in"><td class="rowlabel">pass 1</td><td class="changed" data-var="c">0</td><td class="changed" data-var="total">103</td><td class="spacer"></td></tr>
+              <tr data-hover="loop:out in"><td class="rowlabel">pass 2</td><td class="changed" data-var="c">1</td><td class="changed" data-var="total">204</td><td class="spacer"></td></tr>
+              <tr data-hover="loop:out in"><td class="rowlabel">pass 3</td><td class="changed" data-var="c">2</td><td class="changed" data-var="total">306</td><td class="spacer"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="ret" data-hover="var:total" data-var="total">returned <b>306</b></div>
+  </div>
+</div>
+
+<script>
+  function clearAll() {
+    document.querySelectorAll('.var-active,.line-assign,.col-active,.ret-active,.loop-d1,.loop-d2,.loop-lit,.loop-active')
+      .forEach(el => el.classList.remove('var-active','line-assign','col-active','ret-active','loop-d1','loop-d2','loop-lit','loop-active'));
+  }
+
+  function activateVar(card, name) {
+    card.querySelectorAll('[data-var="' + name + '"]').forEach(el => {
+      if (el.classList.contains('var') || el.classList.contains('kv')) el.classList.add('var-active');
+      if (el.classList.contains('ret')) el.classList.add('ret-active');
+      if (el.tagName === 'TD' || el.tagName === 'TH') el.classList.add('col-active');
+    });
+    card.querySelectorAll('.line[data-assigns]').forEach(line => {
+      if (line.getAttribute('data-assigns').split(/\s+/).includes(name)) line.classList.add('line-assign');
+    });
+    card.querySelectorAll('.line[data-return]').forEach(line => {
+      if (line.getAttribute('data-return').split(/\s+/).includes(name)) line.classList.add('line-assign');
+    });
+  }
+
+  function activateLoopSet(card, chain) {
+    card.querySelectorAll('.line[data-loop-body]').forEach(line => {
+      const mem = line.getAttribute('data-loop-body').split(/\s+/);
+      const depth = mem.filter(id => chain.includes(id)).length;
+      if (depth >= 2) line.classList.add('loop-d2');
+      else if (depth === 1) line.classList.add('loop-d1');
+    });
+    card.querySelectorAll('.loopblock[data-loop]').forEach(b => {
+      if (chain.includes(b.getAttribute('data-loop'))) b.classList.add('loop-lit');
+    });
+    card.querySelectorAll('.loopkw[data-loop]').forEach(k => {
+      if (chain.includes(k.getAttribute('data-loop'))) k.classList.add('loop-active');
+    });
+  }
+
+  // The chain of loops an element lives inside (trace side has nested .loopblock wrappers).
+  function loopChainFor(el) {
+    const chain = [];
+    let n = el.closest('.loopblock');
+    while (n) {
+      const id = n.getAttribute('data-loop');
+      if (id) chain.push(id);
+      n = n.parentElement && n.parentElement.closest('.loopblock');
+    }
+    return chain;
+  }
+
+  // Resolve what the cursor is pointing at: a specific token (variable/cell) refines;
+  // otherwise fall back to the enclosing row's declared subject (data-hover).
+  function apply(card, target) {
+    const token = target.closest('[data-var]');
+    if (token) {
+      activateVar(card, token.getAttribute('data-var'));
+      const chain = loopChainFor(token);
+      if (chain.length) activateLoopSet(card, chain);
+      return;
+    }
+    const row = target.closest('[data-hover]');
+    if (!row) return;
+    const h = row.getAttribute('data-hover');
+    if (h.startsWith('var:')) {
+      activateVar(card, h.slice(4));
+      const chain = loopChainFor(row);
+      if (chain.length) activateLoopSet(card, chain);
+    } else if (h.startsWith('loop:')) {
+      activateLoopSet(card, h.slice(5).split(/\s+/));
+    }
+  }
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mouseover', e => { clearAll(); apply(card, e.target); });
+    card.addEventListener('mouseleave', clearAll);
+  });
+</script>
+
+</body>
+</html>
