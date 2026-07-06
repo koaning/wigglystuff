@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `Excalidraw`: now fits the loaded scene to the viewport on open, so drawings
+  saved while zoomed out reopen at the right scale instead of clipping. Capped at
+  100% zoom — it zooms out to show everything but never zooms in past actual
+  size — and leaves a small margin so content doesn't hug the canvas edges.
+  (#252, closes #251)
+
 ## [0.5.11] - 2026-06-30
 
 ### Added
