@@ -17,11 +17,23 @@
   --liveedit-loop-rgb: 26, 127, 90;
   --liveedit-for: #0969da;
   --liveedit-while: #8250df;
+  --liveedit-chart-bg: #fbfbfd;
+  --liveedit-chart-axis: #b8b8c0;
+  --liveedit-chart-grid: #ececf0;
+  --liveedit-chart-line-0: #2563eb;
+  --liveedit-chart-line-1: #ea580c;
+  --liveedit-chart-line-2: #16a34a;
+  --liveedit-chart-line-3: #dc2626;
+  --liveedit-chart-line-4: #7c3aed;
+  --liveedit-chart-line-5: #0d9488;
+  --liveedit-chart-line-6: #db2777;
   color: var(--liveedit-code);
   color-scheme: light dark;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  max-width: 100%;
-  overflow: auto;
+  /* Size to content by default (see draw() in liveedit.js); a width/height cap
+     switches back to an internal scrollbar. */
+  width: max-content;
+  overflow: visible;
 }
 
 .liveedit-root[data-theme="dark"],
@@ -44,6 +56,16 @@
   --liveedit-var-strong: rgba(245, 197, 24, 0.42);
   --liveedit-var-soft: rgba(245, 197, 24, 0.18);
   --liveedit-loop-rgb: 74, 222, 128;
+  --liveedit-chart-bg: #202024;
+  --liveedit-chart-axis: #5a5a63;
+  --liveedit-chart-grid: #343439;
+  --liveedit-chart-line-0: #60a5fa;
+  --liveedit-chart-line-1: #fb923c;
+  --liveedit-chart-line-2: #4ade80;
+  --liveedit-chart-line-3: #f87171;
+  --liveedit-chart-line-4: #c4b5fd;
+  --liveedit-chart-line-5: #2dd4bf;
+  --liveedit-chart-line-6: #f472b6;
 }
 
 .liveedit-card {
@@ -51,7 +73,9 @@
   border: 1px solid var(--liveedit-border);
   border-radius: 8px;
   display: grid;
-  grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+  /* Code panel is bounded (it scrolls its own long lines); the trace panel
+     grows to fit its table + chart so nothing scrolls inside the widget. */
+  grid-template-columns: minmax(300px, 520px) max-content;
   overflow: hidden;
 }
 
@@ -144,8 +168,13 @@
 }
 
 .liveedit-loopblock {
+  box-sizing: border-box;
   margin: 0 0 14px;
   padding: 8px 10px;
+  /* Grow to fit a wide table so the loop highlight covers all of it, but still
+     fill the panel when the table is narrow. */
+  min-width: 100%;
+  width: max-content;
 }
 
 .liveedit-loopblock-nested {
@@ -237,6 +266,161 @@
 .liveedit-col-active {
   background: var(--liveedit-var-soft) !important;
 }
+
+.liveedit-chart-col {
+  cursor: pointer;
+  user-select: none;
+}
+
+.liveedit-th-label {
+  vertical-align: middle;
+}
+
+.liveedit-chart-icon {
+  margin-left: 4px;
+  opacity: 0;
+  stroke: var(--liveedit-accent);
+  vertical-align: middle;
+}
+
+.liveedit-chart-col:hover .liveedit-chart-icon,
+.liveedit-chart-col-active .liveedit-chart-icon {
+  opacity: 0.85;
+}
+
+.liveedit-chart-col-active {
+  color: var(--liveedit-accent);
+}
+
+.liveedit-loopbody {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+}
+
+.liveedit-loopbody .liveedit-table {
+  width: auto;
+}
+
+.liveedit-chart {
+  background: var(--liveedit-chart-bg);
+  border: 1px solid var(--liveedit-border);
+  border-radius: 6px;
+  flex: 0 0 auto;
+  padding: 8px;
+  position: relative;
+}
+
+.liveedit-chart-close {
+  background: transparent;
+  border: none;
+  color: var(--liveedit-muted);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+}
+
+.liveedit-chart-close:hover {
+  color: var(--liveedit-code);
+}
+
+.liveedit-chart-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.liveedit-chart-block:not(:last-child) {
+  border-bottom: 1px solid var(--liveedit-border);
+  padding-bottom: 8px;
+}
+
+.liveedit-chart-svg {
+  display: block;
+}
+
+.liveedit-chart-axis {
+  stroke: var(--liveedit-chart-axis);
+  stroke-width: 1;
+}
+
+.liveedit-chart-tick {
+  stroke: var(--liveedit-chart-axis);
+  stroke-width: 1;
+}
+
+.liveedit-chart-grid {
+  stroke: var(--liveedit-chart-grid);
+  stroke-width: 1;
+}
+
+.liveedit-chart-axis-label {
+  fill: var(--liveedit-muted);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 9px;
+}
+
+.liveedit-chart-line {
+  fill: none;
+  stroke-width: 1.75;
+}
+
+.liveedit-chart-dot {
+  stroke: var(--liveedit-chart-bg);
+  stroke-width: 1;
+}
+
+.liveedit-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 6px;
+}
+
+.liveedit-chart-legend-item {
+  font-size: 11px;
+  padding-left: 12px;
+  position: relative;
+}
+
+.liveedit-chart-legend-item::before {
+  border-radius: 2px;
+  content: "";
+  height: 8px;
+  left: 0;
+  position: absolute;
+  top: 3px;
+  width: 8px;
+}
+
+.liveedit-chart-stroke-0 { stroke: var(--liveedit-chart-line-0); }
+.liveedit-chart-stroke-1 { stroke: var(--liveedit-chart-line-1); }
+.liveedit-chart-stroke-2 { stroke: var(--liveedit-chart-line-2); }
+.liveedit-chart-stroke-3 { stroke: var(--liveedit-chart-line-3); }
+.liveedit-chart-stroke-4 { stroke: var(--liveedit-chart-line-4); }
+.liveedit-chart-stroke-5 { stroke: var(--liveedit-chart-line-5); }
+.liveedit-chart-stroke-6 { stroke: var(--liveedit-chart-line-6); }
+
+.liveedit-chart-fill-0 { fill: var(--liveedit-chart-line-0); }
+.liveedit-chart-fill-1 { fill: var(--liveedit-chart-line-1); }
+.liveedit-chart-fill-2 { fill: var(--liveedit-chart-line-2); }
+.liveedit-chart-fill-3 { fill: var(--liveedit-chart-line-3); }
+.liveedit-chart-fill-4 { fill: var(--liveedit-chart-line-4); }
+.liveedit-chart-fill-5 { fill: var(--liveedit-chart-line-5); }
+.liveedit-chart-fill-6 { fill: var(--liveedit-chart-line-6); }
+
+.liveedit-chart-swatch-0::before { background: var(--liveedit-chart-line-0); }
+.liveedit-chart-swatch-1::before { background: var(--liveedit-chart-line-1); }
+.liveedit-chart-swatch-2::before { background: var(--liveedit-chart-line-2); }
+.liveedit-chart-swatch-3::before { background: var(--liveedit-chart-line-3); }
+.liveedit-chart-swatch-4::before { background: var(--liveedit-chart-line-4); }
+.liveedit-chart-swatch-5::before { background: var(--liveedit-chart-line-5); }
+.liveedit-chart-swatch-6::before { background: var(--liveedit-chart-line-6); }
 
 .liveedit-child-cell {
   background: transparent !important;
