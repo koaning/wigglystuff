@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `LiveEdit`: when a traced function raises, the failure is now anchored at the point where it happened instead of only floating in a summary box at the top. The failing source line is highlighted with an inline error message, the trace row (loop pass) where execution stopped is marked with a `✗`, and the return chip reads `raised <ErrorType>` rather than the misleading `returned None`. The compact top summary box is kept as well.
+
 ## [0.5.12] - 2026-07-06
 
 ### Added

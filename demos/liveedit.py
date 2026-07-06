@@ -99,6 +99,35 @@ def _(LiveEdit):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    When a run raises, the trace stops at the failing pass. The failing source
+    line is highlighted with an inline message, the loop pass where execution
+    stopped is marked with a `✗`, and the widget reports `raised <ErrorType>`.
+    """)
+    return
+
+
+@app.cell
+def _(LiveEdit):
+    def insertion_sort_boom(values):
+        values = values[:]
+        for i in range(1, len(values)):
+            key = values[i]
+            j = i - 1
+            while j >= 0 and values[j] > key:
+                values[j + 1] = values[j]
+                j = j - 1
+            values[j + 1] = key
+        return values
+
+
+    # The trailing "a" makes `1 > "a"` raise a TypeError mid-run.
+    LiveEdit.inspect_run(insertion_sort_boom, [5, 2, 4, 3, 1, "a"])
+    return
+
+
 @app.cell
 def _(LiveEdit):
     def first_primes(limit):
