@@ -46,6 +46,52 @@ def _error_payload(exc: BaseException) -> dict[str, Any]:
     return payload
 
 
+_MAX_HTML_BYTES = 100_000  # skip giant payloads; fall back to repr
+
+
+def _html_from_mime(mime: str, data: Any) -> str | None:
+    if mime == "text/html" and isinstance(data, str):
+        return data
+    if mime.startswith("image/") and isinstance(data, str):
+        # marimo hands back either a data URL or bare base64; normalize to a URL.
+        src = data if data.startswith("data:") else f"data:{mime};base64,{data}"
+        return f'<img src="{src}" alt="" />'
+    return None
+
+
+def _render_html(value: Any) -> str | None:
+    """Best-effort rich HTML for a value, mirroring marimo's precedence.
+
+    Detects (in order) marimo's ``_display_``/``_mime_`` protocols and the
+    IPython ``_repr_html_`` protocol by duck typing, so no optional dependency
+    (marimo, pandas, numpy) needs to be importable. Returns ``None`` whenever
+    the value has no rich representation, rendering fails, or the payload is
+    larger than ``_MAX_HTML_BYTES`` (the caller then falls back to ``repr``).
+    """
+    html: str | None = None
+    try:
+        display = getattr(value, "_display_", None)
+        if callable(display):
+            html = _render_html(display())
+        if html is None:
+            mime = getattr(value, "_mime_", None)
+            if callable(mime):
+                mimetype, data = mime()
+                html = _html_from_mime(mimetype, data)
+        if html is None:
+            repr_html = getattr(value, "_repr_html_", None)
+            if callable(repr_html):
+                result = repr_html()
+                html = result if isinstance(result, str) else None
+    except Exception:  # noqa: BLE001 - rich rendering is best-effort, never fatal.
+        return None
+    if html is None or not html.strip():
+        return None
+    if len(html.encode("utf-8", "replace")) > _MAX_HTML_BYTES:
+        return None
+    return html
+
+
 def _clear_trace() -> dict[str, Any]:
     return {"setup": [], "body": [], "returned": None}
 
@@ -93,7 +139,9 @@ class _Collector:
         self.loop_meta = loop_meta
         self.setup_order: list[str] = []
         self.setup_values: dict[str, str] = {}
+        self.setup_html: dict[str, str] = {}
         self.global_values: dict[str, str] = {}
+        self.global_html: dict[str, str] = {}
         self.body: list[dict[str, Any]] = []
         self.loop_stack: list[str] = []
         self.pass_stack: list[dict[str, Any]] = []
@@ -102,7 +150,7 @@ class _Collector:
 
     def record_iter(self, loop_id: str) -> None:
         instance = self._loop_instance(loop_id)
-        pass_record = {"cells": {}, "changed": [], "children": []}
+        pass_record = {"cells": {}, "cells_html": {}, "changed": [], "children": []}
         pass_record["_instance"] = instance
         instance["passes"].append(pass_record)
         self.pending_passes[loop_id] = pass_record
@@ -116,6 +164,7 @@ class _Collector:
             return
         pass_record = self.pass_stack[-1]
         pass_record["_snapshot"] = dict(self.global_values)
+        pass_record["_snapshot_html"] = dict(self.global_html)
         # exit_loop runs in the loop body's `finally`, so if an exception is
         # unwinding through it right now this pass is on the failure path.
         if sys.exc_info()[0] is not None:
@@ -125,11 +174,20 @@ class _Collector:
 
     def record_assign(self, name: str, value: Any, lineno: int) -> None:
         value_repr = repr(value)
+        value_html = _render_html(value)
         self.global_values[name] = value_repr
+        if value_html is not None:
+            self.global_html[name] = value_html
+        else:
+            self.global_html.pop(name, None)
         if not self.loop_stack:
             if name not in self.setup_order:
                 self.setup_order.append(name)
             self.setup_values[name] = value_repr
+            if value_html is not None:
+                self.setup_html[name] = value_html
+            else:
+                self.setup_html.pop(name, None)
             return
 
         pass_record = self.pass_stack[-1]
@@ -139,6 +197,8 @@ class _Collector:
         if name not in instance["_assignment_order"]:
             instance["_assignment_order"].append(name)
         pass_record["cells"][name] = value_repr
+        if value_html is not None:
+            pass_record["cells_html"][name] = value_html
         if name not in pass_record["changed"]:
             pass_record["changed"].append(name)
 
@@ -148,18 +208,27 @@ class _Collector:
 
     def record_return(self, value: Any, lineno: int) -> Any:
         self.returned = {"repr": repr(value)}
+        value_html = _render_html(value)
+        if value_html is not None:
+            self.returned["html"] = value_html
         return value
 
     def trace(self) -> dict[str, Any]:
         return {
             "setup": [
-                {"name": name, "repr": self.setup_values[name]}
+                self._setup_entry(name)
                 for name in self.setup_order
                 if name in self.setup_values
             ],
             "body": [self._serialize_loop(loop) for loop in self.body],
             "returned": self.returned,
         }
+
+    def _setup_entry(self, name: str) -> dict[str, Any]:
+        entry = {"name": name, "repr": self.setup_values[name]}
+        if name in self.setup_html:
+            entry["html"] = self.setup_html[name]
+        return entry
 
     def _loop_instance(self, loop_id: str) -> dict[str, Any]:
         container = self.pass_stack[-1]["children"] if self.pass_stack else self.body
@@ -192,22 +261,30 @@ class _Collector:
         passes = []
         for pass_record in loop["passes"]:
             snapshot = pass_record.get("_snapshot", {})
+            snapshot_html = pass_record.get("_snapshot_html", {})
             cells = {
                 name: pass_record["cells"].get(name, snapshot.get(name, ""))
                 for name in columns
                 if name in pass_record["cells"] or name in snapshot
             }
-            passes.append(
-                {
-                    "cells": cells,
-                    "changed": list(pass_record["changed"]),
-                    "failed": pass_record.get("_failed", False),
-                    "children": [
-                        self._serialize_loop(child)
-                        for child in pass_record["children"]
-                    ],
-                }
-            )
+            cells_html = {}
+            for name in columns:
+                if name in pass_record["cells_html"]:
+                    cells_html[name] = pass_record["cells_html"][name]
+                elif name not in pass_record["cells"] and name in snapshot_html:
+                    cells_html[name] = snapshot_html[name]
+            entry = {
+                "cells": cells,
+                "changed": list(pass_record["changed"]),
+                "failed": pass_record.get("_failed", False),
+                "children": [
+                    self._serialize_loop(child)
+                    for child in pass_record["children"]
+                ],
+            }
+            if cells_html:
+                entry["cells_html"] = cells_html
+            passes.append(entry)
         return {
             "kind": "loop",
             "loop_id": loop["loop_id"],
@@ -727,6 +804,7 @@ class LiveEdit(anywidget.AnyWidget):
         editable: bool = False,
         function_name: str | None = None,
         globalns: dict[str, Any] | None = None,
+        height: int | None = None,
         **widget_kwargs: Any,
     ) -> None:
         self._liveedit_args = tuple(args)
@@ -740,12 +818,20 @@ class LiveEdit(anywidget.AnyWidget):
             function_name=function_name,
             globalns=self._liveedit_globalns,
         )
+        if height is None:
+            # Fit the source by default: ~21px per rendered line (13px font *
+            # 1.55 line-height) plus top/bottom padding, floored at 520px so the
+            # trace panel keeps a roomy scroll area. Lines never wrap (they sit
+            # in an overflow-x panel), so a line-count estimate is accurate.
+            n_lines = len(code.splitlines()) or 1
+            height = max(520, n_lines * 21 + 40)
         super().__init__(
             code=code,
             trace=trace,
             annotations=annotations,
             error=error,
             editable=editable,
+            height=height,
             **widget_kwargs,
         )
 

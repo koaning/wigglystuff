@@ -9,6 +9,21 @@ function span(className, value) {
   return node;
 }
 
+// Render a value that may carry a rich HTML representation. Falls back to the
+// plain-text repr when no html is present. innerHTML does not execute <script>,
+// and the widget lives in a shadow root so styles stay isolated.
+function valueNode(className, reprValue, html) {
+  const node = document.createElement("span");
+  node.className = className;
+  if (html != null && html !== "") {
+    node.classList.add("liveedit-html");
+    node.innerHTML = html;
+  } else {
+    node.textContent = reprValue == null ? "" : String(reprValue);
+  }
+  return node;
+}
+
 function codeLine(line) {
   const row = document.createElement("div");
   row.className = "liveedit-line";
@@ -40,7 +55,7 @@ function kvRow(item) {
   row.title = item.repr;
   row.append(span("liveedit-kv-name", item.name.padEnd(6, " ")));
   row.append(text(" = "));
-  row.append(span("liveedit-value", item.repr));
+  row.append(valueNode("liveedit-value", item.repr, item.html));
   return row;
 }
 
@@ -59,7 +74,7 @@ function returnChip(returned, error) {
     return row;
   }
   row.textContent = "returned ";
-  const value = span("liveedit-return-value", returned.repr);
+  const value = valueNode("liveedit-return-value", returned.repr, returned.html);
   row.append(value);
   row.title = returned.repr;
   return row;
@@ -100,8 +115,15 @@ function tableForLoop(loop) {
     for (const column of loop.columns || []) {
       const cell = document.createElement("td");
       cell.dataset.var = column;
-      cell.textContent = pass.cells?.[column] ?? "";
-      cell.title = pass.cells?.[column] ?? "";
+      const reprValue = pass.cells?.[column] ?? "";
+      const html = pass.cells_html?.[column];
+      if (html != null && html !== "") {
+        cell.classList.add("liveedit-html");
+        cell.innerHTML = html;
+      } else {
+        cell.textContent = reprValue;
+      }
+      cell.title = reprValue;
       if ((pass.changed || []).includes(column)) {
         cell.classList.add("liveedit-changed");
       }
@@ -233,7 +255,7 @@ function draw({ model, root }) {
   root.className = "liveedit-root";
   root.dataset.theme = model.get("theme") || "auto";
   root.style.width = `${model.get("width")}px`;
-  root.style.maxHeight = `${model.get("height")}px`;
+  root.style.setProperty("--liveedit-height", `${model.get("height")}px`);
 
   const card = document.createElement("div");
   card.className = "liveedit-card";

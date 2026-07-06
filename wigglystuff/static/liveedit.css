@@ -56,6 +56,8 @@
   border-radius: 8px;
   display: grid;
   grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  height: var(--liveedit-height);
   overflow: hidden;
 }
 
@@ -64,6 +66,7 @@
   font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
   font-size: 13px;
   line-height: 1.55;
+  min-height: 0;
   min-width: 0;
   padding: 16px 18px;
 }
@@ -71,12 +74,12 @@
 .liveedit-code {
   background: var(--liveedit-panel);
   border-right: 1px solid var(--liveedit-border);
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .liveedit-trace {
   background: var(--liveedit-card);
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .liveedit-line {
@@ -145,6 +148,31 @@
 
 .liveedit-value {
   color: var(--liveedit-code);
+}
+
+/* Rich HTML values: keep them scrollable and bounded so a DataFrame or figure
+   never overflows the panel. Applies to setup/return spans and loop cells. */
+.liveedit-value.liveedit-html,
+.liveedit-return-value.liveedit-html {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 260px;
+  overflow: auto;
+  vertical-align: top;
+  white-space: normal;
+}
+
+td.liveedit-html {
+  max-width: 320px;
+  text-align: left;
+  white-space: normal;
+}
+
+.liveedit-html img,
+.liveedit-html svg,
+.liveedit-html table {
+  height: auto;
+  max-width: 100%;
 }
 
 .liveedit-loopblock {
@@ -314,6 +342,14 @@
 @media (max-width: 760px) {
   .liveedit-card {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
+    height: auto;
+  }
+
+  .liveedit-code,
+  .liveedit-trace {
+    overflow-x: auto;
+    overflow-y: visible;
   }
 
   .liveedit-code {
