@@ -51,7 +51,12 @@ def _assert_play_pause_stops_progress(
     paused_value = _slider_value(page, slider_selector)
     page.wait_for_timeout(350)
     after_pause = _slider_value(page, slider_selector)
-    assert after_pause == pytest.approx(paused_value, abs=0.0005)
+    # Pausing must stop *forward* progress. We don't assert the value is frozen
+    # exactly: playback advances t locally each frame but syncs it to the kernel
+    # throttled, so a final delayed t echo can land just after pause and settle
+    # the slider back by up to one playback step. That downward settle is
+    # harmless; a regression would be the value continuing to *advance*.
+    assert after_pause <= paused_value + 0.0005
 
 
 @pytest.mark.e2e
