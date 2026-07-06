@@ -127,7 +127,7 @@ def _(LiveEdit):
         return guess
 
 
-    LiveEdit.inspect_run(sqrt_newton, 30, steps=5)
+    LiveEdit.inspect_run(sqrt_newton, 30, steps=15)
     return
 
 
