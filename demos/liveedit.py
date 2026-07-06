@@ -2,6 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "anywidget",
+#     "dicekit",
 #     "drawdata",
 #     "marimo",
 #     "wigglystuff==0.5.12",
@@ -10,7 +11,7 @@
 
 import marimo
 
-__generated_with = "0.23.13"
+__generated_with = "0.23.3"
 app = marimo.App(width="full")
 
 
@@ -128,6 +129,80 @@ def _(LiveEdit):
 
 
     LiveEdit.inspect_run(sqrt_newton, 30, steps=5)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Rich HTML values
+
+    When a traced value exposes a rich representation (`_repr_html_`, marimo's
+    `_mime_`/`_display_`), the trace panel renders that HTML inline instead of
+    the plain `repr`. Any value assigned to a variable or returned shows up —
+    no `print` needed.
+    """)
+    return
+
+
+@app.cell
+def _(LiveEdit):
+    class Bar:
+        """A value whose HTML repr is a little colored bar."""
+
+        def __init__(self, value):
+            self.value = value
+
+        def __repr__(self):
+            return f"Bar({self.value})"
+
+        def _repr_html_(self):
+            width = min(self.value, 100)
+            return (
+                '<div style="display:flex;align-items:center;gap:6px">'
+                f'<div style="background:#0969da;height:14px;'
+                f'border-radius:3px;width:{width}px"></div>'
+                f"<span>{self.value}</span>"
+                "</div>"
+            )
+
+    def running_totals(steps):
+        total = 0
+        bar = Bar(0)
+        for step in steps:
+            total = total + step
+            bar = Bar(total)
+        return bar
+
+    LiveEdit.inspect_run(running_totals, [10, 15, 30, 25])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ### Real-world showcase: `dicekit`
+
+    A [`dicekit`](https://github.com/koaning/dicekit) `Dice` has a boring
+    `repr` (just an object address) but a rich `_repr_html_` that draws its
+    probability distribution. As we add dice together, the trace shows the
+    running distribution chart for every pass — no `print`, just plain
+    assignments.
+    """)
+    return
+
+
+@app.cell
+def _(LiveEdit):
+    from dicekit import Dice
+
+    def sum_of_dice(n):
+        total = Dice.from_sides(6)
+        for _ in range(n - 1):
+            total = total + total
+        return total
+
+    LiveEdit.inspect_run(sum_of_dice, 8)
     return
 
 
