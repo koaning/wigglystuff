@@ -1,0 +1,289 @@
+.liveedit-root {
+  --liveedit-bg: #f4f4f5;
+  --liveedit-card: #ffffff;
+  --liveedit-panel: #fcfcfd;
+  --liveedit-muted-panel: #fafafb;
+  --liveedit-border: #e2e2e6;
+  --liveedit-code: #2b2b31;
+  --liveedit-muted: #8a8a94;
+  --liveedit-accent: #0969da;
+  --liveedit-kw: #8250df;
+  --liveedit-fn: #0969da;
+  --liveedit-num: #0969da;
+  --liveedit-str: #a1470b;
+  --liveedit-comment: #6a737d;
+  --liveedit-var-strong: rgba(245, 197, 24, 0.55);
+  --liveedit-var-soft: rgba(245, 197, 24, 0.26);
+  --liveedit-loop-rgb: 26, 127, 90;
+  --liveedit-for: #0969da;
+  --liveedit-while: #8250df;
+  color: var(--liveedit-code);
+  color-scheme: light dark;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.liveedit-root[data-theme="dark"],
+.dark .liveedit-root[data-theme="auto"],
+.dark-theme .liveedit-root[data-theme="auto"],
+[data-theme="dark"] .liveedit-root[data-theme="auto"] {
+  --liveedit-bg: #18181b;
+  --liveedit-card: #242428;
+  --liveedit-panel: #202024;
+  --liveedit-muted-panel: #2a2a2f;
+  --liveedit-border: #3f3f46;
+  --liveedit-code: #f4f4f5;
+  --liveedit-muted: #a1a1aa;
+  --liveedit-accent: #7dd3fc;
+  --liveedit-kw: #c4b5fd;
+  --liveedit-fn: #7dd3fc;
+  --liveedit-num: #7dd3fc;
+  --liveedit-str: #fdba74;
+  --liveedit-comment: #a1a1aa;
+  --liveedit-var-strong: rgba(245, 197, 24, 0.42);
+  --liveedit-var-soft: rgba(245, 197, 24, 0.18);
+  --liveedit-loop-rgb: 74, 222, 128;
+}
+
+.liveedit-card {
+  background: var(--liveedit-card);
+  border: 1px solid var(--liveedit-border);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+  overflow: hidden;
+}
+
+.liveedit-code,
+.liveedit-trace {
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  min-width: 0;
+  padding: 16px 18px;
+}
+
+.liveedit-code {
+  background: var(--liveedit-panel);
+  border-right: 1px solid var(--liveedit-border);
+  overflow-x: auto;
+}
+
+.liveedit-trace {
+  background: var(--liveedit-card);
+  overflow-x: auto;
+}
+
+.liveedit-line {
+  cursor: default;
+  margin: 0 -6px;
+  padding: 0 6px;
+  white-space: pre;
+}
+
+.liveedit-line-assign {
+  background: var(--liveedit-var-soft);
+  border-radius: 4px;
+}
+
+.liveedit-loop-d1 {
+  background: rgba(var(--liveedit-loop-rgb), 0.12);
+}
+
+.liveedit-loop-d2 {
+  background: rgba(var(--liveedit-loop-rgb), 0.24);
+}
+
+.liveedit-var {
+  border-radius: 3px;
+  padding: 0 1px;
+}
+
+.liveedit-var-active {
+  background: var(--liveedit-var-strong);
+}
+
+.liveedit-kw {
+  color: var(--liveedit-kw);
+}
+
+.liveedit-fn {
+  color: var(--liveedit-fn);
+}
+
+.liveedit-num {
+  color: var(--liveedit-num);
+}
+
+.liveedit-str {
+  color: var(--liveedit-str);
+}
+
+.liveedit-comment {
+  color: var(--liveedit-comment);
+}
+
+.liveedit-kv-block {
+  margin-bottom: 16px;
+}
+
+.liveedit-kv {
+  border-radius: 4px;
+  margin: 0 -4px;
+  padding: 0 4px;
+  white-space: pre;
+}
+
+.liveedit-kv-name {
+  color: var(--liveedit-muted);
+}
+
+.liveedit-value {
+  color: var(--liveedit-code);
+}
+
+.liveedit-loopblock {
+  margin: 0 0 14px;
+  padding: 8px 10px;
+}
+
+.liveedit-loopblock-nested {
+  margin-left: 18px;
+  padding-left: 12px;
+}
+
+.liveedit-loop-lit {
+  background: rgba(var(--liveedit-loop-rgb), 0.13);
+}
+
+.liveedit-badgerow {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.liveedit-badge {
+  border-radius: 999px;
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 1px 7px;
+  text-transform: uppercase;
+}
+
+.liveedit-for {
+  background: #e3f0ff;
+  color: var(--liveedit-for);
+}
+
+.liveedit-while {
+  background: #f0e9fb;
+  color: var(--liveedit-while);
+}
+
+.liveedit-table {
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 2px 0 6px;
+  width: 100%;
+}
+
+.liveedit-table th,
+.liveedit-table td {
+  border: 1px solid var(--liveedit-border);
+  min-width: 44px;
+  padding: 4px 12px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.liveedit-table td {
+  background: var(--liveedit-card);
+  color: var(--liveedit-code);
+  font-weight: 300;
+}
+
+.liveedit-table th {
+  background: var(--liveedit-muted-panel);
+  color: var(--liveedit-muted);
+  font-weight: 600;
+}
+
+.liveedit-table .liveedit-rowlabel,
+.liveedit-table .liveedit-spacer {
+  background: transparent;
+  border: none;
+  color: var(--liveedit-muted);
+  min-width: 0;
+}
+
+.liveedit-rowlabel {
+  font-size: 11.5px;
+  padding-right: 10px;
+  text-align: right;
+}
+
+.liveedit-spacer {
+  padding: 0;
+  width: 100%;
+}
+
+.liveedit-changed {
+  color: var(--liveedit-code);
+  font-weight: 700;
+}
+
+.liveedit-col-active {
+  background: var(--liveedit-var-soft) !important;
+}
+
+.liveedit-child-cell {
+  background: transparent !important;
+  border: none !important;
+  padding: 4px 0 0 0 !important;
+  text-align: left !important;
+}
+
+.liveedit-return {
+  border-radius: 4px;
+  color: var(--liveedit-muted);
+  display: block;
+  margin: 4px 0 0 -4px;
+  padding: 0 4px;
+}
+
+.liveedit-return-active {
+  background: var(--liveedit-var-soft);
+}
+
+.liveedit-return-value {
+  color: var(--liveedit-accent);
+  font-weight: 700;
+}
+
+.liveedit-muted {
+  color: var(--liveedit-muted);
+}
+
+.liveedit-error {
+  background: rgba(207, 34, 46, 0.08);
+  border: 1px solid rgba(207, 34, 46, 0.28);
+  border-radius: 6px;
+  color: #cf222e;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  margin-bottom: 14px;
+  padding: 8px 10px;
+}
+
+@media (max-width: 760px) {
+  .liveedit-card {
+    grid-template-columns: 1fr;
+  }
+
+  .liveedit-code {
+    border-bottom: 1px solid var(--liveedit-border);
+    border-right: none;
+  }
+}

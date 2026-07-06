@@ -1,6 +1,8 @@
 """Public widget exports for the wigglystuff package."""
 
 import importlib.metadata
+import tomllib
+from pathlib import Path
 
 from .annotation import AnnotationWidget
 from .altair_widget import AltairWidget
@@ -24,6 +26,7 @@ from .grid_draw import GridDraw
 from .hover_zoom import HoverZoom
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
+from .live_edit import LiveEdit, inspect_run
 from .matrix import Matrix
 from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
@@ -45,7 +48,11 @@ from .wandb_chart import WandbChart
 from .utils import forecast_chart
 from .webcam_capture import WebcamCapture
 
-__version__ = importlib.metadata.version("wigglystuff")
+try:
+    __version__ = importlib.metadata.version("wigglystuff")
+except importlib.metadata.PackageNotFoundError:
+    _pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
+    __version__ = tomllib.loads(_pyproject.read_text())["project"]["version"]
 
 __all__ = [
     "AnnotationWidget",
@@ -69,6 +76,7 @@ __all__ = [
     "GraphWidget",
     "GridDraw",
     "KeystrokeWidget",
+    "LiveEdit",
     "Matrix",
     "ModuleTreeWidget",
     "Neo4jWidget",
@@ -95,4 +103,5 @@ __all__ = [
     "ImageRefreshWidget",
     "ProgressBar",
     "forecast_chart",
+    "inspect_run",
 ]

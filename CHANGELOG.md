@@ -2,10 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.12] - 2026-07-06
 
 ### Added
 
+- `LiveEdit`: new read-only function trace widget. `LiveEdit.inspect_run(fn, *args, **kwargs)` instruments one Python function body, runs it once with private Python-side args, and renders setup values, loop passes, nested loop traces, and return values with source-linked hover highlighting. Trace values are captured as `repr(...)` strings so optional objects such as numpy arrays remain supported without adding hard dependencies.
 - `GridDraw`: new drawable square-grid widget for marking dots on grid intersections and orthogonal unit line segments between adjacent intersections. It supports dot, line, and eraser modes; click toggles a single item, drag paints a stroke, undo restores each completed gesture, clear is undoable, and a local theme toggle can force light/dark rendering. The synced data is plain Python-friendly structure: `dots` as `[[row, col], ...]` and `lines` as `{"from": [r, c], "to": [r, c], "width": int}` dictionaries. `line_width` accepts either a fixed integer or a list of widths that enables the toolbar picker.
 
 ### Changed

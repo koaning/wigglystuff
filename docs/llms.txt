@@ -23,6 +23,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [GridDraw](https://koaning.github.io/wigglystuff/reference/grid-draw.md): Drawable square grid for marking intersections and orthogonal unit segments
 - [GraphWidget](https://koaning.github.io/wigglystuff/reference/graph-widget.md): Programmatic force-directed graph visualization with named/sized/colored nodes and edges
 - [KeystrokeWidget](https://koaning.github.io/wigglystuff/reference/keystroke.md): Keyboard input capture
+- [LiveEdit](https://koaning.github.io/wigglystuff/reference/live-edit.md): Inspect one run of a Python function with source-linked loop traces
 - [WebkitSpeechToText](https://koaning.github.io/wigglystuff/reference/talk.md): Speech-to-text input
 - [ColorPicker](https://koaning.github.io/wigglystuff/reference/color-picker.md): Color selection widget
 - [CopyToClipboard](https://koaning.github.io/wigglystuff/reference/copy-to-clipboard.md): Copy text to clipboard
