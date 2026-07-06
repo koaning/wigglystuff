@@ -216,6 +216,15 @@ just the setup block and return chip.
 
 ## Interaction model (frontend)
 
+> **Canonical reference:** the interaction was designed against a working
+> mockup, kept alongside this spec as
+> [`2026-07-06-liveedit-inspect-run-mockup.html`](./2026-07-06-liveedit-inspect-run-mockup.html)
+> (open it in a browser). It is a static HTML/CSS/JS prototype of the two
+> reference examples (binary search + nested `grid_sum`) with the full hover
+> behavior working. Where prose below and the mockup disagree, the mockup wins —
+> it is the source of truth for look and feel. The implementation should
+> reproduce its behavior; its markup/CSS/JS are a starting point, not a mandate.
+
 **Selection is line-based.** Every row — a code line, a key/value row, a loop's
 pill row, a table row — is one hover target spanning the **full width** of its
 panel. Pointing anywhere along a row's height selects that row's subject; a more
