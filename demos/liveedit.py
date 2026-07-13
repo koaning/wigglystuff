@@ -69,7 +69,7 @@ def binary_search(key, array):
 @app.cell
 def _(LiveEdit, mo):
     binary_trace = mo.ui.anywidget(
-        LiveEdit.inspect_run(binary_search, key="g", array=list("abcdef123487561983274132412g"))
+        LiveEdit.inspect_run(binary_search, key="q", array=list("abcdefghijklmnopqrstuvwxyz"))
     )
     binary_trace
     return
@@ -83,7 +83,7 @@ def _(LiveEdit):
         return a
 
 
-    LiveEdit.inspect_run(gcd, 21 * 192, 21 * 7)
+    LiveEdit.inspect_run(gcd, 2**5, 2**4 + 1)
     return
 
 
@@ -134,38 +134,6 @@ def _(LiveEdit):
     return
 
 
-@app.cell
-def _(LiveEdit):
-    def first_primes(limit):
-        primes = []
-        for n in range(2, limit + 1):
-            is_prime = True
-            for p in primes:
-                if n % p == 0:
-                    is_prime = False
-                    break
-            if is_prime:
-                primes = primes + [n]
-        return primes
-
-
-    LiveEdit.inspect_run(first_primes, 12)
-    return
-
-
-@app.cell
-def _(LiveEdit):
-    def sqrt_newton(x, steps=5):
-        guess = x / 2
-        for step in range(steps):
-            guess = 0.5 * (guess + x / guess)
-        return guess
-
-
-    LiveEdit.inspect_run(sqrt_newton, 30, steps=15)
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
@@ -200,6 +168,7 @@ def _(LiveEdit):
                 "</div>"
             )
 
+
     def running_totals(steps):
         total = 0
         bar = Bar(0)
@@ -207,6 +176,7 @@ def _(LiveEdit):
             total = total + step
             bar = Bar(total)
         return bar
+
 
     LiveEdit.inspect_run(running_totals, [10, 15, 30, 25])
     return
@@ -230,11 +200,13 @@ def _(mo):
 def _(LiveEdit):
     from dicekit import Dice
 
+
     def sum_of_dice(n):
         total = Dice.from_sides(6)
         for _ in range(n - 1):
             total = total + total
         return total
+
 
     LiveEdit.inspect_run(sum_of_dice, 8)
     return
@@ -243,6 +215,7 @@ def _(LiveEdit):
 @app.cell
 def _(LiveEdit):
     import numpy as np
+
 
     def gradient_descent(start, steps=12):
         x = start
