@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `ParallelCoordinates` now uses compact Annotation-style controls, readable system typography, and clearer selected-count text. Draggable column headings show a persistent six-dot grip, `grab` feedback, and single-line truncation with the full column name and reorder instructions available on hover.
+
 ## [0.5.13] - 2026-07-06
 
 ### Added
