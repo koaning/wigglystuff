@@ -92,17 +92,53 @@
 }
 
 .pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] {
+    align-items: center;
+    background: var(--pc-bg-secondary);
+    border: 1px solid var(--pc-border);
+    border-radius: 999px;
     color: var(--pc-text-muted) !important;
+    display: inline-flex;
     font-family: inherit !important;
-    font-size: 12px !important;
+    font-size: 0 !important;
     font-variant-numeric: tabular-nums;
+    height: 28px;
     margin: 0 !important;
+    padding: 0 10px;
     white-space: nowrap;
 }
 
-.pc-wrapper .container-fluid .d-flex.flex-wrap strong,
-.pc-wrapper .container-fluid .d-flex.flex-wrap span {
+.pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"]::before {
+    content: "Selected";
+    font-size: 12px;
+    margin-right: 6px;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] strong,
+.pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] span {
+    display: inline !important;
+    font-size: 12px;
     font-variant-numeric: tabular-nums;
+    min-width: 0 !important;
+    text-align: inherit !important;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] strong {
+    color: var(--pc-text);
+    font-weight: 600;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] strong:first-of-type::after {
+    color: var(--pc-text-muted);
+    content: " / ";
+    font-weight: 400;
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] span::before {
+    content: " · ";
+}
+
+.pc-wrapper .container-fluid .d-flex.flex-wrap div[style*="font-family: monospace"] span::after {
+    content: "%";
 }
 
 .pc-wrapper .btn.btn-sm {
