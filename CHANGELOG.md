@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.15] - 2026-07-14
+
+### Fixed
+
+- `ParallelCoordinates`: dragging an axis label no longer occasionally replaces the chart with HiPlot's `Cannot read properties of null (reading 'pos')` error fallback.
+
 ## [0.5.14] - 2026-07-14
 
 ### Changed
