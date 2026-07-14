@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `FramePlayer`: play a sequence of images as an inline, optionally-looping "video". Accepts PIL images, file paths, URLs, bytes, base64 strings, or matplotlib figures (mixed is fine), and renders the current frame with play/pause/loop controls and a scrubber — no second cell that reads a slider value and re-renders.
+
 ## [0.5.15] - 2026-07-14
 
 ### Fixed

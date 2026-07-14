@@ -208,6 +208,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/play_slider.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/play-slider/">API</a><a href="reference/play-slider.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">FramePlayer</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/frame_player.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/frameplayer.webp" alt="FramePlayer"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/frame_player.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/frame-player/">API</a><a href="reference/frame-player.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">CircularSlider</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/circle-slider.webp" alt="CircularSlider"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/circular-slider/">API</a><a href="reference/circular-slider.md">MD</a></div>
