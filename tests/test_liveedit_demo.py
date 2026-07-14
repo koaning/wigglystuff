@@ -1,11 +1,11 @@
 from pathlib import Path
 
 
-def test_liveedit_demo_replaces_grid_sum_with_algorithm_sampler():
+def test_liveedit_demo_wires_functions_through_inspect_run():
     source = Path("demos/liveedit.py").read_text()
 
     assert "grid_sum" not in source
-    for name in ["gcd", "insertion_sort", "first_primes", "sqrt_newton"]:
+    for name in ["gcd", "insertion_sort", "binary_search", "gradient_descent"]:
         assert f"def {name}" in source
         assert f"LiveEdit.inspect_run({name}" in source
 
