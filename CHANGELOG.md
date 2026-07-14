@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.16] - 2026-07-14
+
+### Added
+
+- `AsyncFlow`: a new widget that traces a single `async` run live and renders it as a swimlane timeline. `await AsyncFlow.trace(main())` runs the coroutine on the notebook's own event loop and streams task activity into the widget as it happens — one lane per task, solid bars for running and hatched bars for suspended-at-`await`, with child tasks nested under their parent (depth-first) and per-task timing (ran vs waited) on hover. Capture uses `asyncio` task hooks plus `sys.monitoring`, so it requires Python 3.12+.
+
 ## [0.5.15] - 2026-07-14
 
 ### Fixed
