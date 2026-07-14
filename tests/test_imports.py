@@ -102,3 +102,13 @@ def test_no_unexpected_dependencies():
     }
     allowed = {"anywidget", "drawdata"}
     assert deps == allowed, f"Unexpected dependencies: {deps - allowed}"
+
+
+def test_requires_python_matches_tomllib_availability():
+    """tomllib is stdlib only from 3.11; __init__.py imports it (issue #267)."""
+    import tomllib
+    from pathlib import Path
+
+    pyproject = Path(__file__).parent.parent / "pyproject.toml"
+    data = tomllib.loads(pyproject.read_text())
+    assert data["project"]["requires-python"] == ">=3.11"
