@@ -28,14 +28,15 @@ class AsyncFlowLogger:
     Requires ``sys.monitoring`` (Python 3.12+).
     """
 
-    _TOOL = sys.monitoring.PROFILER_ID
-
     def __init__(
         self,
         files: Iterable[str],
         on_event: Callable[[dict[str, Any]], None] | None = None,
     ) -> None:
         self._files = set(files)
+        # sys.monitoring tool id claimed for the duration of a run; chosen from
+        # a free slot in __aenter__ so we never evict a profiler/coverage tool.
+        self._tool_id: int | None = None
         # Code objects of coroutines we've seen spawned as tracked tasks. Only
         # these get fine-grained suspend/resume events — this excludes the
         # caller frame (e.g. the notebook cell awaiting us), which shares the
@@ -128,22 +129,30 @@ class AsyncFlowLogger:
         self._loop.set_task_factory(self._task_factory)
 
         mon = sys.monitoring
-        if mon.get_tool(self._TOOL) is not None:
-            mon.free_tool_id(self._TOOL)
-        mon.use_tool_id(self._TOOL, "asyncflow")
+        # Claim the first free tool id rather than clobbering a reserved slot
+        # (PROFILER_ID/COVERAGE_ID/etc.) that another tool may be using.
+        self._tool_id = next((i for i in range(6) if mon.get_tool(i) is None), None)
+        if self._tool_id is None:
+            raise RuntimeError(
+                "AsyncFlow needs a free sys.monitoring tool id but all six are "
+                "in use (profiler/coverage/debugger active?)."
+            )
+        mon.use_tool_id(self._tool_id, "asyncflow")
         ev = mon.events
-        mon.set_events(self._TOOL, ev.PY_RESUME | ev.PY_YIELD | ev.PY_RETURN)
-        mon.register_callback(self._TOOL, ev.PY_RESUME, self._on_resume)
-        mon.register_callback(self._TOOL, ev.PY_YIELD, self._on_yield)
-        mon.register_callback(self._TOOL, ev.PY_RETURN, self._on_return)
+        mon.set_events(self._tool_id, ev.PY_RESUME | ev.PY_YIELD | ev.PY_RETURN)
+        mon.register_callback(self._tool_id, ev.PY_RESUME, self._on_resume)
+        mon.register_callback(self._tool_id, ev.PY_YIELD, self._on_yield)
+        mon.register_callback(self._tool_id, ev.PY_RETURN, self._on_return)
         return self
 
     async def __aexit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:
         mon = sys.monitoring
-        mon.set_events(self._TOOL, 0)
-        for ev in (mon.events.PY_RESUME, mon.events.PY_YIELD, mon.events.PY_RETURN):
-            mon.register_callback(self._TOOL, ev, None)
-        mon.free_tool_id(self._TOOL)
+        if self._tool_id is not None:
+            mon.set_events(self._tool_id, 0)
+            for ev in (mon.events.PY_RESUME, mon.events.PY_YIELD, mon.events.PY_RETURN):
+                mon.register_callback(self._tool_id, ev, None)
+            mon.free_tool_id(self._tool_id)
+            self._tool_id = None
         if self._loop is not None:
             self._loop.set_task_factory(None)
         return False
