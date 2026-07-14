@@ -80,46 +80,50 @@ def _(mo, player):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## Fancier: generative art from PIL images
+    ## Fancier: pixel art from PIL images
 
     `FramePlayer` takes PIL images directly, so any drawing library works. Below
-    is a phyllotaxis "sunflower" spiral drawn with `PIL.ImageDraw` — each frame
-    spins the pattern and cycles the hue, and because both wrap over a full turn
-    the loop is seamless.
+    is a set of recursive concentric squares drawn pixel-by-pixel with `PIL` on a
+    small grid and scaled up with nearest-neighbour for a chunky, pixel-y look. A
+    gentle lightness wave flows inward, and since it cycles over a full period the
+    loop is seamless.
     """)
     return
 
 
 @app.cell
 def _():
-    import colorsys
     import math
 
-    from PIL import Image, ImageDraw
+    from PIL import Image
 
-    def make_art_frames(n_frames=48, size=420, n_dots=520):
-        golden_angle = math.pi * (3 - math.sqrt(5))  # ~137.5°
-        center = size / 2
-        scale = (size * 0.46) / math.sqrt(n_dots)
+    def make_art_frames(n_frames=48, grid=44, scale=9):
         frames = []
         for f in range(n_frames):
             t = f / n_frames  # 0 -> 1 across the loop
-            img = Image.new("RGB", (size, size), (11, 14, 20))
-            draw = ImageDraw.Draw(img)
-            spin = t * 2 * math.pi
-            for i in range(n_dots):
-                r = scale * math.sqrt(i)
-                theta = i * golden_angle + spin
-                x = center + r * math.cos(theta)
-                y = center + r * math.sin(theta)
-                hue = (i / n_dots + t) % 1.0
-                cr, cg, cb = colorsys.hsv_to_rgb(hue, 0.85, 1.0)
-                dot = 1.5 + 5.5 * (i / n_dots)  # grow toward the rim
-                draw.ellipse(
-                    [x - dot, y - dot, x + dot, y + dot],
-                    fill=(int(cr * 255), int(cg * 255), int(cb * 255)),
+            img = Image.new("RGB", (grid, grid), (30, 36, 44))
+            px = img.load()
+
+            def rings(lo, hi, depth):
+                if lo > hi:
+                    return
+                # calm single-hue teal with a soft lightness wave flowing inward
+                light = 0.56 + 0.16 * math.sin(2 * math.pi * (depth * 0.11 - t))
+                color = (
+                    int(255 * light * 0.62),
+                    int(255 * light * 0.92),
+                    int(255 * light * 0.86),
                 )
-            frames.append(img)
+                for i in range(lo, hi + 1):
+                    px[i, lo] = color
+                    px[i, hi] = color
+                    px[lo, i] = color
+                    px[hi, i] = color
+                rings(lo + 1, hi - 1, depth + 1)
+
+            rings(0, grid - 1, 0)
+            # nearest-neighbour upscale keeps the crisp, pixel-y edges
+            frames.append(img.resize((grid * scale, grid * scale), Image.NEAREST))
         return frames
 
     return (make_art_frames,)
@@ -128,7 +132,7 @@ def _():
 @app.cell
 def _(FramePlayer, make_art_frames, mo):
     art_player = mo.ui.anywidget(
-        FramePlayer(make_art_frames(), interval_ms=60, loop=True)
+        FramePlayer(make_art_frames(), interval_ms=90, loop=True)
     )
     art_player
     return
