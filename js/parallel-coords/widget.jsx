@@ -89,7 +89,7 @@ function render({ model, el }) {
     if (selectedGroup) {
       selectedGroup.style.display = "flex";
       selectedGroup.style.alignItems = "center";
-      selectedGroup.style.marginLeft = "8px";
+      selectedGroup.style.marginLeft = "auto";
       const stat = selectedGroup.querySelector("div");
       if (stat) {
         stat.style.margin = "0";
@@ -97,6 +97,14 @@ function render({ model, el }) {
         stat.style.fontSize = "12px";
       }
     }
+
+    el.querySelectorAll(".pc-wrapper .label-name").forEach((label) => {
+      const fullName = (label.textContent || "").trim();
+      if (!fullName) return;
+      const instructions = `${fullName} — drag horizontally to reorder; right-click for options`;
+      label.title = instructions;
+      label.setAttribute("aria-label", instructions);
+    });
   }
 
   function ensureDomObserver() {

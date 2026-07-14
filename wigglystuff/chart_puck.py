@@ -292,18 +292,7 @@ class ChartPuck(anywidget.AnyWidget):
                 self.x = list(x_vals)
                 self.y = list(y_vals)
 
-            def export_kmeans(self, n_init: int = 1, max_iter: int = 300, **kwargs):
-                import numpy as np
-                from sklearn.cluster import KMeans
-
-                centroids = np.array(list(zip(self.x, self.y)))
-                return KMeans(
-                    n_clusters=len(self.x),
-                    init=centroids,
-                    n_init=n_init,
-                    max_iter=max_iter,
-                    **kwargs,
-                )
+            export_kmeans = cls.export_kmeans
 
         _stub = _InitialChartPuckProxy(x_list, y_list)
         draw_fn(ax, _stub)

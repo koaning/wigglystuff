@@ -5,13 +5,13 @@
 #     "numpy",
 #     "polars",
 #     "scikit-learn",
-#     "wigglystuff==0.3.1",
+#     "wigglystuff==0.5.14",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.23.10"
+__generated_with = "0.23.3"
 app = marimo.App()
 
 
