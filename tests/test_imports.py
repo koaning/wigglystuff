@@ -29,6 +29,10 @@ def test_import_edge_draw():
     from wigglystuff.edge_draw import EdgeDraw
 
 
+def test_import_frame_player():
+    from wigglystuff.frame_player import FramePlayer
+
+
 def test_import_gamepad():
     from wigglystuff.gamepad import GamepadWidget
 

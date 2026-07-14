@@ -7,6 +7,7 @@ from pathlib import Path
 from .annotation import AnnotationWidget
 from .altair_widget import AltairWidget
 from .api_doc import ApiDoc
+from .async_flow import AsyncFlow
 from .bezier_curve import BezierCurve
 from .cell_tour import CellTour
 from .chart_puck import ChartPuck
@@ -20,6 +21,7 @@ from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
 from .excalidraw import Excalidraw
+from .frame_player import FramePlayer
 from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
 from .grid_draw import GridDraw
@@ -59,6 +61,7 @@ __all__ = [
     "AnnotationWidget",
     "AltairWidget",
     "ApiDoc",
+    "AsyncFlow",
     "BezierCurve",
     "CellTour",
     "ChartPuck",
@@ -73,6 +76,7 @@ __all__ = [
     "EdgeDraw",
     "EnvConfig",
     "Excalidraw",
+    "FramePlayer",
     "GamepadWidget",
     "GraphWidget",
     "GridDraw",

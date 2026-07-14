@@ -49,10 +49,12 @@ nav = [
         { AltairWidget = "reference/altair-widget.md" },
         { ApiDoc = "reference/api-doc.md" },
         { PlaySlider = "reference/play-slider.md" },
+        { FramePlayer = "reference/frame-player.md" },
         { CircularSlider = "reference/circular-slider.md" },
         { HoverZoom = "reference/hover-zoom.md" },
         { Treemap = "reference/treemap.md" },
         { NestedTable = "reference/nested-table.md" },
+        { AsyncFlow = "reference/async-flow.md" },
         { Utils = "reference/utils.md" },
     ] },
 ]

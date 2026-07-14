@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - `ManimWeb`: run a [manim-web](https://github.com/maloyan/manim-web) (browser Manim) scene inline in a notebook. The engine is loaded from a CDN and your scene JavaScript runs with the `manim` namespace, a `container` element, and `width`/`height`/`model` in scope. Use manim-web's own `Player` for a full playback UI (play/pause, scrub timeline with segment markers, speed, fullscreen, export; `autoPlay`/`loop`/`backgroundColor` options). The scene source (`code` or `src`) can be inline JavaScript, a local `.js` file path, or an `http(s)://` URL — files and URLs are resolved in Python at construction time, so the browser always gets plain JS. JS runtime errors surface via the `error` traitlet.
+- `AsyncFlow`: a new widget that traces a single `async` run live and renders it as a swimlane timeline. `await AsyncFlow.trace(main())` runs the coroutine on the notebook's own event loop and streams task activity into the widget as it happens — one lane per task, solid bars for running and hatched bars for suspended-at-`await`, with child tasks nested under their parent (depth-first) and per-task timing (ran vs waited) on hover. Capture uses `asyncio` task hooks plus `sys.monitoring`, so it requires Python 3.12+.
+- `FramePlayer`: play a sequence of images as an inline, optionally-looping "video". Accepts PIL images, file paths, URLs, bytes, base64 strings, or matplotlib figures (mixed is fine), and renders the current frame with play/pause/loop controls and a scrubber — no second cell that reads a slider value and re-renders.
 
 ## [0.5.15] - 2026-07-14
 

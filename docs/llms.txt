@@ -25,6 +25,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [KeystrokeWidget](https://koaning.github.io/wigglystuff/reference/keystroke.md): Keyboard input capture
 - [LiveEdit](https://koaning.github.io/wigglystuff/reference/live-edit.md): Inspect one run of a Python function with source-linked loop traces
 - [ManimWeb](https://koaning.github.io/wigglystuff/reference/manim-web.md): Run a manim-web (browser Manim) scene from a JS string, local file, or URL
+- [AsyncFlow](https://koaning.github.io/wigglystuff/reference/async-flow.md): Trace one async run live as a swimlane timeline of task spawn/suspend/resume/done (Python 3.12+)
 - [WebkitSpeechToText](https://koaning.github.io/wigglystuff/reference/talk.md): Speech-to-text input
 - [ColorPicker](https://koaning.github.io/wigglystuff/reference/color-picker.md): Color selection widget
 - [CopyToClipboard](https://koaning.github.io/wigglystuff/reference/copy-to-clipboard.md): Copy text to clipboard
@@ -43,6 +44,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [SplineDraw](https://koaning.github.io/wigglystuff/reference/spline-draw.md): Draw scatter points with Python-computed spline curve fitting
 - [ApiDoc](https://koaning.github.io/wigglystuff/reference/api-doc.md): Renders API docs for Python classes and functions directly in notebooks
 - [PlaySlider](https://koaning.github.io/wigglystuff/reference/play-slider.md): Slider with play/pause button for auto-advancing values at a configurable pace
+- [FramePlayer](https://koaning.github.io/wigglystuff/reference/frame-player.md): Play a sequence of images (PIL, paths, URLs, matplotlib figures) as an inline, optionally-looping video with play/pause/loop controls and a scrubber
 - [CircularSlider](https://koaning.github.io/wigglystuff/reference/circular-slider.md): Circular dial slider for picking a single value, mirroring mo.ui.slider semantics
 - [CircularRangeSlider](https://koaning.github.io/wigglystuff/reference/circular-slider.md): Circular dial slider for picking a (low, high) span, mirroring mo.ui.range_slider semantics
 - [ForecastChart](https://koaning.github.io/wigglystuff/reference/utils.md): Time series chart with robust exponential forecast via log-linear regression
