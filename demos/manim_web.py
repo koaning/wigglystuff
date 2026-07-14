@@ -84,8 +84,60 @@ def _(ManimWeb):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Not just videos: static frames and 3D
+
+    You don't need animation. Add mobjects to a `Scene` and never call `play()`
+    for a **still image**, or reach for a `ThreeDScene` (with `Sphere`, `Cube`,
+    `ThreeDAxes`, …) for **3D**.
+    """)
+    return
+
+
 @app.cell
-def _():
+def _(ManimWeb):
+    still = """
+        const scene = new manim.Scene(container, {
+            width, height, backgroundColor: manim.WHITE,
+        });
+
+        // No play() -> a static frame.
+        const square = new manim.Square({ sideLength: 3, color: manim.BLUE, fillOpacity: 1 });
+        const circle = new manim.Circle({ radius: 1, color: manim.RED, fillOpacity: 1 });
+        scene.add(square, circle);
+    """
+
+    ManimWeb(code=still, width=640, height=360)
+    return
+
+
+@app.cell
+def _(ManimWeb):
+    scene_3d = """
+        const scene = new manim.ThreeDScene(container, {
+            width,
+            height,
+            backgroundColor: "#191919",
+            phi: 75 * Math.PI / 180,
+            theta: -45 * Math.PI / 180,
+            distance: 12,
+            fov: 30,
+            enableOrbitControls: true,  // drag to rotate
+            orbitControlsUp: "z",
+        });
+
+        const axes = new manim.ThreeDAxes({
+            xRange: [-3, 3, 1], yRange: [-3, 3, 1], zRange: [-3, 3, 1],
+            xLength: 6, yLength: 6, zLength: 6, showLabels: true,
+        });
+        const sphere = new manim.Sphere({ radius: 1.5, color: manim.BLUE });
+        scene.add(axes, sphere);
+        scene.wait(Infinity);  // keep the render loop alive for orbit controls
+    """
+
+    ManimWeb(code=scene_3d, width=640, height=400)
     return
 
 
