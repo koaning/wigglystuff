@@ -1,0 +1,126 @@
+.asyncflow {
+  --af-fg: #1f2328;
+  --af-muted: #656d76;
+  --af-border: rgba(128, 128, 128, 0.25);
+  --af-track: rgba(128, 128, 128, 0.10);
+  --af-run: #4c8bf5;
+  --af-wait-a: rgba(76, 139, 245, 0.18);
+  --af-wait-b: rgba(76, 139, 245, 0.34);
+  --af-wait-border: rgba(76, 139, 245, 0.5);
+  --af-tip-bg: #ffffff;
+  --af-tip-fg: #1f2328;
+  color-scheme: light dark;
+  color: var(--af-fg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  padding: 8px 2px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.asyncflow .af-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 0 8px 8px;
+}
+.asyncflow .af-status { font-weight: 600; }
+.asyncflow .af-running { color: var(--af-run); }
+.asyncflow .af-idle { color: var(--af-muted); }
+.asyncflow .af-meta { color: var(--af-muted); }
+
+.asyncflow .af-empty {
+  color: var(--af-muted);
+  padding: 16px 8px;
+}
+
+.asyncflow .af-grid { padding: 2px 8px; }
+
+.asyncflow .af-lane {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  margin: 4px 0;
+}
+.asyncflow .af-lane-name {
+  flex: 0 0 160px;
+  width: 160px;
+  display: flex;
+  align-items: center;
+  color: var(--af-muted);
+  overflow: hidden;
+}
+.asyncflow .af-coro {
+  padding-right: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.asyncflow .af-track {
+  position: relative;
+  flex: 1;
+  height: 20px;
+  background: var(--af-track);
+  border-radius: 4px;
+}
+.asyncflow .af-seg {
+  position: absolute;
+  height: 20px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.asyncflow .af-run { background: var(--af-run); }
+.asyncflow .af-solid { background: var(--af-run); }
+.asyncflow .af-wait {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--af-wait-a),
+    var(--af-wait-a) 5px,
+    var(--af-wait-b) 5px,
+    var(--af-wait-b) 10px
+  );
+  border: 1px dashed var(--af-wait-border);
+}
+.asyncflow .af-axis {
+  display: flex;
+  justify-content: space-between;
+  color: var(--af-muted);
+  font-size: 10px;
+  margin: 4px 8px 0 168px;
+}
+
+.asyncflow .af-tip {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  background: var(--af-tip-bg);
+  color: var(--af-tip-fg);
+  border: 1px solid var(--af-border);
+  border-radius: 6px;
+  padding: 6px 9px;
+  font-size: 11px;
+  line-height: 1.45;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  min-width: 130px;
+}
+.asyncflow .af-tip-title { font-weight: 600; margin-bottom: 3px; }
+.asyncflow .af-tip-task { color: var(--af-muted); font-weight: 400; }
+.asyncflow .af-tip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.asyncflow .af-tip-row span { color: var(--af-muted); }
+.asyncflow .af-tip-foot { margin-top: 3px; color: var(--af-muted); }
+
+/* Dark theme: follow notebook-level toggles. */
+.dark .asyncflow,
+.dark-theme .asyncflow,
+[data-theme="dark"] .asyncflow {
+  --af-fg: #e6edf3;
+  --af-muted: #8b949e;
+  --af-border: rgba(200, 200, 200, 0.2);
+  --af-track: rgba(200, 200, 200, 0.10);
+  --af-tip-bg: #1c2128;
+  --af-tip-fg: #e6edf3;
+}
