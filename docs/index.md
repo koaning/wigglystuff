@@ -232,6 +232,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/liveedit.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/liveedit.webp" alt="LiveEdit widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/liveedit.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/live-edit/">API</a><a href="reference/live-edit.md">MD</a></div>
 </div>
+<div class="gallery-item">
+<div class="gallery-title">AsyncFlow</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/asyncflow.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/asyncflow.webp" alt="AsyncFlow widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/asyncflow.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/async-flow/">API</a><a href="reference/async-flow.md">MD</a></div>
+</div>
 </div>
 
 Each widget links to a live demo on [molab](https://molab.marimo.io?utm_source=wigglystuff) where you can interact with and edit the notebook directly in your browser.

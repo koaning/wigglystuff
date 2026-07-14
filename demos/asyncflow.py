@@ -4,7 +4,7 @@
 #     "anywidget",
 #     "marimo",
 #     "polars",
-#     "wigglystuff==0.5.15",
+#     "wigglystuff==0.5.16",
 # ]
 # ///
 
