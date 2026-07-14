@@ -21,6 +21,7 @@ from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
 from .excalidraw import Excalidraw
+from .frame_player import FramePlayer
 from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
 from .grid_draw import GridDraw
@@ -74,6 +75,7 @@ __all__ = [
     "EdgeDraw",
     "EnvConfig",
     "Excalidraw",
+    "FramePlayer",
     "GamepadWidget",
     "GraphWidget",
     "GridDraw",

@@ -54,6 +54,7 @@ syncs back to Python.
 | SplineDraw | `wigglystuff.spline_draw.SplineDraw` | `data`, `curve`, `curve_error`, `brushsize`, `n_classes`, `width`, `height` | Draw scatter points with Python-computed spline curve fitting |
 | ScatterWidget | re-exported from [`drawdata`](https://github.com/koaning/drawdata) | `data`, `brushsize`, `width`, `height`, `n_classes` | Paint multi-class 2D scatter data with brush |
 | PlaySlider | `wigglystuff.play_slider.PlaySlider` | `value`, `min_value`, `max_value`, `step`, `interval_ms`, `playing`, `loop`, `width` | Slider with play/pause button for auto-advancing values |
+| FramePlayer | `wigglystuff.frame_player.FramePlayer` | `frames`, `value`, `interval_ms`, `playing`, `loop`, `width`, `show_index` | Play a sequence of images (PIL/paths/URLs/figures) as an inline looping "video" |
 | CircularSlider | `wigglystuff.circular_slider.CircularSlider` | `value`, `start`, `stop`, `step`, `size`, `thickness`, `show_value`, `color`, `label` | Circular dial slider for picking a single value |
 | CircularRangeSlider | `wigglystuff.circular_slider.CircularRangeSlider` | `value` (`(low, high)`), `start`, `stop`, `step`, `size`, `thickness`, `show_value`, `color`, `label` | Circular dial slider for picking a span of values (wraps the seam) |
 | RidgelineChart | `wigglystuff.ridgeline_chart.RidgelineChart` | `data`, `x_values`, `width`, `height`, `overlap`, `stroke_width`, `fill_opacity`, `peak_scale`, `x_label`, `y_label`, `selected_index`, `selected_row` | Stacked waveform "Joy Division" visualization with clickable rows |
