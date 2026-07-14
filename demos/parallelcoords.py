@@ -5,7 +5,7 @@
 #     "numpy",
 #     "polars",
 #     "scikit-learn",
-#     "wigglystuff==0.5.14",
+#     "wigglystuff==0.5.15",
 # ]
 # ///
 

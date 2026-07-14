@@ -2,10 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.15] - 2026-07-14
 
 ### Fixed
 
+- `ParallelCoordinates`: dragging an axis label no longer occasionally replaces the chart with HiPlot's `Cannot read properties of null (reading 'pos')` error fallback.
 - Require Python 3.11+ (`tomllib`, imported in `__init__.py`, is only available in the stdlib from 3.11 onward). Fixes #267.
 
 ## [0.5.14] - 2026-07-14

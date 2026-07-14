@@ -1,4 +1,5 @@
 import React from "react";
+import { flushSync } from "react-dom";
 import ReactDOM from "react-dom/client";
 import {
   HiPlot,
@@ -57,7 +58,8 @@ function render({ model, el }) {
   const persistentState = {};
   let domObserver = null;
   let themeObserver = null;
-  let labelDragGuardInstalled = false;
+  let axisDragGuardInstalled = false;
+  let clearPendingDragEndGuard = null;
   let filterHistoryListenerInstalled = false;
   let lastRenderedDark = null;
 
@@ -151,44 +153,74 @@ function render({ model, el }) {
     }
   }
 
-  function ensureLabelDragGuard() {
-    if (labelDragGuardInstalled) return;
+  function ensureAxisDragGuard() {
+    if (axisDragGuardInstalled) return;
 
-    const onPointerDown = (event) => {
+    const onDragStart = (event) => {
+      if (event.type === "mousedown" && (event.ctrlKey || event.button)) return;
+
       const target = event.target;
-      if (!(target instanceof HTMLElement)) return;
-      const label = target.closest(".label-name");
-      if (!label || !el.contains(label)) return;
+      if (!(target instanceof Element)) return;
 
-      const plugin = getParallelPlotPlugin();
-      if (!plugin || typeof plugin.xscale !== "function") return;
+      const dragHandle = target.closest("foreignObject");
+      if (!dragHandle || !el.contains(dragHandle)) return;
 
-      const dimensionEl = label.closest(".dimension");
+      const dimensionEl = dragHandle.closest(".dimension");
       const dimension = dimensionEl?.__data__;
       if (!dimension) return;
+
+      const plugin = getParallelPlotPlugin();
+      if (
+        !plugin ||
+        typeof plugin.xscale !== "function" ||
+        typeof plugin.setState !== "function"
+      ) return;
 
       const origin = Number(plugin.xscale(dimension));
       if (!Number.isFinite(origin)) return;
 
-      // HiPlot's drag handlers assume dragging is always non-null.
-      plugin.state = {
-        ...plugin.state,
-        dragging: {
-          col: dimension,
-          pos: origin,
-          origin,
-          dragging: false,
-        },
+      // HiPlot's first drag event can run before its drag-start setState commits.
+      flushSync(() => {
+        plugin.setState({
+          dragging: {
+            col: dimension,
+            pos: origin,
+            origin,
+            dragging: false,
+          },
+        });
+      });
+
+      if (clearPendingDragEndGuard) clearPendingDragEndGuard();
+      const endEvents = event.type === "touchstart"
+        ? ["touchend", "touchcancel"]
+        : ["mouseup"];
+      const onDragEnd = () => {
+        // Commit HiPlot's pending drag update before its end handler clears it.
+        flushSync(() => plugin.setState({}));
+        if (clearPendingDragEndGuard) clearPendingDragEndGuard();
+      };
+      endEvents.forEach((eventName) => {
+        window.addEventListener(eventName, onDragEnd, true);
+      });
+      clearPendingDragEndGuard = () => {
+        endEvents.forEach((eventName) => {
+          window.removeEventListener(eventName, onDragEnd, true);
+        });
+        clearPendingDragEndGuard = null;
       };
     };
 
-    el.addEventListener("pointerdown", onPointerDown, true);
-    labelDragGuardInstalled = true;
+    el.addEventListener("mousedown", onDragStart, true);
+    el.addEventListener("touchstart", onDragStart, true);
+    axisDragGuardInstalled = true;
 
     // Stash cleanup handles on the element so we can remove listeners in widget dispose.
-    el.__pcCleanupLabelDragGuard = () => {
-      el.removeEventListener("pointerdown", onPointerDown, true);
-      labelDragGuardInstalled = false;
+    el.__pcCleanupAxisDragGuard = () => {
+      el.removeEventListener("mousedown", onDragStart, true);
+      el.removeEventListener("touchstart", onDragStart, true);
+      if (clearPendingDragEndGuard) clearPendingDragEndGuard();
+      axisDragGuardInstalled = false;
     };
   }
 
@@ -365,7 +397,7 @@ function render({ model, el }) {
       applyHeaderLayout();
       ensureDomObserver();
       ensureThemeObserver();
-      ensureLabelDragGuard();
+      ensureAxisDragGuard();
       ensureFilterHistoryListener();
     });
   }
@@ -432,9 +464,9 @@ function render({ model, el }) {
       themeObserver.disconnect();
       themeObserver = null;
     }
-    if (typeof el.__pcCleanupLabelDragGuard === "function") {
-      el.__pcCleanupLabelDragGuard();
-      delete el.__pcCleanupLabelDragGuard;
+    if (typeof el.__pcCleanupAxisDragGuard === "function") {
+      el.__pcCleanupAxisDragGuard();
+      delete el.__pcCleanupAxisDragGuard;
     }
     if (typeof el.__pcCleanupFilterHistory === "function") {
       el.__pcCleanupFilterHistory();
