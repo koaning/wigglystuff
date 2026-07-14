@@ -5,7 +5,7 @@
 #     "matplotlib",
 #     "numpy",
 #     "pillow",
-#     "wigglystuff==0.5.17",
+#     "wigglystuff==0.5.16",
 # ]
 # ///
 
