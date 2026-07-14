@@ -61,7 +61,6 @@ def _():
         )
 
     async def main():
-        # Start A, B, C, D — but they finish in sleep order: C, A, B, D.
         out = await asyncio.gather(
             multi_worker("A", 0.3),
             worker("B", 1.1),
