@@ -87,29 +87,39 @@ def _(ManimWeb):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Not just videos: static frames and 3D
+    ## Not just videos: static charts and 3D
 
-    You don't need animation. Add mobjects to a `Scene` and never call `play()`
-    for a **still image**, or reach for a `ThreeDScene` (with `Sphere`, `Cube`,
-    `ThreeDAxes`, …) for **3D**.
+    You don't need animation. Plot functions on an `Axes` and `add()` them
+    without calling `play()` for a **static chart**, or reach for a
+    `ThreeDScene` (with `Sphere`, `Cube`, `ThreeDAxes`, …) for **3D**.
     """)
     return
 
 
 @app.cell
 def _(ManimWeb):
-    still = """
+    chart = """
         const scene = new manim.Scene(container, {
-            width, height, backgroundColor: manim.WHITE,
+            width, height, backgroundColor: manim.BLACK,
         });
 
-        // No play() -> a static frame.
-        const square = new manim.Square({ sideLength: 3, color: manim.BLUE, fillOpacity: 1 });
-        const circle = new manim.Circle({ radius: 1, color: manim.RED, fillOpacity: 1 });
-        scene.add(square, circle);
+        const axes = new manim.Axes({
+            xRange: [-10, 10, 2],
+            yRange: [-1.5, 1.5, 0.5],
+            xLength: 11,
+            yLength: 5,
+            axisConfig: { color: manim.GREY_B },
+            tips: false,
+        });
+
+        const sinGraph = axes.plot((x) => Math.sin(x), { color: manim.BLUE });
+        const cosGraph = axes.plot((x) => Math.cos(x), { color: manim.RED });
+
+        // No play() -> a static chart.
+        scene.add(axes, axes.getAxisLabels(), sinGraph, cosGraph);
     """
 
-    ManimWeb(code=still, width=640, height=360)
+    ManimWeb(code=chart, width=720, height=440)
     return
 
 
