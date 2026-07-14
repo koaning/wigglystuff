@@ -43,6 +43,7 @@ syncs back to Python.
 | HoverZoom | `wigglystuff.hover_zoom.HoverZoom` | `image`, `zoom_factor`, `width`, `height`, `_crop` | Image hover zoom with magnified side panel |
 | KeystrokeWidget | `wigglystuff.keystroke.KeystrokeWidget` | `last_key` | Captures the latest keypress w/ modifiers |
 | LiveEdit | `wigglystuff.live_edit.LiveEdit` | `code`, `trace`, `annotations`, `error`, `editable`, `theme`, `width`, `height`, `float_precision`, `visible_columns` | Source-linked loop trace for inspecting one Python function run; click numeric column headers to chart them |
+| ManimWeb | `wigglystuff.manim_web.ManimWeb` | `code`, `width`, `height`, `version`, `error` | Runs a manim-web (browser Manim) scene from a JS string, local file, or URL |
 | AsyncFlow | `wigglystuff.async_flow.AsyncFlow` | `events`, `now_ms`, `running`, `width` | Live swimlane timeline of one async run (`await AsyncFlow.trace(main())`); one lane per task, running vs suspended-at-await, nested by parent; needs Python 3.12+ |
 | WebkitSpeechToTextWidget | `wigglystuff.talk.WebkitSpeechToTextWidget` | `transcript`, `listening`, `trigger_listen` | WebKit speech recognition bridge |
 | DriverTour | `wigglystuff.driver_tour.DriverTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Guided product tours via Driver.js |

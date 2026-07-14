@@ -1,0 +1,35 @@
+.manim-web-root {
+    color-scheme: light dark;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.manim-web-container {
+    position: relative;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    max-width: 100%;
+}
+
+.manim-web-error {
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    background: #fee2e2;
+    color: #991b1b;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Dark theme overrides */
+.dark .manim-web-error,
+.dark-theme .manim-web-error,
+[data-theme="dark"] .manim-web-error {
+    background: #450a0a;
+    color: #fecaca;
+}

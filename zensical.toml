@@ -23,6 +23,7 @@ nav = [
         { SortableList = "reference/sortable-list.md" },
         { Paint = "reference/paint.md" },
         { Excalidraw = "reference/excalidraw.md" },
+        { ManimWeb = "reference/manim-web.md" },
         { ThreeWidget = "reference/three-widget.md" },
         { EdgeDraw = "reference/edge-draw.md" },
         { GraphWidget = "reference/graph-widget.md" },
