@@ -6,7 +6,7 @@
 #     "drawdata",
 #     "marimo",
 #     "numpy",
-#     "wigglystuff==0.5.13",
+#     "wigglystuff==0.5.14",
 # ]
 # ///
 
