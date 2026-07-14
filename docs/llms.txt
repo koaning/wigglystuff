@@ -24,6 +24,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [GraphWidget](https://koaning.github.io/wigglystuff/reference/graph-widget.md): Programmatic force-directed graph visualization with named/sized/colored nodes and edges
 - [KeystrokeWidget](https://koaning.github.io/wigglystuff/reference/keystroke.md): Keyboard input capture
 - [LiveEdit](https://koaning.github.io/wigglystuff/reference/live-edit.md): Inspect one run of a Python function with source-linked loop traces
+- [AsyncFlow](https://koaning.github.io/wigglystuff/reference/async-flow.md): Trace one async run live as a swimlane timeline of task spawn/suspend/resume/done (Python 3.12+)
 - [WebkitSpeechToText](https://koaning.github.io/wigglystuff/reference/talk.md): Speech-to-text input
 - [ColorPicker](https://koaning.github.io/wigglystuff/reference/color-picker.md): Color selection widget
 - [CopyToClipboard](https://koaning.github.io/wigglystuff/reference/copy-to-clipboard.md): Copy text to clipboard

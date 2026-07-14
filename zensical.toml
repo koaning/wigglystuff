@@ -53,6 +53,7 @@ nav = [
         { HoverZoom = "reference/hover-zoom.md" },
         { Treemap = "reference/treemap.md" },
         { NestedTable = "reference/nested-table.md" },
+        { AsyncFlow = "reference/async-flow.md" },
         { Utils = "reference/utils.md" },
     ] },
 ]
