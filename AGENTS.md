@@ -43,6 +43,7 @@ syncs back to Python.
 | HoverZoom | `wigglystuff.hover_zoom.HoverZoom` | `image`, `zoom_factor`, `width`, `height`, `_crop` | Image hover zoom with magnified side panel |
 | KeystrokeWidget | `wigglystuff.keystroke.KeystrokeWidget` | `last_key` | Captures the latest keypress w/ modifiers |
 | LiveEdit | `wigglystuff.live_edit.LiveEdit` | `code`, `trace`, `annotations`, `error`, `editable`, `theme`, `width`, `height`, `float_precision`, `visible_columns` | Source-linked loop trace for inspecting one Python function run; click numeric column headers to chart them |
+| ManimWeb | `wigglystuff.manim_web.ManimWeb` | `code`, `width`, `height`, `version`, `error` | Runs a manim-web (browser Manim) scene from a JS string, local file, or URL |
 | WebkitSpeechToTextWidget | `wigglystuff.talk.WebkitSpeechToTextWidget` | `transcript`, `listening`, `trigger_listen` | WebKit speech recognition bridge |
 | DriverTour | `wigglystuff.driver_tour.DriverTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Guided product tours via Driver.js |
 | CellTour | `wigglystuff.cell_tour.CellTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Simplified cell-based tours for marimo |

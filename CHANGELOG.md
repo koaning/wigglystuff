@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `ManimWeb`: run a [manim-web](https://github.com/maloyan/manim-web) (browser Manim) scene inline in a notebook. The engine is loaded from a CDN and your scene JavaScript runs with the `manim` namespace, a `container` element, and `width`/`height`/`model` in scope. Use manim-web's own `Player` for a full playback UI (play/pause, scrub timeline with segment markers, speed, fullscreen, export; `autoPlay`/`loop`/`backgroundColor` options). The scene source (`code` or `src`) can be inline JavaScript, a local `.js` file path, or an `http(s)://` URL — files and URLs are resolved in Python at construction time, so the browser always gets plain JS. JS runtime errors surface via the `error` traitlet.
+
 ## [0.5.15] - 2026-07-14
 
 ### Fixed

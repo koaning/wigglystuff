@@ -27,6 +27,7 @@ from .hover_zoom import HoverZoom
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
 from .live_edit import LiveEdit, inspect_run
+from .manim_web import ManimWeb
 from .matrix import Matrix
 from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
@@ -77,6 +78,7 @@ __all__ = [
     "GridDraw",
     "KeystrokeWidget",
     "LiveEdit",
+    "ManimWeb",
     "Matrix",
     "ModuleTreeWidget",
     "Neo4jWidget",

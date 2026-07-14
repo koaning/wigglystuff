@@ -86,6 +86,9 @@ uv pip install wigglystuff
 <td align="center"><b>Excalidraw</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/excalidraw.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/excalidraw.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/excalidraw.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/excalidraw/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/excalidraw.md">MD</a></td>
 <td align="center"><b>LiveEdit</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/liveedit.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/liveedit.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/liveedit.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/live-edit/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/live-edit.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>ManimWeb</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/manim-web.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/manim-web/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/manim-web.md">MD</a></td>
+</tr>
 </table>
 
 ## 3rd party widgets
