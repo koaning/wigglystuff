@@ -7,7 +7,7 @@
 #     "marimo",
 #     "numpy",
 #     "pytest",
-#     "wigglystuff==0.5.14",
+#     "wigglystuff==0.5.17",
 # ]
 # ///
 

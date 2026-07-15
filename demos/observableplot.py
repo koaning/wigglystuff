@@ -4,7 +4,7 @@
 #     "marimo",
 #     "numpy",
 #     "pandas",
-#     "wigglystuff==0.5.16",
+#     "wigglystuff==0.5.17",
 # ]
 # ///
 
