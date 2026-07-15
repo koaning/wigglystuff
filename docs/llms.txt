@@ -26,6 +26,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [LiveEdit](https://koaning.github.io/wigglystuff/reference/live-edit.md): Inspect one run of a Python function with source-linked loop traces
 - [ManimWeb](https://koaning.github.io/wigglystuff/reference/manim-web.md): Run a manim-web (browser Manim) scene from a JS string, local file, or URL
 - [ObservablePlot](https://koaning.github.io/wigglystuff/reference/observable-plot.md): Run Observable Plot JS from a string, local file, or URL, injecting Python variables by name
+- [EsmWidget](https://koaning.github.io/wigglystuff/reference/esm-widget.md): Render an inline ES module (any CDN library, e.g. motion.dev or Observable Plot) with a two-way `data` bridge to Python
 - [AsyncFlow](https://koaning.github.io/wigglystuff/reference/async-flow.md): Trace one async run live as a swimlane timeline of task spawn/suspend/resume/done (Python 3.12+)
 - [WebkitSpeechToText](https://koaning.github.io/wigglystuff/reference/talk.md): Speech-to-text input
 - [ColorPicker](https://koaning.github.io/wigglystuff/reference/color-picker.md): Color selection widget
