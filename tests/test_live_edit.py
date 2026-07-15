@@ -1,5 +1,7 @@
-import pytest
+import textwrap
 from pathlib import Path
+
+import pytest
 
 from wigglystuff.live_edit import LiveEdit, inspect_run
 
@@ -350,3 +352,157 @@ def test_changed_cells_use_weight_not_red_color():
     assert "--liveedit-changed" not in css
     assert "color: #cf222e" not in changed_rule
     assert "font-weight: 700" in changed_rule
+
+
+def test_from_pytest_traces_body_with_resolved_fixture(tmp_path):
+    test_file = tmp_path / "test_sample_fixture.py"
+    test_file.write_text(
+        textwrap.dedent(
+            """
+            import pytest
+
+            @pytest.fixture
+            def numbers():
+                return [3, 1, 2]
+
+            def test_totals(numbers):
+                total = 0
+                for n in numbers:
+                    total = total + n
+                assert total == 6
+            """
+        )
+    )
+    widget = LiveEdit.from_pytest(f"{test_file}::test_totals")
+
+    assert isinstance(widget, LiveEdit)
+    assert widget.error is None
+    # The fixture was resolved by pytest and recorded as a parameter.
+    setup = {row["name"]: row["repr"] for row in widget.trace["setup"]}
+    assert setup["numbers"] == "[3, 1, 2]"
+    # The test body's loop was traced.
+    assert widget.trace["body"]
+
+
+def test_from_pytest_parametrized_requires_disambiguation(tmp_path):
+    test_file = tmp_path / "test_sample_param.py"
+    test_file.write_text(
+        textwrap.dedent(
+            """
+            import pytest
+
+            @pytest.mark.parametrize("x", [1, 2, 3])
+            def test_double(x):
+                doubled = x * 2
+                assert doubled == x + x
+            """
+        )
+    )
+    # A bare id matches all three cases: refuse to guess.
+    with pytest.raises(ValueError, match="matched 3 tests"):
+        LiveEdit.from_pytest(f"{test_file}::test_double")
+
+    # A specific case selects exactly that parametrization.
+    widget = LiveEdit.from_pytest(f"{test_file}::test_double[2]")
+    setup = {row["name"]: row["repr"] for row in widget.trace["setup"]}
+    assert setup["x"] == "2"
+    assert setup["doubled"] == "4"
+
+
+def test_from_pytest_manual_kwargs_bypass_fixtures(tmp_path):
+    test_file = tmp_path / "test_sample_manual.py"
+    test_file.write_text(
+        textwrap.dedent(
+            """
+            import pytest
+
+            @pytest.fixture
+            def numbers():
+                raise RuntimeError("fixture should be bypassed")
+
+            def test_total(numbers):
+                total = sum(numbers)
+                assert total == 6
+            """
+        )
+    )
+    # Passing the argument manually skips the (deliberately broken) fixture.
+    widget = LiveEdit.from_pytest(f"{test_file}::test_total", numbers=[1, 2, 3])
+    assert widget.error is None
+    setup = {row["name"]: row["repr"] for row in widget.trace["setup"]}
+    assert setup["numbers"] == "[1, 2, 3]"
+    assert setup["total"] == "6"
+
+
+def test_from_pytest_resolves_conftest_and_sibling_imports(tmp_path):
+    # The gnarly, realistic case a single-file test can't reach: the fixture
+    # lives in conftest.py (not the test file) and the test imports a sibling
+    # module. Both only work if the test's directory is importable, which the
+    # importlib collection mode does not arrange on its own.
+    (tmp_path / "conftest.py").write_text(
+        textwrap.dedent(
+            """
+            import pytest
+
+            @pytest.fixture
+            def shared():
+                return [4, 2, 7]
+            """
+        )
+    )
+    (tmp_path / "helper_mod.py").write_text("BONUS = 100\n")
+    (tmp_path / "test_multi_file.py").write_text(
+        textwrap.dedent(
+            """
+            import helper_mod
+
+            def test_uses_both(shared):
+                biggest = max(shared) + helper_mod.BONUS
+                assert biggest == 107
+            """
+        )
+    )
+    widget = LiveEdit.from_pytest(f"{tmp_path / 'test_multi_file.py'}::test_uses_both")
+
+    assert widget.error is None
+    setup = {row["name"]: row["repr"] for row in widget.trace["setup"]}
+    assert setup["shared"] == "[4, 2, 7]"  # fixture resolved from conftest.py
+    assert setup["biggest"] == "107"  # sibling module import resolved
+
+
+def test_from_pytest_failing_assert_is_data_not_a_crash(tmp_path):
+    test_file = tmp_path / "test_sample_fail.py"
+    test_file.write_text(
+        textwrap.dedent(
+            """
+            def test_boom():
+                value = 1
+                assert value == 2
+            """
+        )
+    )
+    widget = LiveEdit.from_pytest(f"{test_file}::test_boom")
+
+    assert widget.error is not None
+    assert widget.error["type"] == "AssertionError"
+
+
+def test_from_pytest_friendly_errors(tmp_path):
+    empty = tmp_path / "test_sample_empty.py"
+    empty.write_text("def test_ok():\n    x = 1\n")
+    with pytest.raises(ValueError, match="no test matched"):
+        LiveEdit.from_pytest(f"{empty}::test_missing")
+
+    klass = tmp_path / "test_sample_class.py"
+    klass.write_text(
+        textwrap.dedent(
+            """
+            class TestThing:
+                def test_method(self):
+                    x = 1
+                    assert x == 1
+            """
+        )
+    )
+    with pytest.raises(ValueError, match="class-based"):
+        LiveEdit.from_pytest(f"{klass}::TestThing::test_method")

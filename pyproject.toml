@@ -38,6 +38,9 @@ torch = [
 neo4j = [
     "neo4j>=5.0.0",
 ]
+pytest = [
+    "pytest>=8.3.3",
+]
 test = [
     "pytest>=8.3.3",
     "pytest-check-links>=0.10.0",

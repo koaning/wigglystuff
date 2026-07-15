@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `LiveEdit.from_pytest("tests/test_foo.py::test_bar")`: point `LiveEdit` at a pytest test by node id (the same string you'd type on the command line) and trace the test body. By default pytest resolves the test's fixtures, parametrization, and `conftest.py`, and a failing `assert` is rendered on the offending line — handy for debugging a failing test. Pass arguments yourself (`from_pytest(nodeid, x=3)`) to bypass fixtures entirely, the escape hatch for parametrized tests or fixtures too heavy to spin up. If a bare node id matches several tests, `from_pytest` refuses to guess and asks for a specific `...::test_bar[case]` id (or manual args). Class-based and `async def` tests aren't supported yet. Requires pytest (`pip install wigglystuff[pytest]`).
+
 ## [0.5.16] - 2026-07-14
 
 ### Added

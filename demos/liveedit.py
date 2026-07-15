@@ -6,13 +6,14 @@
 #     "drawdata",
 #     "marimo",
 #     "numpy",
+#     "pytest",
 #     "wigglystuff==0.5.14",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.23.13"
+__generated_with = "0.23.3"
 app = marimo.App(width="full")
 
 
@@ -232,6 +233,59 @@ def _(LiveEdit):
     # Click `loss` to watch it decay, then Shift-click `lr` to stack a second
     # chart below it (same iteration axis, its own y-axis).
     LiveEdit.inspect_run(gradient_descent, 12.0, steps=12, float_precision=4)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ### Debug a pytest test
+
+    `LiveEdit.from_pytest("path/test_file.py::test_name")` traces one test's
+    body — pytest resolves its fixtures, parametrization, and `conftest.py`, and
+    a failing `assert` lights up on the offending line. (Pass arguments yourself,
+    e.g. `from_pytest(nodeid, x=3)`, to bypass fixtures entirely.)
+
+    The test below pulls its list from a `numbers` fixture, then removes the
+    even numbers — expecting `[1, 5, 9]` — but mutates the list while iterating
+    it. Watch the `x` column skip `4` and `8`: each removal shifts the next value
+    into a slot the loop already passed, so those evens survive in `nums` and the
+    `assert` fails.
+    """)
+    return
+
+
+@app.cell
+def _(LiveEdit):
+    import pathlib
+    import tempfile
+    import textwrap
+
+    sample = pathlib.Path(tempfile.mkdtemp()) / "test_sample.py"
+    sample.write_text(
+        textwrap.dedent(
+            """
+            import pytest
+
+            @pytest.fixture
+            def numbers():
+                return [1, 2, 4, 5, 6, 8, 9, 10]
+
+            def remove(lst, value):
+                lst.remove(value)
+                return lst
+
+            def test_remove_evens(numbers):
+                nums = list(numbers)
+                for x in nums:
+                    if x % 2 == 0:
+                        nums = remove(nums, x)
+                assert nums == [1, 5, 9]
+            """
+        )
+    )
+
+    LiveEdit.from_pytest(f"{sample}::test_remove_evens")
     return
 
 
