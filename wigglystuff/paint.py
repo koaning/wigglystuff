@@ -108,8 +108,13 @@ class Paint(anywidget.AnyWidget):
     width = traitlets.Int(DEFAULT_WIDTH).tag(sync=True)  # rough 16:9 ratio
     store_background = traitlets.Bool(True).tag(sync=True)
     rainbow_brush = traitlets.Bool(False).tag(sync=True)
+    brush = traitlets.Bool(True).tag(sync=True)
+    marker = traitlets.Bool(True).tag(sync=True)
+    eraser = traitlets.Bool(True).tag(sync=True)
+    color_picker = traitlets.Bool(True).tag(sync=True)
+    color = traitlets.Unicode("#000000").tag(sync=True)
 
-    def __init__(self, height: int = DEFAULT_HEIGHT, width: int = DEFAULT_WIDTH, store_background: bool = True, init_image: Optional[Any] = None, rainbow_brush: bool = False):
+    def __init__(self, height: int = DEFAULT_HEIGHT, width: int = DEFAULT_WIDTH, store_background: bool = True, init_image: Optional[Any] = None, rainbow_brush: bool = False, brush: bool = True, marker: bool = True, eraser: bool = True, color_picker: bool = True, color: str = "#000000"):
         """Create a Paint widget.
 
         Args:
@@ -118,7 +123,18 @@ class Paint(anywidget.AnyWidget):
             store_background: Persist previous strokes when background changes.
             init_image: Optional path/URL/PIL image/bytes to preload.
             rainbow_brush: Show an extra spray tool that paints randomly-colored particles.
+            brush: Show the thin brush tool.
+            marker: Show the thick marker tool.
+            eraser: Show the eraser tool.
+            color_picker: Show the color picker (hide it to lock drawing to ``color``).
+            color: Drawing color as a hex string; two-way synced with the picker.
         """
+        if not (brush or marker or eraser or rainbow_brush):
+            raise ValueError(
+                "At least one drawing tool must be enabled "
+                "(brush, marker, eraser, or rainbow_brush)."
+            )
+
         super().__init__()
 
         user_provided_width = width != DEFAULT_WIDTH
@@ -170,6 +186,11 @@ class Paint(anywidget.AnyWidget):
 
         self.store_background = store_background
         self.rainbow_brush = rainbow_brush
+        self.brush = brush
+        self.marker = marker
+        self.eraser = eraser
+        self.color_picker = color_picker
+        self.color = color
 
     def get_pil(self):
         """Return the current drawing as a PIL Image."""

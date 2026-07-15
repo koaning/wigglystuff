@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `Paint`: the toolbar is now configurable. New boolean flags `brush`, `marker`, `eraser`, and `color_picker` (all default `True`) hide/show individual controls, generalizing the existing `rainbow_brush` toggle — so you can build a constrained canvas like an eraser-only mask editor or a single-color annotation tool. The drawing color is now a two-way synced `color` traitlet (default `"#000000"`): it backs the picker, updates when you pick a color, and can be preset/read from Python (handy when the picker is hidden). Constructing a `Paint` with every drawing tool disabled raises `ValueError`.
+
 ## [0.5.16] - 2026-07-14
 
 ### Added
