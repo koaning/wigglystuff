@@ -63,11 +63,6 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/excalidraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/excalidraw/">API</a><a href="reference/excalidraw.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ManimWeb</div>
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/manim-web.webp" alt="ManimWeb widget"></a>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/manim-web/">API</a><a href="reference/manim-web.md">MD</a></div>
-</div>
-<div class="gallery-item">
 <div class="gallery-title">ThreeWidget</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/threewidget.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/threewidget.webp" alt="ThreeWidget widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/threewidget.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/three-widget/">API</a><a href="reference/three-widget.md">MD</a></div>
@@ -76,11 +71,6 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-title">EdgeDraw</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/edgedraw.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/edgedraw.webp" alt="EdgeDraw widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/edgedraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/edge-draw/">API</a><a href="reference/edge-draw.md">MD</a></div>
-</div>
-<div class="gallery-item">
-<div class="gallery-title">GridDraw</div>
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/griddraw.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/griddraw.webp" alt="GridDraw widget"></a>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/griddraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/grid-draw/">API</a><a href="reference/grid-draw.md">MD</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">GraphWidget</div>
@@ -106,6 +96,16 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-title">GamepadWidget</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/gamepad.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/gamepad.webp" alt="GamepadWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/gamepad.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/gamepad/">API</a><a href="reference/gamepad.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title">GridDraw</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/griddraw.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/griddraw.webp" alt="GridDraw widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/griddraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/grid-draw/">API</a><a href="reference/grid-draw.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title">ManimWeb</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/manim-web.webp" alt="ManimWeb widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/manim-web/">API</a><a href="reference/manim-web.md">MD</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title">KeystrokeWidget</div>
