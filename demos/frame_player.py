@@ -5,7 +5,7 @@
 #     "matplotlib",
 #     "numpy",
 #     "pillow",
-#     "wigglystuff==0.5.16",
+#     "wigglystuff==0.5.18",
 # ]
 # ///
 
@@ -67,14 +67,6 @@ def _(FramePlayer, make_frames, mo):
     )
     player
     return (player,)
-
-
-@app.cell(hide_code=True)
-def _(mo, player):
-    mo.md(f"""
-    Currently showing frame **{player.value.get('value', 0)}**.
-    """)
-    return
 
 
 @app.cell(hide_code=True)

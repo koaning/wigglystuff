@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.18] - 2026-07-15
+
+### Fixed
+
+- `FramePlayer`: playback no longer stutters or flips frames out of order over a remote kernel (MoLab/sandbox). Playback and scrubbing are now fully client-side — the widget advances a local frame counter instead of round-tripping the synced `value` traitlet to the kernel on every frame, which previously created a feedback loop of out-of-order comm messages that painted stale frames. Behavior note: `value` and `playing` are now one-way Python→JS controls (setting `player.value = 10` or `player.playing = True` still drives the widget), but the widget no longer reports the live playhead or the play/pause state back to Python. Fixes #289.
+
 ## [0.5.17] - 2026-07-15
 
 ### Added

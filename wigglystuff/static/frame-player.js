@@ -32,10 +32,17 @@ function render({ model, el }) {
   el.appendChild(wrapper);
 
   let intervalId = null;
-  let localUpdate = false;
+  // Local frame index — the single source of truth for what's displayed.
+  // Playback is purely client-side; the widget never writes state back to the
+  // kernel, so there is no comm round-trip per frame and nothing to echo.
+  let cur = 0;
 
   function maxIndex() {
     return Math.max(0, model.get("frames").length - 1);
+  }
+
+  function clampIndex(i) {
+    return Math.max(0, Math.min(i, maxIndex()));
   }
 
   function applyWidth() {
@@ -65,7 +72,7 @@ function render({ model, el }) {
 
   function renderFrame() {
     const frames = model.get("frames");
-    const idx = Math.max(0, Math.min(model.get("value"), maxIndex()));
+    const idx = clampIndex(cur);
     if (frames.length > 0) {
       image.src = frames[idx];
     } else {
@@ -78,98 +85,82 @@ function render({ model, el }) {
   }
 
   function renderBtn() {
-    btn.innerHTML = model.get("playing") ? PAUSE_ICON : PLAY_ICON;
+    btn.innerHTML = intervalId !== null ? PAUSE_ICON : PLAY_ICON;
   }
 
   function tick() {
     const max = maxIndex();
-    let val = model.get("value") + 1;
+    let next = cur + 1;
 
-    if (val > max) {
+    if (next > max) {
       if (model.get("loop")) {
-        val = 0;
+        next = 0;
       } else {
-        val = max;
         stopPlaying();
+        return;
       }
     }
 
-    localUpdate = true;
-    model.set("value", val);
-    model.save_changes();
+    cur = next;
+    renderFrame();
   }
 
   function startPlaying() {
     if (intervalId !== null) return;
-    const ms = model.get("interval_ms");
-    intervalId = setInterval(tick, ms);
-    localUpdate = true;
-    model.set("playing", true);
-    model.save_changes();
+    intervalId = setInterval(tick, model.get("interval_ms"));
     renderBtn();
   }
 
   function stopPlaying() {
-    if (intervalId !== null) {
-      clearInterval(intervalId);
-      intervalId = null;
-    }
-    localUpdate = true;
-    model.set("playing", false);
-    model.save_changes();
+    if (intervalId === null) return;
+    clearInterval(intervalId);
+    intervalId = null;
     renderBtn();
   }
 
   // Button click toggles play/pause
   btn.addEventListener("click", () => {
-    if (model.get("playing")) {
+    if (intervalId !== null) {
       stopPlaying();
     } else {
       startPlaying();
     }
   });
 
-  // Manual scrubbing
+  // Manual scrubbing — moves the local playhead; playback (if running)
+  // continues from the new position.
   slider.addEventListener("input", () => {
-    localUpdate = true;
-    model.set("value", parseInt(slider.value, 10));
-    model.save_changes();
+    cur = clampIndex(parseInt(slider.value, 10));
     renderFrame();
   });
 
-  // React to Python-side value changes
+  // Python can jump the frame by setting `value` (Python -> JS control).
   model.on("change:value", () => {
+    cur = clampIndex(model.get("value"));
     renderFrame();
-    if (!localUpdate) {
-      model.save_changes();
-    }
-    localUpdate = false;
   });
 
-  // React to Python toggling playing
+  // Python can start/stop playback by setting `playing` (Python -> JS control).
   model.on("change:playing", () => {
-    const playing = model.get("playing");
-    if (playing && intervalId === null) {
+    if (model.get("playing")) {
       startPlaying();
-    } else if (!playing && intervalId !== null) {
+    } else {
       stopPlaying();
     }
-    renderBtn();
-    localUpdate = false;
   });
 
   // React to interval_ms change while playing
   model.on("change:interval_ms", () => {
     if (intervalId !== null) {
       clearInterval(intervalId);
-      const ms = model.get("interval_ms");
-      intervalId = setInterval(tick, ms);
+      intervalId = setInterval(tick, model.get("interval_ms"));
     }
   });
 
   // React to a new frame sequence
   model.on("change:frames", () => {
     syncSliderAttrs();
+    cur = clampIndex(cur);
     renderFrame();
   });
 
@@ -179,7 +170,9 @@ function render({ model, el }) {
   // Initial render
   applyWidth();
   syncSliderAttrs();
+  cur = clampIndex(model.get("value"));
   renderFrame();
+  if (model.get("playing")) startPlaying();
   renderBtn();
 
   // Cleanup
