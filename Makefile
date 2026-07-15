@@ -5,6 +5,8 @@ install:
 	curl -fsSL https://esbuild.github.io/dl/v0.19.11 | sh
 	uv venv --allow-existing
 	uv pip install -e '.[test,docs]'
+	# always develop against the latest marimo, not just the >= floor
+	uv pip install -U marimo
 	npm i
 
 test:

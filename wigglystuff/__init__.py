@@ -20,6 +20,7 @@ from .curve_editor import CurveEditor
 from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
+from .esm_widget import EsmWidget
 from .excalidraw import Excalidraw
 from .frame_player import FramePlayer
 from .gamepad import GamepadWidget
@@ -76,6 +77,7 @@ __all__ = [
     "DriverTour",
     "EdgeDraw",
     "EnvConfig",
+    "EsmWidget",
     "Excalidraw",
     "FramePlayer",
     "GamepadWidget",

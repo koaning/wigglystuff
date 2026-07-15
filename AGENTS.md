@@ -45,6 +45,7 @@ syncs back to Python.
 | LiveEdit | `wigglystuff.live_edit.LiveEdit` | `code`, `trace`, `annotations`, `error`, `editable`, `theme`, `width`, `height`, `float_precision`, `visible_columns` | Source-linked loop trace for inspecting one Python function run; click numeric column headers to chart them |
 | ManimWeb | `wigglystuff.manim_web.ManimWeb` | `code`, `width`, `height`, `version`, `error` | Runs a manim-web (browser Manim) scene from a JS string, local file, or URL |
 | ObservablePlot | `wigglystuff.observable_plot.ObservablePlot` | `code`, `variables`, `width`, `height`, `version`, `error` | Runs Observable Plot JS from a string, local file, or URL, injecting Python variables by name |
+| EsmWidget | `wigglystuff.esm_widget.EsmWidget` | `code`, `css`, `data`, `width`, `height`, `error` | Renders an inline ES module (any CDN library, e.g. motion.dev or Observable Plot) with a two-way `data` bridge; `change:data` fires without re-running `render` |
 | AsyncFlow | `wigglystuff.async_flow.AsyncFlow` | `events`, `now_ms`, `running`, `width` | Live swimlane timeline of one async run (`await AsyncFlow.trace(main())`); one lane per task, running vs suspended-at-await, nested by parent; needs Python 3.12+ |
 | WebkitSpeechToTextWidget | `wigglystuff.talk.WebkitSpeechToTextWidget` | `transcript`, `listening`, `trigger_listen` | WebKit speech recognition bridge |
 | DriverTour | `wigglystuff.driver_tour.DriverTour` | `steps`, `auto_start`, `show_progress`, `active`, `current_step` | Guided product tours via Driver.js |
