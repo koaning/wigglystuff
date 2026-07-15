@@ -108,6 +108,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/manim-web/">API</a><a href="reference/manim-web.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">ObservablePlot</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/observableplot.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/observable-plot.webp" alt="ObservablePlot widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/observableplot.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/observable-plot/">API</a><a href="reference/observable-plot.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">KeystrokeWidget</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/keystroke.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/keystroke.webp" alt="KeystrokeWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/keystroke.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/keystroke/">API</a><a href="reference/keystroke.md">MD</a></div>
