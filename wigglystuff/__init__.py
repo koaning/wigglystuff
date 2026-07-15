@@ -34,6 +34,7 @@ from .matrix import Matrix
 from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
 from .nested_table import NestedTable
+from .observable_plot import ObservablePlot
 from .paint import Paint
 from .parallel_coords import ParallelCoordinates
 from .play_slider import PlaySlider
@@ -87,6 +88,7 @@ __all__ = [
     "ModuleTreeWidget",
     "Neo4jWidget",
     "NestedTable",
+    "ObservablePlot",
     "Paint",
     "ParallelCoordinates",
     "PlaySlider",

@@ -92,6 +92,7 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>ManimWeb</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/manim-web.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/manim-web/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/manim-web.md">MD</a></td>
+<td align="center"><b>ObservablePlot</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/observableplot.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/observable-plot.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/observableplot.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/observable-plot/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/observable-plot.md">MD</a></td>
 </tr>
 </table>
 

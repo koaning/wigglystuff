@@ -24,6 +24,7 @@ nav = [
         { Paint = "reference/paint.md" },
         { Excalidraw = "reference/excalidraw.md" },
         { ManimWeb = "reference/manim-web.md" },
+        { ObservablePlot = "reference/observable-plot.md" },
         { ThreeWidget = "reference/three-widget.md" },
         { EdgeDraw = "reference/edge-draw.md" },
         { GraphWidget = "reference/graph-widget.md" },
