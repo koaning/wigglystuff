@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import contextlib
 import inspect
 import io
 import keyword
@@ -839,6 +840,121 @@ def _source_for(fn: Any) -> tuple[str, str, dict[str, Any]]:
     return code, fn.__name__, fn.__globals__
 
 
+class _PytestCollector:
+    """In-process pytest plugin that captures one test as a LiveEdit widget.
+
+    Registered only for the duration of a single ``LiveEdit.from_pytest`` call.
+    Two modes, decided by whether the caller supplied arguments:
+
+    - **No manual args**: pytest resolves fixtures and the single matched test
+      runs; ``pytest_pyfunc_call`` intercepts the call to trace it with the
+      resolved fixture values. If the node id matches more than one test (a
+      parametrized test given by its bare name), nothing is traced and an error
+      is recorded so the caller can ask for a specific ``[case]`` id.
+    - **Manual args/kwargs**: the test is captured at collection time and traced
+      with the caller's values, bypassing fixtures entirely (the matched items
+      are deselected so pytest never runs them).
+
+    Setup and collection failures are recorded so ``from_pytest`` can raise a
+    clear error afterwards.
+    """
+
+    def __init__(self, live_edit_cls, args, kwargs, float_precision, visible_columns):
+        self._cls = live_edit_cls
+        self._args = args
+        self._kwargs = kwargs
+        self._manual = bool(args) or bool(kwargs)
+        self._float_precision = float_precision
+        self._visible_columns = visible_columns
+        self.widget = None
+        self.traced_nodeid = None
+        self.guard_error = None
+        self.select_error = None
+        self.setup_error = None
+        self.collect_error = None
+
+    def _trace(self, fn, nodeid, item_cls, call_kwargs, call_args=()):
+        if item_cls is not None:
+            # Bound method -> class-based test; the standalone exec can't bind
+            # `self`, so this is a v1 limitation rather than a silent failure.
+            self.guard_error = (
+                f"LiveEdit.from_pytest supports module-level test functions "
+                f"only; `{nodeid}` looks like a class-based test."
+            )
+            return
+        if inspect.iscoroutinefunction(fn):
+            self.guard_error = (
+                f"LiveEdit.from_pytest does not support async tests yet "
+                f"(`{nodeid}`)."
+            )
+            return
+        self.widget = self._cls.inspect_run(
+            fn,
+            *call_args,
+            float_precision=self._float_precision,
+            visible_columns=self._visible_columns,
+            **call_kwargs,
+        )
+        self.traced_nodeid = nodeid
+
+    def pytest_collection_modifyitems(self, items):
+        if not items:
+            return  # the no-match case is reported after the run.
+        if self._manual:
+            distinct = {
+                (it.function.__module__, it.function.__qualname__) for it in items
+            }
+            if len(distinct) > 1:
+                self.select_error = (
+                    "matched multiple different tests; give a specific "
+                    "`...::test_name` node id."
+                )
+            else:
+                item = items[0]
+                self._trace(
+                    item.function,
+                    item.nodeid,
+                    item.cls,
+                    self._kwargs,
+                    self._args,
+                )
+            items[:] = []  # we've traced it ourselves; don't let pytest run.
+            return
+        if len(items) > 1:
+            cases = ", ".join(it.nodeid.split("::", 1)[1] for it in items)
+            self.select_error = (
+                f"matched {len(items)} tests: {cases}. Pass a specific "
+                f"`...::name[case]` node id, or supply the test's arguments "
+                f"yourself as keyword args to from_pytest(...)."
+            )
+            items[:] = []  # don't run anything; the caller must disambiguate.
+
+    def pytest_pyfunc_call(self, pyfuncitem):
+        # firstresult hook: returning a non-None value skips pytest's own call,
+        # so we trace the test instead of letting pytest run it. Only reached in
+        # the single-match, no-manual-args path.
+        if self.widget is not None or self.guard_error is not None:
+            return True
+        # Same filter pytest itself uses: keep only the function's declared
+        # parameters, dropping autouse fixtures that aren't in the signature.
+        call_kwargs = {
+            name: pyfuncitem.funcargs[name]
+            for name in pyfuncitem._fixtureinfo.argnames
+        }
+        self._trace(
+            pyfuncitem.function, pyfuncitem.nodeid, pyfuncitem.cls, call_kwargs
+        )
+        return True
+
+    def pytest_runtest_logreport(self, report):
+        if report.when == "setup" and report.failed and self.setup_error is None:
+            self.setup_error = str(report.longrepr)
+
+    def pytest_collectreport(self, report):
+        if report.failed and self.collect_error is None:
+            self.collect_error = str(report.longrepr)
+
+
 class LiveEdit(anywidget.AnyWidget):
     """Read-only function trace widget for inspecting one Python run.
 
@@ -953,6 +1069,112 @@ class LiveEdit(anywidget.AnyWidget):
             globalns=globalns,
             float_precision=float_precision,
             visible_columns=visible_columns,
+        )
+
+    @classmethod
+    def from_pytest(
+        cls,
+        nodeid: str,
+        *args: Any,
+        float_precision: int | None = None,
+        visible_columns: list[str] | None = None,
+        **kwargs: Any,
+    ) -> "LiveEdit":
+        """Trace one pytest test's body with ``LiveEdit``.
+
+        ``nodeid`` is a pytest node id like ``"tests/test_foo.py::test_bar"``
+        (the same string you would pass on the command line). ``LiveEdit`` then
+        traces the **test function body** exactly as ``inspect_run`` would.
+        Calls into other functions stay opaque (you see a call's return value,
+        not its internals). A failing ``assert`` is rendered on the offending
+        source line rather than raised.
+
+        Arguments come from one of two places:
+
+        - **Nothing passed** (default): pytest resolves the test's fixtures,
+          parametrization, and ``conftest.py`` and the test runs once. If the
+          node id matches several tests (e.g. a parametrized test given by its
+          bare name), no test is traced and an error asks you to pass a specific
+          ``...::test_bar[case]`` id or supply arguments yourself.
+        - **Args/keyword args passed** (e.g. ``from_pytest(nodeid, x=3)``):
+          those values are used directly and fixtures are bypassed entirely.
+          This is the escape hatch for parametrized tests or tests whose
+          fixtures are too heavy to spin up just to watch the logic.
+
+        Only module-level ``def test_*`` functions are supported: class-based
+        tests (``TestClass::test_x``) and ``async def`` tests raise a clear
+        error. Tests wrapped in a *behaviour-changing* decorator (e.g.
+        ``@mock.patch(...)``) aren't traced either, because the trace runs a
+        re-`exec`'d copy of the source; use the fixture forms (``monkeypatch``,
+        ``mocker``) — which are resolved normally — or pass args manually.
+
+        Note: pytest imports each test module once per process, so editing the
+        test file and calling ``from_pytest`` again in the same kernel may reuse
+        the stale module.
+        """
+        try:
+            import pytest
+        except ImportError as exc:  # pytest is not a runtime dependency.
+            raise ImportError(
+                "LiveEdit.from_pytest requires pytest. Install it with "
+                "`pip install wigglystuff[pytest]`."
+            ) from exc
+
+        collector = _PytestCollector(
+            cls, args, kwargs, float_precision, visible_columns
+        )
+        path = nodeid.split("::", 1)[0]
+        rootdir = str(Path(path).resolve().parent) if path else "."
+        argv = [
+            nodeid,
+            "-p",
+            "no:cacheprovider",
+            "--assert=plain",
+            # importlib import mode keys modules by full path rather than
+            # basename, so tracing two test files that share a basename (or
+            # re-running against a fresh temp file of the same name) doesn't
+            # trip pytest's "import file mismatch" collection error.
+            "--import-mode=importlib",
+            "-q",
+            f"--rootdir={rootdir}",
+        ]
+        # importlib import mode keys modules by full path (see argv), but unlike
+        # pytest's default it does NOT put the test's directory on sys.path, so a
+        # test that imports a sibling/helper module (or whose conftest does)
+        # would fail to collect. Add the rootdir the way prepend mode would, and
+        # restore sys.path afterwards. Swallow pytest's console chatter (e.g.
+        # "no tests ran") so the widget is the only cell output; errors still
+        # reach us via the collector's hooks.
+        sink = io.StringIO()
+        added_to_path = rootdir not in sys.path
+        if added_to_path:
+            sys.path.insert(0, rootdir)
+        try:
+            with contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
+                exit_code = pytest.main(argv, plugins=[collector])
+        finally:
+            if added_to_path and rootdir in sys.path:
+                sys.path.remove(rootdir)
+
+        if collector.collect_error is not None:
+            raise RuntimeError(
+                f"LiveEdit.from_pytest: pytest could not collect `{nodeid}`:\n"
+                f"{collector.collect_error}"
+            )
+        if collector.select_error is not None:
+            raise ValueError(f"LiveEdit.from_pytest: `{nodeid}` {collector.select_error}")
+        if collector.guard_error is not None:
+            raise ValueError(collector.guard_error)
+        if collector.widget is not None:
+            return collector.widget
+        if collector.setup_error is not None:
+            raise RuntimeError(
+                f"LiveEdit.from_pytest: fixture setup failed for `{nodeid}`:\n"
+                f"{collector.setup_error}"
+            )
+        raise ValueError(
+            f"LiveEdit.from_pytest: no test matched `{nodeid}` "
+            f"(pytest exit code {int(exit_code)})."
         )
 
 
