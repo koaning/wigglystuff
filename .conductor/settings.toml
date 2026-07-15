@@ -1,0 +1,13 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+setup = "make install"
+
+[scripts.run.dev]
+command = "uv run marimo edit --watch --no-token demos"
+default = true
+icon = "play"
+
+[scripts.run.docs]
+command = "make docs-serve"
+icon = "book"
