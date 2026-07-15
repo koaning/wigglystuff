@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - `ObservablePlot`: run [Observable Plot](https://observablehq.com/plot/) code inline in a notebook. Plot and d3 are loaded from a CDN and your JavaScript is evaluated the way an Observable cell is — as an expression that returns a DOM node (a bare `Plot.plot({...})`), which is mounted into the widget. Python data is injected by name via the `variables` dict (e.g. `variables={"vacancies": df}` exposes `vacancies` inside the code); pandas/polars DataFrames and numpy arrays are converted to JSON records/lists automatically. `Plot`, `d3`, `container`, `width`, `height`, and `model` are always in scope. The source (`code` or `src`) can be inline JavaScript, a local `.js` file path, or an `http(s)://` URL (resolved in Python). The Plot `version` defaults to `"latest"`. JS runtime and CDN-load errors surface via the `error` traitlet.
+- `Paint`: the toolbar is now configurable. New boolean flags `brush`, `marker`, `eraser`, and `color_picker` (all default `True`) hide/show individual controls, generalizing the existing `rainbow_brush` toggle — so you can build a constrained canvas like an eraser-only mask editor or a single-color annotation tool. The drawing color is now a two-way synced `color` traitlet (default `"#000000"`): it backs the picker, updates when you pick a color, and can be preset/read from Python (handy when the picker is hidden). Constructing a `Paint` with every drawing tool disabled raises `ValueError`.
 
 ## [0.5.16] - 2026-07-14
 

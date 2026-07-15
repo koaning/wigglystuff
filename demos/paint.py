@@ -3,13 +3,14 @@
 # dependencies = [
 #     "marimo",
 #     "mohtml",
-#     "wigglystuff==0.4.4",
+#     "pillow",
+#     "wigglystuff",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.21.1"
+__generated_with = "0.23.14"
 app = marimo.App(width="medium")
 
 
@@ -131,8 +132,37 @@ def _(rainbow):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    You can trim the toolbar down to just the controls you want. Each tool has a
+    boolean flag (`brush`, `marker`, `eraser`, `rainbow_brush`) and the color
+    picker can be hidden with `color_picker=False`. When the picker is hidden,
+    drawing uses the `color` traitlet, which is two-way synced with the picker
+    when it *is* shown — so you can preset it and read it back from Python.
+    """)
+    return
+
+
 @app.cell
-def _():
+def _(Paint, mo):
+    trimmed = mo.ui.anywidget(
+        Paint(
+            height=300,
+            width=400,
+            marker=False,
+            eraser=False,
+            color_picker=False,
+            color="#e11d48",
+        )
+    )
+    trimmed
+    return (trimmed,)
+
+
+@app.cell
+def _(trimmed):
+    trimmed.color
     return
 
 
