@@ -52,7 +52,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [ForecastChart](https://koaning.github.io/wigglystuff/reference/utils.md): Time series chart with robust exponential forecast via log-linear regression
 - [Treemap](https://koaning.github.io/wigglystuff/reference/treemap.md): Zoomable hierarchical treemap with clickable path navigation and constructors for dicts, path strings, records, or dataframes
 - [NestedTable](https://koaning.github.io/wigglystuff/reference/nested-table.md): Recursive expandable table for hierarchical data with name, summed value, and share-of-total columns
-- [WidgetDAG](https://koaning.github.io/wigglystuff/reference/widget-dag.md): Arrange live widgets/images as a DAG (columns by edge-depth) and draw the connecting arrows
+- [WidgetDAG](https://koaning.github.io/wigglystuff/reference/widget-dag.md): Arrange live widgets/images as a DAG (columns by edge-depth) and draw the connecting arrows; `WidgetDAG.from_widgets([...])` derives the edges from marimo's dataflow graph
 
 ## 3rd party widgets
 
