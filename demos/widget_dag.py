@@ -5,7 +5,7 @@
 #     "mohtml",
 #     "numpy",
 #     "pillow",
-#     "wigglystuff==0.5.18",
+#     "wigglystuff==0.5.19",
 # ]
 # ///
 
