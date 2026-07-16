@@ -62,6 +62,7 @@ syncs back to Python.
 | CircularRangeSlider | `wigglystuff.circular_slider.CircularRangeSlider` | `value` (`(low, high)`), `start`, `stop`, `step`, `size`, `thickness`, `show_value`, `color`, `label` | Circular dial slider for picking a span of values (wraps the seam) |
 | RidgelineChart | `wigglystuff.ridgeline_chart.RidgelineChart` | `data`, `x_values`, `width`, `height`, `overlap`, `stroke_width`, `fill_opacity`, `peak_scale`, `x_label`, `y_label`, `selected_index`, `selected_row` | Stacked waveform "Joy Division" visualization with clickable rows |
 | Treemap | `wigglystuff.treemap.Treemap` | `data`, `width`, `height`, `max_depth`, `value_col`, `selected_path`, `clicked_path`, `hovered_path` | Zoomable hierarchical treemap with breadcrumbs |
+| WidgetDAG | `wigglystuff.widget_dag.WidgetDAG` | `nodes`, `edges`, `layout` (not an AnyWidget — a marimo display helper) | Arrange live widgets/images as a DAG (columns by edge-depth) and draw the connecting arrows |
 
 ## Patterns to remember
 

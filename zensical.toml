@@ -57,6 +57,7 @@ nav = [
         { Treemap = "reference/treemap.md" },
         { NestedTable = "reference/nested-table.md" },
         { AsyncFlow = "reference/async-flow.md" },
+        { WidgetDAG = "reference/widget-dag.md" },
         { Utils = "reference/utils.md" },
     ] },
 ]
