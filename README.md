@@ -95,6 +95,9 @@ uv pip install wigglystuff
 <td align="center"><b>ObservablePlot</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/observableplot.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/observable-plot.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/observableplot.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/observable-plot/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/observable-plot.md">MD</a></td>
 <td align="center"><b>EsmWidget</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/esm_widget.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/esm-widget.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/esm_widget.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/esm-widget/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/esm-widget.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>WidgetDAG</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_dag.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/widget-dag.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_dag.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/widget-dag/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/widget-dag.md">MD</a></td>
+</tr>
 </table>
 
 ## 3rd party widgets
