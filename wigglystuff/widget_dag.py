@@ -58,6 +58,34 @@ def layered_layout(nodes, edges):
     return col
 
 
+def _reduce_edges(order, name_to_cell, ancestors):
+    """Derive DAG edges between nodes from their cells' ancestry.
+
+    ``order`` is the list of node names (input order), ``name_to_cell`` maps each
+    name to its defining cell id, and ``ancestors`` maps a cell id to the set of
+    its transitive ancestor cell ids. Returns ``[[u, v], ...]``.
+
+    An edge ``u -> v`` exists when ``u``'s cell is an ancestor of ``v``'s cell,
+    then transitively reduced: ``u -> v`` is dropped if some other node ``w``
+    sits on the path (``u`` ancestor of ``w`` and ``w`` ancestor of ``v``). Nodes
+    that share a cell are neither each other's ancestor, so they get no edge and
+    land in the same column -- correct for independent inputs.
+    """
+
+    def is_anc(a, b):  # cell(a) is an ancestor of cell(b)
+        return name_to_cell[a] in ancestors.get(name_to_cell[b], set())
+
+    edges = []
+    for v in order:
+        for u in order:
+            if u == v or not is_anc(u, v):
+                continue
+            if any(w not in (u, v) and is_anc(u, w) and is_anc(w, v) for w in order):
+                continue
+            edges.append([u, v])
+    return edges
+
+
 class WidgetDAG:
     """Lay widgets out as a DAG and draw the arrows -- like ``mo.hstack``, but
     columns come from edge depth and the connections are drawn for you.
@@ -69,6 +97,10 @@ class WidgetDAG:
 
     This is a marimo-only display helper: the arrow overlay reaches into
     marimo's rendered DOM, so it is not wired for plain Jupyter.
+
+    Instead of spelling out ``edges`` by hand, ``WidgetDAG.from_widgets`` derives
+    them from marimo's own dataflow graph -- pass the widgets and the arrows
+    follow the notebook's dependency order (see that method).
 
     Example:
         ```python
@@ -87,6 +119,56 @@ class WidgetDAG:
         self.nodes = dict(nodes)
         self.edges = [list(e) for e in edges]
         self.layout = layout
+
+    @classmethod
+    def from_widgets(cls, widgets, *, layout=layered_layout):
+        """Build a ``WidgetDAG`` from a list of widgets, deriving the arrows from
+        marimo's dataflow graph.
+
+        Pass the widget objects (not their names); each node is labelled with the
+        Python variable it is bound to, and an edge is drawn between two widgets
+        whenever the cell defining one depends on the cell defining the other.
+
+        ```python
+        WidgetDAG.from_widgets([paint, angle, kernel, conv, kernel2, conv2])
+        ```
+
+        This only works when each widget is a top-level variable defined in its
+        own cell -- marimo's graph is cell-level, so two variables computed in the
+        same cell can't be ordered, and inline expressions aren't variables at
+        all. For those cases use ``WidgetDAG(nodes, edges)`` directly. Requires a
+        running marimo kernel.
+        """
+        try:
+            from marimo._runtime.context.types import get_context
+
+            ctx = get_context()
+            graph = ctx.graph
+            glb = ctx.globals
+        except Exception as e:  # not in a marimo kernel
+            raise RuntimeError(
+                "WidgetDAG.from_widgets needs a running marimo kernel; "
+                "use WidgetDAG(nodes, edges) directly outside marimo."
+            ) from e
+
+        # object identity -> variable name (first match wins), preserving order
+        name_of = {}
+        for w in widgets:
+            hit = next((n for n, val in glb.items() if val is w), None)
+            if hit is None:
+                raise ValueError(
+                    "Every widget passed to from_widgets must be a top-level "
+                    "variable; one object was not found in the notebook globals. "
+                    "Assign it to a variable or use WidgetDAG(nodes, edges)."
+                )
+            name_of[id(w)] = hit
+
+        order = [name_of[id(w)] for w in widgets]
+        nodes = {name_of[id(w)]: w for w in widgets}
+        name_to_cell = {n: next(iter(graph.definitions[n])) for n in order}
+        ancestors = {c: graph.ancestors(c) for c in name_to_cell.values()}
+        edges = _reduce_edges(order, name_to_cell, ancestors)
+        return cls(nodes, edges, layout=layout)
 
     def _display_(self):
         import marimo as mo

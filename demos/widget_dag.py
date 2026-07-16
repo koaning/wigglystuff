@@ -5,7 +5,7 @@
 #     "mohtml",
 #     "numpy",
 #     "pillow",
-#     "wigglystuff==0.5.18",
+#     "wigglystuff==0.5.19",
 # ]
 # ///
 
@@ -38,20 +38,23 @@ def _(mo):
     mo.md("""
     # Draw a digit, watch it convolve
 
-    Scribble a digit on the `draw` canvas below. It is a live `Paint` node inside
+    Scribble a digit on the `paint` canvas below. It is a live `Paint` node inside
     the DAG: your drawing is downsampled to a tiny array and pushed through two
     convolution kernels. Edit either kernel (they are live `mo.ui.matrix` editors)
-    and the whole DAG recomputes. The `rotate°` node is a plain `mo.ui.slider` -- any
+    and the whole DAG recomputes. The `angle` node is a plain `mo.ui.slider` -- any
     marimo UI element works as a node -- and dragging it re-rotates the digit
-    before it is convolved. `WidgetDAG` lays the nodes out by edge-depth and
-    draws the arrows for you.
+    before it is convolved.
+
+    Each node lives in its own cell, so `WidgetDAG.from_widgets([...])` reads
+    marimo's dataflow graph to place the nodes by edge-depth and draw the arrows
+    for you -- no `edges=` list to spell out by hand.
     """)
     return
 
 
 @app.cell
 def _(Paint, mo):
-    # The live drawing surface -- it IS the "draw" node embedded in the DAG below.
+    # The live drawing surface -- it IS the "paint" node embedded in the DAG below.
     # store_background=False keeps the canvas transparent, so the alpha channel of
     # the exported PNG is a clean ink mask (opaque where you drew, else transparent).
     paint = mo.ui.anywidget(Paint(width=260, height=260, color_picker=False, store_background=False))
@@ -60,11 +63,17 @@ def _(Paint, mo):
 
 @app.cell
 def _(mo):
-    # Two kernels for the chained convolutions -- native mo.ui.matrix editors
-    # (drag an entry to change it). Edit either to recompute.
+    # First convolution kernel -- a native mo.ui.matrix editor (drag an entry to
+    # change it). It lives in its own cell so the DAG can wire it to `conv` only.
     kernel = mo.ui.matrix([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+    return (kernel,)
+
+
+@app.cell
+def _(mo):
+    # Second kernel, in its own cell too -- it feeds `conv2`.
     kernel2 = mo.ui.matrix([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
-    return kernel, kernel2
+    return (kernel2,)
 
 
 @app.cell
@@ -76,7 +85,9 @@ def _(mo):
 
 
 @app.cell
-def _(WidgetDAG, angle, kernel, kernel2, paint):
+def _():
+    # Shared helpers -- exported (no leading underscore) so the two convolution
+    # cells below can both use them.
     import base64
     import io
 
@@ -84,7 +95,7 @@ def _(WidgetDAG, angle, kernel, kernel2, paint):
     from mohtml import img
     from PIL import Image
 
-    def _img(a, width=110):
+    def to_img(a, width=110):
         a = np.asarray(a, dtype=float)
         lo, hi = float(a.min()), float(a.max())
         u8 = ((a - lo) / (hi - lo) * 255 if hi > lo else np.zeros_like(a)).astype("uint8")
@@ -96,40 +107,44 @@ def _(WidgetDAG, angle, kernel, kernel2, paint):
             style=f"width:{width}px;image-rendering:pixelated;border:1px solid #ccc",
         )
 
-    def _convolve(a, k):
+    def convolve(a, k):
         from numpy.lib.stride_tricks import sliding_window_view
 
         kh, kw = k.shape
         return np.einsum("ijkl,kl->ij", sliding_window_view(a, (kh, kw)), k)
 
-    # The drawing -> rotate by the slider -> a 28x28 array. The alpha channel is
-    # the ink mask (bright where you drew), which the convolutions sharpen and
-    # then blur. Rotating the full-res PIL (transparent fill) keeps the mask clean.
+    return convolve, np, to_img
+
+
+@app.cell
+def _(angle, convolve, kernel, np, paint, to_img):
+    # The drawing -> rotate by the slider -> a 28x28 array -> convolve with `kernel`.
+    # The alpha channel is the ink mask (bright where you drew); rotating the
+    # full-res PIL (transparent fill) keeps that mask clean. `conv` is the image
+    # node; `out1` is the array the next cell picks up (that reference is the edge
+    # `conv -> conv2` the DAG draws).
     _pil = paint.get_pil().convert("RGBA").rotate(angle.value)
     _arr = np.array(_pil.resize((28, 28)))[..., 3].astype(float)
-    _out = _convolve(_arr, np.asarray(kernel.value, dtype=float))
-    _out2 = _convolve(_out, np.asarray(kernel2.value, dtype=float))
+    out1 = convolve(_arr, np.asarray(kernel.value, dtype=float))
+    conv = to_img(out1)
+    return conv, out1
 
-    # draw ⊛ kernel -> conv ⊛ kernel2 -> conv2. The `draw` node IS the live Paint
-    # widget and both kernel nodes ARE the live mo.ui.matrix editors, so drawing or
-    # editing a kernel recomputes the DAG.
-    WidgetDAG(
-        nodes={
-            "draw": paint,
-            "rotate": angle,
-            "kernel": kernel,
-            "conv": _img(_out),
-            "kernel2": kernel2,
-            "conv2": _img(_out2),
-        },
-        edges=[
-            ("draw", "conv"),
-            ("rotate", "conv"),
-            ("kernel", "conv"),
-            ("conv", "conv2"),
-            ("kernel2", "conv2"),
-        ],
-    )
+
+@app.cell
+def _(convolve, kernel2, np, out1, to_img):
+    # Second convolution: `out1` (from the cell above) blurred by `kernel2`.
+    out2 = convolve(out1, np.asarray(kernel2.value, dtype=float))
+    conv2 = to_img(out2)
+    return (conv2,)
+
+
+@app.cell
+def _(WidgetDAG, angle, conv, conv2, kernel, kernel2, paint):
+    # Each node is a top-level variable in its own cell, so from_widgets reads
+    # marimo's dataflow graph to derive the arrows:
+    #   paint, angle, kernel -> conv -> conv2  and  kernel2 -> conv2.
+    # Drawing or editing a kernel recomputes the DAG.
+    WidgetDAG.from_widgets([paint, angle, kernel, conv, kernel2, conv2])
     return
 
 

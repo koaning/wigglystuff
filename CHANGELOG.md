@@ -2,11 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.19] - 2026-07-16
 
 ### Added
 
-- `WidgetDAG`: lay widgets out as a DAG and draw the arrows for you. It is a marimo display helper (not an `AnyWidget`) — like `mo.hstack`, but the columns come from edge depth and the connections are drawn automatically. Pass `nodes` (a mapping of id → any renderable: an input widget, an image, a chart — anything marimo can show) and `edges` (a list of `(src_id, dst_id)` pairs); the widgets stay live and reactive, so embedding a `Matrix` or `Paint` as a node keeps it interactive and editing it re-runs the cell that built the DAG. Layout is pluggable via `layout=(nodes, edges) -> {id: column}` (default `layered_layout`, a longest-path layering pulled rightward so arrows stay in the empty column gaps). A small `_Arrows` overlay draws smooth cubic-bezier connectors with fan-out slotting so shared endpoints don't cross. The included demo (`demos/widget_dag.py`) wires a `Paint` canvas through two chained convolution kernels: draw a digit, and the downsampled image flows `draw → conv → conv2` with both kernels as live `Matrix` nodes.
+- `WidgetDAG`: a marimo display helper that lays live widgets out as a DAG (columns by edge depth) and draws the connecting arrows for you. Pass `nodes` (id → any renderable) and `edges` (`(src_id, dst_id)` pairs); nodes stay live and reactive. `layout` is pluggable (default `layered_layout`).
+- `WidgetDAG.from_widgets([...])`: skip the `edges` list — pass the widgets and the arrows are derived from marimo's dataflow graph. Needs each widget to be a top-level variable in its own cell; use `WidgetDAG(nodes, edges)` for inline or same-cell nodes.
 
 ## [0.5.18] - 2026-07-15
 
