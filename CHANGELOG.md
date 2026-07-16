@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `ManimWeb`: runtime errors thrown inside the scene now reach the `error` traitlet and render in the cell. The recommended `player.sequence(async (scene) => {...})` entry point returns immediately and runs its callback detached from the promise the widget awaits, so a throw inside the scene (e.g. misusing a manim-web constructor) was an unhandled promise rejection visible only in the browser console — the widget rendered blank and `widget.error` stayed `""`. A window `unhandledrejection` listener now routes those into the existing error surface, so scene bugs are visible in the notebook and readable from Python. Fixes #291.
+
 ## [0.5.18] - 2026-07-15
 
 ### Fixed

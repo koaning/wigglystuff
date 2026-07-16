@@ -44,6 +44,8 @@ function render({ model, el }) {
 
   // Bumped on every (re)run so a stale async run can't clobber a newer one.
   let runToken = 0;
+  // Flipped in the cleanup so a late rejection can't touch a removed widget.
+  let disposed = false;
 
   function applySize() {
     container.style.width = model.get("width") + "px";
@@ -100,6 +102,23 @@ function render({ model, el }) {
     }
   }
 
+  // The recommended entry point, `player.sequence(async (scene) => {...})`,
+  // returns immediately and runs its callback detached from the promise `run`
+  // awaits — so a throw inside the scene is an *unhandled* rejection the
+  // try/catch in `run` never sees. Catch those here so scene bugs still reach
+  // the `error` traitlet (and the cell) instead of only the browser console.
+  //
+  // Caveat: `unhandledrejection` is a page-global event, so with multiple live
+  // ManimWeb widgets a rejection from one may be reported by all of them. The
+  // target use (one scene under iteration) is single-widget, and surfacing a
+  // stray error beats the current silent failure — so we keep it simple.
+  function onRejection(event) {
+    if (disposed) return;
+    const reason = event.reason;
+    showError((reason && reason.stack) || String(reason));
+  }
+  window.addEventListener("unhandledrejection", onRejection);
+
   applySize();
   run();
 
@@ -117,6 +136,8 @@ function render({ model, el }) {
   return () => {
     // Invalidate any in-flight run so it stops touching the removed DOM.
     runToken++;
+    disposed = true;
+    window.removeEventListener("unhandledrejection", onRejection);
   };
 }
 
