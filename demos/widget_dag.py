@@ -11,7 +11,7 @@
 
 import marimo
 
-__generated_with = "0.23.3"
+__generated_with = "0.23.14"
 app = marimo.App(width="medium")
 
 
@@ -49,6 +49,12 @@ def _(mo):
     marimo's dataflow graph to place the nodes by edge-depth and draw the arrows
     for you -- no `edges=` list to spell out by hand.
     """)
+    return
+
+
+@app.cell
+def _(WidgetDAG, angle, conv, conv2, kernel, kernel2, paint):
+    WidgetDAG.from_widgets([paint, angle, kernel, conv, kernel2, conv2])
     return
 
 
@@ -136,16 +142,6 @@ def _(convolve, kernel2, np, out1, to_img):
     out2 = convolve(out1, np.asarray(kernel2.value, dtype=float))
     conv2 = to_img(out2)
     return (conv2,)
-
-
-@app.cell
-def _(WidgetDAG, angle, conv, conv2, kernel, kernel2, paint):
-    # Each node is a top-level variable in its own cell, so from_widgets reads
-    # marimo's dataflow graph to derive the arrows:
-    #   paint, angle, kernel -> conv -> conv2  and  kernel2 -> conv2.
-    # Drawing or editing a kernel recomputes the DAG.
-    WidgetDAG.from_widgets([paint, angle, kernel, conv, kernel2, conv2])
-    return
 
 
 if __name__ == "__main__":
