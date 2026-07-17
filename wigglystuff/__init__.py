@@ -30,6 +30,7 @@ from .grid_draw import GridDraw
 from .hover_zoom import HoverZoom
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
+from .tangle_latex import TangleLatex
 from .live_edit import LiveEdit, inspect_run
 from .manim_web import ManimWeb
 from .matrix import Matrix
@@ -87,6 +88,7 @@ __all__ = [
     "GraphWidget",
     "GridDraw",
     "KeystrokeWidget",
+    "TangleLatex",
     "LiveEdit",
     "ManimWeb",
     "Matrix",

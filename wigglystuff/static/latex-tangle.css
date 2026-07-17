@@ -1,0 +1,240 @@
+.latex-tangle {
+  --lt-surface: #fffdf9;
+  --lt-stage: #f7f5f0;
+  --lt-ink: #25221d;
+  --lt-muted: #706a60;
+  --lt-line: #ddd7cc;
+  display: inline-flex;
+  width: min(100%, 680px);
+  min-width: 260px;
+  flex-direction: column;
+  color: var(--lt-ink);
+  color-scheme: light dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  .latex-tangle {
+    --lt-surface: #22201d;
+    --lt-stage: #1b1a18;
+    --lt-ink: #f5f0e8;
+    --lt-muted: #b8b0a4;
+    --lt-line: #3e3933;
+  }
+}
+
+.dark .latex-tangle,
+.dark-theme .latex-tangle,
+[data-theme="dark"] .latex-tangle {
+  --lt-surface: #22201d;
+  --lt-stage: #1b1a18;
+  --lt-ink: #f5f0e8;
+  --lt-muted: #b8b0a4;
+  --lt-line: #3e3933;
+  color-scheme: dark;
+}
+
+.latex-tangle.latex-tangle--theme-light {
+  --lt-surface: #fffdf9;
+  --lt-stage: #f7f5f0;
+  --lt-ink: #25221d;
+  --lt-muted: #706a60;
+  --lt-line: #ddd7cc;
+  color-scheme: light;
+}
+
+.latex-tangle.latex-tangle--theme-dark {
+  --lt-surface: #22201d;
+  --lt-stage: #1b1a18;
+  --lt-ink: #f5f0e8;
+  --lt-muted: #b8b0a4;
+  --lt-line: #3e3933;
+  color-scheme: dark;
+}
+
+.latex-tangle__stage {
+  position: relative;
+  display: grid;
+  min-height: 116px;
+  place-items: center;
+  overflow: visible;
+  border: 1px solid var(--lt-line);
+  border-radius: 10px;
+  background: var(--lt-stage);
+  padding: 28px 18px;
+}
+
+.latex-tangle__formula {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  color: var(--lt-ink);
+  font-size: clamp(1.06rem, 2.4vw, 1.42rem);
+  scrollbar-width: thin;
+}
+
+.latex-tangle__formula .katex-display {
+  margin: 0;
+}
+
+.latex-tangle__formula [data-tangle-param] {
+  --lt-param-color: var(--lt-param-light);
+  --lt-param-soft: color-mix(in srgb, var(--lt-param-color), transparent 84%);
+  border-radius: 0.16em;
+  color: var(--lt-param-color);
+  cursor: ew-resize;
+  outline: none;
+  pointer-events: auto;
+  position: relative;
+  touch-action: none;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+  z-index: 1;
+}
+
+.latex-tangle__formula [data-tangle-param] > * {
+  box-shadow: inset 0 -0.065em 0 color-mix(in srgb, currentColor, transparent 32%);
+}
+
+.latex-tangle__formula .katex-html * {
+  pointer-events: none;
+}
+
+.latex-tangle__formula .katex-html [data-tangle-param] {
+  pointer-events: auto;
+}
+
+.latex-tangle__formula [data-tangle-param]:hover,
+.latex-tangle__formula [data-tangle-param]:focus-visible,
+.latex-tangle__formula [data-tangle-param].is-active {
+  background: var(--lt-param-soft);
+  box-shadow: 0 0 0 0.14em var(--lt-param-soft);
+}
+
+.latex-tangle__formula [data-tangle-param].is-active {
+  cursor: grabbing;
+}
+
+@media (prefers-color-scheme: dark) {
+  .latex-tangle__formula [data-tangle-param] {
+    --lt-param-color: var(--lt-param-dark);
+  }
+}
+
+.dark .latex-tangle__formula [data-tangle-param],
+.dark-theme .latex-tangle__formula [data-tangle-param],
+[data-theme="dark"] .latex-tangle__formula [data-tangle-param] {
+  --lt-param-color: var(--lt-param-dark);
+}
+
+.latex-tangle--theme-light .latex-tangle__formula [data-tangle-param] {
+  --lt-param-color: var(--lt-param-light);
+}
+
+.latex-tangle--theme-dark .latex-tangle__formula [data-tangle-param] {
+  --lt-param-color: var(--lt-param-dark);
+}
+
+.latex-tangle.is-dragging,
+.latex-tangle.is-dragging * {
+  cursor: ew-resize !important;
+  user-select: none !important;
+}
+
+.latex-tangle__footer {
+  display: flex;
+  min-height: 30px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 6px 2px 0;
+}
+
+.latex-tangle__reset {
+  border: 0;
+  border-radius: 4px;
+  background: var(--lt-surface);
+  color: var(--lt-ink);
+  padding: 4px 6px;
+  font: 700 0.74rem/1 ui-sans-serif, system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.latex-tangle__reset:hover {
+  text-decoration: underline;
+}
+
+.latex-tangle__reset:focus-visible,
+.latex-tangle__editor:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--lt-ink), transparent 72%);
+  outline-offset: 2px;
+}
+
+.latex-tangle__editor {
+  --lt-editor-color: var(--lt-editor-light);
+  --lt-editor-soft: color-mix(in srgb, var(--lt-editor-color), transparent 82%);
+  z-index: 5;
+  border: 1px solid color-mix(in srgb, var(--lt-editor-color), #000 12%);
+  border-radius: 7px;
+  background: var(--lt-surface);
+  color: var(--lt-editor-color);
+  font-variant-numeric: tabular-nums;
+  outline: none;
+  box-shadow: 0 8px 22px rgb(0 0 0 / 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+  .latex-tangle__editor {
+    --lt-editor-color: var(--lt-editor-dark);
+  }
+}
+
+.dark .latex-tangle__editor,
+.dark-theme .latex-tangle__editor,
+[data-theme="dark"] .latex-tangle__editor {
+  --lt-editor-color: var(--lt-editor-dark);
+}
+
+.latex-tangle--theme-light .latex-tangle__editor {
+  --lt-editor-color: var(--lt-editor-light);
+}
+
+.latex-tangle--theme-dark .latex-tangle__editor {
+  --lt-editor-color: var(--lt-editor-dark);
+}
+
+.latex-tangle__editor:focus {
+  box-shadow: 0 0 0 3px var(--lt-editor-soft), 0 8px 22px rgb(0 0 0 / 0.16);
+}
+
+.latex-tangle__editor.is-invalid {
+  border-color: #c9382b;
+  box-shadow: 0 0 0 3px rgb(201 56 43 / 0.15);
+}
+
+.latex-tangle__editor--popover {
+  position: absolute;
+  width: 82px;
+  transform: translateX(-50%);
+  padding: 7px 9px;
+  font: 650 0.86rem/1 ui-sans-serif, system-ui, sans-serif;
+  text-align: center;
+}
+
+.latex-tangle__editor--inline {
+  position: absolute;
+  min-width: 54px;
+  padding: 0 4px;
+  font-family: KaTeX_Main, "Times New Roman", serif;
+  line-height: 1;
+  text-align: center;
+}
+
+.latex-tangle__error {
+  margin-top: 6px;
+  border: 1px solid #c9382b;
+  border-radius: 7px;
+  background: rgb(201 56 43 / 0.08);
+  color: #c9382b;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}

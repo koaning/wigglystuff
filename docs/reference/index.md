@@ -22,6 +22,7 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [ColorPicker](color-picker.md)
 - [CopyToClipboard](copy-to-clipboard.md)
 - [Tangle widgets](tangle.md)
+- [TangleLatex](tangle-latex.md)
 - [GamepadWidget](gamepad.md)
 - [CellTour](cell-tour.md)
 - [WebcamCapture](webcam-capture.md)
