@@ -202,6 +202,20 @@ class CubeWidget(anywidget.AnyWidget):
             normalized[axis_key] = _normalize_number(value)
         return normalized
 
+    @traitlets.validate("locked_order")
+    def _validate_locked_order(
+        self, proposal: dict[str, Any]
+    ) -> list[str]:
+        locked_order = proposal["value"]
+        unknown = set(locked_order) - set(_AXIS_KEYS)
+        if unknown:
+            raise ValueError(
+                f"locked_order contains unknown axes: {sorted(unknown)}."
+            )
+        if len(locked_order) != len(set(locked_order)):
+            raise ValueError("locked_order must not contain duplicates.")
+        return list(locked_order)
+
     def _get_axis_config(self, axis_key: str) -> dict[str, Any]:
         return {
             "x": self.x_axis,

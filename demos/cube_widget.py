@@ -47,6 +47,12 @@ def _(CubeWidget, mo):
 
 
 @app.cell
+def _(cube_view, mo, trajectory_chart):
+    mo.hstack([cube_view, trajectory_chart], justify="start", gap=1)
+    return
+
+
+@app.cell(hide_code=True)
 def _(cube_view, mo):
     cube = cube_view.widget
     mo.md(f"""
@@ -172,12 +178,6 @@ def _(build_trajectory_frame, cube_view, filter_frame, plt):
     plt.tight_layout()
     trajectory_chart = fig
     return (trajectory_chart,)
-
-
-@app.cell
-def _(cube_view, mo, trajectory_chart):
-    mo.hstack([cube_view, trajectory_chart], justify="start", gap=1)
-    return
 
 
 if __name__ == "__main__":

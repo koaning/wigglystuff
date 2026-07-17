@@ -66,6 +66,25 @@ syncs back to Python.
 
 ## Patterns to remember
 
+### Visual approval comes before verification
+
+- For new widgets and visual or interaction changes, stop once the implementation
+  and demo are ready for inspection. Give the user a concrete way to open the
+  widget, then wait for explicit visual approval before running test suites,
+  requesting code review, updating galleries/docs, committing, pushing, or
+  starting branch-finishing workflows. The user may want another design pass.
+- During visual iteration, do not repeatedly run automated checks after CSS,
+  SVG, layout, or styling tweaks. Make the change and return it for inspection.
+- Browser E2E tests are exceptional, not the default for a widget. Add or run
+  them only when the user requests them or after the user approves a specific
+  browser behavior that cannot be covered meaningfully in Python.
+- After visual approval, run the smallest focused checks once. Run the full
+  repository suite only when preparing to ship/merge or when shared
+  infrastructure changed.
+- Keep widget unit tests compact: cover each public behavior once, group
+  repetitive validation cases in one test, and avoid parameter matrices that
+  multiply test count without adding distinct behavioral coverage.
+
 - All agents inherit from `anywidget.AnyWidget`, so `widget.observe(handler)`
   remains the standard way to react to state changes.
 - Constructors tend to validate bounds, lengths, or choice counts; let the
@@ -117,15 +136,11 @@ syncs back to Python.
 - Each widget has a demo marimo notebook in the `demos/` folder (e.g.,
   `demos/colorpicker.py`). When adding a new widget, create a corresponding
   demo notebook. Run demos with `marimo edit demos/<widget>.py`.
-- **Always smoke-test new or modified widget code** with
+- **After visual approval, smoke-test new or modified widget code** with
   `uv run python -c "..."` to instantiate the widget, exercise traitlet changes,
-  and check edge cases (built-ins, empty inputs, toggles). `marimo check` only
-  validates notebook structure—it does **not** execute code, so it catches zero
-  runtime bugs.
-- **Always run `uv run marimo check demos/<notebook>.py`** after editing a demo
+  and check edge cases (built-ins, empty inputs, toggles).
+- **After visual approval, run `uv run marimo check demos/<notebook>.py`** after editing a demo
   notebook to verify it parses correctly and has no cell dependency issues.
-- **Always run `uv run demos/<notebook>.py`** after editing a demo notebook to
-  execute all cells and catch runtime errors. This complements `marimo check`,
   which only validates structure.
 - Dumber is better. Prefer obvious, direct code over clever abstractions—someone
   new to the project should be able to read the code top-to-bottom and grok it
@@ -141,8 +156,8 @@ syncs back to Python.
 - When planning a new widget, always present the proposed Python API
   (constructor, traitlets, helper methods) during plan review so the user
   can sign off on the interface before implementation.
-- E2E test fixtures (`tests/fixtures/*.py`, `demos/*.py` used by Playwright
-  tests) must live inside the project tree. The repo's `pyproject.toml`
+- When an explicitly approved E2E test needs a fixture, keep it in
+  `tests/fixtures/*.py` or `demos/*.py` inside the project tree. The repo's `pyproject.toml`
   sets `[tool.marimo.runtime] auto_instantiate = true` so cells run on
   notebook open — without that, `marimo edit` shows the editor but never
   produces widget output and selectors will time out. If a test needs an

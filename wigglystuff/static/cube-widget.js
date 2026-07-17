@@ -160,7 +160,6 @@ function render({ model, el }) {
       line.setAttribute("y2", end.y);
       line.setAttribute("stroke", "var(--color-wireframe)");
       line.setAttribute("stroke-width", "2");
-      line.setAttribute("stroke-opacity", "0.3");
       group.appendChild(line);
     });
 
@@ -177,24 +176,21 @@ function render({ model, el }) {
     labelGroup.setAttribute("class", `axis-label axis-${axis}`);
     labelGroup.style.cursor = "pointer";
 
-    let start, end, labelPos;
+    let start, labelPos;
     let axisColor = "#e74c3c"; // X default red
 
     if (axis === "x") {
       start = p.v0;
-      end = p.v1;
       const extended = isoProject(0.8, -0.5, -0.5);
       labelPos = extended;
       axisColor = "#e74c3c";
     } else if (axis === "y") {
       start = p.v0;
-      end = p.v3;
       const extended = isoProject(-0.5, 0.8, -0.5);
       labelPos = extended;
       axisColor = "#27ae60";
     } else {
       start = p.v0;
-      end = p.v4;
       const extended = isoProject(-0.5, -0.5, 0.8);
       labelPos = extended;
       axisColor = "#3498db";
@@ -221,7 +217,6 @@ function render({ model, el }) {
     cutout.setAttribute("stroke-width", lockIndex >= 0 ? "7" : "6");
     cutout.setAttribute("stroke-linecap", "round");
     cutout.setAttribute("class", "axis-cutout");
-    group.appendChild(cutout);
 
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     line.setAttribute("x1", start.x);
@@ -313,7 +308,7 @@ function render({ model, el }) {
       labelBg.removeAttribute("transform");
     });
 
-    return { group, labelGroup };
+    return { cutout, group, labelGroup };
   }
 
   // Draw selection plane - uses axis color
@@ -575,14 +570,20 @@ function render({ model, el }) {
     svg.appendChild(drawWireframe(p));
 
     // Draw axes behind selection geometry
+    const cutoutLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    cutoutLayer.setAttribute("class", "axis-cutouts");
+    const axisGroups = [];
     const axisLabels = [];
     ["x", "y", "z"].forEach((axis) => {
       const config = getAxisConfig(axis);
       const lockIndex = lockedOrder.indexOf(axis);
-      const { group, labelGroup } = drawAxis(axis, p, config, lockIndex);
-      svg.appendChild(group);
+      const { cutout, group, labelGroup } = drawAxis(axis, p, config, lockIndex);
+      cutoutLayer.appendChild(cutout);
+      axisGroups.push(group);
       axisLabels.push(labelGroup);
     });
+    svg.appendChild(cutoutLayer);
+    axisGroups.forEach((group) => svg.appendChild(group));
 
     // Draw selection geometry on top
     if (lockedOrder.length >= 1) {

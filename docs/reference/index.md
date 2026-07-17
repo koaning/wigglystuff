@@ -12,6 +12,7 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [SortableList](sortable-list.md)
 - [Paint](paint.md)
 - [ThreeWidget](three-widget.md)
+- [CubeWidget](cube-widget.md)
 - [EdgeDraw](edge-draw.md)
 - [GridDraw](grid-draw.md)
 - [GraphWidget](graph-widget.md)

@@ -10,6 +10,8 @@
   --shadow-panel: 0 7px 18px rgba(15, 23, 42, 0.09);
 
   display: block;
+  box-sizing: border-box;
+  width: 100%;
   max-width: 440px;
   background: transparent;
   color: var(--color-text);
@@ -101,11 +103,15 @@
 }
 
 .wireframe {
+  opacity: 0.58;
   transition: opacity 0.18s ease;
 }
 
 .wireframe line {
-  transition: opacity 0.18s ease, stroke-dasharray 0.18s ease;
+  stroke-width: 2.75;
+  stroke-opacity: 1;
+  stroke-dasharray: 5 5;
+  transition: opacity 0.18s ease, stroke-dasharray 0.18s ease, stroke-width 0.18s ease;
 }
 
 .cube-svg.has-selection .wireframe {
@@ -113,6 +119,7 @@
 }
 
 .cube-svg.has-selection .wireframe line {
+  stroke-width: 2;
   stroke-opacity: 1;
   stroke-dasharray: 4 5;
 }
