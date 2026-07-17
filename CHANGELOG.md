@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `CubeWidget`: progressively lock three configurable axes to select a plane, line, and point. The dependency-free SVG view includes smooth axis-colored sliders, reset and Python locking helpers, derived selection outputs, and light/dark theme support.
+
 ## [0.5.19] - 2026-07-16
 
 ### Added

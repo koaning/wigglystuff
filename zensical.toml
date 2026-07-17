@@ -27,6 +27,7 @@ nav = [
         { ObservablePlot = "reference/observable-plot.md" },
         { EsmWidget = "reference/esm-widget.md" },
         { ThreeWidget = "reference/three-widget.md" },
+        { CubeWidget = "reference/cube-widget.md" },
         { EdgeDraw = "reference/edge-draw.md" },
         { GraphWidget = "reference/graph-widget.md" },
         { KeystrokeWidget = "reference/keystroke.md" },
