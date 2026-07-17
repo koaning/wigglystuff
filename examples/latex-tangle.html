@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KaTeX Tangle Experiment</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css"
+    integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB"
+    crossorigin="anonymous"
+  >
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.js"
+    integrity="sha384-AtrdNsnxl/75rvBneBVH7DtOvCxSVahR2zWqle1coBKd8DEmLoviqNeJSx64gNAs"
+    crossorigin="anonymous"
+  ></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --page: #f5f3ee;
+      --card: #fffdf9;
+      --ink: #25221d;
+      --muted: #706a60;
+      --line: #ddd7cc;
+      --shadow: 0 14px 38px rgb(60 52 42 / 0.09);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page: #171614;
+        --card: #22201d;
+        --ink: #f5f0e8;
+        --muted: #b8b0a4;
+        --line: #3e3933;
+        --shadow: 0 18px 42px rgb(0 0 0 / 0.26);
+      }
+    }
+
+    body[data-theme="light"] {
+      --page: #f5f3ee;
+      --card: #fffdf9;
+      --ink: #25221d;
+      --muted: #706a60;
+      --line: #ddd7cc;
+      --shadow: 0 14px 38px rgb(60 52 42 / 0.09);
+      color-scheme: light;
+    }
+
+    body[data-theme="dark"] {
+      --page: #171614;
+      --card: #22201d;
+      --ink: #f5f0e8;
+      --muted: #b8b0a4;
+      --line: #3e3933;
+      --shadow: 0 18px 42px rgb(0 0 0 / 0.26);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--page);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body.is-dragging,
+    body.is-dragging * {
+      cursor: ew-resize !important;
+      user-select: none !important;
+    }
+
+    main {
+      width: min(1060px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: clamp(36px, 7vw, 88px) 0;
+    }
+
+    header {
+      margin-bottom: 30px;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .header-copy {
+      max-width: 720px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #246bce;
+      font-size: 0.76rem;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.25rem);
+      font-weight: 720;
+      letter-spacing: -0.045em;
+      line-height: 0.98;
+    }
+
+    header p {
+      max-width: 620px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      line-height: 1.55;
+    }
+
+    .theme-picker {
+      display: inline-flex;
+      flex: none;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--card);
+      box-shadow: 0 1px 0 rgb(0 0 0 / 0.04);
+    }
+
+    .theme-picker button {
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 10px;
+      font: 650 0.74rem/1 ui-sans-serif, system-ui, sans-serif;
+      cursor: pointer;
+    }
+
+    .theme-picker button:last-child {
+      border-right: 0;
+    }
+
+    .theme-picker button[aria-pressed="true"] {
+      background: var(--ink);
+      color: var(--card);
+    }
+
+    code {
+      font-size: 0.88em;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      display: flex;
+      min-width: 0;
+      min-height: 340px;
+      flex-direction: column;
+      overflow: visible;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .card-copy {
+      padding: 22px 22px 0;
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card-copy p {
+      min-height: 3.9em;
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.48;
+    }
+
+    .formula-stage {
+      position: relative;
+      display: grid;
+      min-height: 138px;
+      flex: 1;
+      place-items: center;
+      margin: 18px 14px 0;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--card), var(--page) 30%);
+      padding: 28px 12px;
+    }
+
+    .formula-host {
+      max-width: 100%;
+      font-size: clamp(1.08rem, 2.2vw, 1.42rem);
+    }
+
+    .formula-host .katex-display {
+      margin: 0;
+    }
+
+    .card[data-card-id="symbolic"] .formula-host,
+    .card[data-card-id="mixed"] .formula-host {
+      font-size: clamp(0.96rem, 1.75vw, 1.16rem);
+    }
+
+    .formula-host [data-tangle-param] {
+      --param-color: var(--param-light);
+      --param-soft: color-mix(in srgb, var(--param-color), transparent 84%);
+      border-radius: 0.16em;
+      color: var(--param-color);
+      cursor: ew-resize;
+      outline: none;
+      text-decoration: underline;
+      text-decoration-color: color-mix(in srgb, var(--param-color), transparent 32%);
+      text-decoration-thickness: 0.065em;
+      text-underline-offset: 0.16em;
+      touch-action: none;
+      transition: background-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .formula-host [data-tangle-param]:hover,
+    .formula-host [data-tangle-param]:focus-visible,
+    .formula-host [data-tangle-param].is-active {
+      background: var(--param-soft);
+      box-shadow: 0 0 0 0.14em var(--param-soft);
+    }
+
+    .formula-host [data-tangle-param].is-active {
+      cursor: grabbing;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) .formula-host [data-tangle-param],
+      body:not([data-theme="light"]) .parameter-summary span {
+        --param-color: var(--param-dark);
+      }
+    }
+
+    body[data-theme="dark"] .formula-host [data-tangle-param],
+    body[data-theme="dark"] .parameter-summary span,
+    .dark .formula-host [data-tangle-param],
+    .dark .parameter-summary span,
+    .dark-theme .formula-host [data-tangle-param],
+    .dark-theme .parameter-summary span,
+    [data-theme="dark"] .formula-host [data-tangle-param],
+    [data-theme="dark"] .parameter-summary span {
+      --param-color: var(--param-dark);
+    }
+
+    body[data-theme="light"] .formula-host [data-tangle-param],
+    body[data-theme="light"] .parameter-summary span {
+      --param-color: var(--param-light);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px 16px;
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .parameter-summary {
+      display: flex;
+      min-width: 0;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .parameter-summary span {
+      --param-color: var(--param-light);
+      color: var(--param-color);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .reset {
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      padding: 3px 0;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .reset:hover {
+      text-decoration: underline;
+    }
+
+    .tangle-editor {
+      --editor-color: var(--editor-light);
+      --editor-soft: color-mix(in srgb, var(--editor-color), transparent 82%);
+      z-index: 5;
+      border: 1px solid color-mix(in srgb, var(--editor-color), #000 12%);
+      border-radius: 7px;
+      background: var(--card);
+      color: var(--editor-color);
+      font-variant-numeric: tabular-nums;
+      outline: none;
+      box-shadow: 0 8px 22px rgb(0 0 0 / 0.16);
+    }
+
+    .tangle-editor:focus {
+      box-shadow:
+        0 0 0 3px var(--editor-soft),
+        0 8px 22px rgb(0 0 0 / 0.16);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) .tangle-editor {
+        --editor-color: var(--editor-dark);
+      }
+    }
+
+    body[data-theme="dark"] .tangle-editor,
+    .dark .tangle-editor,
+    .dark-theme .tangle-editor,
+    [data-theme="dark"] .tangle-editor {
+      --editor-color: var(--editor-dark);
+    }
+
+    body[data-theme="light"] .tangle-editor {
+      --editor-color: var(--editor-light);
+    }
+
+    .tangle-editor.is-invalid {
+      border-color: #c9382b;
+      box-shadow: 0 0 0 3px rgb(201 56 43 / 0.15);
+    }
+
+    .tangle-editor--popover {
+      position: absolute;
+      width: 82px;
+      transform: translateX(-50%);
+      padding: 7px 9px;
+      font: 650 0.86rem/1 ui-sans-serif, system-ui, sans-serif;
+      text-align: center;
+    }
+
+    .tangle-editor--inline {
+      position: absolute;
+      min-width: 54px;
+      padding: 0 4px;
+      font-family: KaTeX_Main, "Times New Roman", serif;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .load-error {
+      margin-top: 16px;
+      border: 1px solid #c9382b;
+      border-radius: 9px;
+      background: rgb(201 56 43 / 0.08);
+      color: #c9382b;
+      padding: 12px 14px;
+    }
+
+    .notes {
+      margin: 22px 2px 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 820px) {
+      .header-row {
+        flex-direction: column-reverse;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: 310px;
+      }
+
+      .card-copy p {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="header-row">
+        <div class="header-copy">
+          <p class="eyebrow">Python API behavior, prototyped in HTML</p>
+          <h1>One formula, many parameters.</h1>
+          <p>
+            Drag any colored number or symbol. Repeated symbolic parameters reveal all their
+            numeric occurrences during the gesture, then return to notation when released.
+          </p>
+        </div>
+        <div class="theme-picker" role="group" aria-label="Preview color theme">
+          <button type="button" data-theme-choice="auto" aria-pressed="true">Auto</button>
+          <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+          <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="cards" aria-label="Multi-parameter Tangle presentation experiments">
+      <article class="card" data-card-id="numeric">
+        <div class="card-copy">
+          <h2>1. Numeric parameters</h2>
+          <p>Both values are controls. Each parameter has independent bounds, steps, and colors.</p>
+        </div>
+        <div class="formula-stage">
+          <div class="formula-host" aria-live="polite"></div>
+        </div>
+        <div class="card-footer">
+          <div class="parameter-summary"></div>
+          <button class="reset" type="button">Reset</button>
+        </div>
+      </article>
+
+      <article class="card" data-card-id="symbolic">
+        <div class="card-copy">
+          <h2>2. Symbolic parameters</h2>
+          <p>Drag either occurrence of <em>a</em>: both become numbers while <em>b</em> stays symbolic.</p>
+        </div>
+        <div class="formula-stage">
+          <div class="formula-host" aria-live="polite"></div>
+        </div>
+        <div class="card-footer">
+          <div class="parameter-summary"></div>
+          <button class="reset" type="button">Reset</button>
+        </div>
+      </article>
+
+      <article class="card" data-card-id="mixed">
+        <div class="card-copy">
+          <h2>3. Mixed presentation</h2>
+          <p>A numeric amplitude and symbolic decay rate coexist in one formula.</p>
+        </div>
+        <div class="formula-stage">
+          <div class="formula-host" aria-live="polite"></div>
+        </div>
+        <div class="card-footer">
+          <div class="parameter-summary"></div>
+          <button class="reset" type="button">Reset</button>
+        </div>
+      </article>
+    </section>
+
+    <p class="notes">
+      Dragging is clamped and snapped to the stated step. Press Enter to commit typed input;
+      Escape or clicking away cancels it. The theme switch previews per-parameter
+      <code>{light, dark}</code> colors. KaTeX lays out each target via <code>\htmlData</code>.
+    </p>
+    <div class="load-error" role="alert" hidden></div>
+  </main>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const errorBox = document.querySelector(".load-error");
+      if (!window.katex) {
+        errorBox.hidden = false;
+        errorBox.textContent = "KaTeX did not load. Check the network connection and reload this page.";
+        return;
+      }
+
+      const formulas = {
+        numeric: {
+          editor: "popover",
+          tex: (param) => String.raw`y = ${param("a")}x + ${param("b")}`,
+          parameters: {
+            a: parameter(2.5, -5, 5, 0.1, 1, "number", "slope a", "#246bce", "#75a7ff"),
+            b: parameter(1, -10, 10, 0.5, 1, "number", "intercept b", "#b45b1b", "#ffad66"),
+          },
+        },
+        symbolic: {
+          editor: "inline",
+          tex: (param) => String.raw`f(x) = ${param("a")}x^2 + ${param("b")}x + ${param("a")}`,
+          parameters: {
+            a: parameter(2.5, -5, 5, 0.1, 1, "symbol", "coefficient a", "#246bce", "#75a7ff"),
+            b: parameter(1, -10, 10, 0.5, 1, "symbol", "coefficient b", "#b45b1b", "#ffad66"),
+          },
+        },
+        mixed: {
+          editor: "popover",
+          tex: (param) => String.raw`N(t) = ${param("A")}e^{-${param("k")}t} + ${param("k")}`,
+          parameters: {
+            A: parameter(100, 0, 200, 5, 0, "number", "amplitude A", "#147a68", "#5ed5bd"),
+            k: parameter(0.5, 0, 2, 0.1, 1, "symbol", "decay k", "#a23b78", "#f08bc2"),
+          },
+        },
+      };
+
+      let activeEditor = null;
+      let drag = null;
+
+      for (const [id, formula] of Object.entries(formulas)) {
+        const card = document.querySelector(`[data-card-id="${id}"]`);
+        formula.id = id;
+        formula.card = card;
+        formula.host = card.querySelector(".formula-host");
+        formula.stage = card.querySelector(".formula-stage");
+        formula.revealed = null;
+
+        const summary = card.querySelector(".parameter-summary");
+        for (const [name, param] of Object.entries(formula.parameters)) {
+          const item = document.createElement("span");
+          item.style.setProperty("--param-light", param.color.light);
+          item.style.setProperty("--param-dark", param.color.dark);
+          item.textContent = `${name}: ${formatValue(param.min, param.digits)}…${formatValue(param.max, param.digits)} · ${formatValue(param.step, param.digits)}`;
+          summary.appendChild(item);
+        }
+
+        card.querySelector(".reset").addEventListener("click", () => {
+          closeEditor(false);
+          for (const param of Object.values(formula.parameters)) {
+            param.value = param.initialValue;
+          }
+          formula.revealed = null;
+          render(formula);
+        });
+
+        formula.host.addEventListener("pointerdown", (event) => startDrag(event, formula));
+        formula.host.addEventListener("keydown", (event) => {
+          const target = event.target.closest("[data-tangle-param]");
+          if (!target || (event.key !== "Enter" && event.key !== " ")) return;
+          event.preventDefault();
+          const name = target.dataset.tangleParam;
+          const occurrence = occurrenceIndex(formula, target, name);
+          openEditor(formula, name, occurrence);
+        });
+        formula.host.addEventListener("dragstart", (event) => event.preventDefault());
+        render(formula);
+      }
+
+      for (const button of document.querySelectorAll("[data-theme-choice]")) {
+        button.addEventListener("click", () => {
+          const choice = button.dataset.themeChoice;
+          if (choice === "auto") {
+            delete document.body.dataset.theme;
+          } else {
+            document.body.dataset.theme = choice;
+          }
+          for (const candidate of document.querySelectorAll("[data-theme-choice]")) {
+            candidate.setAttribute("aria-pressed", String(candidate === button));
+          }
+        });
+      }
+
+      document.addEventListener("pointermove", moveDrag);
+      document.addEventListener("pointerup", endDrag);
+      document.addEventListener("pointercancel", cancelDrag);
+
+      function parameter(initialValue, min, max, step, digits, display, label, light, dark) {
+        return {
+          value: initialValue,
+          initialValue,
+          min,
+          max,
+          step,
+          digits,
+          display,
+          label,
+          pixelsPerStep: 7,
+          color: { light, dark },
+        };
+      }
+
+      function tangleTex(name, content) {
+        return String.raw`\htmlData{tangle-param=${name}}{${content}}`;
+      }
+
+      function formatValue(value, digits) {
+        const safe = Math.abs(value) < 10 ** (-(digits + 1)) ? 0 : value;
+        return safe.toFixed(digits);
+      }
+
+      function render(formula) {
+        const param = (name) => {
+          const spec = formula.parameters[name];
+          const showValue = spec.display === "number" || formula.revealed === name;
+          return tangleTex(name, showValue ? formatValue(spec.value, spec.digits) : name);
+        };
+
+        try {
+          katex.render(formula.tex(param), formula.host, {
+            displayMode: true,
+            throwOnError: true,
+            trust: (context) => context.command === "\\htmlData",
+            strict: (errorCode) => errorCode === "htmlExtension" ? "ignore" : "warn",
+          });
+        } catch (error) {
+          formula.host.textContent = error.message;
+          formula.host.style.color = "#c9382b";
+          return;
+        }
+
+        formula.host.style.color = "";
+        for (const [name, spec] of Object.entries(formula.parameters)) {
+          const targets = formula.host.querySelectorAll(`.katex-html [data-tangle-param="${name}"]`);
+          for (const target of targets) {
+            target.tabIndex = 0;
+            target.setAttribute("role", "button");
+            target.style.setProperty("--param-light", spec.color.light);
+            target.style.setProperty("--param-dark", spec.color.dark);
+            target.setAttribute(
+              "aria-label",
+              `${spec.label}: ${formatValue(spec.value, spec.digits)}. Drag horizontally or press Enter to type.`,
+            );
+            if (formula.revealed === name) target.classList.add("is-active");
+          }
+        }
+      }
+
+      function startDrag(event, formula) {
+        const target = event.target.closest("[data-tangle-param]");
+        if (!target || (event.pointerType === "mouse" && event.button !== 0)) return;
+        event.preventDefault();
+        const name = target.dataset.tangleParam;
+        const occurrence = occurrenceIndex(formula, target, name);
+        closeEditor(false);
+        const spec = formula.parameters[name];
+        formula.revealed = name;
+        drag = {
+          formula,
+          spec,
+          name,
+          occurrence,
+          pointerId: event.pointerId,
+          startX: event.clientX,
+          startValue: spec.value,
+          moved: false,
+        };
+        document.body.classList.add("is-dragging");
+        render(formula);
+      }
+
+      function moveDrag(event) {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        const deltaX = event.clientX - drag.startX;
+        if (Math.abs(deltaX) >= 3) drag.moved = true;
+        if (!drag.moved) return;
+
+        event.preventDefault();
+        const stepCount = Math.trunc(deltaX / drag.spec.pixelsPerStep);
+        const next = clamp(
+          drag.startValue + stepCount * drag.spec.step,
+          drag.spec.min,
+          drag.spec.max,
+        );
+        const rounded = roundForStep(next, drag.spec.step);
+        if (rounded === drag.spec.value) return;
+        drag.spec.value = rounded;
+        render(drag.formula);
+      }
+
+      function endDrag(event) {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        const finished = drag;
+        drag = null;
+        document.body.classList.remove("is-dragging");
+        if (finished.moved) {
+          finished.formula.revealed = null;
+          render(finished.formula);
+          return;
+        }
+        openEditor(finished.formula, finished.name, finished.occurrence);
+      }
+
+      function cancelDrag(event) {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        drag.formula.revealed = null;
+        render(drag.formula);
+        drag = null;
+        document.body.classList.remove("is-dragging");
+      }
+
+      function occurrenceIndex(formula, target, name) {
+        return [...formula.host.querySelectorAll(`.katex-html [data-tangle-param="${name}"]`)].indexOf(target);
+      }
+
+      function openEditor(formula, name, occurrence = 0) {
+        closeEditor(false);
+        const spec = formula.parameters[name];
+        formula.revealed = name;
+        render(formula);
+        const targets = formula.host.querySelectorAll(`.katex-html [data-tangle-param="${name}"]`);
+        const currentTarget = targets[Math.max(0, occurrence)] || targets[0];
+        const input = document.createElement("input");
+        input.type = "text";
+        input.inputMode = "decimal";
+        input.className = `tangle-editor tangle-editor--${formula.editor}`;
+        input.dataset.editorFor = `${formula.id}:${name}`;
+        input.value = formatValue(spec.value, spec.digits);
+        input.setAttribute("aria-label", `Set ${spec.label}`);
+        input.style.setProperty("--editor-light", spec.color.light);
+        input.style.setProperty("--editor-dark", spec.color.dark);
+
+        const targetRect = currentTarget.getBoundingClientRect();
+        const stageRect = formula.stage.getBoundingClientRect();
+        if (formula.editor === "popover") {
+          input.style.left = `${targetRect.left + targetRect.width / 2 - stageRect.left}px`;
+          input.style.top = `${targetRect.bottom - stageRect.top + 10}px`;
+        } else {
+          currentTarget.style.visibility = "hidden";
+          input.style.left = `${targetRect.left + targetRect.width / 2 - stageRect.left}px`;
+          input.style.top = `${targetRect.top + targetRect.height / 2 - stageRect.top}px`;
+          input.style.width = `${Math.max(targetRect.width + 16, 54)}px`;
+          input.style.height = `${Math.max(targetRect.height + 8, 34)}px`;
+          input.style.fontSize = getComputedStyle(currentTarget).fontSize;
+          input.style.transform = "translate(-50%, -50%)";
+        }
+
+        formula.stage.appendChild(input);
+        activeEditor = { input, formula, name, spec, target: currentTarget, previous: spec.value };
+        input.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            closeEditor(true);
+          } else if (event.key === "Escape") {
+            event.preventDefault();
+            closeEditor(false);
+          }
+        });
+        input.addEventListener("blur", () => closeEditor(false));
+        input.focus();
+        input.select();
+      }
+
+      function closeEditor(commit) {
+        if (!activeEditor) return;
+        const editor = activeEditor;
+        if (commit) {
+          const parsed = Number(editor.input.value);
+          if (!Number.isFinite(parsed)) {
+            editor.input.classList.add("is-invalid");
+            editor.input.setAttribute("aria-invalid", "true");
+            editor.input.focus();
+            editor.input.select();
+            return;
+          }
+          editor.spec.value = snap(parsed, editor.spec);
+        } else {
+          editor.spec.value = editor.previous;
+        }
+        activeEditor = null;
+        editor.target.style.visibility = "";
+        editor.input.remove();
+        editor.formula.revealed = null;
+        render(editor.formula);
+      }
+
+      function snap(value, spec) {
+        const snapped = spec.min + Math.round((value - spec.min) / spec.step) * spec.step;
+        return roundForStep(clamp(snapped, spec.min, spec.max), spec.step);
+      }
+
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function roundForStep(value, step) {
+        const precision = Math.max(0, (String(step).split(".")[1] || "").length);
+        return Number(value.toFixed(precision + 2));
+      }
+
+      window.__latexTangleDemo = {
+        values: () => Object.fromEntries(
+          Object.entries(formulas).map(([formulaId, formula]) => [
+            formulaId,
+            Object.fromEntries(Object.entries(formula.parameters).map(([name, spec]) => [name, spec.value])),
+          ]),
+        ),
+        revealed: () => Object.fromEntries(Object.entries(formulas).map(([id, formula]) => [id, formula.revealed])),
+      };
+    });
+  </script>
+</body>
+</html>
