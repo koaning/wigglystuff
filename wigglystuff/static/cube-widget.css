@@ -1,0 +1,251 @@
+.cube-widget-root {
+  --color-bg: #fff;
+  --color-panel: #fff;
+  --color-text: #334155;
+  --color-text-muted: #94a3b8;
+  --color-border: #dbe3ea;
+  --color-track: #e2e8f0;
+  --color-surface: #f8fafc;
+  --color-wireframe: #64748b;
+  --shadow-panel: 0 7px 18px rgba(15, 23, 42, 0.09);
+
+  display: block;
+  max-width: 440px;
+  background: transparent;
+  color: var(--color-text);
+  color-scheme: light dark;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cube-widget-root.dark-mode {
+  --color-bg: #1a1a1a;
+  --color-panel: #242424;
+  --color-text: #e2e8f0;
+  --color-text-muted: #94a3b8;
+  --color-border: #3f3f46;
+  --color-track: #45454d;
+  --color-surface: #242424;
+  --color-wireframe: #555;
+  --shadow-panel: 0 7px 18px rgba(0, 0, 0, 0.22);
+}
+
+.cube-container {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-bg);
+}
+
+.cube-toolbar {
+  min-height: 38px;
+  padding: 0 8px 0 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.toolbar-title {
+  color: var(--color-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.state-display {
+  color: var(--color-text-muted);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.reset-button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.reset-button:hover {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.svg-container {
+  width: 100%;
+  aspect-ratio: 1.12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.cube-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.wireframe {
+  transition: opacity 0.18s ease;
+}
+
+.wireframe line {
+  transition: opacity 0.18s ease, stroke-dasharray 0.18s ease;
+}
+
+.cube-svg.has-selection .wireframe {
+  opacity: 0.14;
+}
+
+.cube-svg.has-selection .wireframe line {
+  stroke-opacity: 1;
+  stroke-dasharray: 4 5;
+}
+
+.axis,
+.axis-label {
+  cursor: pointer;
+}
+
+.axis-line,
+.axis-arrow {
+  transition: opacity 0.18s ease;
+}
+
+.cube-svg.has-selection .axis-line,
+.cube-svg.has-selection .axis-arrow {
+  opacity: 0.24;
+}
+
+.axis-cutout,
+.selection-cutout {
+  pointer-events: none;
+}
+
+.axis-label:hover .axis-label-bg {
+  filter: brightness(1.08);
+}
+
+.axis-label-bg {
+  transition: filter 0.15s ease;
+}
+
+.axis-label-text {
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.selection-plane polygon {
+  transition: opacity 0.2s ease;
+}
+
+.selection-line .selection-mark {
+  transition: stroke-width 0.2s ease;
+}
+
+.selection-point circle {
+  transition: r 0.2s ease;
+}
+
+.cube-controls {
+  position: relative;
+  z-index: 1;
+  margin: -36px 16px 14px;
+}
+
+.cube-controls[hidden] {
+  display: none;
+}
+
+.sliders-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 9px 11px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-panel);
+  box-shadow: var(--shadow-panel);
+}
+
+.slider-row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 42px;
+  gap: 9px;
+  align-items: center;
+}
+
+.slider-label {
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.axis-slider {
+  width: 100%;
+  height: 4px;
+  margin: 0;
+  border-radius: 999px;
+  background-color: var(--color-track);
+  background-image: linear-gradient(
+    to right,
+    var(--slider-color) 0,
+    var(--slider-color) var(--slider-progress),
+    var(--color-track) var(--slider-progress),
+    var(--color-track) 100%
+  );
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.axis-slider::-webkit-slider-thumb {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--color-panel);
+  border-radius: 50%;
+  background: var(--slider-color);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.18);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.axis-slider::-moz-range-thumb {
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--color-panel);
+  border-radius: 50%;
+  background: var(--slider-color);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.18);
+  cursor: pointer;
+}
+
+.slider-value {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-family: "SF Mono", Menlo, Monaco, monospace;
+  font-size: 10px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

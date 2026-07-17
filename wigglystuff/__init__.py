@@ -16,6 +16,7 @@ from .chart_select import ChartSelect
 from .circular_slider import CircularRangeSlider, CircularSlider
 from .color_picker import ColorPicker
 from .copy_to_clipboard import CopyToClipboard
+from .cube_widget import CubeWidget
 from .curve_editor import CurveEditor
 from .driver_tour import DriverTour
 from .edge_draw import EdgeDraw
@@ -74,6 +75,7 @@ __all__ = [
     "CircularSlider",
     "ColorPicker",
     "CopyToClipboard",
+    "CubeWidget",
     "CurveEditor",
     "DriverTour",
     "EdgeDraw",
