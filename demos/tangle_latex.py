@@ -2,7 +2,7 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "marimo>=0.23.3",
-#     "wigglystuff==0.5.19",
+#     "wigglystuff==0.5.20",
 # ]
 # ///
 
@@ -14,11 +14,13 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
+    import math
+
     import marimo as mo
 
-    from wigglystuff import TangleLatex
+    from wigglystuff import ObservablePlot, TangleLatex
 
-    return TangleLatex, mo
+    return ObservablePlot, TangleLatex, math, mo
 
 
 @app.cell(hide_code=True)
@@ -79,14 +81,45 @@ def _(TangleLatex, mo, theme):
 
 
 @app.cell(hide_code=True)
-def _(mo, numbers):
-    mo.vstack(
+def _(ObservablePlot, mo, numbers):
+    a, b, c = numbers.values["a"], numbers.values["b"], numbers.values["c"]
+    a0 = numbers.parameters["a"]["value"]
+    b0 = numbers.parameters["b"]["value"]
+    c0 = numbers.parameters["c"]["value"]
+    _xs = [-5 + i * 10 / 200 for i in range(201)]
+    curve = [{"x": x, "y": a * x**2 + b * x + c} for x in _xs]
+    _reference = [{"x": x, "y": a0 * x**2 + b0 * x + c0} for x in _xs]
+    parabola = ObservablePlot(
+        """
+        Plot.plot({
+            y: { grid: true },
+            marks: [
+                Plot.ruleY([0]),
+                Plot.ruleX([0]),
+                Plot.line(reference, { x: "x", y: "y", stroke: "#9ca3af", strokeDasharray: "4,4" }),
+                Plot.line(curve, { x: "x", y: "y", stroke: "#246bce", strokeWidth: 2 }),
+            ],
+        })
+        """,
+        variables={"curve": curve, "reference": _reference},
+        width=420,
+        height=300,
+    )
+    mo.hstack(
         [
-            mo.md("### Numbers in the formula"),
-            numbers,
-            mo.md(f"Current values: `{numbers.values}`"),
+            parabola,
+            mo.vstack(
+                [
+                    mo.md("### Numbers in the formula"),
+                    numbers,
+                    mo.md(f"Current values: `{numbers.values}`"),
+                    mo.md("The dashed grey line is the original curve."),
+                ],
+                gap=0.5,
+            ),
         ],
-        gap=0.5,
+        align="center",
+        gap=2,
     )
     return
 
@@ -133,14 +166,49 @@ def _(TangleLatex, mo, theme):
 
 
 @app.cell(hide_code=True)
-def _(mo, symbols):
-    mo.vstack(
+def _(ObservablePlot, math, mo, symbols):
+    def _normal(x, mu, sigma):
+        return math.exp(-((x - mu) ** 2) / (2 * sigma**2)) / (
+            sigma * math.sqrt(2 * math.pi)
+        )
+
+    mu, sigma = symbols.values["mu"], symbols.values["sigma"]
+    mu0 = symbols.parameters["mu"]["value"]
+    sigma0 = symbols.parameters["sigma"]["value"]
+    _xs = [-6 + i * 12 / 200 for i in range(201)]
+    pdf = [{"x": x, "y": _normal(x, mu, sigma)} for x in _xs]
+    _reference = [{"x": x, "y": _normal(x, mu0, sigma0)} for x in _xs]
+    bell = ObservablePlot(
+        """
+        Plot.plot({
+            y: { grid: true },
+            marks: [
+                Plot.ruleY([0]),
+                Plot.line(reference, { x: "x", y: "y", stroke: "#9ca3af", strokeDasharray: "4,4" }),
+                Plot.areaY(pdf, { x: "x", y: "y", fill: "#a23b78", fillOpacity: 0.15 }),
+                Plot.line(pdf, { x: "x", y: "y", stroke: "#a23b78", strokeWidth: 2 }),
+            ],
+        })
+        """,
+        variables={"pdf": pdf, "reference": _reference},
+        width=420,
+        height=300,
+    )
+    mo.hstack(
         [
-            mo.md("### Symbols that reveal together while dragging"),
-            symbols,
-            mo.md(f"Current values: `{symbols.values}`"),
+            bell,
+            mo.vstack(
+                [
+                    mo.md("### Symbols that reveal together while dragging"),
+                    symbols,
+                    mo.md(f"Current values: `{symbols.values}`"),
+                    mo.md("The dashed grey line is the original distribution."),
+                ],
+                gap=0.5,
+            ),
         ],
-        gap=0.5,
+        align="center",
+        gap=2,
     )
     return
 

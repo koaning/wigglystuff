@@ -35,6 +35,7 @@ nav = [
         { ColorPicker = "reference/color-picker.md" },
         { CopyToClipboard = "reference/copy-to-clipboard.md" },
         { "Tangle Widgets" = "reference/tangle.md" },
+        { TangleLatex = "reference/tangle-latex.md" },
         { GamepadWidget = "reference/gamepad.md" },
         { AnnotationWidget = "reference/annotation.md" },
         { WebcamCapture = "reference/webcam-capture.md" },

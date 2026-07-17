@@ -178,6 +178,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/envconfig.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/env-config/">API</a><a href="reference/env-config.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">TangleLatex</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_latex.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/tanglelatex.webp" alt="TangleLatex"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_latex.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/tangle-latex/">API</a><a href="reference/tangle-latex.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">Tangle</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/tangle.webp" alt="Tangle widgets"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/tangle/">API</a><a href="reference/tangle.md">MD</a></div>

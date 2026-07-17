@@ -2,11 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.20] - 2026-07-17
 
 ### Added
 
 - `CubeWidget`: progressively lock three configurable axes to select a plane, line, and point. The dependency-free SVG view includes smooth axis-colored sliders, reset and Python locking helpers, derived selection outputs, and light/dark theme support.
+- `TangleLatex`: render a LaTeX formula with `\tangle{name}` markers whose numbers (or symbols) become draggable, Bret Victor-style tangle controls. Each parameter is configured via a `parameters` dict (bounds, step, digits, color, symbol display), the live numbers sync back through the `values` traitlet, and `reveal_all_on_drag`, `editor`, and `theme` tune the interaction. See the `demos/tangle_latex.py` demo, where the parameters drive live Observable Plot charts.
 
 ## [0.5.19] - 2026-07-16
 
