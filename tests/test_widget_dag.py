@@ -1,3 +1,5 @@
+import pytest
+
 from wigglystuff import WidgetDAG
 from wigglystuff.widget_dag import _reduce_edges, layered_layout
 
@@ -58,3 +60,12 @@ def test_widget_dag_stores_nodes_edges_and_layout():
     assert widget.nodes == {"image": "<img>", "conv": "<img>"}
     assert widget.edges == [["image", "conv"]]
     assert widget.layout is layered_layout
+
+
+def test_widget_dag_display_raises_outside_marimo():
+    # Tests run outside a marimo kernel, so both display hooks should refuse.
+    widget = WidgetDAG(nodes={"a": "<img>"}, edges=[])
+    with pytest.raises(RuntimeError, match="marimo-only"):
+        widget._display_()
+    with pytest.raises(RuntimeError, match="marimo-only"):
+        widget._repr_mimebundle_()

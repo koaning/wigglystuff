@@ -20,6 +20,27 @@ class _Arrows(anywidget.AnyWidget):
     edges = traitlets.List().tag(sync=True)
 
 
+def _require_marimo_notebook():
+    """Raise unless we are displaying inside a running marimo notebook.
+
+    ``WidgetDAG`` renders by reaching into marimo's rendered DOM, so it is a
+    no-op anywhere else. Mirrors the ``mo.running_in_notebook()`` check in
+    ``wigglystuff/_marimo_notice.py``.
+    """
+    try:
+        import marimo as mo
+
+        if mo.running_in_notebook():
+            return
+    except ImportError:
+        pass
+    raise RuntimeError(
+        "WidgetDAG is a marimo-only display helper: it renders by reaching "
+        "into marimo's rendered DOM and does not work outside a running "
+        "marimo notebook."
+    )
+
+
 def layered_layout(nodes, edges):
     """Assign each node a column (0 = leftmost).
 
@@ -170,7 +191,13 @@ class WidgetDAG:
         edges = _reduce_edges(order, name_to_cell, ancestors)
         return cls(nodes, edges, layout=layout)
 
+    def _repr_mimebundle_(self, **kwargs):
+        # marimo prefers ``_display_``, so this only fires in Jupyter/IPython,
+        # where it turns a silent plain-text repr into a clear error.
+        _require_marimo_notebook()
+
     def _display_(self):
+        _require_marimo_notebook()
         import marimo as mo
 
         depth = self.layout(self.nodes, self.edges)
