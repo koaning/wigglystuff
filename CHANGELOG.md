@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `WidgetDAG` now raises a clear `RuntimeError` when displayed outside a running marimo notebook (in plain Jupyter/IPython or without a live kernel) instead of showing a silent plain-text repr. It renders by reaching into marimo's DOM, so it is marimo-only by design.
+
 ## [0.5.20] - 2026-07-17
 
 ### Added
