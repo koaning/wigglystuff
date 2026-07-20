@@ -8,7 +8,7 @@
 
 import marimo
 
-__generated_with = "0.23.3"
+__generated_with = "0.23.14"
 app = marimo.App(width="medium")
 
 
@@ -129,10 +129,10 @@ def _(ManimWeb):
         const scene = new manim.ThreeDScene(container, {
             width,
             height,
-            backgroundColor: "#191919",
+            backgroundColor: manim.WHITE,
             phi: 75 * Math.PI / 180,
             theta: -45 * Math.PI / 180,
-            distance: 12,
+            distance: 14,  // zoomed out enough that the top z label stays in frame
             fov: 30,
             enableOrbitControls: true,  // drag to rotate
             orbitControlsUp: "z",
@@ -141,13 +141,23 @@ def _(ManimWeb):
         const axes = new manim.ThreeDAxes({
             xRange: [-3, 3, 1], yRange: [-3, 3, 1], zRange: [-3, 3, 1],
             xLength: 6, yLength: 6, zLength: 6, showLabels: true,
+            axisColor: "#444444",  // axes default to white; darken for white bg
         });
+        // labels are white by default too, so recolor them to match the axes
+        axes.getXLabel()?.setColor("#444444");
+        axes.getYLabel()?.setColor("#444444");
+        axes.getZLabel()?.setColor("#444444");
         const sphere = new manim.Sphere({ radius: 1.5, color: manim.BLUE });
         scene.add(axes, sphere);
         scene.wait(Infinity);  // keep the render loop alive for orbit controls
     """
 
-    ManimWeb(code=scene_3d, width=640, height=400)
+    ManimWeb(code=scene_3d, width=640, height=500)
+    return
+
+
+@app.cell
+def _():
     return
 
 
