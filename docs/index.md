@@ -304,6 +304,14 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 
 <div class="example-gallery">
 <div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mujoco_sim.py/server?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/falling-balls.webp" alt="MuJoCo Falling Balls"></a>
+<div class="example-content">
+<div class="example-title">MuJoCo Physics</div>
+<div class="example-desc">Drive a headless MuJoCo physics sim with inline TangleSliders — drop semi-transparent bouncing balls and watch the rendered clip play back through mo.video. Runs on a molab server since MuJoCo is a native engine.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mujoco_sim.py/server?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/mujoco_sim.py">Source</a></div>
+</div>
+<div class="example-item">
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/dimensions.py?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/dimensions.webp" alt="Dimensions"></a>
 <div class="example-content">
 <div class="example-title">Dimensions</div>
