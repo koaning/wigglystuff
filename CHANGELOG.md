@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - New "MuJoCo Physics" example notebook (`demos/mujoco_sim.py`, linked from the docs gallery Examples section) — a headless MuJoCo simulation driven by inline `TangleSlider` controls (ball count, drop height, gravity, bounciness, clip length) that rains semi-transparent bouncing balls onto a floor, renders each step with MuJoCo's offscreen renderer, and plays the encoded `.mp4` back through `mo.video`. The gallery link boots it on a molab **server** (`…/mujoco_sim.py/server`) since MuJoCo is a native engine and can't run in WASM.
 
+### Changed
+
+- `WidgetDAG` now raises a clear `RuntimeError` when displayed outside a running marimo notebook (in plain Jupyter/IPython or without a live kernel) instead of showing a silent plain-text repr. It renders by reaching into marimo's DOM, so it is marimo-only by design.
+
 ## [0.5.20] - 2026-07-17
 
 ### Added
