@@ -102,7 +102,39 @@ def _(
     slider,
 ):
     WidgetDAG.from_widgets(
-        [e1, e2, slider, grp1_energy_left, grp2_energy_left, p_win_first, p_win_second, p_win]
+        [e1, e2, slider, grp1_energy_left, grp2_energy_left, p_win_first, p_win, p_win_second]
+    )
+    return
+
+
+@app.cell
+def _(mo):
+    from wigglystuff import ScatterLog
+
+    # Created once, in a cell with no dependencies, so it survives re-runs and
+    # can accumulate a history as you sweep the slider.
+    log = mo.ui.anywidget(
+        ScatterLog(x_label="my energy", y_label="p(win)", max_points=300)
+    )
+    return (log,)
+
+
+@app.cell
+def _(log):
+    log
+    return
+
+
+@app.cell
+def _(log, p_win, p_win_first, p_win_second, slider):
+    # Depends on slider + the probabilities, so it re-runs every time you move
+    # the slider. Pass every series you want to track as a keyword -- each name
+    # becomes its own legend entry. Sweep the slider to trace them vs energy.
+    log.append(
+        x=slider.value,
+        p_win=float(p_win),
+        p_win_first=float(p_win_first),
+        p_win_second=float(p_win_second),
     )
     return
 

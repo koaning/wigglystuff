@@ -1,8 +1,10 @@
 // A pure overlay: it owns no content. It finds the [data-wdag-node] boxes
-// that WidgetDAG laid out and connects them per `edges` with SVG arrows.
+// that WidgetDAG laid out and connects them per `routes` with SVG arrows.
+// Each route is a chain [src, ...waypoints, dst]; a long edge is drawn through
+// its (invisible) waypoint boxes so it never crosses a widget.
 const SVGNS = "http://www.w3.org/2000/svg";
 function render({ model, el }) {
-  const edges = model.get("edges");
+  const routes = model.get("routes");
   // el is sealed inside a <marimo-anywidget> shadow root. Climb out to the
   // host, find the light-DOM container WidgetDAG made, and draw the SVG there
   // so it shares a coordinate space with the node boxes.
@@ -16,7 +18,8 @@ function render({ model, el }) {
   svg.setAttribute("shape-rendering", "geometricPrecision");
   Object.assign(svg.style, { position: "absolute", left: 0, top: 0,
     width: "100%", height: "100%", pointerEvents: "none", overflow: "visible" });
-  svg.innerHTML = '<defs><marker id="wdag-ah" viewBox="0 0 12 12" refX="8.5" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0.5,0.5 L11.5,6 L0.5,11.5 Q4,6 0.5,0.5 Z" fill="#8a9096"/></marker></defs>';
+  // Chevron ("open V") arrowhead in the same gray as the line.
+  svg.innerHTML = '<defs><marker id="wdag-ah" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M1.5,1 L8.5,5 L1.5,9" fill="none" stroke="#9aa0a6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
   root.appendChild(svg);
   function draw() {
     [...svg.querySelectorAll("path.edge")].forEach((p) => p.remove());
@@ -26,26 +29,40 @@ function render({ model, el }) {
     const rect = (id) => {
       const r = boxes[id].getBoundingClientRect();
       return { left: r.left - base.left, right: r.right - base.left,
+               cx: r.left - base.left + r.width / 2,
                top: r.top - base.top, h: r.height, cy: r.top - base.top + r.height / 2 };
     };
-    const es = edges.filter(([s, d]) => boxes[s] && boxes[d]);
-    // Fan out shared endpoints: group by source (exits) and target (entries)...
+    const rs = routes.filter((r) => r.every((id) => boxes[id]));
+    const last = (r) => r[r.length - 1];
+    // Fan out shared real endpoints: group by source (exits) and target
+    // (entries), ordered by the height of the adjacent point so lines don't cross.
     const outBySrc = {}, inByDst = {};
-    es.forEach((e, i) => { (outBySrc[e[0]] ||= []).push(i); (inByDst[e[1]] ||= []).push(i); });
-    // ...and order the slots by the other end's height so lines don't cross.
-    for (const s in outBySrc) outBySrc[s].sort((a, b) => rect(es[a][1]).cy - rect(es[b][1]).cy);
-    for (const d in inByDst) inByDst[d].sort((a, b) => rect(es[a][0]).cy - rect(es[b][0]).cy);
+    rs.forEach((r, i) => { (outBySrc[r[0]] ||= []).push(i); (inByDst[last(r)] ||= []).push(i); });
+    for (const s in outBySrc) outBySrc[s].sort((a, b) => rect(rs[a][1]).cy - rect(rs[b][1]).cy);
+    for (const d in inByDst) inByDst[d].sort((a, b) => rect(rs[a][rs[a].length - 2]).cy - rect(rs[b][rs[b].length - 2]).cy);
     const slot = (r, idx, n) => r.top + (r.h * (idx + 1)) / (n + 1);
-    es.forEach((e, i) => {
-      const rs = rect(e[0]), rd = rect(e[1]), out = outBySrc[e[0]], inn = inByDst[e[1]];
-      const x1 = rs.right, y1 = slot(rs, out.indexOf(i), out.length);
-      const x2 = rd.left - 5, y2 = slot(rd, inn.indexOf(i), inn.length);
-      const dx = Math.max(24, (x2 - x1) * 0.5);  // horizontal tangents -> smooth S
+    rs.forEach((route, i) => {
+      const src = rect(route[0]), dst = rect(last(route));
+      const out = outBySrc[route[0]], inn = inByDst[last(route)];
+      // waypoints route through their box centres; endpoints use fan-out slots
+      const pts = [[src.right, slot(src, out.indexOf(i), out.length)]];
+      for (let k = 1; k < route.length - 1; k++) { const w = rect(route[k]); pts.push([w.cx, w.cy]); }
+      pts.push([dst.left - 3, slot(dst, inn.indexOf(i), inn.length)]);
+      let d = `M ${pts[0][0]} ${pts[0][1]}`;
+      for (let k = 0; k < pts.length - 1; k++) {
+        // Horizontal tangents give a smooth S; scaling the handle by the
+        // vertical drop keeps steep hops from arriving at a sharp angle
+        // (so the arrowhead always sits flat, never "bolted on").
+        const [ax, ay] = pts[k], [bx, by] = pts[k + 1];
+        const dx = Math.min(Math.max((bx - ax) * 0.5, Math.abs(by - ay) * 0.5, 22), 120);
+        d += ` C ${ax + dx} ${ay}, ${bx - dx} ${by}, ${bx} ${by}`;
+      }
       const p = document.createElementNS(SVGNS, "path");
       p.setAttribute("class", "edge");
-      p.setAttribute("d", `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`);
+      p.setAttribute("d", d);
       p.setAttribute("fill", "none"); p.setAttribute("stroke", "#9aa0a6");
       p.setAttribute("stroke-width", "1.5"); p.setAttribute("stroke-linecap", "round");
+      p.setAttribute("stroke-linejoin", "round");
       p.setAttribute("marker-end", "url(#wdag-ah)");
       svg.appendChild(p);
     });
