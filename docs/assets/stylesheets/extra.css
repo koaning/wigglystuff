@@ -338,6 +338,7 @@
    —————————————————————————————————————————— */
 @media (max-width: 600px) {
   .gallery-links {
+    flex-wrap: wrap;
     gap: 0.375rem;
     padding: 0.5rem;
   }
@@ -345,5 +346,10 @@
   .gallery-links a {
     font-size: 0.65rem;
     padding: 0.25rem 0.5rem;
+  }
+
+  /* Drop the raw-markdown ("MD") link on mobile to keep the row on one line */
+  .gallery-links a[href$=".md"] {
+    display: none;
   }
 }
