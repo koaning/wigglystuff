@@ -5,7 +5,7 @@
 #     "mohtml",
 #     "numpy",
 #     "pillow",
-#     "wigglystuff==0.5.19",
+#     "wigglystuff==0.5.21",
 # ]
 # ///
 
@@ -48,6 +48,20 @@ def _(mo):
     Each node lives in its own cell, so `WidgetDAG.from_widgets([...])` reads
     marimo's dataflow graph to place the nodes by edge-depth and draw the arrows
     for you -- no `edges=` list to spell out by hand.
+    """)
+    return
+
+
+@app.cell
+def _(angle, conv, conv2, kernel, kernel2, paint):
+    [conv, angle, paint, kernel, kernel2, conv2]
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Above is "meh", we can do better below.
     """)
     return
 

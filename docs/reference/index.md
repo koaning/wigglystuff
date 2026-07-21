@@ -32,4 +32,5 @@ Browse widget-specific reference pages below. Each page is generated automatical
 - [RidgelineChart](ridgeline-chart.md)
 - [TextCompare](text-compare.md)
 - [EnvConfig](env-config.md)
+- [ScatterLog](scatter-log.md)
 - [Utils](utils.md)

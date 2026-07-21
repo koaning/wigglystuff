@@ -2,22 +2,44 @@
 
 from __future__ import annotations
 
+from html import escape
+from itertools import permutations
 from pathlib import Path
 
 import anywidget
 import traitlets
 
+# Prefix for dummy "waypoint" node ids inserted for edges that span more than
+# one column. It starts with "!" so it can never equal a real node id (those
+# are Python identifiers), while staying a valid HTML attribute value.
+_WP = "!wdag_wp"
+_FLOAT_PRECISION = 4
+
+
+def _format_float_html(value):
+    """Return compact HTML for a bare float, or ``None`` for other nodes."""
+    if not isinstance(value, float):
+        return None
+    exact = repr(value)
+    compact = format(value, f".{_FLOAT_PRECISION}g")
+    return (
+        f'<span title="Exact value: {escape(exact)}">'
+        f"{escape(compact)}</span>"
+    )
+
 
 class _Arrows(anywidget.AnyWidget):
-    """A pure SVG overlay that connects ``[data-wdag-node]`` boxes per ``edges``.
+    """A pure SVG overlay that connects ``[data-wdag-node]`` boxes per ``routes``.
 
     It owns no content of its own: the ESM climbs out of its shadow root to the
     ``[data-wdag-root]`` container ``WidgetDAG`` laid out and draws arrows into
-    it, so the SVG shares a coordinate space with the node boxes.
+    it, so the SVG shares a coordinate space with the node boxes. Each entry in
+    ``routes`` is a chain ``[src, *waypoints, dst]`` of node ids; a long edge is
+    routed through the invisible waypoint boxes so it never crosses a widget.
     """
 
     _esm = Path(__file__).parent / "static" / "widget-dag.js"
-    edges = traitlets.List().tag(sync=True)
+    routes = traitlets.List().tag(sync=True)
 
 
 def _require_marimo_notebook():
@@ -105,6 +127,76 @@ def _reduce_edges(order, name_to_cell, ancestors):
                 continue
             edges.append([u, v])
     return edges
+
+
+def _order_and_route(order, columns, edges, sweeps=8, brute_cap=6):
+    """Order the nodes within each column to reduce edge crossings, and split
+    every edge that spans more than one column with dummy waypoint nodes.
+
+    ``order`` seeds each column (ties broken by input order), ``columns`` maps a
+    node to its column (from the layout), and ``edges`` is ``[[u, v], ...]`` with
+    ``columns[u] < columns[v]``. Returns ``(layers, routes, dummies)``:
+
+    - ``layers`` -- ``{column: [id, ...]}`` in top-to-bottom order (ids are real
+      node names or ``_WP``-prefixed waypoints).
+    - ``routes`` -- one chain ``[u, *waypoints, v]`` per edge, so a long edge is
+      drawn through the reserved (empty) waypoint lanes instead of over a widget.
+    - ``dummies`` -- the set of waypoint ids.
+
+    Ordering is the standard layer-by-layer crossing minimization: split long
+    edges into single-column segments, then repeatedly pick, for each column, the
+    within-column order that minimizes crossings with the neighbouring column.
+    Graphs that admit a crossing-free order under the assigned layering can
+    reach zero; the rest are minimized, not guaranteed (that is NP-hard).
+    Columns wider than ``brute_cap`` keep their seeded order rather than
+    brute-forcing.
+    """
+    max_col = max(columns.values(), default=0)
+    layers = {c: [] for c in range(max_col + 1)}
+    for n in order:
+        layers[columns[n]].append(n)
+
+    seg_children = {}  # node -> nodes one column to its right (after splitting)
+    routes = []
+    dummies = set()
+    for u, v in edges:
+        prev, chain = u, [u]
+        for c in range(columns[u] + 1, columns[v]):
+            d = f"{_WP}{len(dummies)}"
+            dummies.add(d)
+            layers[c].append(d)
+            seg_children.setdefault(prev, []).append(d)
+            prev, _ = d, chain.append(d)
+        seg_children.setdefault(prev, []).append(v)
+        chain.append(v)
+        routes.append(chain)
+
+    def crossings(upper, lower):
+        pos_l = {n: i for i, n in enumerate(lower)}
+        seg = [
+            (i, pos_l[c])
+            for i, n in enumerate(upper)
+            for c in seg_children.get(n, [])
+            if c in pos_l
+        ]
+        return sum(
+            1
+            for a in range(len(seg))
+            for b in range(a + 1, len(seg))
+            if (seg[a][0] - seg[b][0]) * (seg[a][1] - seg[b][1]) < 0
+        )
+
+    def best(layer, score):
+        return min((list(p) for p in permutations(layer)), key=score)
+
+    for _ in range(sweeps):
+        for c in range(1, max_col + 1):
+            if len(layers[c]) <= brute_cap:
+                layers[c] = best(layers[c], lambda p, c=c: crossings(layers[c - 1], p))
+        for c in range(max_col - 1, -1, -1):
+            if len(layers[c]) <= brute_cap:
+                layers[c] = best(layers[c], lambda p, c=c: crossings(p, layers[c + 1]))
+    return layers, routes, dummies
 
 
 class WidgetDAG:
@@ -201,20 +293,30 @@ class WidgetDAG:
         import marimo as mo
 
         depth = self.layout(self.nodes, self.edges)
+        layers, routes, dummies = _order_and_route(list(self.nodes), depth, self.edges)
         columns = []
-        for lvl in range(max(depth.values(), default=0) + 1):
-            boxes = [
-                mo.md(
-                    f'<div data-wdag-node="{k}" style="display:inline-flex;'
-                    f'flex-direction:column;align-items:center;gap:4px">{v}'
-                    f'<span style="font:11px monospace;color:#888">{k}</span></div>'
-                )
-                for k, v in self.nodes.items()
-                if depth[k] == lvl
-            ]
+        for lvl in sorted(layers):
+            boxes = []
+            for k in layers[lvl]:
+                if k in dummies:
+                    # an invisible routing lane reserved for a long edge
+                    boxes.append(mo.md(f'<div data-wdag-node="{k}" style="height:18px"></div>'))
+                else:
+                    node_html = _format_float_html(self.nodes[k])
+                    if node_html is None:
+                        node_html = mo.as_html(self.nodes[k])
+                    boxes.append(
+                        mo.md(
+                            f'<div data-wdag-node="{k}" style="display:inline-flex;'
+                            f'flex-direction:column;align-items:center;gap:4px">'
+                            f"{node_html}"
+                            f'<span style="font:11px monospace;color:#888">{k}</span></div>'
+                        )
+                    )
             columns.append(mo.vstack(boxes, gap=1.5, align="center"))
-        board = mo.hstack(columns, gap=4, align="center", justify="start")
-        overlay = mo.ui.anywidget(_Arrows(edges=self.edges))
+        # gap=6 reserves a clear inter-column corridor for tight turns and heads.
+        board = mo.hstack(columns, gap=6, align="center", justify="start")
+        overlay = mo.ui.anywidget(_Arrows(routes=routes))
         return mo.md(
             f'<div data-wdag-root style="position:relative;'
             f'display:inline-block">{board}{overlay}</div>'

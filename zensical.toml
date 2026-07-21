@@ -51,6 +51,7 @@ nav = [
         { TextCompare = "reference/text-compare.md" },
         { EnvConfig = "reference/env-config.md" },
         { AltairWidget = "reference/altair-widget.md" },
+        { ScatterLog = "reference/scatter-log.md" },
         { ApiDoc = "reference/api-doc.md" },
         { PlaySlider = "reference/play-slider.md" },
         { FramePlayer = "reference/frame-player.md" },

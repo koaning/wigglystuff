@@ -2,14 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.21] - 2026-07-21
 
 ### Added
 
 - New "MuJoCo Physics" example notebook (`demos/mujoco_sim.py`, linked from the docs gallery Examples section) — a headless MuJoCo simulation driven by inline `TangleSlider` controls (ball count, drop height, gravity, bounciness, clip length) that rains semi-transparent bouncing balls onto a floor, renders each step with MuJoCo's offscreen renderer, and plays the encoded `.mp4` back through `mo.video`. The gallery link boots it on a molab **server** (`…/mujoco_sim.py/server`) since MuJoCo is a native engine and can't run in WASM.
+- `ScatterLog`: accumulate values from reactive cells into a live scatter plot without resetting the history on every notebook re-run. Append one point or several named series at once, bound retained history with `max_points`, inspect it through `data`, and reset with `clear()`.
+- New `WidgetDAG` dice-probability demo combining live dependency routing with `ScatterLog` history.
+
+### Fixed
+
+- `WidgetDAG` now renders each node through `mo.as_html`, so nodes that display via `_repr_html_`/`_repr_mimebundle_` (charts, raw anywidgets) show their content instead of an empty box; previously only marimo `Html`/UI nodes rendered.
 
 ### Changed
 
+- Bare float nodes in `WidgetDAG` now display four significant digits instead of Python's full floating-point repr; hovering the compact value reveals the exact value.
+- `WidgetDAG` edges now use tight, near-orthogonal turns inside the clear gaps between columns. Routes keep the layout's crossing-minimized order and continue through reserved waypoint lanes for long edges, avoiding broad curves that could sweep across neighbouring widgets.
 - `WidgetDAG` now raises a clear `RuntimeError` when displayed outside a running marimo notebook (in plain Jupyter/IPython or without a live kernel) instead of showing a silent plain-text repr. It renders by reaching into marimo's DOM, so it is marimo-only by design.
 
 ## [0.5.20] - 2026-07-17
