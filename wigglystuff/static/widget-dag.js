@@ -50,11 +50,13 @@ function render({ model, el }) {
       pts.push([dst.left - 3, slot(dst, inn.indexOf(i), inn.length)]);
       let d = `M ${pts[0][0]} ${pts[0][1]}`;
       for (let k = 0; k < pts.length - 1; k++) {
-        // Horizontal tangents give a smooth S; scaling the handle by the
-        // vertical drop keeps steep hops from arriving at a sharp angle
-        // (so the arrowhead always sits flat, never "bolted on").
+        // Horizontal tangents at both ends -> the arrowhead always arrives
+        // flat. The handle is exactly half the horizontal gap so the curve is
+        // x-monotonic (never doubles back): with the columns already in a
+        // crossing-free order, x-monotone edges can't cross. The column gap
+        // (set in _display_) gives the room that keeps the arrival gentle.
         const [ax, ay] = pts[k], [bx, by] = pts[k + 1];
-        const dx = Math.min(Math.max((bx - ax) * 0.5, Math.abs(by - ay) * 0.5, 22), 120);
+        const dx = (bx - ax) * 0.5;
         d += ` C ${ax + dx} ${ay}, ${bx - dx} ${by}, ${bx} ${by}`;
       }
       const p = document.createElementNS(SVGNS, "path");

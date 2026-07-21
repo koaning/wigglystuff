@@ -296,7 +296,9 @@ class WidgetDAG:
                         )
                     )
             columns.append(mo.vstack(boxes, gap=1.5, align="center"))
-        board = mo.hstack(columns, gap=4, align="center", justify="start")
+        # gap=6 gives edges horizontal room to arrive gently (the overlay keeps
+        # them x-monotonic, so more room = flatter approach, never a crossing)
+        board = mo.hstack(columns, gap=6, align="center", justify="start")
         overlay = mo.ui.anywidget(_Arrows(routes=routes))
         return mo.md(
             f'<div data-wdag-root style="position:relative;'

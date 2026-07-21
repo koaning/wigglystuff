@@ -53,6 +53,20 @@ def _(mo):
 
 
 @app.cell
+def _(angle, conv, conv2, kernel, kernel2, paint):
+    [paint, angle, kernel, conv, kernel2, conv2]
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Above is "meh", we can do better below.
+    """)
+    return
+
+
+@app.cell
 def _(WidgetDAG, angle, conv, conv2, kernel, kernel2, paint):
     WidgetDAG.from_widgets([paint, angle, kernel, conv, kernel2, conv2])
     return

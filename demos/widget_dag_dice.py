@@ -12,7 +12,7 @@
 import marimo
 
 __generated_with = "0.23.14"
-app = marimo.App(width="columns", sql_output="polars")
+app = marimo.App(width="medium", sql_output="polars")
 
 
 @app.cell
@@ -32,6 +32,26 @@ def _():
     from wigglystuff import WidgetDAG
 
     return Dice, WidgetDAG, mo, ordered, p
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    This notebook is inspired by the [Fiddler on the Proof](https://thefiddler.substack.com/p/can-you-win-the-world-cup) mailing list. Check it out if you haven't already!
+
+    ## The Riddle
+
+    Here's the riddle we want to tackle.
+
+    > Congratulations to Fiddler Nation for making it to the semifinals of the World Cup! All four teams that made it this far are equally matched in that they each possess the same total amount of “energy.” In advance of each semifinal game, teams must independently decide how much of their energy to allocate to the match; all remaining energy goes toward the finals. The team that spends more energy in any given game will win. The semifinals and finals occur so close in time that teams can’t recuperate any of their energy in between.
+
+    > You’ve heard that the managers for the other three teams are abysmal and have no idea how to allocate their teams’ energy. Each of the other managers will independently pick a random percentage between 0 and 100 and allocate that portion of their team’s energy to the semifinal game; the rest of that team’s energy will go toward the final.
+
+    > Since you’re the cleverest manager of the bunch, you can choose an optimal strategy that will maximize Fiddler Nation’s probability of winning the World Cup. What is this optimal probability?
+
+    So let's model this. I will assume that we represent player 3.
+    """)
+    return
 
 
 @app.cell
@@ -61,19 +81,19 @@ def _(Dice):
 
 @app.cell
 def _(e1, e2, ordered):
-    grp1_energy_left = 100 - ordered(e1, e2)[-1]
+    grp1_energy_left = 100 - ordered(e1, e2)[0]
     return (grp1_energy_left,)
 
 
 @app.cell
-def _(e3, e4, ordered):
-    grp2_energy_left = 100 - ordered(e3, e4)[-1]
+def _(e3):
+    grp2_energy_left = 100 - e3
     return (grp2_energy_left,)
 
 
 @app.cell
-def _(e4, p, slider):
-    p_win_first = p(slider.value > e4)
+def _(e3, e4, p):
+    p_win_first = p(e3 > e4)
     return (p_win_first,)
 
 
@@ -107,14 +127,14 @@ def _(
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     from wigglystuff import ScatterLog
 
     # Created once, in a cell with no dependencies, so it survives re-runs and
     # can accumulate a history as you sweep the slider.
     log = mo.ui.anywidget(
-        ScatterLog(x_label="my energy", y_label="p(win)", max_points=300)
+        ScatterLog(x_label="my energy", y_label="p(win)", max_points=500)
     )
     return (log,)
 
@@ -127,9 +147,9 @@ def _(log):
 
 @app.cell
 def _(log, p_win, p_win_first, p_win_second, slider):
-    # Depends on slider + the probabilities, so it re-runs every time you move
-    # the slider. Pass every series you want to track as a keyword -- each name
-    # becomes its own legend entry. Sweep the slider to trace them vs energy.
+    # # Depends on slider + the probabilities, so it re-runs every time you move
+    # # the slider. Pass every series you want to track as a keyword -- each name
+    # # becomes its own legend entry. Sweep the slider to trace them vs energy.
     log.append(
         x=slider.value,
         p_win=float(p_win),
