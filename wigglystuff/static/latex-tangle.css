@@ -91,10 +91,6 @@
   z-index: 1;
 }
 
-.latex-tangle__formula [data-tangle-param] > * {
-  box-shadow: inset 0 -0.065em 0 color-mix(in srgb, currentColor, transparent 32%);
-}
-
 .latex-tangle__formula .katex-html * {
   pointer-events: none;
 }
