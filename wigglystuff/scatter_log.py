@@ -126,6 +126,7 @@ class ScatterLog(AltairWidget):
     def clear(self) -> None:
         """Drop all accumulated points and blank the chart."""
         self._points = []
+        self._has_color = False
         self.spec = {}
 
     @property

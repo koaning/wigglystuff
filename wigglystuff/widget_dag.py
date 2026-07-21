@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from html import escape
 from itertools import permutations
 from pathlib import Path
 
@@ -12,6 +13,19 @@ import traitlets
 # one column. It starts with "!" so it can never equal a real node id (those
 # are Python identifiers), while staying a valid HTML attribute value.
 _WP = "!wdag_wp"
+_FLOAT_PRECISION = 4
+
+
+def _format_float_html(value):
+    """Return compact HTML for a bare float, or ``None`` for other nodes."""
+    if not isinstance(value, float):
+        return None
+    exact = repr(value)
+    compact = format(value, f".{_FLOAT_PRECISION}g")
+    return (
+        f'<span title="Exact value: {escape(exact)}">'
+        f"{escape(compact)}</span>"
+    )
 
 
 class _Arrows(anywidget.AnyWidget):
@@ -131,10 +145,11 @@ def _order_and_route(order, columns, edges, sweeps=8, brute_cap=6):
 
     Ordering is the standard layer-by-layer crossing minimization: split long
     edges into single-column segments, then repeatedly pick, for each column, the
-    within-column order that minimizes crossings with the neighbouring column. A
-    DAG that admits a crossing-free layered drawing (any planar one) reaches
-    zero; the rest are minimized, not guaranteed (that is NP-hard). Columns wider
-    than ``brute_cap`` keep their seeded order rather than brute-forcing.
+    within-column order that minimizes crossings with the neighbouring column.
+    Graphs that admit a crossing-free order under the assigned layering can
+    reach zero; the rest are minimized, not guaranteed (that is NP-hard).
+    Columns wider than ``brute_cap`` keep their seeded order rather than
+    brute-forcing.
     """
     max_col = max(columns.values(), default=0)
     layers = {c: [] for c in range(max_col + 1)}
@@ -287,17 +302,19 @@ class WidgetDAG:
                     # an invisible routing lane reserved for a long edge
                     boxes.append(mo.md(f'<div data-wdag-node="{k}" style="height:18px"></div>'))
                 else:
+                    node_html = _format_float_html(self.nodes[k])
+                    if node_html is None:
+                        node_html = mo.as_html(self.nodes[k])
                     boxes.append(
                         mo.md(
                             f'<div data-wdag-node="{k}" style="display:inline-flex;'
                             f'flex-direction:column;align-items:center;gap:4px">'
-                            f'{mo.as_html(self.nodes[k])}'
+                            f"{node_html}"
                             f'<span style="font:11px monospace;color:#888">{k}</span></div>'
                         )
                     )
             columns.append(mo.vstack(boxes, gap=1.5, align="center"))
-        # gap=6 gives edges horizontal room to arrive gently (the overlay keeps
-        # them x-monotonic, so more room = flatter approach, never a crossing)
+        # gap=6 reserves a clear inter-column corridor for tight turns and heads.
         board = mo.hstack(columns, gap=6, align="center", justify="start")
         overlay = mo.ui.anywidget(_Arrows(routes=routes))
         return mo.md(

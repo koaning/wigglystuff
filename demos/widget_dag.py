@@ -5,7 +5,7 @@
 #     "mohtml",
 #     "numpy",
 #     "pillow",
-#     "wigglystuff==0.5.19",
+#     "wigglystuff==0.5.21",
 # ]
 # ///
 
@@ -54,7 +54,7 @@ def _(mo):
 
 @app.cell
 def _(angle, conv, conv2, kernel, kernel2, paint):
-    [paint, angle, kernel, conv, kernel2, conv2]
+    [conv, angle, paint, kernel, kernel2, conv2]
     return
 
 

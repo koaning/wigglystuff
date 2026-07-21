@@ -4,7 +4,7 @@
 #     "hastyplot==0.4.1",
 #     "marimo",
 #     "pandas==3.0.3",
-#     "wigglystuff==0.5.20",
+#     "wigglystuff==0.5.21",
 # ]
 # requires-python = ">=3.12"
 # ///
@@ -128,9 +128,10 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(mo):
+def _(mo, p_win, p_win_first, p_win_second):
     from wigglystuff import ScatterLog
 
+    p_win, p_win_second, p_win_first
     # Created once, in a cell with no dependencies, so it survives re-runs and
     # can accumulate a history as you sweep the slider.
     log = mo.ui.anywidget(
@@ -156,11 +157,6 @@ def _(log, p_win, p_win_first, p_win_second, slider):
         p_win_first=float(p_win_first),
         p_win_second=float(p_win_second),
     )
-    return
-
-
-@app.cell
-def _():
     return
 
 

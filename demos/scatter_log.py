@@ -2,7 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
-#     "wigglystuff==0.5.20",
+#     "wigglystuff==0.5.21",
 # ]
 # ///
 
@@ -44,13 +44,13 @@ def _(ScatterLog, mo):
 
 @app.cell
 def _(Slider2D, mo):
-    pad = mo.ui.anywidget(Slider2D(width=200))
+    pad = mo.ui.anywidget(Slider2D(width=200, height=200))
     return (pad,)
 
 
 @app.cell
-def _(log, mo, pad):
-    mo.hstack([pad, log], align="center", gap=2)
+def _(log, pad):
+    [pad, log]
     return
 
 

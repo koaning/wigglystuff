@@ -3,6 +3,53 @@
 // Each route is a chain [src, ...waypoints, dst]; a long edge is drawn through
 // its (invisible) waypoint boxes so it never crosses a widget.
 const SVGNS = "http://www.w3.org/2000/svg";
+const TURN_HALF_WIDTH = 7;
+
+function edgePaths(pointRoutes) {
+  const bands = pointRoutes.map((points) => Array(Math.max(0, points.length - 1)).fill(null));
+  const byColumns = {};
+  pointRoutes.forEach((points, routeIndex) => {
+    for (let segmentIndex = 0; segmentIndex < points.length - 1; segmentIndex++) {
+      const a = points[segmentIndex], b = points[segmentIndex + 1];
+      // Boxes in one layer share a centre x. Group every segment crossing the
+      // same pair of layers so they all turn through one common clear band.
+      const key = `${Math.round(a.columnX)}:${Math.round(b.columnX)}`;
+      (byColumns[key] ||= []).push({ routeIndex, segmentIndex, a, b });
+    }
+  });
+  Object.values(byColumns).forEach((segments) => {
+    const clearLeft = Math.max(...segments.map(({ a }) => a.x));
+    const clearRight = Math.min(...segments.map(({ b }) => b.x));
+    if (clearRight <= clearLeft) return;
+    const turnX = (clearLeft + clearRight) / 2;
+    const halfWidth = Math.min(TURN_HALF_WIDTH, (clearRight - clearLeft) / 2);
+    segments.forEach(({ routeIndex, segmentIndex }) => {
+      bands[routeIndex][segmentIndex] = { turnX, halfWidth };
+    });
+  });
+  return pointRoutes.map((points, routeIndex) => {
+    let d = `M ${points[0].x} ${points[0].y}`;
+    for (let segmentIndex = 0; segmentIndex < points.length - 1; segmentIndex++) {
+      const a = points[segmentIndex], b = points[segmentIndex + 1];
+      const band = bands[routeIndex][segmentIndex];
+      if (Math.abs(a.y - b.y) < 0.01) {
+        d += ` H ${b.x}`;
+      } else if (band) {
+        const { turnX, halfWidth } = band;
+        d += ` H ${turnX - halfWidth}`;
+        d += ` C ${turnX} ${a.y}, ${turnX} ${b.y}, ${turnX + halfWidth} ${b.y}`;
+        d += ` H ${b.x}`;
+      } else {
+        // Degenerate/custom geometry with no shared corridor: retain the old
+        // x-monotonic curve instead of routing through an occupied node area.
+        const dx = (b.x - a.x) * 0.5;
+        d += ` C ${a.x + dx} ${a.y}, ${b.x - dx} ${b.y}, ${b.x} ${b.y}`;
+      }
+    }
+    return d;
+  });
+}
+
 function render({ model, el }) {
   const routes = model.get("routes");
   // el is sealed inside a <marimo-anywidget> shadow root. Climb out to the
@@ -41,27 +88,31 @@ function render({ model, el }) {
     for (const s in outBySrc) outBySrc[s].sort((a, b) => rect(rs[a][1]).cy - rect(rs[b][1]).cy);
     for (const d in inByDst) inByDst[d].sort((a, b) => rect(rs[a][rs[a].length - 2]).cy - rect(rs[b][rs[b].length - 2]).cy);
     const slot = (r, idx, n) => r.top + (r.h * (idx + 1)) / (n + 1);
-    rs.forEach((route, i) => {
+    const pointRoutes = rs.map((route, i) => {
       const src = rect(route[0]), dst = rect(last(route));
       const out = outBySrc[route[0]], inn = inByDst[last(route)];
       // waypoints route through their box centres; endpoints use fan-out slots
-      const pts = [[src.right, slot(src, out.indexOf(i), out.length)]];
-      for (let k = 1; k < route.length - 1; k++) { const w = rect(route[k]); pts.push([w.cx, w.cy]); }
-      pts.push([dst.left - 3, slot(dst, inn.indexOf(i), inn.length)]);
-      let d = `M ${pts[0][0]} ${pts[0][1]}`;
-      for (let k = 0; k < pts.length - 1; k++) {
-        // Horizontal tangents at both ends -> the arrowhead always arrives
-        // flat. The handle is exactly half the horizontal gap so the curve is
-        // x-monotonic (never doubles back): with the columns already in a
-        // crossing-free order, x-monotone edges can't cross. The column gap
-        // (set in _display_) gives the room that keeps the arrival gentle.
-        const [ax, ay] = pts[k], [bx, by] = pts[k + 1];
-        const dx = (bx - ax) * 0.5;
-        d += ` C ${ax + dx} ${ay}, ${bx - dx} ${by}, ${bx} ${by}`;
+      const points = [{
+        x: src.right,
+        y: slot(src, out.indexOf(i), out.length),
+        columnX: src.cx,
+      }];
+      for (let k = 1; k < route.length - 1; k++) {
+        const waypoint = rect(route[k]);
+        points.push({ x: waypoint.cx, y: waypoint.cy, columnX: waypoint.cx });
       }
+      points.push({
+        x: dst.left - 3,
+        y: slot(dst, inn.indexOf(i), inn.length),
+        columnX: dst.cx,
+      });
+      return points;
+    });
+    const paths = edgePaths(pointRoutes);
+    rs.forEach((route, i) => {
       const p = document.createElementNS(SVGNS, "path");
       p.setAttribute("class", "edge");
-      p.setAttribute("d", d);
+      p.setAttribute("d", paths[i]);
       p.setAttribute("fill", "none"); p.setAttribute("stroke", "#9aa0a6");
       p.setAttribute("stroke-width", "1.5"); p.setAttribute("stroke-linecap", "round");
       p.setAttribute("stroke-linejoin", "round");
