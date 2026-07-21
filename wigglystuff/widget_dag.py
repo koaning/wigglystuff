@@ -206,7 +206,7 @@ class WidgetDAG:
             boxes = [
                 mo.md(
                     f'<div data-wdag-node="{k}" style="display:inline-flex;'
-                    f'flex-direction:column;align-items:center;gap:4px">{v}'
+                    f'flex-direction:column;align-items:center;gap:4px">{mo.as_html(v)}'
                     f'<span style="font:11px monospace;color:#888">{k}</span></div>'
                 )
                 for k, v in self.nodes.items()

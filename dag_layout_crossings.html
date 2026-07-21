@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Can a DAG always be drawn without crossings?</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #fbfbfc; --fg: #1c2024; --muted: #6b7280; --card: #ffffff;
+    --line: #e3e6ea; --node: #4c6ef5; --nodefill: #eef2ff; --edge: #9aa0a6;
+    --good: #157347; --bad: #c02a2a; --accent: #4c6ef5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a; --fg: #e6e8eb; --muted: #9aa0a6; --card: #1c1f24;
+      --line: #2a2e35; --node: #91a7ff; --nodefill: #232a44; --edge: #7c828a;
+      --good: #4ade80; --bad: #f87171; --accent: #91a7ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1 { font-size: 30px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h2 { font-size: 20px; margin: 44px 0 6px; letter-spacing: -0.01em; }
+  p { margin: 10px 0; }
+  .lede { color: var(--muted); font-size: 16px; max-width: 68ch; }
+  .verdict { margin: 22px 0 8px; padding: 16px 18px; border-radius: 12px;
+    background: var(--card); border: 1px solid var(--line);
+    border-left: 4px solid var(--accent); }
+  .verdict b { color: var(--accent); }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em; }
+  .grid { display: grid; gap: 16px; margin: 16px 0;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  figure { margin: 0; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px 12px 8px; }
+  figure h3 { margin: 0 0 2px; font-size: 14px; }
+  figure .sub { color: var(--muted); font-size: 12.5px; margin: 0 0 8px; min-height: 32px; }
+  svg.panel { width: 100%; height: auto; display: block; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px;
+    font-weight: 600; padding: 3px 10px; border-radius: 999px; margin-top: 8px; }
+  .badge.zero { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
+  .badge.nonzero { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
+  button { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--card); color: var(--fg); cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  .controls { margin: 10px 0 0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .note { color: var(--muted); font-size: 13.5px; }
+  .proof { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 18px; margin: 14px 0; }
+  .proof li { margin: 4px 0; }
+  table.arrows { border-collapse: collapse; margin-top: 12px; width: 100%; }
+  table.arrows td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: middle; }
+  table.arrows td:first-child { width: 160px; font-weight: 600; font-size: 14px; }
+  table.arrows .desc { color: var(--muted); font-size: 13px; font-weight: 400; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Can a DAG always be drawn without crossings?</h1>
+  <p class="lede">A quick, honest answer to “it’s a DAG, so zero crossings must be
+  possible” — and “force-directed on a DAG never crosses.” Every number below is
+  computed live in your browser by the same algorithms, counting real
+  segment intersections. Nothing is hand-drawn.</p>
+
+  <div class="verdict">
+    <b>Verdict: No, not in general.</b> Zero crossings is achievable only for
+    <i>planar</i> DAGs. A non-planar DAG (a DAG whose underlying graph contains a
+    K₅ or K₃,₃) provably <i>cannot</i> be drawn without crossings by any
+    method — force-directed included — because planarity is a property of the
+    graph, not of the algorithm. Your notebook’s DAG <i>is</i> planar, so there we
+    can (and now do) reach 0.
+  </div>
+
+  <h2>1 · Your notebook’s DAG (planar → 0 is reachable)</h2>
+  <p class="note">Nodes <code>e1, e2, slider, grp1_energy, grp2_energy,
+  p_win_first, p_win_second, p_win</code> with the dependency edges marimo
+  derives. Every method here can reach 0 — the only question is whether it
+  <i>does</i>.</p>
+  <div class="grid" id="grid-notebook"></div>
+  <div class="controls">
+    <button data-reforce="notebook">↻ Re-run force-directed (new seed)</button>
+    <span class="note">Force-directed lands on 0 for this graph because it’s planar — but that’s luck of the energy minimum, not a guarantee (see §2).</span>
+  </div>
+
+  <h2>2 · A non-planar DAG: K₃,₃ oriented top→bottom (0 is impossible)</h2>
+  <p class="note">Three sources <code>a, b, c</code> each point to three sinks
+  <code>x, y, z</code> — all 9 edges. It’s acyclic (a genuine DAG) and it’s
+  K₃,₃, the textbook non-planar graph. Its <i>crossing number is 1</i>: the best
+  any drawing can do is a single crossing, and <b>0 is mathematically
+  unreachable</b>. Re-run the force sim as many times as you like — it never hits 0.</p>
+  <div class="grid" id="grid-k33"></div>
+  <div class="controls">
+    <button data-reforce="k33">↻ Re-run force-directed (new seed)</button>
+    <span class="note">Force-directed doesn’t even find the minimum (1) — it settles into a higher-energy tangle.</span>
+  </div>
+
+  <div class="proof">
+    <b>Why no algorithm can win here</b>
+    <ul>
+      <li><b>Acyclic:</b> every edge goes top-row → bottom-row, so there’s no cycle. It <i>is</i> a DAG.</li>
+      <li><b>Non-planar:</b> the underlying graph is K₃,₃, which by Kuratowski’s theorem cannot be embedded in the plane without an edge crossing.</li>
+      <li><b>Therefore:</b> ≥ 1 crossing in <i>every</i> drawing. Force-directed, layered, spectral, hand-tuned — all bounded below by the graph’s crossing number, which is 1. (K₅ oriented <code>i→j</code> is the same story; our layered layout draws it with exactly 1 crossing, the optimum, but still not 0.)</li>
+      <li><b>And even when 0 is possible</b> (planar case), finding a minimum-crossing <i>layered</i> order is NP-hard, so in general we minimize with a heuristic rather than guarantee optimum.</li>
+    </ul>
+  </div>
+
+  <h2>3 · Prettier arrowheads — pick one</h2>
+  <p class="note">The current head is a chunky concave triangle in a slightly
+  different gray than the line. Candidates below share the line’s color and are
+  daintier. Tell me which you like (or describe a tweak).</p>
+  <table class="arrows" id="arrow-table"></table>
+</div>
+
+<script>
+"use strict";
+// ------- graphs -------
+const LABEL = {
+  grp1: "grp1_energy", grp2: "grp2_energy",
+  pf: "p_win_first", ps: "p_win_second", pw: "p_win",
+};
+const label = id => LABEL[id] || id;
+const GRAPHS = {
+  notebook: {
+    nodes: ["e1", "e2", "slider", "grp1", "grp2", "pf", "ps", "pw"],
+    edges: [["e1","grp1"],["e2","grp1"],["slider","grp2"],["slider","pf"],
+            ["grp1","ps"],["grp2","ps"],["pf","pw"],["ps","pw"]],
+  },
+  k33: {
+    nodes: ["a","b","c","x","y","z"],
+    edges: [["a","x"],["a","y"],["a","z"],["b","x"],["b","y"],["b","z"],
+            ["c","x"],["c","y"],["c","z"]],
+  },
+};
+
+// ------- geometry / crossing count -------
+const orient = (p, q, r) => (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x);
+function segCross(a, b, c, d) {
+  const d1 = orient(c, d, a), d2 = orient(c, d, b);
+  const d3 = orient(a, b, c), d4 = orient(a, b, d);
+  return ((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) &&
+         ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0));
+}
+function countCrossings(paths) {
+  let n = 0;
+  for (let i = 0; i < paths.length; i++)
+    for (let j = i + 1; j < paths.length; j++) {
+      const A = paths[i], B = paths[j];
+      if (A.u === B.u || A.u === B.v || A.v === B.u || A.v === B.v) continue;
+      let hit = false;
+      for (let s = 0; s < A.pts.length - 1 && !hit; s++)
+        for (let t = 0; t < B.pts.length - 1 && !hit; t++)
+          if (segCross(A.pts[s], A.pts[s+1], B.pts[t], B.pts[t+1])) hit = true;
+      if (hit) n++;
+    }
+  return n;
+}
+
+// ------- layered (Sugiyama-ish) with dummy waypoints + ordering -------
+function permutations(arr) {
+  if (arr.length <= 1) return [arr];
+  const out = [];
+  arr.forEach((v, i) => {
+    const rest = arr.slice(0, i).concat(arr.slice(i + 1));
+    permutations(rest).forEach(p => out.push([v, ...p]));
+  });
+  return out;
+}
+function columns(g) {
+  const parents = {}, children = {};
+  g.nodes.forEach(n => { parents[n] = []; children[n] = []; });
+  g.edges.forEach(([u, v]) => { parents[v].push(u); children[u].push(v); });
+  const col = {};
+  const lp = n => (col[n] ??= parents[n].length ? 1 + Math.max(...parents[n].map(lp)) : 0);
+  g.nodes.forEach(lp);
+  let changed = true;
+  while (changed) {
+    changed = false;
+    g.nodes.forEach(n => {
+      if (children[n].length) {
+        const latest = Math.min(...children[n].map(c => col[c])) - 1;
+        if (latest > col[n]) { col[n] = latest; changed = true; }
+      }
+    });
+  }
+  return { col, maxCol: Math.max(...Object.values(col)) };
+}
+function place(layers, maxCol) {
+  const pos = {}, nL = maxCol + 1;
+  for (let c = 0; c <= maxCol; c++) {
+    const L = layers[c], m = L.length;
+    L.forEach((n, i) => { pos[n] = { x: nL === 1 ? 0.5 : c / (nL - 1),
+      y: m === 1 ? 0.5 : i / (m - 1) }; });
+  }
+  return pos;
+}
+function layered(g, { order }) {
+  const { col, maxCol } = columns(g);
+  const layers = {};
+  for (let c = 0; c <= maxCol; c++) layers[c] = [];
+  g.nodes.forEach(n => layers[col[n]].push(n));
+  if (order === "naive") {
+    // current WidgetDAG: input order, straight src->dst lines, no waypoints
+    const pos = place(layers, maxCol);
+    const paths = g.edges.map(([u, v]) => ({ u, v, pts: [pos[u], pos[v]] }));
+    return { pos, paths, dummies: new Set() };
+  }
+  // waypoints: split long edges, then minimize crossings layer-by-layer
+  const segChildren = {}, chains = [], dummies = new Set();
+  let dc = 0;
+  const link = (a, b) => (segChildren[a] = segChildren[a] || []).push(b);
+  g.edges.forEach(([u, v]) => {
+    let prev = u; const chain = [u];
+    for (let c = col[u] + 1; c < col[v]; c++) {
+      const d = "__d" + dc++; layers[c].push(d); dummies.add(d);
+      link(prev, d); prev = d; chain.push(d);
+    }
+    link(prev, v); chain.push(v);
+    chains.push({ u, v, chain });
+  });
+  const between = (upper, lower) => {
+    const pu = Object.fromEntries(upper.map((n, i) => [n, i]));
+    const pl = Object.fromEntries(lower.map((n, i) => [n, i]));
+    const es = [];
+    upper.forEach(n => (segChildren[n] || []).forEach(c => {
+      if (pl[c] != null) es.push([pu[n], pl[c]]);
+    }));
+    let x = 0;
+    for (let i = 0; i < es.length; i++)
+      for (let j = i + 1; j < es.length; j++)
+        if ((es[i][0] - es[j][0]) * (es[i][1] - es[j][1]) < 0) x++;
+    return x;
+  };
+  for (let it = 0; it < 8; it++) {
+    for (let c = 1; c <= maxCol; c++) if (layers[c].length <= 7) {
+      let best = layers[c], bx = Infinity;
+      for (const p of permutations(layers[c])) { const x = between(layers[c-1], p); if (x < bx) { bx = x; best = p; } }
+      layers[c] = best;
+    }
+    for (let c = maxCol - 1; c >= 0; c--) if (layers[c].length <= 7) {
+      let best = layers[c], bx = Infinity;
+      for (const p of permutations(layers[c])) { const x = between(p, layers[c+1]); if (x < bx) { bx = x; best = p; } }
+      layers[c] = best;
+    }
+  }
+  const pos = place(layers, maxCol);
+  const paths = chains.map(({ u, v, chain }) => ({ u, v, pts: chain.map(n => pos[n]) }));
+  return { pos, paths, dummies };
+}
+
+// ------- force-directed (Fruchterman–Reingold; ignores edge direction) -------
+function force(g, seed) {
+  let s = (seed >>> 0) || 1;
+  const rnd = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+  const idx = Object.fromEntries(g.nodes.map((n, i) => [n, i]));
+  const P = g.nodes.map(() => ({ x: rnd(), y: rnd() }));
+  const E = g.edges.map(([a, b]) => [idx[a], idx[b]]);
+  const k = Math.sqrt(1 / g.nodes.length) * 0.9;
+  let t = 0.1;
+  for (let it = 0; it < 600; it++) {
+    const dx = P.map(() => 0), dy = P.map(() => 0);
+    for (let i = 0; i < P.length; i++)
+      for (let j = i + 1; j < P.length; j++) {
+        let ax = P[i].x - P[j].x, ay = P[i].y - P[j].y;
+        let d = Math.hypot(ax, ay) || 1e-4, f = k * k / d;
+        ax /= d; ay /= d;
+        dx[i] += ax*f; dy[i] += ay*f; dx[j] -= ax*f; dy[j] -= ay*f;
+      }
+    for (const [a, b] of E) {
+      let ax = P[a].x - P[b].x, ay = P[a].y - P[b].y;
+      let d = Math.hypot(ax, ay) || 1e-4, f = d * d / k;
+      ax /= d; ay /= d;
+      dx[a] -= ax*f; dy[a] -= ay*f; dx[b] += ax*f; dy[b] += ay*f;
+    }
+    for (let i = 0; i < P.length; i++) {
+      let d = Math.hypot(dx[i], dy[i]) || 1e-4, lim = Math.min(d, t);
+      P[i].x = Math.max(0, Math.min(1, P[i].x + dx[i]/d*lim));
+      P[i].y = Math.max(0, Math.min(1, P[i].y + dy[i]/d*lim));
+    }
+    t *= 0.99;
+  }
+  const pos = {};
+  g.nodes.forEach((n, i) => pos[n] = P[i]);
+  const paths = g.edges.map(([u, v]) => ({ u, v, pts: [pos[u], pos[v]] }));
+  return { pos, paths, dummies: new Set() };
+}
+
+// ------- SVG rendering -------
+const NS = "http://www.w3.org/2000/svg";
+const W = 320, H = 250, MX = 40, MY = 30;
+const el = (tag, attrs) => { const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+function renderPanel(host, layout, isForce) {
+  const { pos, paths, dummies } = layout;
+  const mapx = x => MX + x * (W - 2 * MX);
+  const mapy = y => MY + y * (H - 2 * MY);
+  const svg = el("svg", { class: "panel", viewBox: `0 0 ${W} ${H}` });
+  svg.innerHTML =
+    `<defs><marker id="ah-${Math.random().toString(36).slice(2)}" viewBox="0 0 10 10"
+      refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,1 L9,5 L0,9 Q3,5 0,1 Z" fill="var(--edge)"/></marker></defs>`;
+  const mk = "url(#" + svg.querySelector("marker").id + ")";
+  // edges (straight polylines through waypoints; what we count is what we draw)
+  paths.forEach(p => {
+    const d = p.pts.map((pt, i) => (i ? "L" : "M") + mapx(pt.x).toFixed(1) + " " + mapy(pt.y).toFixed(1)).join(" ");
+    svg.appendChild(el("path", { d, fill: "none", stroke: "var(--edge)",
+      "stroke-width": 1.5, "stroke-linejoin": "round", "marker-end": mk }));
+  });
+  // nodes (skip dummies)
+  for (const id in pos) {
+    if (dummies.has(id)) continue;
+    const x = mapx(pos[id].x), y = mapy(pos[id].y);
+    const txt = label(id);
+    const w = Math.max(26, txt.length * 6.4 + 12);
+    svg.appendChild(el("rect", { x: x - w/2, y: y - 11, width: w, height: 22, rx: 6,
+      fill: "var(--nodefill)", stroke: "var(--node)", "stroke-width": 1.3 }));
+    const t = el("text", { x, y: y + 4, "text-anchor": "middle",
+      "font-size": 11, "font-family": "ui-monospace, Menlo, monospace", fill: "var(--fg)" });
+    t.textContent = txt;
+    svg.appendChild(t);
+  }
+  const n = countCrossings(paths);
+  host.querySelector("svg")?.remove();
+  host.querySelector(".badge")?.remove();
+  host.insertBefore(svg, host.querySelector(".controls-slot") || null);
+  const badge = document.createElement("span");
+  badge.className = "badge " + (n === 0 ? "zero" : "nonzero");
+  badge.textContent = n === 0 ? "0 crossings ✓" : n + (n === 1 ? " crossing" : " crossings");
+  host.appendChild(badge);
+}
+
+// ------- wire up panels -------
+const seeds = { notebook: 1, k33: 1 };
+function figure(title, sub) {
+  const fig = document.createElement("figure");
+  fig.innerHTML = `<h3>${title}</h3><p class="sub">${sub}</p>`;
+  return fig;
+}
+const PANELS = {
+  notebook: [
+    ["Current WidgetDAG", "layered columns, input order, straight edges", g => layered(g, { order: "naive" })],
+    ["Force-directed", "spring/repulsion energy; ignores edge direction", (g, seed) => force(g, seed)],
+    ["Layered + waypoints + ordering", "proposed fix: dummy lanes + crossing-min order", g => layered(g, { order: "min" })],
+  ],
+  k33: [
+    ["Force-directed", "re-run all you want — never 0", (g, seed) => force(g, seed)],
+    ["Layered + waypoints + ordering", "our best is still ≥ 1", g => layered(g, { order: "min" })],
+  ],
+};
+function build(key) {
+  const grid = document.getElementById("grid-" + key);
+  grid.innerHTML = "";
+  PANELS[key].forEach(([title, sub, fn], i) => {
+    const fig = figure(title, sub);
+    fig.dataset.idx = i;
+    grid.appendChild(fig);
+    renderPanel(fig, fn(GRAPHS[key], seeds[key]), fn.length === 2);
+  });
+}
+document.querySelectorAll("[data-reforce]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const key = btn.dataset.reforce;
+    seeds[key] += 1;
+    // only re-render the force panels
+    document.getElementById("grid-" + key).querySelectorAll("figure").forEach(fig => {
+      const [title, sub, fn] = PANELS[key][+fig.dataset.idx];
+      if (fn.length === 2) renderPanel(fig, fn(GRAPHS[key], seeds[key]), true);
+    });
+  });
+});
+build("notebook");
+build("k33");
+
+// ------- arrowhead candidates -------
+const ARROWS = [
+  ["Current", "chunky concave triangle, off-color (#8a9096)", 12, "M0.5,0.5 L11.5,6 L0.5,11.5 Q4,6 0.5,0.5 Z", "fill", "#8a9096"],
+  ["Slim triangle", "matched color, daintier, gentle concave tail", 9, "M0,0.8 L9,5 L0,9.2 Q3,5 0,0.8 Z", "fill", "var(--edge)"],
+  ["Chevron", "open “>”, lightest and most modern", 10, "M1.5,1 L8.5,5 L1.5,9", "stroke", "var(--edge)"],
+  ["Kite", "filled, sharper point, soft back", 10, "M0,1.2 L9.5,5 L0,8.8 Q4.6,5 0,1.2 Z", "fill", "var(--edge)"],
+];
+const at = document.getElementById("arrow-table");
+ARROWS.forEach(([name, desc, size, d, mode, color], i) => {
+  const id = "mk" + i;
+  const marker = mode === "fill"
+    ? `<marker id="${id}" viewBox="0 0 12 12" refX="8" refY="6" markerWidth="${size}" markerHeight="${size}" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="${d}" fill="${color}"/></marker>`
+    : `<marker id="${id}" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="${size}" markerHeight="${size}" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="${d}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>`;
+  const row = document.createElement("tr");
+  const td1 = document.createElement("td");
+  td1.innerHTML = `${name}<div class="desc">${desc}</div>`;
+  const td2 = document.createElement("td");
+  td2.innerHTML = `<svg width="220" height="40" viewBox="0 0 220 40"><defs>${marker}</defs>
+    <path d="M10,20 C70,20 110,30 205,20" fill="none" stroke="var(--edge)" stroke-width="1.5" stroke-linecap="round" marker-end="url(#${id})"/></svg>`;
+  row.appendChild(td1); row.appendChild(td2);
+  at.appendChild(row);
+});
+</script>
+</body>
+</html>
