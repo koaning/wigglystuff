@@ -55,39 +55,46 @@ def _(mo):
 
 
 @app.cell
-def _(Dice):
-    e1 = Dice.from_numbers(*range(1, 101))
-    e2 = Dice.from_numbers(*range(1, 101))
+def _(mo):
+    slider_n = mo.ui.slider(1, 200, 1, value=100, label="n_sides")
+    slider_n
+    return (slider_n,)
+
+
+@app.cell
+def _(Dice, slider_n):
+    e1 = Dice.from_numbers(*range(1, slider_n.value + 1))
+    e2 = Dice.from_numbers(*range(1, slider_n.value + 1))
     return e1, e2
 
 
 @app.cell
-def _(mo):
-    slider = mo.ui.slider(1, 101, label="my energy")
+def _(mo, slider_n):
+    slider = mo.ui.slider(1, slider_n.value, label="my energy")
     return (slider,)
 
 
 @app.cell
-def _(Dice, slider):
-    e3 = Dice.from_numbers(*[slider.value])
+def _(Dice, slider, slider_n):
+    e3 = Dice({i: 0 if not i == slider.value else 1 for i in range(1, slider_n.value + 1)})
     return (e3,)
 
 
 @app.cell
-def _(Dice):
-    e4 = Dice.from_numbers(*range(1, 101))
+def _(Dice, slider_n):
+    e4 = Dice.from_numbers(*range(1, slider_n.value))
     return (e4,)
 
 
 @app.cell
-def _(e1, e2, ordered):
-    grp1_energy_left = 100 - ordered(e1, e2)[0]
+def _(e1, e2, ordered, slider_n):
+    grp1_energy_left = slider_n.value - ordered(e1, e2)[0]
     return (grp1_energy_left,)
 
 
 @app.cell
-def _(e3):
-    grp2_energy_left = 100 - e3
+def _(e3, slider_n):
+    grp2_energy_left = (slider_n.value - e3)
     return (grp2_energy_left,)
 
 
@@ -127,23 +134,23 @@ def _(
     return
 
 
-@app.cell(hide_code=True)
-def _(mo, p_win, p_win_first, p_win_second):
-    from wigglystuff import ScatterLog
-
-    p_win, p_win_second, p_win_first
-    # Created once, in a cell with no dependencies, so it survives re-runs and
-    # can accumulate a history as you sweep the slider.
-    log = mo.ui.anywidget(
-        ScatterLog(x_label="my energy", y_label="p(win)", max_points=500)
-    )
-    return (log,)
-
-
 @app.cell
 def _(log):
     log
     return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    from wigglystuff import ScatterLog
+
+    # p_win, p_win_second, p_win_first
+    # Created once, in a cell with no dependencies, so it survives re-runs and
+    # can accumulate a history as you sweep the slider.
+    log = mo.ui.anywidget(
+        ScatterLog(x_label="my energy", y_label="value", max_points=500)
+    )
+    return (log,)
 
 
 @app.cell
