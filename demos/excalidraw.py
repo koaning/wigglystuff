@@ -136,5 +136,12 @@ def _(Excalidraw, mo):
     return
 
 
+@app.cell
+def _(draw, mo):
+    # The current scene can be converted to Mermaid code
+    mo.mermaid(draw.to_mermaid(direction = "LR"))
+    return
+
+
 if __name__ == "__main__":
     app.run()
