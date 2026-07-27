@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- New `HeatmapSelect` widget: a dense parameter-space grid in the spirit of Bret Victor's *Up and Down the Ladder of Abstraction*. Hover or click a cell in the body, or grab either axis gutter to pin a whole row or column.
+- Three pins coexist independently (`pinned_cell`, `pinned_row`, `pinned_col`), each with a matching `hover_*` trait. Clicking a region replaces only that region's pin; double-clicking drops only that one.
+- Coloring follows matplotlib — `cmap`/`norm`/`vmin`/`vmax`, grayscale by default, with masked or non-finite cells taking the colormap's "bad" color. A finished picture (PIL image, uint8 array, path, base64 PNG) works too, and the values themselves never cross the wire.
+- Row and column bands are tinted per axis via `row_color`/`col_color`, so a selection can match the colors of whatever chart consumes it.
+- Demo at `demos/heatmap_select.py`: a cannon's range over launch angle and speed, with a wind slider that recolors the space while the pins stay put.
+
 ## [0.5.21] - 2026-07-21
 
 ### Added

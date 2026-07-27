@@ -43,6 +43,7 @@ def test_import_graph_widget():
 
 def test_import_grid_draw():
     from wigglystuff.grid_draw import GridDraw
+    from wigglystuff.heatmap_select import HeatmapSelect
 
 
 def test_import_keystroke():
