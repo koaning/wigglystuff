@@ -243,6 +243,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/circular-slider/">API</a><a href="reference/circular-slider.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title">HoverSlider</div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hover_slider.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/hover_slider.webp" alt="HoverSlider"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hover_slider.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/hover-slider/">API</a><a href="reference/hover-slider.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title">ForecastChart</div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/forecast-chart.webp" alt="ForecastChart"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/utils/">API</a><a href="reference/utils.md">MD</a></div>

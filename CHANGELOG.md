@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.22] - 2026-07-27
+
+### Added
+
+- `HoverSlider`: horizontal slider that reports two values at once — `value` (committed on click, drag, or arrow keys) and `hover_value` (live under the pointer), plus a `hovering` flag — so a notebook can preview a result before the user commits to it. Mirrors `mo.ui.slider` (`start`/`stop`/`step` or a discrete `steps` list, numeric types preserved), and `sync_throttle_ms` caps how often hover updates reach Python.
+
 ## [0.5.21] - 2026-07-21
 
 ### Added

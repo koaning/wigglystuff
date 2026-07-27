@@ -27,6 +27,7 @@ from .frame_player import FramePlayer
 from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
 from .grid_draw import GridDraw
+from .hover_slider import HoverSlider
 from .hover_zoom import HoverZoom
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
@@ -116,6 +117,7 @@ __all__ = [
     "WandbChart",
     "WidgetDAG",
     "WebcamCapture",
+    "HoverSlider",
     "HoverZoom",
     "HTMLRefreshWidget",
     "ImageRefreshWidget",
