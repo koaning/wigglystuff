@@ -1,0 +1,114 @@
+.hover-slider {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: light dark;
+  padding: 6px 0;
+  outline: none;
+
+  --hs-rail: #e5e7eb;
+  --hs-fill: #3b82f6;
+  --hs-puck: #ffffff;
+  --hs-puck-border: #1d4ed8;
+  --hs-ghost: #1d4ed8;
+  --hs-text: #111827;
+  --hs-muted: #6b7280;
+  --hs-focus: #93c5fd;
+  --hs-rail-height: 6px;
+  --hs-puck-size: 14px;
+}
+
+.dark .hover-slider,
+.dark-theme .hover-slider,
+[data-theme="dark"] .hover-slider {
+  --hs-rail: #334155;
+  --hs-fill: #60a5fa;
+  --hs-puck: #0f172a;
+  --hs-puck-border: #60a5fa;
+  --hs-ghost: #93c5fd;
+  --hs-text: #f1f5f9;
+  --hs-muted: #94a3b8;
+  --hs-focus: #1e40af;
+}
+
+.hover-slider-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--hs-text);
+  opacity: 0.85;
+}
+
+/* Inset by half a puck so the puck doesn't clip at 0% / 100%. All pixel math
+   uses this element's bounding rect, so the mapping needs no extra arithmetic. */
+.hover-slider-track {
+  position: relative;
+  height: var(--hs-puck-size);
+  margin: 0 calc(var(--hs-puck-size) / 2);
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+
+.hover-slider-rail,
+.hover-slider-fill {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: var(--hs-rail-height);
+  transform: translateY(-50%);
+  border-radius: calc(var(--hs-rail-height) / 2);
+  pointer-events: none;
+}
+
+.hover-slider-rail {
+  width: 100%;
+  background: var(--hs-rail);
+}
+
+.hover-slider-fill {
+  width: 0;
+  background: var(--hs-fill);
+}
+
+/* A dashed bar rather than a second circle, so it stays readable when it sits
+   on top of the puck. */
+.hover-slider-ghost {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 2px dashed var(--hs-ghost);
+  transform: translateX(-1px);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.hover-slider-puck {
+  position: absolute;
+  top: 50%;
+  width: var(--hs-puck-size);
+  height: var(--hs-puck-size);
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--hs-puck);
+  border: 2px solid var(--hs-puck-border);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hover-slider:focus-visible .hover-slider-puck {
+  box-shadow: 0 0 0 3px var(--hs-focus);
+}
+
+.hover-slider-readout {
+  display: flex;
+  gap: 6px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--hs-text);
+}
+
+.hover-slider-readout-hover {
+  color: var(--hs-muted);
+}
