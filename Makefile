@@ -1,4 +1,4 @@
-.PHONY: js docs test test-links docs-serve marimo-notebook marimo-sessions
+.PHONY: js docs test test-browser test-all test-links docs-serve marimo-notebook marimo-sessions
 
 install:
 	# install the build tool for JS written in Golang
@@ -11,7 +11,7 @@ install:
 
 test:
 	uv pip install -e '.[test]'
-	uv run pytest --ignore=tests/test_browser
+	uv run pytest --ignore=tests/test_e2e
 
 test-links: docs
 	uv pip install -e '.[test]'
@@ -20,10 +20,11 @@ test-links: docs
 		--ignore=site/overrides \
 		--check-links-ignore '^https?://'
 
+# Browser tests are local-only; they are not run in CI.
 test-browser:
 	uv pip install -e '.[test-browser]'
 	uv run playwright install chromium
-	uv run pytest tests/test_browser -v
+	uv run pytest tests/test_e2e -v
 
 test-all:
 	uv pip install -e '.[test-browser]'

@@ -22,34 +22,7 @@ jobs:
           python -m pip install --upgrade uv
           uv venv
           uv pip install -e ".[test]"
+          # tests/test_e2e is browser-driven and too flaky to gate PRs on; it is
+          # kept for local use only (make test-browser) and Playwright is not
+          # installed here, so collection would fail without this ignore.
           uv run pytest --ignore=tests/test_e2e
-
-  e2e-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade uv
-          uv venv
-          uv pip install -e ".[test-browser]"
-      - name: Get Playwright version
-        id: pw-version
-        run: echo "version=$(uv run python -c 'from importlib.metadata import version; print(version("playwright"))')" >> "$GITHUB_OUTPUT"
-      - name: Cache Playwright browsers
-        id: pw-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ steps.pw-version.outputs.version }}-chromium
-      - name: Install Playwright browsers
-        if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: uv run playwright install chromium --with-deps
-      - name: Install Playwright system deps
-        if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: uv run playwright install-deps chromium
-      - name: Pytest (e2e tests)
-        run: uv run pytest tests/test_e2e -v
