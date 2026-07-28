@@ -2,10 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.23] - 2026-07-28
 
 ### Added
 
+- New `HeatmapSelect` widget: a dense parameter-space grid in the spirit of Bret Victor's *Up and Down the Ladder of Abstraction*. Hover or click a cell in the body, or grab either axis gutter to pin a whole row or column.
+- Three pins coexist independently (`pinned_cell`, `pinned_row`, `pinned_col`), each with a matching `hover_*` trait. Clicking a region replaces only that region's pin; double-clicking drops only that one.
+- Coloring follows matplotlib — `cmap`/`norm`/`vmin`/`vmax`, grayscale by default, with masked or non-finite cells taking the colormap's "bad" color. A finished picture (PIL image, uint8 array, path, base64 PNG) works too, and the values themselves never cross the wire.
+- Row and column bands are tinted per axis via `row_color`/`col_color`, so a selection can match the colors of whatever chart consumes it.
+- Demo at `demos/heatmap_select.py`: two parameter spaces, one smooth and one not. A cannon's range over launch angle and speed, then a double pendulum over its two release angles — colour that one by flip time, distance travelled, or highest point, all read off a single 8-second run so the toggle is a repaint. Each example has a slider that recolors the whole space while the pins stay put.
 - `Hint`: marimo-only display helper that wraps a widget and curves an arrow from an explanatory note to its edge, so a reader can tell what is interactive and why. The note is any marimo content (a `str` goes through `mo.md`), `side` puts it on any of the four sides, and the arc defaults to `currentColor` to follow the notebook theme.
 - Hints render as ordinary marimo content, so they compose into `mo.hstack`/`mo.vstack` and `WidgetDAG` nodes, and nest inside each other to give one widget more than one arrow.
 

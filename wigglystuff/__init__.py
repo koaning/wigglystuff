@@ -27,6 +27,7 @@ from .frame_player import FramePlayer
 from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
 from .grid_draw import GridDraw
+from .heatmap_select import HeatmapSelect
 from .hint import Hint
 from .hover_slider import HoverSlider
 from .hover_zoom import HoverZoom
@@ -90,6 +91,7 @@ __all__ = [
     "GamepadWidget",
     "GraphWidget",
     "GridDraw",
+    "HeatmapSelect",
     "Hint",
     "KeystrokeWidget",
     "TangleLatex",

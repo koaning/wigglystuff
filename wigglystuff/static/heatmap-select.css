@@ -1,0 +1,67 @@
+/* HeatmapSelect Widget Styles */
+/* Canvas can't inherit CSS, so the JS reads these vars via getComputedStyle. */
+.heatmap-select {
+    --hs-bg: #ffffff;
+    --hs-frame: #cccccc;
+    --hs-tick: #999999;
+    --hs-label: #666666;
+    --hs-marker: #ffffff;
+    --hs-marker-edge: rgba(0, 0, 0, 0.65);
+    --hs-row-color: #3b82f6;
+    --hs-col-color: #f59e0b;
+    --hs-ghost: rgba(70, 70, 70, 0.8);
+    color-scheme: light dark;
+    display: inline-block;
+    line-height: 0;
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+    .heatmap-select {
+        --hs-bg: #1a1a1a;
+        --hs-frame: #444444;
+        --hs-tick: #888888;
+        --hs-label: #aaaaaa;
+        --hs-marker: #ffffff;
+        --hs-marker-edge: rgba(0, 0, 0, 0.8);
+        --hs-row-color: #60a5fa;
+        --hs-col-color: #fbbf24;
+        --hs-ghost: rgba(210, 210, 210, 0.8);
+    }
+}
+
+/* Explicit dark theme selectors so notebook toggles work instantly */
+.dark .heatmap-select,
+.dark-theme .heatmap-select,
+[data-theme="dark"] .heatmap-select {
+    --hs-bg: #1a1a1a;
+    --hs-frame: #444444;
+    --hs-tick: #888888;
+    --hs-label: #aaaaaa;
+    --hs-marker: #ffffff;
+    --hs-marker-edge: rgba(0, 0, 0, 0.8);
+    --hs-row-color: #60a5fa;
+    --hs-col-color: #fbbf24;
+    --hs-ghost: rgba(210, 210, 210, 0.8);
+}
+
+/* Explicit light theme selectors win back over prefers-color-scheme: dark */
+:where(:not(.dark):not(.dark-theme):not([data-theme="dark"])) .heatmap-select {
+    --hs-bg: #ffffff;
+    --hs-frame: #cccccc;
+    --hs-tick: #999999;
+    --hs-label: #666666;
+    --hs-marker: #ffffff;
+    --hs-marker-edge: rgba(0, 0, 0, 0.65);
+    --hs-row-color: #3b82f6;
+    --hs-col-color: #f59e0b;
+    --hs-ghost: rgba(70, 70, 70, 0.8);
+}
+
+.heatmap-select__canvas {
+    display: block;
+    cursor: crosshair;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}

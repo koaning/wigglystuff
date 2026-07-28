@@ -35,6 +35,7 @@ syncs back to Python.
 | ColorPicker | `wigglystuff.color_picker.ColorPicker` | `color` | Native color input with `rgb` helper |
 | EdgeDraw | `wigglystuff.edge_draw.EdgeDraw` | `names`, `links`, `directed`, `width`, `height` | Sketch node/link diagrams and query adjacency |
 | GridDraw | `wigglystuff.grid_draw.GridDraw` | `dots`, `lines`, `rows`, `cols`, `line_width`, `dot_radius`, `theme`, `width`, `height` | Draw dots on grid intersections and orthogonal line segments between them |
+| HeatmapSelect | `wigglystuff.heatmap_select.HeatmapSelect` | `pinned_cell`, `pinned_row`, `pinned_col`, `hover_cell`, `hover_row`, `hover_col`, `image_base64`, `n_rows`, `n_cols`, `x_range`, `y_range`, `cell_width`, `cell_height`, `row_color`, `col_color`, `throttle` | Bret Victor style parameter-space grid; pin a cell plus a whole row/column off either axis |
 | GraphWidget | `wigglystuff.graph_widget.GraphWidget` | `nodes`, `edges`, `directed`, `width`, `height`, `selected_nodes`, `selected_edges` | Programmatic force-directed graph visualization |
 | Paint | `wigglystuff.paint.Paint` | `base64`, `width`, `height`, `store_background`, `rainbow_brush`, `brush`, `marker`, `eraser`, `color_picker`, `color` | MS-Paint-style canvas with PIL helpers and a configurable toolbar |
 | Excalidraw | `wigglystuff.excalidraw.Excalidraw` | `scene`, `image_base64`, `theme`, `height`, `sync_throttle_ms` | Embedded Excalidraw whiteboard (loads from CDN); `get_pil`/`save`/`from_file` helpers (`save()` remembers the path) |
