@@ -1,4 +1,30 @@
+---
+title: "GraphWidget: force-directed graph in Python"
+description: GraphWidget draws nodes and edges supplied from Python as an interactive force-directed graph in marimo or Jupyter, syncing clicks back as selections.
+image: graphwidget
+image_alt: GraphWidget showing a force-directed graph of colored labeled nodes joined by named edges
+---
+
 # GraphWidget API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="graphwidget" data-demo-title="GraphWidget live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/graphwidget.webp" alt="GraphWidget showing a force-directed graph of colored labeled nodes joined by named edges" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
+
+`GraphWidget` takes nodes and edges from Python — plain strings, numbers or dicts —
+and lays them out as a force-directed graph. Browser-side positions survive changes to
+`nodes` and `edges`, so growing a graph from Python does not reshuffle the whole
+picture, and clicks come back on `selected_nodes` and `selected_edges` for the rest of
+the notebook to read.
+
+See also: [EdgeDraw](edge-draw.md) for drawing the edges by hand instead of passing
+them in, [Neo4jWidget](neo4j-widget.md) for querying a live Neo4j database, and
+[WidgetDAG](widget-dag.md) for arranging live widgets as a DAG.
 
 ::: wigglystuff.graph_widget.GraphWidget
 

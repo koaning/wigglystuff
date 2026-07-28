@@ -7,14 +7,44 @@
   window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
   plausible.init()
 </script>
+
+{#- Social cards. Zensical's base.html emits no og:/twitter: tags at all, so
+    every page shared anywhere used to preview as a bare URL. Driven by the same
+    front matter that feeds <title> and <meta name="description">. -#}
+{% set card_title = page.meta.title if page.meta and page.meta.title else page.title %}
+{% set card_description = page.meta.description if page.meta and page.meta.description else config.site_description %}
+{#- site_url carries a trailing slash in zensical.toml; dropping it silently
+    breaks these absolute image URLs. -#}
+{% if page.meta and page.meta.image %}
+  {% set card_image = config.site_url ~ "assets/gallery/" ~ page.meta.image ~ ".webp" %}
+{% else %}
+  {% set card_image = config.site_url ~ "assets/logo.svg" %}
+{% endif %}
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ config.site_name }}">
+<meta property="og:title" content="{{ card_title }}">
+<meta property="og:description" content="{{ card_description }}">
+<meta property="og:url" content="{{ page.canonical_url }}">
+<meta property="og:image" content="{{ card_image }}">
+<meta property="og:image:alt" content="{{ page.meta.image_alt | d(card_title, true) if page.meta else card_title }}">
+{#- summary, not summary_large_image: the gallery screenshots are square and as
+    small as 205x211, which clears summary's 144px floor but not a 2:1 card. -#}
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ card_title }}">
+<meta name="twitter:description" content="{{ card_description }}">
+<meta name="twitter:image" content="{{ card_image }}">
 {% endblock %}
 
 {% block content %}
   {% if page and "reference/" in page.url and page.url != "reference/" %}
     {% set slug = page.url | replace("reference/", "") | replace("/", "") %}
+    {#- Fenced so scripts/post_zensical.py keeps it out of the .md mirrors that
+        docs/llms.txt points at -- a link to the .md is noise inside the .md. -#}
+    <!-- no-md -->
     <a class="llm-md-link" href="../{{ slug }}.md">
       Feeding a clanker? Grab this page as raw <code>.md</code> <span class="llm-md-link__arrow">→</span>
     </a>
+    <!-- /no-md -->
   {% endif %}
   {% include "partials/content.html" %}
 {% endblock %}

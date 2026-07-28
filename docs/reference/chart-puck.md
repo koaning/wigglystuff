@@ -1,4 +1,31 @@
+---
+title: "ChartPuck: drag a puck on a matplotlib plot"
+description: ChartPuck overlays a draggable puck on a static matplotlib figure and reports its position in data coordinates, turning a plot into an input control in marimo.
+image: chartpuck
+image_alt: ChartPuck widget showing a green puck dragged over a matplotlib scatter plot with crosshair guides and its coordinates in the title
+---
+
 # ChartPuck API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="chartpuck" data-demo-title="ChartPuck live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/chartpuck.webp" alt="ChartPuck widget showing a green puck dragged over a matplotlib scatter plot with crosshair guides and its coordinates in the title" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
+
+`ChartPuck` renders your matplotlib figure once to a base64 PNG and floats a draggable
+puck on top of it, so the chart stays a static image and only the puck moves. `x` and `y`
+report the puck position in the axes' own data coordinates, which makes an existing plot
+usable as an input control. Pass lists to get several pucks at once, `throttle` to choose
+between syncing every drag move and syncing on release, and `from_callback` when the
+figure itself should be redrawn as the puck moves.
+
+See also: [Slider2D](slider2d.md) for a bare x/y pad with no chart behind it,
+[ChartSelect](chart-select.md) for selecting a region of the same chart instead of a
+point, and [ChartMultiSelect](chart-multi-select.md) for labeling several regions.
 
 ::: wigglystuff.chart_puck.ChartPuck
 

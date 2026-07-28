@@ -1,4 +1,31 @@
+---
+title: "ChartSelect: lasso select on matplotlib"
+description: ChartSelect overlays box and lasso selection on a matplotlib chart, returning the region in data coordinates so you can filter arrays or a DataFrame in Jupyter.
+image: chartselect
+image_alt: ChartSelect widget showing a lasso region drawn over a matplotlib scatter plot, highlighting 55 of 300 points
+---
+
 # ChartSelect API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="chartselect" data-demo-title="ChartSelect live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/chartselect.webp" alt="ChartSelect widget showing a lasso region drawn over a matplotlib scatter plot, highlighting 55 of 300 points" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
+
+`ChartSelect` draws a box or freehand lasso on top of a matplotlib figure that has been
+rendered to a base64 PNG, then hands the region back in data coordinates. `get_mask` and
+`get_indices` turn that region into a filter for the arrays or DataFrame behind the plot,
+so brushing a chart becomes a query. This widget has graduated to marimo core: in marimo
+prefer `mo.ui.matplotlib`, and keep `ChartSelect` for plain Jupyter and other anywidget
+hosts.
+
+See also: [ChartMultiSelect](chart-multi-select.md) for several persistent class-labeled
+regions, [ChartPuck](chart-puck.md) for picking one point instead of a region, and
+[ParallelCoordinates](parallel-coords.md) for brushing many dimensions at once.
 
 ::: wigglystuff.chart_select.ChartSelect
 

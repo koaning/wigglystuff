@@ -1,4 +1,29 @@
+---
+title: "BezierCurve: draggable Bezier curve editor"
+description: BezierCurve is an arbitrary-degree Bezier editor with draggable control points, playback along the curve, and sampled points synced back to Python.
+image: beziercurve
+image_alt: BezierCurve widget showing a Bezier curve with draggable control points
+---
+
 # BezierCurve API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="beziercurve" data-demo-title="BezierCurve live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/beziercurve.webp" alt="BezierCurve widget showing a Bezier curve with draggable control points" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
+
+`BezierCurve` is an arbitrary-degree Bezier editor: drag the control points and the
+curve follows, while `samples` streams evenly spaced points along it back to Python.
+Set `playing` to sweep the parameter `t` from 0 to 1 and animate anything downstream
+of `x`/`y`.
+
+See also: [CurveEditor](curve-editor.md) for D3 line interpolators in chart space,
+[SplineDraw](spline-draw.md) for fitting a spline to drawn points, and
+[Slider2D](slider2d.md) for a single draggable x/y point.
 
 ::: wigglystuff.bezier_curve.BezierCurve
 

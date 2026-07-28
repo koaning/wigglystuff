@@ -1,4 +1,29 @@
+---
+title: "Hint: point an arrow at a widget"
+description: Hint wraps a marimo widget and curves an arrow from an explanatory note to its edge, so a reader can see at a glance what is interactive and why.
+image: hint
+image_alt: Hint showing a curved arrow from a note to the widget it explains
+---
+
 # Hint API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="hint" data-demo-title="Hint live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/hint.webp" alt="Hint showing a curved arrow from a note to the widget it explains" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
+
+`Hint` wraps a widget and curves an arrow from a note to its edge, so a reader skimming
+a notebook can tell which parts are interactive and why. It is a marimo display helper
+rather than an `AnyWidget`, and the wrapped widget stays live — keep your own reference
+and read `.value` as usual.
+
+See also: [WidgetDAG](widget-dag.md) for arranging live widgets as a DAG and drawing the
+arrows between them, [CellTour](cell-tour.md) for a stepped guided tour of a notebook,
+and [AnnotationWidget](annotation.md) for collecting labels rather than explaining them.
 
 ::: wigglystuff.hint.Hint
 
