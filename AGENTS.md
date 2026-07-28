@@ -78,9 +78,6 @@ syncs back to Python.
   starting branch-finishing workflows. The user may want another design pass.
 - During visual iteration, do not repeatedly run automated checks after CSS,
   SVG, layout, or styling tweaks. Make the change and return it for inspection.
-- Browser E2E tests are exceptional, not the default for a widget. Add or run
-  them only when the user requests them or after the user approves a specific
-  browser behavior that cannot be covered meaningfully in Python.
 - After visual approval, run the smallest focused checks once. Run the full
   repository suite only when preparing to ship/merge or when shared
   infrastructure changed.
@@ -159,10 +156,3 @@ syncs back to Python.
 - When planning a new widget, always present the proposed Python API
   (constructor, traitlets, helper methods) during plan review so the user
   can sign off on the interface before implementation.
-- When an explicitly approved E2E test needs a fixture, keep it in
-  `tests/fixtures/*.py` or `demos/*.py` inside the project tree. The repo's `pyproject.toml`
-  sets `[tool.marimo.runtime] auto_instantiate = true` so cells run on
-  notebook open — without that, `marimo edit` shows the editor but never
-  produces widget output and selectors will time out. If a test needs an
-  isolated copy, put the copy somewhere a `pyproject.toml` walk reaches,
-  not under `tmp_path`.
