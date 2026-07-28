@@ -1,6 +1,7 @@
 """An arrow and a note pointing at a live widget."""
 
 from pathlib import Path
+from typing import Any
 
 import anywidget
 import traitlets
@@ -75,7 +76,15 @@ class Hint:
         ```
     """
 
-    def __init__(self, target, note, *, side="right", color="currentColor", gap=3):
+    def __init__(
+        self,
+        target: Any,
+        note: Any,
+        *,
+        side: str = "right",
+        color: str = "currentColor",
+        gap: float = 3,
+    ) -> None:
         if side not in SIDES:
             raise ValueError(f"side must be one of {SIDES}, got {side!r}")
         self.target = target

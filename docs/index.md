@@ -33,257 +33,262 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 
 <div class="widget-gallery">
 <div class="gallery-item">
-<div class="gallery-title">Slider2D</div>
+<div class="gallery-title"><a href="reference/slider2d/">Slider2D</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/slider2d.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/slider2d.webp" alt="Slider2D widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/slider2d.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/slider2d/">API</a><a href="reference/slider2d.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">BezierCurve</div>
+<div class="gallery-title"><a href="reference/bezier-curve/">BezierCurve</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/beziercurve.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/beziercurve.webp" alt="BezierCurve widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/beziercurve.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/bezier-curve/">API</a><a href="reference/bezier-curve.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">CurveEditor</div>
+<div class="gallery-title"><a href="reference/curve-editor/">CurveEditor</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curveeditor.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/curveeditor.webp" alt="CurveEditor widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curveeditor.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/curve-editor/">API</a><a href="reference/curve-editor.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">Matrix</div>
+<div class="gallery-title"><a href="reference/matrix/">Matrix</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/matrix.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/matrix.webp" alt="Matrix widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/matrix.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/matrix/">API</a><a href="reference/matrix.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">Paint</div>
+<div class="gallery-title"><a href="reference/paint/">Paint</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/paint.webp" alt="Paint widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/paint.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/paint/">API</a><a href="reference/paint.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">Excalidraw</div>
+<div class="gallery-title"><a href="reference/excalidraw/">Excalidraw</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/excalidraw.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/excalidraw.webp" alt="Excalidraw widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/excalidraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/excalidraw/">API</a><a href="reference/excalidraw.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ThreeWidget</div>
+<div class="gallery-title"><a href="reference/three-widget/">ThreeWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/threewidget.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/threewidget.webp" alt="ThreeWidget widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/threewidget.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/three-widget/">API</a><a href="reference/three-widget.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">CubeWidget</div>
+<div class="gallery-title"><a href="reference/cube-widget/">CubeWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/cube_widget.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/cube-widget.webp" alt="CubeWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/cube_widget.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/cube-widget/">API</a><a href="reference/cube-widget.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">EdgeDraw</div>
+<div class="gallery-title"><a href="reference/edge-draw/">EdgeDraw</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/edgedraw.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/edgedraw.webp" alt="EdgeDraw widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/edgedraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/edge-draw/">API</a><a href="reference/edge-draw.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">GraphWidget</div>
+<div class="gallery-title"><a href="reference/graph-widget/">GraphWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/graphwidget.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/graphwidget.webp" alt="GraphWidget widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/graphwidget.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/graph-widget/">API</a><a href="reference/graph-widget.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">SortableList</div>
+<div class="gallery-title"><a href="reference/sortable-list/">SortableList</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/sortlist.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/sortablelist.webp" alt="SortableList widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/sortlist.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/sortable-list/">API</a><a href="reference/sortable-list.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ColorPicker</div>
+<div class="gallery-title"><a href="reference/color-picker/">ColorPicker</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/colorpicker.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/colorpicker.webp" alt="ColorPicker widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/colorpicker.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/color-picker/">API</a><a href="reference/color-picker.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">HoverZoom</div>
+<div class="gallery-title"><a href="reference/hover-zoom/">HoverZoom</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hoverzoom.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/hoverzoom.webp" alt="HoverZoom widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hoverzoom.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/hover-zoom/">API</a><a href="reference/hover-zoom.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">GamepadWidget</div>
+<div class="gallery-title"><a href="reference/gamepad/">GamepadWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/gamepad.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/gamepad.webp" alt="GamepadWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/gamepad.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/gamepad/">API</a><a href="reference/gamepad.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">GridDraw</div>
+<div class="gallery-title"><a href="reference/grid-draw/">GridDraw</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/griddraw.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/griddraw.webp" alt="GridDraw widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/griddraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/grid-draw/">API</a><a href="reference/grid-draw.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ManimWeb</div>
+<div class="gallery-title"><a href="reference/manim-web/">ManimWeb</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/manim-web.webp" alt="ManimWeb widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/manim_web.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/manim-web/">API</a><a href="reference/manim-web.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ObservablePlot</div>
+<div class="gallery-title"><a href="reference/observable-plot/">ObservablePlot</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/observableplot.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/observable-plot.webp" alt="ObservablePlot widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/observableplot.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/observable-plot/">API</a><a href="reference/observable-plot.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">EsmWidget</div>
+<div class="gallery-title"><a href="reference/esm-widget/">EsmWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/esm_widget.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/esm-widget.webp" alt="EsmWidget widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/esm_widget.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/esm-widget/">API</a><a href="reference/esm-widget.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">KeystrokeWidget</div>
+<div class="gallery-title"><a href="reference/keystroke/">KeystrokeWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/keystroke.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/keystroke.webp" alt="KeystrokeWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/keystroke.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/keystroke/">API</a><a href="reference/keystroke.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">SpeechToText</div>
+<div class="gallery-title"><a href="reference/talk/">SpeechToText</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/talk.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/speechtotext.webp" alt="WebkitSpeechToText widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/talk.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/talk/">API</a><a href="reference/talk.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">CopyToClipboard</div>
+<div class="gallery-title"><a href="reference/copy-to-clipboard/">CopyToClipboard</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/copytoclipboard.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/copytoclipboard.webp" alt="CopyToClipboard widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/copytoclipboard.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/copy-to-clipboard/">API</a><a href="reference/copy-to-clipboard.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">CellTour</div>
+<div class="gallery-title"><a href="reference/cell-tour/">CellTour</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/celltour.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/celltour.webp" alt="CellTour widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/celltour.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/cell-tour/">API</a><a href="reference/cell-tour.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">WebcamCapture</div>
+<div class="gallery-title"><a href="reference/webcam-capture/">WebcamCapture</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/webcam_capture.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/webcam-capture.webp" alt="WebcamCapture widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/webcam_capture.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/webcam-capture/">API</a><a href="reference/webcam-capture.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ImageRefreshWidget</div>
+<div class="gallery-title"><a href="reference/image-refresh/">ImageRefreshWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/htmlwidget.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/imagerefresh.webp" alt="ImageRefreshWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/htmlwidget.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/image-refresh/">API</a><a href="reference/image-refresh.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">HTMLRefreshWidget</div>
+<div class="gallery-title"><a href="reference/html-refresh/">HTMLRefreshWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/htmlwidget.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/htmlwidget.webp" alt="HTMLRefreshWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/htmlwidget.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/html-refresh/">API</a><a href="reference/html-refresh.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ProgressBar</div>
+<div class="gallery-title"><a href="reference/progress-bar/">ProgressBar</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/progressbar.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/progressbar.webp" alt="ProgressBar widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/progressbar.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/progress-bar/">API</a><a href="reference/progress-bar.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">RidgelineChart</div>
+<div class="gallery-title"><a href="reference/ridgeline-chart/">RidgelineChart</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/ridgelinechart.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/ridgelinechart.webp" alt="RidgelineChart widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/ridgelinechart.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/ridgeline-chart/">API</a><a href="reference/ridgeline-chart.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">TextCompare</div>
+<div class="gallery-title"><a href="reference/text-compare/">TextCompare</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/textcompare.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/textcompare.webp" alt="TextCompare widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/textcompare.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/text-compare/">API</a><a href="reference/text-compare.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">EnvConfig</div>
+<div class="gallery-title"><a href="reference/env-config/">EnvConfig</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/envconfig.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/envconfig.webp" alt="EnvConfig widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/envconfig.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/env-config/">API</a><a href="reference/env-config.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">TangleLatex</div>
+<div class="gallery-title"><a href="reference/tangle-latex/">TangleLatex</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_latex.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/tanglelatex.webp" alt="TangleLatex"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_latex.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/tangle-latex/">API</a><a href="reference/tangle-latex.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">Tangle</div>
+<div class="gallery-title"><a href="reference/tangle/">Tangle</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/tangle.webp" alt="Tangle widgets"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/tangle/">API</a><a href="reference/tangle.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ChartPuck</div>
+<div class="gallery-title"><a href="reference/chart-puck/">ChartPuck</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/chartpuck.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/chartpuck.webp" alt="ChartPuck widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/chartpuck.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/chart-puck/">API</a><a href="reference/chart-puck.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ChartMultiSelect</div>
+<div class="gallery-title"><a href="reference/chart-multi-select/">ChartMultiSelect</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/chartmultiselect.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/chartmultiselect.webp" alt="ChartMultiSelect widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/chartmultiselect.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/chart-multi-select/">API</a><a href="reference/chart-multi-select.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ChartSelect</div>
+<div class="gallery-title"><a href="reference/chart-select/">ChartSelect</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/chartselect.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/chartselect.webp" alt="ChartSelect widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/chartselect.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/chart-select/">API</a><a href="reference/chart-select.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">HeatmapSelect</div>
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/heatmap_select.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/heatmap-select.webp" alt="HeatmapSelect widget"></a>
+<div class="gallery-title"><a href="reference/heatmap-select/">HeatmapSelect</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/heatmap_select.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/heatmap-select.webp" alt="HeatmapSelect"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/heatmap_select.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/heatmap-select/">API</a><a href="reference/heatmap-select.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ParallelCoordinates</div>
+<div class="gallery-title"><a href="reference/parallel-coords/">ParallelCoordinates</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/parallelcoords.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/parallelcoords.webp" alt="ParallelCoordinates"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/parallelcoords.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/parallel-coords/">API</a><a href="reference/parallel-coords.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ScatterWidget</div>
+<div class="gallery-title"><a href="reference/scatter-widget/">ScatterWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scatterwidget.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/scatterwidget.webp" alt="ScatterWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scatterwidget.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/scatter-widget/">API</a><a href="reference/scatter-widget.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">SplineDraw</div>
+<div class="gallery-title"><a href="reference/spline-draw/">SplineDraw</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/splinedraw.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/splinedraw.webp" alt="SplineDraw"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/splinedraw.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/spline-draw/">API</a><a href="reference/spline-draw.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ApiDoc</div>
+<div class="gallery-title"><a href="reference/api-doc/">ApiDoc</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/apidoc.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/apidoc.webp" alt="ApiDoc"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/apidoc.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/api-doc/">API</a><a href="reference/api-doc.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">AnnotationWidget</div>
+<div class="gallery-title"><a href="reference/annotation/">AnnotationWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/annotation.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/annotation.webp" alt="AnnotationWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/annotation.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/annotation/">API</a><a href="reference/annotation.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">PlaySlider</div>
+<div class="gallery-title"><a href="reference/play-slider/">PlaySlider</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/play_slider.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/playslider.webp" alt="PlaySlider"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/play_slider.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/play-slider/">API</a><a href="reference/play-slider.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">FramePlayer</div>
+<div class="gallery-title"><a href="reference/frame-player/">FramePlayer</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/frame_player.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/frameplayer.webp" alt="FramePlayer"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/frame_player.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/frame-player/">API</a><a href="reference/frame-player.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">CircularSlider</div>
+<div class="gallery-title"><a href="reference/circular-slider/">CircularSlider</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/circle-slider.webp" alt="CircularSlider"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/circular-slider/">API</a><a href="reference/circular-slider.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">HoverSlider</div>
+<div class="gallery-title"><a href="reference/hover-slider/">HoverSlider</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hover_slider.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/hover_slider.webp" alt="HoverSlider"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hover_slider.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/hover-slider/">API</a><a href="reference/hover-slider.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ForecastChart</div>
+<div class="gallery-title"><a href="reference/utils/">ForecastChart</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/forecast-chart.webp" alt="ForecastChart"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/forecast_chart.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/utils/">API</a><a href="reference/utils.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">Treemap</div>
+<div class="gallery-title"><a href="reference/treemap/">Treemap</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/treemap.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/treemap.webp" alt="Treemap widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/treemap.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/treemap/">API</a><a href="reference/treemap.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">NestedTable</div>
+<div class="gallery-title"><a href="reference/nested-table/">NestedTable</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/nested_table.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/nested_table.webp" alt="NestedTable widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/nested_table.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/nested-table/">API</a><a href="reference/nested-table.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">LiveEdit</div>
+<div class="gallery-title"><a href="reference/live-edit/">LiveEdit</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/liveedit.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/liveedit.webp" alt="LiveEdit widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/liveedit.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/live-edit/">API</a><a href="reference/live-edit.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">AsyncFlow</div>
+<div class="gallery-title"><a href="reference/async-flow/">AsyncFlow</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/asyncflow.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/asyncflow.webp" alt="AsyncFlow widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/asyncflow.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/async-flow/">API</a><a href="reference/async-flow.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">WidgetDAG</div>
+<div class="gallery-title"><a href="reference/widget-dag/">WidgetDAG</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_dag.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/widget-dag.webp" alt="WidgetDAG widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_dag.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/widget-dag/">API</a><a href="reference/widget-dag.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">ScatterLog</div>
+<div class="gallery-title"><a href="reference/hint/">Hint</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/hint.webp" alt="Hint widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/hint/">API</a><a href="reference/hint.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title"><a href="reference/scatter-log/">ScatterLog</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scatter_log.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/scatter-log.webp" alt="ScatterLog widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scatter_log.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/scatter-log/">API</a><a href="reference/scatter-log.md">MD</a></div>
 </div>
@@ -297,17 +302,17 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 
 <div class="widget-gallery">
 <div class="gallery-item">
-<div class="gallery-title">ModuleTreeWidget</div>
+<div class="gallery-title"><a href="reference/module-tree/">ModuleTreeWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/moduletree.webp" alt="ModuleTreeWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/notebooks/nb_K7QvvoASZErgKxwD8XSMWi?utm_source=wigglystuff">molab</a><a href="reference/module-tree/">API</a><a href="reference/module-tree.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">Neo4jWidget</div>
+<div class="gallery-title"><a href="reference/neo4j-widget/">Neo4jWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/neo4j-widget.webp" alt="Neo4jWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/notebooks/nb_ghifaw8nRCuDAgc1UTajXU?utm_source=wigglystuff">molab</a><a href="reference/neo4j-widget/">API</a><a href="reference/neo4j-widget.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title">AltairWidget</div>
+<div class="gallery-title"><a href="reference/altair-widget/">AltairWidget</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/altairwidget.webp" alt="AltairWidget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/altairwidget.py?utm_source=wigglystuff">molab</a><a href="reference/altair-widget/">API</a><a href="reference/altair-widget.md">MD</a></div>
 </div>

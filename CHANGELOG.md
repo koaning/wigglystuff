@@ -11,6 +11,15 @@ All notable changes to this project will be documented in this file.
 - Coloring follows matplotlib — `cmap`/`norm`/`vmin`/`vmax`, grayscale by default, with masked or non-finite cells taking the colormap's "bad" color. A finished picture (PIL image, uint8 array, path, base64 PNG) works too, and the values themselves never cross the wire.
 - Row and column bands are tinted per axis via `row_color`/`col_color`, so a selection can match the colors of whatever chart consumes it.
 - Demo at `demos/heatmap_select.py`: a cannon's range over launch angle and speed, with a wind slider that recolors the space while the pins stay put.
+- `Hint`: marimo-only display helper that wraps a widget and curves an arrow from an explanatory note to its edge, so a reader can tell what is interactive and why. The note is any marimo content (a `str` goes through `mo.md`), `side` puts it on any of the four sides, and the arc defaults to `currentColor` to follow the notebook theme.
+- Hints render as ordinary marimo content, so they compose into `mo.hstack`/`mo.vstack` and `WidgetDAG` nodes, and nest inside each other to give one widget more than one arrow.
+
+### Changed
+
+- Docs: every reference page now has a unique `title` and meta description plus a lead paragraph and "See also" links. All 54 previously shared one description and had almost no prose, so none of them ranked.
+- Docs: reference pages show the widget screenshot as a click-to-load card that swaps in a live marimo WASM demo — nothing is fetched from marimo.app until the click.
+- Docs: added Open Graph/Twitter card tags, a `robots.txt` declaring the sitemap, and `GridDraw`/`LiveEdit` to the nav (both were built but missing from the sitemap).
+- Docs: `reference/index.md` lists every widget grouped by purpose, up from 32 ungrouped; `utils.md` now documents `forecast_chart`.
 
 ## [0.5.22] - 2026-07-27
 

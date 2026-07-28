@@ -9,12 +9,20 @@
 from __future__ import annotations
 
 import re
+import shutil
 from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS_DIR = ROOT / "docs"
 SITE_DIR = ROOT / "site"
+
+# Blocks that only make sense on the rendered page -- the live-demo card, the
+# raw-.md pill -- are fenced with these comments so they stay out of the `.md`
+# mirrors that docs/llms.txt points at. Stripped before the parser sees them,
+# because _HtmlToMarkdown's skip-depth counter never recovers from a void
+# element like <img>.
+_NO_MD_BLOCK = re.compile(r"<!--\s*no-md\s*-->.*?<!--\s*/no-md\s*-->", re.DOTALL)
 
 
 def _extract_article_html(html: str) -> str | None:
@@ -26,7 +34,7 @@ def _extract_article_html(html: str) -> str | None:
     end = html.find("</article>", start)
     if end == -1:
         return None
-    return html[start:end]
+    return _NO_MD_BLOCK.sub("", html[start:end])
 
 
 class _HtmlToMarkdown(HTMLParser):
@@ -324,10 +332,31 @@ def _patch_md_links() -> None:
             html_file.write_text(patched, encoding="utf-8")
 
 
+# Directories under docs/ that exist for us, not for readers. zensical builds
+# every .md it finds under docs_dir and has no exclude setting, so the only way
+# to keep these off the public site is to drop them after the build.
+UNPUBLISHED = ("superpowers",)
+
+
+def _prune_unpublished() -> list[str]:
+    removed = []
+    for name in UNPUBLISHED:
+        target = SITE_DIR / name
+        if target.exists():
+            shutil.rmtree(target)
+            removed.append(name)
+    return removed
+
+
 def main() -> None:
     _copy_markdown_sources()
     _patch_md_links()
-    print(f"[post-zensical] copied .md sources and patched gallery MD links in {SITE_DIR.relative_to(ROOT)}")
+    pruned = _prune_unpublished()
+    note = f", pruned {'/'.join(pruned)}" if pruned else ""
+    print(
+        f"[post-zensical] copied .md sources and patched gallery MD links in "
+        f"{SITE_DIR.relative_to(ROOT)}{note}"
+    )
 
 
 if __name__ == "__main__":

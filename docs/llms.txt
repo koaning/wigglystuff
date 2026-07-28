@@ -58,6 +58,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [Treemap](https://koaning.github.io/wigglystuff/reference/treemap.md): Zoomable hierarchical treemap with clickable path navigation and constructors for dicts, path strings, records, or dataframes
 - [NestedTable](https://koaning.github.io/wigglystuff/reference/nested-table.md): Recursive expandable table for hierarchical data with name, summed value, and share-of-total columns
 - [WidgetDAG](https://koaning.github.io/wigglystuff/reference/widget-dag.md): Arrange live widgets/images as a DAG (columns by edge-depth) and draw the connecting arrows; `WidgetDAG.from_widgets([...])` derives the edges from marimo's dataflow graph
+- [Hint](https://koaning.github.io/wigglystuff/reference/hint.md): Wrap a widget and curve an arrow from an explanatory note to its edge, so a reader can tell what is interactive and why; the note is any marimo content and hints compose into stacks, DAGs, and each other
 
 ## 3rd party widgets
 
