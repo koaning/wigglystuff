@@ -28,6 +28,8 @@ from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
 from .grid_draw import GridDraw
 from .heatmap_select import HeatmapSelect
+from .hint import Hint
+from .hover_slider import HoverSlider
 from .hover_zoom import HoverZoom
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
@@ -90,6 +92,7 @@ __all__ = [
     "GraphWidget",
     "GridDraw",
     "HeatmapSelect",
+    "Hint",
     "KeystrokeWidget",
     "TangleLatex",
     "LiveEdit",
@@ -118,6 +121,7 @@ __all__ = [
     "WandbChart",
     "WidgetDAG",
     "WebcamCapture",
+    "HoverSlider",
     "HoverZoom",
     "HTMLRefreshWidget",
     "ImageRefreshWidget",

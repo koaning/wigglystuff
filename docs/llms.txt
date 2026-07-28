@@ -53,6 +53,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [FramePlayer](https://koaning.github.io/wigglystuff/reference/frame-player.md): Play a sequence of images (PIL, paths, URLs, matplotlib figures) as an inline, optionally-looping video with play/pause/loop controls and a scrubber
 - [CircularSlider](https://koaning.github.io/wigglystuff/reference/circular-slider.md): Circular dial slider for picking a single value, mirroring mo.ui.slider semantics
 - [CircularRangeSlider](https://koaning.github.io/wigglystuff/reference/circular-slider.md): Circular dial slider for picking a (low, high) span, mirroring mo.ui.range_slider semantics
+- [HoverSlider](https://koaning.github.io/wigglystuff/reference/hover-slider.md): Horizontal slider that reports both the committed value and a live hover value, so notebooks can preview a result before the user clicks to commit
 - [ForecastChart](https://koaning.github.io/wigglystuff/reference/utils.md): Time series chart with robust exponential forecast via log-linear regression
 - [Treemap](https://koaning.github.io/wigglystuff/reference/treemap.md): Zoomable hierarchical treemap with clickable path navigation and constructors for dicts, path strings, records, or dataframes
 - [NestedTable](https://koaning.github.io/wigglystuff/reference/nested-table.md): Recursive expandable table for hierarchical data with name, summed value, and share-of-total columns

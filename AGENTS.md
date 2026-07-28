@@ -63,6 +63,7 @@ syncs back to Python.
 | FramePlayer | `wigglystuff.frame_player.FramePlayer` | `frames`, `value`, `interval_ms`, `playing`, `loop`, `width`, `show_index` | Play a sequence of images (PIL/paths/URLs/figures) as an inline looping "video" |
 | CircularSlider | `wigglystuff.circular_slider.CircularSlider` | `value`, `start`, `stop`, `step`, `size`, `thickness`, `show_value`, `color`, `label` | Circular dial slider for picking a single value |
 | CircularRangeSlider | `wigglystuff.circular_slider.CircularRangeSlider` | `value` (`(low, high)`), `start`, `stop`, `step`, `size`, `thickness`, `show_value`, `color`, `label` | Circular dial slider for picking a span of values (wraps the seam) |
+| HoverSlider | `wigglystuff.hover_slider.HoverSlider` | `value`, `hover_value`, `hovering`, `start`, `stop`, `step`, `steps`, `sync_throttle_ms`, `show_value`, `label`, `color`, `width` | Slider that emits both the committed value and the live value under the pointer |
 | RidgelineChart | `wigglystuff.ridgeline_chart.RidgelineChart` | `data`, `x_values`, `width`, `height`, `overlap`, `stroke_width`, `fill_opacity`, `peak_scale`, `x_label`, `y_label`, `selected_index`, `selected_row` | Stacked waveform "Joy Division" visualization with clickable rows |
 | Treemap | `wigglystuff.treemap.Treemap` | `data`, `width`, `height`, `max_depth`, `value_col`, `selected_path`, `clicked_path`, `hovered_path` | Zoomable hierarchical treemap with breadcrumbs |
 | WidgetDAG | `wigglystuff.widget_dag.WidgetDAG` | `nodes`, `edges`, `layout` (not an AnyWidget — a marimo display helper) | Arrange live widgets/images as a DAG (columns by edge-depth) and draw the connecting arrows; `WidgetDAG.from_widgets([...])` derives the edges from marimo's dataflow graph (one node per cell) |
@@ -78,9 +79,6 @@ syncs back to Python.
   starting branch-finishing workflows. The user may want another design pass.
 - During visual iteration, do not repeatedly run automated checks after CSS,
   SVG, layout, or styling tweaks. Make the change and return it for inspection.
-- Browser E2E tests are exceptional, not the default for a widget. Add or run
-  them only when the user requests them or after the user approves a specific
-  browser behavior that cannot be covered meaningfully in Python.
 - After visual approval, run the smallest focused checks once. Run the full
   repository suite only when preparing to ship/merge or when shared
   infrastructure changed.
@@ -159,10 +157,3 @@ syncs back to Python.
 - When planning a new widget, always present the proposed Python API
   (constructor, traitlets, helper methods) during plan review so the user
   can sign off on the interface before implementation.
-- When an explicitly approved E2E test needs a fixture, keep it in
-  `tests/fixtures/*.py` or `demos/*.py` inside the project tree. The repo's `pyproject.toml`
-  sets `[tool.marimo.runtime] auto_instantiate = true` so cells run on
-  notebook open — without that, `marimo edit` shows the editor but never
-  produces widget output and selectors will time out. If a test needs an
-  isolated copy, put the copy somewhere a `pyproject.toml` walk reaches,
-  not under `tmp_path`.
