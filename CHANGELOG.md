@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `Hint`: marimo-only display helper that wraps a widget and curves an arrow from an explanatory note to its edge, so a reader can tell what is interactive and why. The note is any marimo content (a `str` goes through `mo.md`), `side` puts it on any of the four sides, and the arc defaults to `currentColor` to follow the notebook theme.
+- Hints render as ordinary marimo content, so they compose into `mo.hstack`/`mo.vstack` and `WidgetDAG` nodes, and nest inside each other to give one widget more than one arrow.
+
 ## [0.5.22] - 2026-07-27
 
 ### Added
