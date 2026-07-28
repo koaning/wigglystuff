@@ -62,6 +62,7 @@ nav = [
         { NestedTable = "reference/nested-table.md" },
         { AsyncFlow = "reference/async-flow.md" },
         { WidgetDAG = "reference/widget-dag.md" },
+        { Hint = "reference/hint.md" },
         { Utils = "reference/utils.md" },
     ] },
 ]
