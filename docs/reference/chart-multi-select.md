@@ -1,4 +1,31 @@
+---
+title: "ChartMultiSelect: label chart regions"
+description: ChartMultiSelect keeps several class-labeled box or lasso regions on a matplotlib chart so you can hand-label scatter points in marimo or Colab notebooks.
+image: chartmultiselect
+image_alt: ChartMultiSelect widget showing blue and orange lasso regions labeling the two moons of a matplotlib scatter plot
+---
+
 # ChartMultiSelect API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="chartmultiselect" data-demo-title="ChartMultiSelect live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/chartmultiselect.webp" alt="ChartMultiSelect widget showing blue and orange lasso regions labeling the two moons of a matplotlib scatter plot" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
+
+`ChartMultiSelect` is `ChartSelect` with memory: every box or lasso you draw over the
+matplotlib PNG stays on the canvas tagged with a class label, up to four classes. Draw one
+region per class and `get_labels(x, y)` returns a class per point, with `-1` for anything
+unclassified and last-drawn winning where regions overlap. It is a quick way to hand-label
+a scatter plot before training on it.
+
+See also: [ChartSelect](chart-select.md) for a single throwaway selection,
+[ScatterWidget](scatter-widget.md) for painting labeled points instead of labeling
+existing ones, and [ChartPuck](chart-puck.md) for dragging a point on the same kind of
+chart overlay.
 
 ::: wigglystuff.chart_multi_select.ChartMultiSelect
 

@@ -1,4 +1,32 @@
+---
+title: "AnnotationWidget: label data in notebooks"
+description: AnnotationWidget is an annotation surface with action buttons, keyboard shortcuts, gamepad input and speech-to-text notes for labeling runs in marimo.
+image: annotation
+image_alt: AnnotationWidget showing previous, accept, fail and defer buttons above a note field with a microphone
+---
+
 # AnnotationWidget API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="annotation" data-demo-title="AnnotationWidget live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/annotation.webp" alt="AnnotationWidget showing previous, accept, fail and defer buttons above a note field with a microphone" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
+
+`AnnotationWidget` is the input half of an annotation workflow: a row of action buttons
+(`previous`, `accept`, `fail`, `defer` by default), a note field with speech-to-text, and
+the same actions bound to number keys and gamepad buttons so you can label a queue
+without reaching for the mouse. It deliberately does not render the thing being
+annotated — your notebook shows the content and reacts to the `action` traitlet, and
+because `action_timestamp` changes on every trigger, `observe` fires even when the same
+action is picked twice in a row.
+
+See also: [KeystrokeWidget](keystroke.md) for raw keypresses without the button UI,
+[GamepadWidget](gamepad.md) for reading a controller's axes and buttons directly, and
+[ProgressBar](progress-bar.md) for showing how far through the queue you are.
 
 ::: wigglystuff.annotation.AnnotationWidget
 

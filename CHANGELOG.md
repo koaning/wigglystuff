@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- Docs: every reference page now has a unique `title` and meta description plus a lead paragraph and "See also" links. All 54 previously shared one description and had almost no prose, so none of them ranked.
+- Docs: reference pages show the widget screenshot as a click-to-load card that swaps in a live marimo WASM demo — nothing is fetched from marimo.app until the click.
+- Docs: added Open Graph/Twitter card tags, a `robots.txt` declaring the sitemap, and `GridDraw`/`LiveEdit` to the nav (both were built but missing from the sitemap).
+- Docs: `reference/index.md` lists all 53 widgets grouped by purpose, up from 32 ungrouped; `utils.md` now documents `forecast_chart`.
+
 ## [0.5.22] - 2026-07-27
 
 ### Added

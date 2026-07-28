@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://koaning.github.io/wigglystuff/sitemap.xml

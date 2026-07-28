@@ -29,6 +29,7 @@ nav = [
         { ThreeWidget = "reference/three-widget.md" },
         { CubeWidget = "reference/cube-widget.md" },
         { EdgeDraw = "reference/edge-draw.md" },
+        { GridDraw = "reference/grid-draw.md" },
         { GraphWidget = "reference/graph-widget.md" },
         { KeystrokeWidget = "reference/keystroke.md" },
         { WebkitSpeechToText = "reference/talk.md" },
@@ -60,6 +61,7 @@ nav = [
         { HoverZoom = "reference/hover-zoom.md" },
         { Treemap = "reference/treemap.md" },
         { NestedTable = "reference/nested-table.md" },
+        { LiveEdit = "reference/live-edit.md" },
         { AsyncFlow = "reference/async-flow.md" },
         { WidgetDAG = "reference/widget-dag.md" },
         { Utils = "reference/utils.md" },
@@ -67,6 +69,7 @@ nav = [
 ]
 
 extra_css = ["assets/stylesheets/extra.css"]
+extra_javascript = ["assets/javascripts/demo-embed.js"]
 
 # ----------------------------------------------------------------------------
 # Theme
