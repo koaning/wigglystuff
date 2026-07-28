@@ -42,6 +42,7 @@ the link at the top of any page. [`llms.txt`](../llms.txt) lists them all.
 ## Selecting on top of charts
 
 - [ChartPuck](chart-puck.md) — draggable puck over a matplotlib chart
+- [HeatmapSelect](heatmap-select.md) — pin a cell, a row or a column out of a parameter-space grid
 - [ChartSelect](chart-select.md) — box and lasso selection on a matplotlib chart
 - [ChartMultiSelect](chart-multi-select.md) — multi-region class-labeled selection
 - [ScatterWidget](scatter-widget.md) — paint multi-class 2D scatter data with a brush

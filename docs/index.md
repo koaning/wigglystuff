@@ -203,6 +203,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/chartselect.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/chart-select/">API</a><a href="reference/chart-select.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title"><a href="reference/heatmap-select/">HeatmapSelect</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/heatmap_select.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/heatmap-select.webp" alt="HeatmapSelect"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/heatmap_select.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/heatmap-select/">API</a><a href="reference/heatmap-select.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title"><a href="reference/parallel-coords/">ParallelCoordinates</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/parallelcoords.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/parallelcoords.webp" alt="ParallelCoordinates"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/parallelcoords.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/parallel-coords/">API</a><a href="reference/parallel-coords.md">MD</a></div>
