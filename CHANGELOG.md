@@ -4,12 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `Hint`: marimo-only display helper that wraps a widget and curves an arrow from an explanatory note to its edge, so a reader can tell what is interactive and why. The note is any marimo content (a `str` goes through `mo.md`), `side` puts it on any of the four sides, and the arc defaults to `currentColor` to follow the notebook theme.
+- Hints render as ordinary marimo content, so they compose into `mo.hstack`/`mo.vstack` and `WidgetDAG` nodes, and nest inside each other to give one widget more than one arrow.
+
 ### Changed
 
 - Docs: every reference page now has a unique `title` and meta description plus a lead paragraph and "See also" links. All 54 previously shared one description and had almost no prose, so none of them ranked.
 - Docs: reference pages show the widget screenshot as a click-to-load card that swaps in a live marimo WASM demo — nothing is fetched from marimo.app until the click.
 - Docs: added Open Graph/Twitter card tags, a `robots.txt` declaring the sitemap, and `GridDraw`/`LiveEdit` to the nav (both were built but missing from the sitemap).
-- Docs: `reference/index.md` lists all 53 widgets grouped by purpose, up from 32 ungrouped; `utils.md` now documents `forecast_chart`.
+- Docs: `reference/index.md` lists every widget grouped by purpose, up from 32 ungrouped; `utils.md` now documents `forecast_chart`.
 
 ## [0.5.22] - 2026-07-27
 

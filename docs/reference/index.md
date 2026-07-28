@@ -5,9 +5,10 @@ description: Reference index for all wigglystuff AnyWidgets, grouped by what the
 
 # API Overview
 
-The widgets below each have a reference page, grouped by what they are for. Each page is
-generated with mkdocstrings, so docstrings and trait metadata stay in sync with the
-source on every release — and each one carries a live demo you can run in the browser.
+Every widget in `wigglystuff` has its own reference page below, grouped by what it is
+for. Each page is generated with mkdocstrings, so docstrings and trait metadata stay in
+sync with the source on every release — and each one carries a live demo you can run in
+the browser.
 
 Every page is also available as raw Markdown: swap the trailing `/` for `.md`, or use
 the link at the top of any page. [`llms.txt`](../llms.txt) lists them all.
@@ -86,6 +87,7 @@ the link at the top of any page. [`llms.txt`](../llms.txt) lists them all.
 - [AsyncFlow](async-flow.md) — swimlane timeline of one async run (Python 3.12+)
 - [LiveEdit](live-edit.md) — source-linked loop trace for one function run
 - [CellTour](cell-tour.md) — cell-based guided tours for marimo
+- [Hint](hint.md) — curve an arrow from a note to the widget it explains
 
 ## Images
 
