@@ -1,4 +1,34 @@
+---
+title: "HeatmapSelect: pick a cell, a row or a column out of a parameter space"
+description: HeatmapSelect draws a 2D array one pixel per cell and hands back the cell, row and column you pin from its axes, so a notebook can chart the runs behind any slice of a parameter sweep.
+image: heatmap-select
+image_alt: HeatmapSelect showing a dense parameter-space grid with a pinned row band, a pinned column band and a pinned cell at their crossing
+---
+
 # HeatmapSelect API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="heatmap_select" data-demo-title="HeatmapSelect live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/heatmap-select.webp" alt="HeatmapSelect showing a dense parameter-space grid with a pinned row band, a pinned column band and a pinned cell at their crossing" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
+
+`HeatmapSelect` renders a 2D array as a dense grid — one image pixel per cell, in the
+spirit of the parameter spaces in Bret Victor's
+[*Up and Down the Ladder of Abstraction*](https://worrydream.com/LadderOfAbstraction/).
+Hover or click a cell in the body to pick one point of the sweep, or grab the left or
+bottom gutter to pin a whole row or column. The three pins are independent and coexist, so
+you can hold a cell, a row and a column at once. The values behind the picture never cross
+the wire: the widget reports indices and you do the slicing, which is what lets a 14 641-cell
+field stay a single PNG. Reach for it when a sweep has two knobs and you want to see the runs
+behind any slice of it.
+
+See also: [ChartSelect](chart-select.md) for box and lasso selection over a matplotlib
+figure, [ChartPuck](chart-puck.md) for dragging a single point across a chart, and
+[Slider2D](slider2d.md) for picking a continuous `(x, y)` pair rather than a grid cell.
 
 ::: wigglystuff.heatmap_select.HeatmapSelect
 

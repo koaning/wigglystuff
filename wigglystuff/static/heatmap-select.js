@@ -257,9 +257,14 @@ function render({ model, el }) {
     const [yLo, yHi] = model.get("y_range");
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
+    // The y label sits in the origin corner, stacked upwards from `bottom`, so
+    // skip whichever ticks it covers. Measured against the label's actual height
+    // rather than a fixed fraction — a two-line name reaches twice as far up, and
+    // a fraction that clears a one-line name lets it collide.
+    const yLabelHeight = yLines.length ? yLines.length * LINE_HEIGHT + 5 : 0;
     for (const tick of tickList("y")) {
       const frac = yHi === yLo ? 0 : (tick - yLo) / (yHi - yLo);
-      if (yLines.length && frac < 0.05) continue;
+      if (frac * gh < yLabelHeight) continue;
       ctx.fillText(
         formatTick(tick) + model.get("y_suffix"),
         MARGIN.left - 6,
@@ -292,6 +297,12 @@ function render({ model, el }) {
     const x = MARGIN.left + col * cw - 1.5;
     const y = rowToCanvasY(row) - 1.5;
     if (!strong) {
+      // Two passes, same as the pinned marker below and for the same reason: a
+      // single mid-gray outline vanishes against a mid-gray cell, and a dense
+      // field like this has every shade in it somewhere.
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = withAlpha(colors.markerEdge, 0.45);
+      ctx.strokeRect(x, y, cw + 3, ch + 3);
       ctx.lineWidth = 1;
       ctx.strokeStyle = colors.ghost;
       ctx.strokeRect(x, y, cw + 3, ch + 3);
@@ -317,19 +328,24 @@ function render({ model, el }) {
     ctx.strokeRect(rect.x + 0.5, rect.y + 0.5, rect.w - 1, rect.h - 1);
   }
 
+  // Bands stop at the grid, not at the edge of the canvas. Running them out
+  // through the gutters puts a tinted wash over the tick labels and past the axis
+  // line, which reads as a rendering bug rather than as a selection.
   function drawRowBand(colors, row, strong) {
-    // Spans the full width including the gutters, so the band visually ties the
-    // y axis to the data it selects.
     const ch = model.get("cell_height");
     const y = rowToCanvasY(row);
-    drawBand({ x: 2, y: y - 2, w: totalWidth() - 4, h: ch + 4 }, colors.row, strong);
+    drawBand(
+      { x: MARGIN.left, y: y - 2, w: gridWidth(), h: ch + 4 },
+      colors.row,
+      strong
+    );
   }
 
   function drawColumnBand(colors, col, strong) {
     const cw = model.get("cell_width");
     const x = MARGIN.left + col * cw;
     drawBand(
-      { x: x - 2, y: 2, w: cw + 4, h: totalHeight() - 4 },
+      { x: x - 2, y: MARGIN.top, w: cw + 4, h: gridHeight() },
       colors.col,
       strong
     );
