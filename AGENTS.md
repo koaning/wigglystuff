@@ -66,6 +66,7 @@ syncs back to Python.
 | RidgelineChart | `wigglystuff.ridgeline_chart.RidgelineChart` | `data`, `x_values`, `width`, `height`, `overlap`, `stroke_width`, `fill_opacity`, `peak_scale`, `x_label`, `y_label`, `selected_index`, `selected_row` | Stacked waveform "Joy Division" visualization with clickable rows |
 | Treemap | `wigglystuff.treemap.Treemap` | `data`, `width`, `height`, `max_depth`, `value_col`, `selected_path`, `clicked_path`, `hovered_path` | Zoomable hierarchical treemap with breadcrumbs |
 | WidgetDAG | `wigglystuff.widget_dag.WidgetDAG` | `nodes`, `edges`, `layout` (not an AnyWidget — a marimo display helper) | Arrange live widgets/images as a DAG (columns by edge-depth) and draw the connecting arrows; `WidgetDAG.from_widgets([...])` derives the edges from marimo's dataflow graph (one node per cell) |
+| Hint | `wigglystuff.hint.Hint` | `target`, `note`, `side`, `color`, `gap` (not an AnyWidget — a marimo display helper) | Wrap a widget and curve an arrow from an explanatory note to its edge; the note is any marimo content, and hints compose into stacks, `WidgetDAG` nodes, and each other |
 
 ## Patterns to remember
 

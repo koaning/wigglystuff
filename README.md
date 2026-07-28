@@ -103,7 +103,7 @@ uv pip install wigglystuff
 <tr>
 <td align="center"><b>ScatterLog</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scatter_log.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/scatter-log.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scatter_log.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/scatter-log/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/scatter-log.md">MD</a></td>
 <td align="center"><b>HoverSlider</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hover_slider.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/hover_slider.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hover_slider.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/hover-slider/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/hover-slider.md">MD</a></td>
-<td></td>
+<td align="center"><b>Hint</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/hint.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/hint/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/hint.md">MD</a></td>
 </tr>
 </table>
 
