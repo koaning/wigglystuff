@@ -45,6 +45,10 @@ def test_import_grid_draw():
     from wigglystuff.grid_draw import GridDraw
 
 
+def test_import_hint():
+    from wigglystuff.hint import Hint
+
+
 def test_import_hover_slider():
     from wigglystuff.hover_slider import HoverSlider
 
