@@ -55,7 +55,6 @@ from .tangle import TangleChoice, TangleSelect, TangleSlider
 from .text_compare import TextCompare
 from .treemap import Treemap
 from .three_widget import ThreeWidget
-from .wandb_chart import WandbChart
 from .widget_dag import WidgetDAG
 from .utils import forecast_chart
 from .webcam_capture import WebcamCapture
@@ -118,7 +117,6 @@ __all__ = [
     "Treemap",
     "WebkitSpeechToTextWidget",
     "ThreeWidget",
-    "WandbChart",
     "WidgetDAG",
     "WebcamCapture",
     "HoverSlider",

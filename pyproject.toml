@@ -29,9 +29,6 @@ all = [
     "numpy",
     "pillow",
 ]
-wandb = [
-    "wandb>=0.15.0",
-]
 torch = [
     "torch>=2.10.0",
 ]
