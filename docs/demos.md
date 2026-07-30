@@ -22,4 +22,20 @@
 <iframe src="https://www.youtube.com/embed/dVrkzc_arE8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
+<div class="youtube-embed">
+<iframe src="https://www.youtube.com/embed/q8UBH54B2Rg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+<div class="youtube-embed">
+<iframe src="https://www.youtube.com/embed/VD5bAOvDxFY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+<div class="youtube-embed">
+<iframe src="https://www.youtube.com/embed/BrQLCqofc30" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+<div class="youtube-embed">
+<iframe src="https://www.youtube.com/embed/qVSeOr3AIbc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
 </div>
