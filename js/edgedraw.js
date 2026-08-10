@@ -11,9 +11,9 @@ function render({model, el}){
 
     // Sample nodes
     const names = model.get("names");
-    const nodes = names.map((name) => ({ id: name, x: 100, y: 100 }));
-    const nodeOrder = new Map(names.map((name, index) => [name, index]));
-    const nodeById = new Map(nodes.map((node) => [node.id, node]));
+    let nodes = names.map((name) => ({ id: name, x: 100, y: 100 }));
+    let nodeOrder = new Map(names.map((name, index) => [name, index]));
+    let nodeById = new Map(nodes.map((node) => [node.id, node]));
 
     let links = [];
     let selectedNode = null;
@@ -66,7 +66,7 @@ function render({model, el}){
     const nodeGroup = svg.append("g");
 
     // Draw nodes
-    const node = nodeGroup.selectAll(".node")
+    let node = nodeGroup.selectAll(".node")
         .data(nodes)
         .join("circle")
         .attr("class", "node")
@@ -74,7 +74,7 @@ function render({model, el}){
         .on("click", handleNodeClick);
 
     // Add labels
-    const labels = nodeGroup.selectAll(".label")
+    let labels = nodeGroup.selectAll(".label")
         .data(nodes)
         .join("text")
         .attr("class", "label")
@@ -195,6 +195,51 @@ function render({model, el}){
         links = hydrateLinks(model.get("links"));
         simulation.force("link").links(links);
         updateLinks();
+    });
+
+    model.on("change:names", () => {
+        const updatedNames = model.get("names");
+
+        // Reuse existing node objects (positions/velocities) for surviving
+        // names; new names spawn in the middle and let the simulation settle.
+        const previousById = nodeById;
+        nodes = updatedNames.map((name) =>
+            previousById.get(name) || { id: name, x: width / 2, y: height / 2 }
+        );
+        nodeOrder = new Map(updatedNames.map((name, index) => [name, index]));
+        nodeById = new Map(nodes.map((node) => [node.id, node]));
+
+        if (selectedNode && !nodeById.has(selectedNode.id)) {
+            selectedNode = null;
+        }
+
+        // Drop any links that referenced removed nodes.
+        links = hydrateLinks(model.get("links"));
+
+        node = nodeGroup.selectAll(".node")
+            .data(nodes, (d) => d.id)
+            .join("circle")
+            .attr("class", "node")
+            .attr("r", 10)
+            .on("click", handleNodeClick);
+        node.call(nodeDrag);
+
+        labels = nodeGroup.selectAll(".label")
+            .data(nodes, (d) => d.id)
+            .join("text")
+            .attr("class", "label")
+            .attr("dx", 15)
+            .attr("dy", 4)
+            .text(d => d.id);
+
+        simulation.nodes(nodes);
+        simulation.force("link").links(links);
+        simulation.alpha(1).restart();
+        updateLinks();
+
+        // Keep Python's `links` consistent when removing a node prunes edges.
+        model.set("links", links.map(l => ({source: l.source.id, target: l.target.id})));
+        model.save_changes();
     });
 };
 
