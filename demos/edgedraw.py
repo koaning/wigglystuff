@@ -2,18 +2,20 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
-#     "wigglystuff==0.3.1",
+#     "wigglystuff==0.5.24",
 # ]
 # ///
+
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.23.16"
 app = marimo.App()
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -84,8 +86,35 @@ def _(widget):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Editing nodes from Python
+
+    You can add or remove nodes at runtime by updating `widget.names`.
+    Traitlets only notices a change when you **reassign** the list, so build a
+    new list (`widget.names = widget.names + ["e"]`) rather than mutating it in
+    place with `.append()` — an in-place mutation never syncs to the drawing.
+    """)
+    return
+
+
 @app.cell
-def _():
+def _(mo):
+    name_input = mo.ui.text(placeholder="node name")
+    add_button = mo.ui.run_button(label="Add node", kind="success")
+    remove_button = mo.ui.run_button(label="Remove node", kind="danger")
+    mo.hstack([name_input, add_button, remove_button], justify="start")
+    return add_button, name_input, remove_button
+
+
+@app.cell
+def _(add_button, name_input, remove_button, widget):
+    name = name_input.value.strip()
+    if add_button.value and name and name not in widget.names:
+        widget.names = widget.names + [name]
+    if remove_button.value and name in widget.names:
+        widget.names = [n for n in widget.names if n != name]
     return
 
 

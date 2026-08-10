@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.24] - 2026-08-10
+
+### Fixed
+
+- `EdgeDraw` now redraws when `names` changes from Python, so nodes can be added or removed at runtime (e.g. `widget.names = widget.names + ["e"]`). Previously the frontend read `names` only once at init and never reacted, so Python-side node changes never appeared. Surviving nodes keep their position, links that pointed at a removed node are pruned (and synced back), and the force simulation restarts. Note that traitlets only fires on reassignment — an in-place `widget.names.append(...)` still won't sync; build a new list instead.
+
 ## [0.5.23] - 2026-07-28
 
 ### Added
