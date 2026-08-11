@@ -54,6 +54,14 @@ class Knob(anywidget.AnyWidget):
     show_value = traitlets.Bool(True).tag(sync=True)
     color = traitlets.Unicode("").tag(sync=True)
 
+    # MIDI: an Ableton-style "learn" binding to a hardware control-change (CC).
+    midi = traitlets.Bool(False).tag(sync=True)
+    midi_supported = traitlets.Bool(False).tag(sync=True)
+    midi_learning = traitlets.Bool(False).tag(sync=True)
+    midi_cc = traitlets.Int(-1).tag(sync=True)
+    midi_channel = traitlets.Int(-1).tag(sync=True)
+    midi_device = traitlets.Unicode("").tag(sync=True)
+
     def __init__(
         self,
         value: Optional[float] = None,
@@ -68,6 +76,7 @@ class Knob(anywidget.AnyWidget):
         label: str = "",
         show_value: bool = True,
         color: str = "",
+        midi: bool = False,
         **kwargs: Any,
     ) -> None:
         """Create a Knob.
@@ -95,6 +104,11 @@ class Knob(anywidget.AnyWidget):
             show_value: Render the current value as text below the knob.
             color: Optional CSS color for the value arc and pointer. Empty
                 string uses the theme default.
+            midi: Show a "MIDI learn" button. Click it, then move a control on
+                your hardware; the next control-change (CC) message binds to
+                this knob and drives its value. Uses the Web MIDI API (Chromium
+                browsers, secure context). Read the binding back via
+                ``midi_cc`` / ``midi_channel`` / ``midi_device``.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
         if step <= 0:
@@ -138,5 +152,6 @@ class Knob(anywidget.AnyWidget):
             label=label,
             show_value=show_value,
             color=color,
+            midi=midi,
             **kwargs,
         )

@@ -93,3 +93,52 @@
   text-align: center;
   white-space: nowrap;
 }
+
+.knob-midi-btn {
+  margin-top: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--knob-text);
+  background: transparent;
+  border: 1px solid var(--knob-track);
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.knob-midi-btn:hover:not(:disabled) {
+  border-color: var(--knob-fill);
+}
+
+.knob-midi-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.knob-midi-btn.bound {
+  color: #fff;
+  background: var(--knob-fill);
+  border-color: var(--knob-fill);
+}
+
+.knob-midi-btn.learning {
+  color: #fff;
+  background: #ef4444;
+  border-color: #ef4444;
+  animation: knob-midi-pulse 1s ease-in-out infinite;
+}
+
+@keyframes knob-midi-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}

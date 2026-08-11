@@ -87,6 +87,30 @@ def _(full, gain, mo, pan, wide):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## MIDI learn
+
+    Click the **MIDI** button, then move a control on your hardware — the next
+    control-change message binds to the knob (like Ableton). Needs a Chromium
+    browser and a connected MIDI device; right-click the button to clear.
+    """)
+    return
+
+
+@app.cell
+def _(Knob, mo):
+    midi_knob1 = mo.ui.anywidget(
+        Knob(min_value=0, max_value=127, value=64, midi=True, label="MIDI")
+    )
+    midi_knob2 = mo.ui.anywidget(
+        Knob(min_value=0, max_value=127, value=64, midi=True, label="MIDI")
+    )
+    mo.hstack([midi_knob1, midi_knob2], justify="center")
+    return
+
+
 @app.cell
 def _():
     import marimo as mo

@@ -1,6 +1,14 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
 const DEG = Math.PI / 180;
 
+// Shared across all knobs on the page so we only request access once.
+let _midiAccessPromise = null;
+function getMidiAccess() {
+  if (!navigator.requestMIDIAccess) return Promise.resolve(null);
+  if (!_midiAccessPromise) _midiAccessPromise = navigator.requestMIDIAccess();
+  return _midiAccessPromise;
+}
+
 function getPrecision(step) {
   const s = String(step);
   const dot = s.indexOf(".");
@@ -93,6 +101,11 @@ function render({ model, el }) {
   const valueLabel = document.createElement("div");
   valueLabel.className = "knob-value";
   wrapper.appendChild(valueLabel);
+
+  const midiBtn = document.createElement("button");
+  midiBtn.className = "knob-midi-btn";
+  midiBtn.type = "button";
+  wrapper.appendChild(midiBtn);
 
   el.appendChild(wrapper);
 
@@ -292,6 +305,125 @@ function render({ model, el }) {
     }
   }
 
+  // --- MIDI (Ableton-style learn) -----------------------------------------
+  let midiInputs = [];
+  let midiStateBound = false;
+
+  function onMidiMessage(event) {
+    const [status, data1, data2] = event.data;
+    if ((status & 0xf0) !== 0xb0) return; // control-change only
+    const channel = status & 0x0f;
+    const cc = data1;
+    const val = data2;
+
+    if (model.get("midi_learning")) {
+      model.set("midi_cc", cc);
+      model.set("midi_channel", channel);
+      model.set("midi_device", event.target.name || "");
+      model.set("midi_learning", false);
+      model.save_changes();
+      return;
+    }
+
+    const boundCc = model.get("midi_cc");
+    if (boundCc < 0 || cc !== boundCc) return;
+    const boundCh = model.get("midi_channel");
+    if (boundCh >= 0 && channel !== boundCh) return;
+    setFromFraction(val / 127);
+  }
+
+  function detachMidi() {
+    for (const input of midiInputs) {
+      input.removeEventListener("midimessage", onMidiMessage);
+    }
+    midiInputs = [];
+  }
+
+  function attachMidi(access) {
+    detachMidi();
+    for (const input of access.inputs.values()) {
+      input.addEventListener("midimessage", onMidiMessage);
+      midiInputs.push(input);
+    }
+  }
+
+  async function enableMidi() {
+    const access = await getMidiAccess();
+    if (!access) return null;
+    attachMidi(access);
+    if (!midiStateBound) {
+      midiStateBound = true;
+      access.addEventListener("statechange", () => attachMidi(access));
+    }
+    return access;
+  }
+
+  function updateMidiButton() {
+    if (!model.get("midi")) {
+      midiBtn.style.display = "none";
+      return;
+    }
+    midiBtn.style.display = "";
+    midiBtn.classList.toggle("learning", model.get("midi_learning"));
+    const cc = model.get("midi_cc");
+    midiBtn.classList.toggle("bound", cc >= 0 && !model.get("midi_learning"));
+    if (!model.get("midi_supported")) {
+      midiBtn.textContent = "no MIDI";
+      midiBtn.disabled = true;
+      midiBtn.title = "Web MIDI is not available in this browser.";
+    } else if (model.get("midi_learning")) {
+      midiBtn.textContent = "move a control…";
+      midiBtn.disabled = false;
+      midiBtn.title = "Move a knob/fader on your MIDI device to bind it.";
+    } else if (cc >= 0) {
+      midiBtn.textContent = `CC ${cc}`;
+      midiBtn.disabled = false;
+      midiBtn.title =
+        (model.get("midi_device") || "MIDI") +
+        ` · CC ${cc}. Click to re-learn, right-click to clear.`;
+    } else {
+      midiBtn.textContent = "MIDI";
+      midiBtn.disabled = false;
+      midiBtn.title = "Click, then move a control on your MIDI device.";
+    }
+  }
+
+  midiBtn.addEventListener("click", async () => {
+    if (!model.get("midi_supported")) return;
+    if (model.get("midi_learning")) {
+      model.set("midi_learning", false); // toggle off
+      model.save_changes();
+      return;
+    }
+    await enableMidi();
+    model.set("midi_learning", true);
+    model.save_changes();
+  });
+
+  midiBtn.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    model.set("midi_cc", -1);
+    model.set("midi_channel", -1);
+    model.set("midi_device", "");
+    model.set("midi_learning", false);
+    model.save_changes();
+  });
+
+  function initMidi() {
+    if (!model.get("midi")) {
+      updateMidiButton();
+      return;
+    }
+    const supported = !!navigator.requestMIDIAccess;
+    if (model.get("midi_supported") !== supported) {
+      model.set("midi_supported", supported);
+      model.save_changes();
+    }
+    // If a binding was restored from Python, start listening immediately.
+    if (supported && model.get("midi_cc") >= 0) enableMidi();
+    updateMidiButton();
+  }
+
   model.on("change:value", updateGeometry);
   model.on("change:min_value", updateGeometry);
   model.on("change:max_value", updateGeometry);
@@ -304,16 +436,23 @@ function render({ model, el }) {
   model.on("change:show_value", updateValueLabel);
   model.on("change:label", updateTitle);
   model.on("change:color", applyColor);
+  model.on("change:midi", initMidi);
+  model.on("change:midi_learning", updateMidiButton);
+  model.on("change:midi_supported", updateMidiButton);
+  model.on("change:midi_cc", updateMidiButton);
+  model.on("change:midi_device", updateMidiButton);
 
   applyColor();
   updateTitle();
   updateGeometry();
+  initMidi();
 
   return () => {
     window.removeEventListener("mousemove", moveDrag);
     window.removeEventListener("mouseup", endDrag);
     window.removeEventListener("touchmove", moveDrag);
     window.removeEventListener("touchend", endDrag);
+    detachMidi();
   };
 }
 
