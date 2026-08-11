@@ -1,0 +1,96 @@
+.fader-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: light dark;
+  padding: 4px;
+
+  --fader-track: #d1d5db;
+  --fader-fill: #3b82f6;
+  --fader-cap: #f9fafb;
+  --fader-cap-border: #9ca3af;
+  --fader-groove: #9ca3af;
+  --fader-tick: #9ca3af;
+  --fader-text: #111827;
+}
+
+.dark .fader-wrapper,
+.dark-theme .fader-wrapper,
+[data-theme="dark"] .fader-wrapper {
+  --fader-track: #374151;
+  --fader-fill: #60a5fa;
+  --fader-cap: #1f2937;
+  --fader-cap-border: #4b5563;
+  --fader-groove: #6b7280;
+  --fader-tick: #6b7280;
+  --fader-text: #f1f5f9;
+}
+
+.fader-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fader-text);
+  opacity: 0.85;
+  margin-bottom: 3px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fader-svg {
+  display: block;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.fader-svg:active {
+  cursor: grabbing;
+}
+
+.fader-track {
+  stroke: var(--fader-track);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.fader-fill {
+  stroke: var(--fader-fill);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.fader-cap {
+  fill: var(--fader-cap);
+  stroke: var(--fader-cap-border);
+  stroke-width: 1.5;
+}
+
+.fader-groove {
+  stroke: var(--fader-groove);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.fader-tick {
+  stroke: var(--fader-tick);
+  stroke-width: 1.5;
+}
+
+.fader-tick-label {
+  fill: var(--fader-text);
+  opacity: 0.75;
+  font-size: 9px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.fader-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fader-text);
+  font-variant-numeric: tabular-nums;
+  margin-top: 4px;
+  text-align: center;
+  white-space: nowrap;
+}

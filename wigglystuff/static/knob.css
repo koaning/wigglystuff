@@ -1,0 +1,95 @@
+.knob-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: light dark;
+  padding: 4px;
+
+  --knob-track: #d1d5db;
+  --knob-fill: #3b82f6;
+  --knob-body: #f9fafb;
+  --knob-body-border: #9ca3af;
+  --knob-pointer: #1d4ed8;
+  --knob-tick: #9ca3af;
+  --knob-text: #111827;
+}
+
+.dark .knob-wrapper,
+.dark-theme .knob-wrapper,
+[data-theme="dark"] .knob-wrapper {
+  --knob-track: #374151;
+  --knob-fill: #60a5fa;
+  --knob-body: #1f2937;
+  --knob-body-border: #4b5563;
+  --knob-pointer: #93c5fd;
+  --knob-tick: #6b7280;
+  --knob-text: #f1f5f9;
+}
+
+.knob-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--knob-text);
+  opacity: 0.85;
+  margin-bottom: 3px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.knob-svg {
+  display: block;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.knob-svg:active {
+  cursor: grabbing;
+}
+
+.knob-track {
+  stroke: var(--knob-track);
+  fill: none;
+  stroke-linecap: round;
+}
+
+.knob-fill {
+  stroke: var(--knob-fill);
+  fill: none;
+  stroke-linecap: round;
+}
+
+.knob-body {
+  fill: var(--knob-body);
+  stroke: var(--knob-body-border);
+  stroke-width: 1.5;
+}
+
+.knob-pointer {
+  stroke: var(--knob-pointer);
+  stroke-linecap: round;
+}
+
+.knob-tick {
+  stroke: var(--knob-tick);
+  stroke-width: 1.5;
+}
+
+.knob-tick-label {
+  fill: var(--knob-text);
+  opacity: 0.75;
+  font-size: 9px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.knob-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--knob-text);
+  font-variant-numeric: tabular-nums;
+  margin-top: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
