@@ -5,7 +5,7 @@ of ticks/axis labels. The tick spec is normalized here once, in Python, so the
 frontend JS only ever has to draw a plain list of ``{"value", "label"}`` dicts.
 """
 
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import Any, Dict, List, Sequence, Union
 
 # What a caller may pass for ``ticks``:
 #   None / 0 / []            -> no ticks
@@ -101,19 +101,3 @@ def normalize_steps(steps: Sequence[Any]) -> List[float]:
     if len(values) < 2:
         raise ValueError("Must pass at least two steps.")
     return sorted(values)
-
-
-def widget_refs(widgets: Sequence[Any], _obj: Optional[Any] = None) -> List[Any]:
-    """Serialize a list of child widgets to anywidget ref strings.
-
-    Used as the ``to_json`` for a synced ``List`` trait holding child widgets.
-    anywidget's ``WidgetTrait`` handles a *single* widget, but a ``List`` trait
-    does not apply the per-element serializer, so we do it here. Every
-    ``anywidget.AnyWidget`` exposes a stable ``model_id``; the frontend host
-    resolves ``"anywidget:<model_id>"`` back into a renderable child.
-    """
-    refs: List[Any] = []
-    for w in widgets:
-        model_id = getattr(w, "model_id", None)
-        refs.append(f"anywidget:{model_id}" if model_id else w)
-    return refs

@@ -2,14 +2,14 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "marimo",
-#     "wigglystuff==0.5.24",
+#     "wigglystuff==0.5.25",
 # ]
 # ///
 
 import marimo
 
 __generated_with = "0.23.16"
-app = marimo.App(width="medium")
+app = marimo.App()
 
 
 @app.cell
@@ -93,8 +93,10 @@ def _(mo):
     ## MIDI learn
 
     Click the **MIDI** button, then move a control on your hardware — the next
-    control-change message binds to the knob (like Ableton). Needs a Chromium
-    browser and a connected MIDI device; right-click the button to clear.
+    control-change message binds to the knob (like Ableton). The binding is
+    remembered in your browser (keyed by the knob's `label`), so it survives a
+    kernel restart or cell re-run. Needs a Chromium browser and a connected MIDI
+    device; right-click the button to clear.
     """)
     return
 

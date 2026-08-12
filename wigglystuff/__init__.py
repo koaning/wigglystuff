@@ -39,7 +39,6 @@ from .tangle_latex import TangleLatex
 from .live_edit import LiveEdit, inspect_run
 from .manim_web import ManimWeb
 from .matrix import Matrix
-from .mix_panel import MixPanel
 from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
 from .nested_table import NestedTable
@@ -102,7 +101,6 @@ __all__ = [
     "LiveEdit",
     "ManimWeb",
     "Matrix",
-    "MixPanel",
     "ModuleTreeWidget",
     "Neo4jWidget",
     "NestedTable",

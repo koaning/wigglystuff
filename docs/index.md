@@ -243,6 +243,16 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/frame_player.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/frame-player/">API</a><a href="reference/frame-player.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title"><a href="reference/knob/">Knob</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/knob.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/knob.webp" alt="Knob"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/knob.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/knob/">API</a><a href="reference/knob.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title"><a href="reference/fader/">Fader</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fader.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/fader.webp" alt="Fader"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fader.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/fader/">API</a><a href="reference/fader.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title"><a href="reference/circular-slider/">CircularSlider</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/circle-slider.webp" alt="CircularSlider"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/circular-slider/">API</a><a href="reference/circular-slider.md">MD</a></div>

@@ -8,6 +8,8 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 
 - [AnnotationWidget](https://koaning.github.io/wigglystuff/reference/annotation.md): Annotation input surface with buttons, keyboard shortcuts, gamepad, and speech-to-text
 - [Slider2D](https://koaning.github.io/wigglystuff/reference/slider2d.md): 2D slider for x/y value selection
+- [Knob](https://koaning.github.io/wigglystuff/reference/knob.md): Audio-panel rotary knob with a configurable sweep, tick scale, discrete detents, and optional Web MIDI learn (bindings persist in browser localStorage)
+- [Fader](https://koaning.github.io/wigglystuff/reference/fader.md): Mixing-console fader (vertical or horizontal) with a configurable tick scale, discrete detents, and optional Web MIDI learn
 - [BezierCurve](https://koaning.github.io/wigglystuff/reference/bezier-curve.md): Interactive arbitrary-degree Bezier curve editor with draggable control points
 - [CurveEditor](https://koaning.github.io/wigglystuff/reference/curve-editor.md): Chart-space curve editor with draggable knots, D3 line interpolators, closed paths, and progress output
 - [ChartPuck](https://koaning.github.io/wigglystuff/reference/chart-puck.md): Draggable puck overlay for matplotlib charts

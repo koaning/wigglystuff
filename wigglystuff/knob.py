@@ -61,6 +61,10 @@ class Knob(anywidget.AnyWidget):
     midi_cc = traitlets.Int(-1).tag(sync=True)
     midi_channel = traitlets.Int(-1).tag(sync=True)
     midi_device = traitlets.Unicode("").tag(sync=True)
+    # Persistence: bindings are stored in browser localStorage under
+    # ``wigglystuff-midi/{midi_scope}/{midi_key}``.
+    midi_key = traitlets.Unicode("").tag(sync=True)
+    midi_scope = traitlets.Unicode("").tag(sync=True)
 
     def __init__(
         self,
@@ -77,6 +81,10 @@ class Knob(anywidget.AnyWidget):
         show_value: bool = True,
         color: str = "",
         midi: bool = False,
+        midi_cc: int = -1,
+        midi_channel: int = -1,
+        midi_key: str = "",
+        midi_scope: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         """Create a Knob.
@@ -109,8 +117,20 @@ class Knob(anywidget.AnyWidget):
                 this knob and drives its value. Uses the Web MIDI API (Chromium
                 browsers, secure context). Read the binding back via
                 ``midi_cc`` / ``midi_channel`` / ``midi_device``.
+            midi_cc: Bind a control-change number (0-127) up front instead of
+                learning it. ``-1`` (default) leaves it unbound.
+            midi_channel: MIDI channel (0-15) for the binding, or ``-1`` for any.
+            midi_key: localStorage key for persisting the learned binding across
+                restarts. Defaults to ``label``. Empty (no label either) disables
+                persistence.
+            midi_scope: Namespace for the persisted binding, so different
+                notebooks don't collide. Empty (default) uses the browser's URL
+                path automatically; pass an explicit string to pin it (or to
+                intentionally share a mapping across notebooks).
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
+        if midi_scope is None:
+            midi_scope = ""
         if step <= 0:
             raise ValueError("step must be positive.")
         if start_angle == end_angle:
@@ -153,5 +173,9 @@ class Knob(anywidget.AnyWidget):
             show_value=show_value,
             color=color,
             midi=midi,
+            midi_cc=midi_cc,
+            midi_channel=midi_channel,
+            midi_key=midi_key,
+            midi_scope=midi_scope,
             **kwargs,
         )

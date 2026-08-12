@@ -50,6 +50,18 @@ class Fader(anywidget.AnyWidget):
     show_value = traitlets.Bool(True).tag(sync=True)
     color = traitlets.Unicode("").tag(sync=True)
 
+    # MIDI: an Ableton-style "learn" binding to a hardware control-change (CC).
+    midi = traitlets.Bool(False).tag(sync=True)
+    midi_supported = traitlets.Bool(False).tag(sync=True)
+    midi_learning = traitlets.Bool(False).tag(sync=True)
+    midi_cc = traitlets.Int(-1).tag(sync=True)
+    midi_channel = traitlets.Int(-1).tag(sync=True)
+    midi_device = traitlets.Unicode("").tag(sync=True)
+    # Persistence: bindings are stored in browser localStorage under
+    # ``wigglystuff-midi/{midi_scope}/{midi_key}``.
+    midi_key = traitlets.Unicode("").tag(sync=True)
+    midi_scope = traitlets.Unicode("").tag(sync=True)
+
     def __init__(
         self,
         value: Optional[float] = None,
@@ -63,6 +75,11 @@ class Fader(anywidget.AnyWidget):
         label: str = "",
         show_value: bool = True,
         color: str = "",
+        midi: bool = False,
+        midi_cc: int = -1,
+        midi_channel: int = -1,
+        midi_key: str = "",
+        midi_scope: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         """Create a Fader.
@@ -86,8 +103,25 @@ class Fader(anywidget.AnyWidget):
             show_value: Render the current value as text next to the fader.
             color: Optional CSS color for the filled track and cap. Empty
                 string uses the theme default.
+            midi: Show a "MIDI learn" button. Click it, then move a control on
+                your hardware; the next control-change (CC) message binds to
+                this fader and drives its value. Uses the Web MIDI API (Chromium
+                browsers, secure context). Read the binding back via
+                ``midi_cc`` / ``midi_channel`` / ``midi_device``.
+            midi_cc: Bind a control-change number (0-127) up front instead of
+                learning it. ``-1`` (default) leaves it unbound.
+            midi_channel: MIDI channel (0-15) for the binding, or ``-1`` for any.
+            midi_key: localStorage key for persisting the learned binding across
+                restarts. Defaults to ``label``. Empty (no label either) disables
+                persistence.
+            midi_scope: Namespace for the persisted binding, so different
+                notebooks don't collide. Empty (default) uses the browser's URL
+                path automatically; pass an explicit string to pin it (or to
+                intentionally share a mapping across notebooks).
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
+        if midi_scope is None:
+            midi_scope = ""
         if step <= 0:
             raise ValueError("step must be positive.")
         if orientation not in _ORIENTATIONS:
@@ -126,5 +160,10 @@ class Fader(anywidget.AnyWidget):
             label=label,
             show_value=show_value,
             color=color,
+            midi=midi,
+            midi_cc=midi_cc,
+            midi_channel=midi_channel,
+            midi_key=midi_key,
+            midi_scope=midi_scope,
             **kwargs,
         )

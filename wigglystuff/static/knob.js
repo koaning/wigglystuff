@@ -309,6 +309,64 @@ function render({ model, el }) {
   let midiInputs = [];
   let midiStateBound = false;
 
+  // Persist bindings in browser localStorage, namespaced by scope + key so two
+  // notebooks (which share an origin's storage) don't collide. The default
+  // scope is the browser URL path — localStorage is already per-origin, so the
+  // path is all that's needed to tell sibling notebooks apart.
+  function midiScope() {
+    const explicit = model.get("midi_scope");
+    if (explicit) return explicit;
+    try {
+      return window.location.pathname || "";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function storageKey() {
+    const key = model.get("midi_key") || model.get("label") || "";
+    if (!key) return null;
+    return `wigglystuff-midi/${midiScope()}/${key}`;
+  }
+
+  function saveBinding() {
+    const sk = storageKey();
+    if (!sk) return;
+    try {
+      localStorage.setItem(
+        sk,
+        JSON.stringify({
+          cc: model.get("midi_cc"),
+          channel: model.get("midi_channel"),
+          device: model.get("midi_device"),
+        }),
+      );
+    } catch (e) {
+      /* storage unavailable (private mode, quota) — ignore */
+    }
+  }
+
+  function clearBinding() {
+    const sk = storageKey();
+    if (!sk) return;
+    try {
+      localStorage.removeItem(sk);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  function loadBinding() {
+    const sk = storageKey();
+    if (!sk) return null;
+    try {
+      const raw = localStorage.getItem(sk);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   function onMidiMessage(event) {
     const [status, data1, data2] = event.data;
     if ((status & 0xf0) !== 0xb0) return; // control-change only
@@ -322,6 +380,7 @@ function render({ model, el }) {
       model.set("midi_device", event.target.name || "");
       model.set("midi_learning", false);
       model.save_changes();
+      saveBinding();
       return;
     }
 
@@ -407,6 +466,7 @@ function render({ model, el }) {
     model.set("midi_device", "");
     model.set("midi_learning", false);
     model.save_changes();
+    clearBinding();
   });
 
   function initMidi() {
@@ -419,7 +479,20 @@ function render({ model, el }) {
       model.set("midi_supported", supported);
       model.save_changes();
     }
-    // If a binding was restored from Python, start listening immediately.
+    // Restore a persisted binding when none was set explicitly in Python.
+    if (model.get("midi_cc") < 0) {
+      const stored = loadBinding();
+      if (stored && typeof stored.cc === "number" && stored.cc >= 0) {
+        model.set("midi_cc", stored.cc);
+        model.set(
+          "midi_channel",
+          typeof stored.channel === "number" ? stored.channel : -1,
+        );
+        model.set("midi_device", stored.device || "");
+        model.save_changes();
+      }
+    }
+    // Start listening for any active binding (explicit or restored).
     if (supported && model.get("midi_cc") >= 0) enableMidi();
     updateMidiButton();
   }

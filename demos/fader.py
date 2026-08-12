@@ -2,7 +2,7 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "marimo",
-#     "wigglystuff==0.5.24",
+#     "wigglystuff==0.5.25",
 # ]
 # ///
 
@@ -68,6 +68,39 @@ def _(crossfade, level, mo, send):
     **Level:** `{level.value['value']:.1f} dB` &nbsp;
     **Send:** `{send.value['value']:.0f}` &nbsp;
     **Crossfade:** `{crossfade.value['value']:.2f}`
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## MIDI learn
+
+    Click the **MIDI** button, then move a control on your hardware — the next
+    control-change message binds to the fader (like Ableton). The binding is
+    remembered in your browser (keyed by the fader's `label`), so it survives a
+    kernel restart or cell re-run. Needs a Chromium browser and a connected MIDI
+    device; right-click the button to clear.
+    """)
+    return
+
+
+@app.cell
+def _(Fader, mo):
+    midi_fader = mo.ui.anywidget(
+        Fader(min_value=0, max_value=127, value=64, midi=True, label="MIDI")
+    )
+    midi_fader
+    return (midi_fader,)
+
+
+@app.cell(hide_code=True)
+def _(midi_fader, mo):
+    mo.md(f"""
+    **Value:** `{midi_fader.value['value']:.0f}` &nbsp;
+    **Bound CC:** `{midi_fader.value['midi_cc']}` &nbsp;
+    **Device:** `{midi_fader.value['midi_device'] or '—'}`
     """)
     return
 
