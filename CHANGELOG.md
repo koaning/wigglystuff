@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.25] - 2026-08-12
+
+### Added
+
+- New `Knob` widget: an audio-panel rotary knob. Partial-arc by default (configurable `start_angle`/`end_angle`, up to a gapless full 360° circle), with a pointer, a configurable tick scale (`ticks`), and discrete detents (`steps`) for a rotary selector.
+- New `Fader` widget: a mixing-console fader (vertical or horizontal) with a configurable tick scale and the same `steps` detents.
+- Both support optional Web MIDI "learn" (`midi=True`): click the button, move a hardware control, and the next control-change binds to the widget and drives its value. Bindings can be set upfront (`midi_cc`/`midi_channel`) and persist across restarts in browser localStorage, namespaced by the notebook URL path (override with `midi_key`/`midi_scope`). Web MIDI is Chromium-only and needs a secure context.
+- Demos at `demos/knob.py` and `demos/fader.py`.
+
 ## [0.5.24] - 2026-08-10
 
 ### Fixed
