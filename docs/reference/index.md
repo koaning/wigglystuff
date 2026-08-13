@@ -24,6 +24,7 @@ the link at the top of any page. [`llms.txt`](../llms.txt) lists them all.
 - [Matrix](matrix.md) — spreadsheet-like numeric matrix editor
 - [SortableList](sortable-list.md) — drag-and-drop ordering with optional CRUD
 - [ColorPicker](color-picker.md) — native color input with an `rgb` helper
+- [ScientificNumber](scientific-number.md) — text-field numeric input with scientific notation and an applied scale
 
 ## Curves
 

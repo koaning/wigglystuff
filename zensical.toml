@@ -59,6 +59,7 @@ nav = [
         { FramePlayer = "reference/frame-player.md" },
         { CircularSlider = "reference/circular-slider.md" },
         { HoverSlider = "reference/hover-slider.md" },
+        { ScientificNumber = "reference/scientific-number.md" },
         { HoverZoom = "reference/hover-zoom.md" },
         { Treemap = "reference/treemap.md" },
         { NestedTable = "reference/nested-table.md" },

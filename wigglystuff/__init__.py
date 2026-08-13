@@ -46,6 +46,7 @@ from .parallel_coords import ParallelCoordinates
 from .play_slider import PlaySlider
 from .ridgeline_chart import RidgelineChart
 from .scatter_log import ScatterLog
+from .scientific_number import ScientificNumber
 from drawdata import ScatterWidget
 from .slider2d import Slider2D
 from .spline_draw import SplineDraw
@@ -107,6 +108,7 @@ __all__ = [
     "RidgelineChart",
     "ScatterLog",
     "ScatterWidget",
+    "ScientificNumber",
     "Slider2D",
     "SplineDraw",
     "SortableList",

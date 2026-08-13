@@ -1,0 +1,64 @@
+.scientific-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  color-scheme: light dark;
+}
+
+.scientific-number-label {
+  white-space: nowrap;
+}
+
+.scientific-number-box {
+  display: inline-flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.scientific-number-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 4px 8px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The initial (default) value renders faintly, placeholder-style, until the
+   user types or Python moves the value. */
+.scientific-number-input.is-default {
+  opacity: 0.5;
+}
+
+.scientific-number-scale {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border-left: 1px dashed #9ca3af;
+  white-space: nowrap;
+}
+
+/* `.inline()` mode: sit at text height inside a mo.md paragraph. The box
+   inherits the surrounding font size and drops its vertical padding so it
+   reads as one line of text. */
+.scientific-number-inline {
+  font-size: inherit;
+}
+
+.scientific-number-inline .scientific-number-box {
+  height: 1.4em;
+}
+
+.scientific-number-inline .scientific-number-input,
+.scientific-number-inline .scientific-number-scale {
+  padding-top: 0;
+  padding-bottom: 0;
+}

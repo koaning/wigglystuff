@@ -107,6 +107,7 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>Hint</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/hint.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/hint/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/hint.md">MD</a></td>
+<td align="center"><b>ScientificNumber</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scientific_number.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/scientific_number.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/scientific_number.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/scientific-number/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/scientific-number.md">MD</a></td>
 </tr>
 </table>
 
