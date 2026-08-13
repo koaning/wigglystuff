@@ -243,6 +243,16 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/frame_player.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/frame-player/">API</a><a href="reference/frame-player.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title"><a href="reference/knob/">Knob</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/knob.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/knob.webp" alt="Knob"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/knob.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/knob/">API</a><a href="reference/knob.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title"><a href="reference/fader/">Fader</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fader.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/fader.webp" alt="Fader"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fader.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/fader/">API</a><a href="reference/fader.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title"><a href="reference/circular-slider/">CircularSlider</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/circle-slider.webp" alt="CircularSlider"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/circular_slider.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/circular-slider/">API</a><a href="reference/circular-slider.md">MD</a></div>
@@ -328,14 +338,6 @@ These widgets depend on 3rd party packages. They still ship with wigglystuff but
 These notebooks show how to combine multiple widgets for more complex workflows.
 
 <div class="example-gallery">
-<div class="example-item">
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mujoco_sim.py/server?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/falling-balls.webp" alt="MuJoCo Falling Balls"></a>
-<div class="example-content">
-<div class="example-title">MuJoCo Physics</div>
-<div class="example-desc">Drive a headless MuJoCo physics sim with inline TangleSliders — drop semi-transparent bouncing balls and watch the rendered clip play back through mo.video. Runs on a molab server since MuJoCo is a native engine.</div>
-</div>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mujoco_sim.py/server?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/mujoco_sim.py">Source</a></div>
-</div>
 <div class="example-item">
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/dimensions.py?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/dimensions.webp" alt="Dimensions"></a>
 <div class="example-content">

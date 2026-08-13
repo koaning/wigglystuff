@@ -23,6 +23,7 @@ from .edge_draw import EdgeDraw
 from .env_config import EnvConfig
 from .esm_widget import EsmWidget
 from .excalidraw import Excalidraw
+from .fader import Fader
 from .frame_player import FramePlayer
 from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
@@ -33,6 +34,7 @@ from .hover_slider import HoverSlider
 from .hover_zoom import HoverZoom
 from .html import HTMLRefreshWidget, ImageRefreshWidget, ProgressBar
 from .keystroke import KeystrokeWidget
+from .knob import Knob
 from .tangle_latex import TangleLatex
 from .live_edit import LiveEdit, inspect_run
 from .manim_web import ManimWeb
@@ -87,6 +89,7 @@ __all__ = [
     "EnvConfig",
     "EsmWidget",
     "Excalidraw",
+    "Fader",
     "FramePlayer",
     "GamepadWidget",
     "GraphWidget",
@@ -94,6 +97,7 @@ __all__ = [
     "HeatmapSelect",
     "Hint",
     "KeystrokeWidget",
+    "Knob",
     "TangleLatex",
     "LiveEdit",
     "ManimWeb",
