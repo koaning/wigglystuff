@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.26] - 2026-08-18
+
+### Changed
+
+- `TangleSlider` scrubbing now responds to modifier keys while dragging: hold **Shift** for 10× coarser steps (cover a big range fast) and **Alt/Option** for 10× finer steps (dial in a precise value). Toggling a modifier mid-drag rebases the drag anchor so the value rescales smoothly instead of jumping. Applies to linear sliders only; discrete `steps` sliders are unchanged.
+- `TangleSlider` type-to-edit now accepts scientific notation (e.g. `2.5e-3`, `2.32e7`) and preserves exact values: typed values are clamped to `[min_value, max_value]` but no longer snapped to the `step` grid, so an entry like `2.5e-3` survives the round trip. The value is displayed as entered so the notation stays legible.
+
 ## [0.5.25] - 2026-08-12
 
 ### Added

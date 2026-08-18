@@ -76,6 +76,29 @@ def test_tangle_slider_click_to_type(start_marimo, page: Page):
 
 
 @pytest.mark.e2e
+def test_tangle_slider_scientific_notation_survives(start_marimo, page: Page):
+    """Typed scientific notation is kept exactly, not snapped to the step grid."""
+    url = start_marimo(NOTEBOOK)
+    page.goto(url, wait_until="networkidle")
+
+    page.wait_for_selector(".tangle-value", timeout=TIMEOUT)
+    widget = page.locator(".tangle-value").first
+    expect(widget).to_be_visible()
+
+    # The coffees slider has step=1; snapping would round 2.5e-3 to 0.
+    widget.click()
+    editor = page.locator(".tangle-input")
+    expect(editor).to_be_visible()
+    editor.fill("2.5e-3")
+    editor.press("Enter")
+
+    page.wait_for_timeout(200)
+    value = page.locator(".tangle-value").first
+    # The exact typed value is preserved and shown, not snapped away to 0.
+    expect(value).to_contain_text("2.5e-3")
+
+
+@pytest.mark.e2e
 def test_tangle_choice_renders_and_cycles(start_marimo, page: Page):
     """Test that TangleChoice renders and clicking cycles through choices."""
     url = start_marimo(NOTEBOOK)

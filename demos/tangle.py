@@ -5,13 +5,13 @@
 #     "marimo>=0.19.4",
 #     "numpy==2.4.1",
 #     "pandas==2.3.3",
-#     "wigglystuff==0.5.11",
+#     "wigglystuff==0.5.26",
 # ]
 # ///
 
 import marimo
 
-__generated_with = "0.23.3"
+__generated_with = "0.23.16"
 app = marimo.App(width="medium")
 
 
@@ -37,7 +37,7 @@ def _(mo):
 
 @app.cell
 def _(TangleSlider, mo):
-    coffees = mo.ui.anywidget(TangleSlider(amount=10, min_value=0, step=1, suffix=" coffees", digits=0))
+    coffees = mo.ui.anywidget(TangleSlider(amount=10, min_value=0, max_value=10_000, step=1, suffix=" coffees", digits=0))
     price = mo.ui.anywidget(TangleSlider(amount=3.50, min_value=0.01, max_value=10, step=0.01, prefix="$", digits=2))
     return coffees, price
 
@@ -100,6 +100,44 @@ def _(c, mo, prob1, prob2):
         """),
         c
     ])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Fine control & exact values
+
+    While dragging you can hold a modifier key to change the scrub speed:
+
+    - Hold **Shift** for 10&times; *coarser* steps &mdash; cover a big range fast.
+    - Hold **Alt / Option** for 10&times; *finer* steps &mdash; dial in a precise value.
+
+    Toggle the modifier mid-drag and the value rescales smoothly instead of
+    jumping. You can also **click** a slider to type an exact value, including
+    scientific notation like `2.5e-3`. Typed values are clamped to the bounds but
+    keep their exact value (they are *not* snapped to `step`).
+    """)
+    return
+
+
+@app.cell
+def _(TangleSlider, mo):
+    unit_cost = mo.ui.anywidget(
+        TangleSlider(amount=0.002, min_value=0, max_value=1, step=0.0001, prefix="$", digits=4)
+    )
+    return (unit_cost,)
+
+
+@app.cell(hide_code=True)
+def _(mo, unit_cost):
+    mo.md(f"""
+    Say each API call costs {unit_cost}.
+
+    - Hold **Alt/Option** and drag to nudge it by fractions of a cent.
+    - Click it and type `2.5e-3` to set an exact price &mdash; the `$` prefix
+      stays put and the value reads back as you typed it.
+    """)
     return
 
 
