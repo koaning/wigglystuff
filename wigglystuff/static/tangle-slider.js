@@ -12,6 +12,10 @@ function render({model, el}) {
     let amount = model.get("amount");
     let steps = model.get("steps");
     let editing = false;
+    // Literal text the user last typed (e.g. "2.5e-3"). When set, the value is
+    // shown verbatim so scientific notation stays legible; cleared on any drag
+    // or Python-side change so those revert to toFixed(digits) formatting.
+    let lastTypedText = null;
 
     const container = document.createElement('div');
     container.classList.add("tangle-container");
@@ -30,6 +34,8 @@ function render({model, el}) {
             config.pixelsPerStep = model.get("pixels_per_step");
             amount = model.get("amount");
             steps = model.get("steps");
+            // A Python-side change supersedes any typed literal.
+            lastTypedText = null;
             // Ignore external syncs while the user is typing a value.
             if (!editing) renderValue();
         });
@@ -42,7 +48,8 @@ function render({model, el}) {
         element.style.color = '#0066cc';
         element.style.textDecoration = 'underline';
         element.style.cursor = 'ew-resize';
-        element.textContent = config.prefix + amount.toFixed(config.digits) + config.suffix;
+        const shown = lastTypedText !== null ? lastTypedText : amount.toFixed(config.digits);
+        element.textContent = config.prefix + shown + config.suffix;
         element.addEventListener('mousedown', startDragging);
         container.appendChild(element);
     }
@@ -58,17 +65,35 @@ function render({model, el}) {
         updateTimeout = setTimeout(updateModel, 50); // Debounce for 100ms
     }
 
+    // Modifier scaling for linear sliders: Shift = 10x coarser, Alt/Option =
+    // 10x finer (Alt wins if both are held). Discrete steps mode ignores this.
+    function modMultiplier(ev) {
+        if (ev.altKey) return 0.1;
+        if (ev.shiftKey) return 10;
+        return 1;
+    }
+
     function startDragging(e) {
         e.preventDefault();
         const element = e.target;
         element.style.cursor = 'grabbing';
-        const startX = e.clientX;
-        const startValue = parseFloat(element.textContent.replace(config.prefix, '').replace(config.suffix, ''));
+        // Anchor (startX/startValue) is mutable so we can rebase it when the
+        // modifier changes mid-drag, keeping the value from jumping.
+        let startX = e.clientX;
+        let startValue = amount;
+        let lastX = startX;
+        let curMult = 1;
         const startIndex = steps.length > 0 ? Math.max(0, steps.indexOf(amount)) : -1;
         let moved = false;
 
-        function onMouseMove(e) {
-            const deltaX = e.clientX - startX;
+        function applyMove(clientX, mult) {
+            if (mult !== curMult) {
+                // Rebase the anchor so future movement rescales from here.
+                startX = clientX;
+                startValue = amount;
+                curMult = mult;
+            }
+            const deltaX = clientX - startX;
             if (Math.abs(deltaX) > 3) moved = true;
             const pixelSteps = Math.floor(deltaX / config.pixelsPerStep);
             if (steps.length > 0) {
@@ -77,15 +102,29 @@ function render({model, el}) {
             } else {
                 amount = Math.max(config.minValue,
                                Math.min(config.maxValue,
-                                        startValue + pixelSteps * config.stepSize));
+                                        startValue + pixelSteps * config.stepSize * mult));
             }
             renderValue();
             debouncedUpdateModel();
         }
 
+        function onMouseMove(e) {
+            lastTypedText = null; // dragging supersedes any typed literal
+            lastX = e.clientX;
+            const mult = steps.length > 0 ? 1 : modMultiplier(e);
+            applyMove(e.clientX, mult);
+        }
+
+        function onKeyChange(e) {
+            if (steps.length > 0) return; // linear mode only
+            applyMove(lastX, modMultiplier(e));
+        }
+
         function onMouseUp() {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
+            document.removeEventListener('keydown', onKeyChange);
+            document.removeEventListener('keyup', onKeyChange);
             element.style.cursor = 'ew-resize';
             // A click without a real drag enters edit mode (linear sliders only).
             if (!moved && steps.length === 0) {
@@ -98,18 +137,21 @@ function render({model, el}) {
 
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
+        document.addEventListener('keydown', onKeyChange);
+        document.addEventListener('keyup', onKeyChange);
     }
 
     function enterEditMode() {
         editing = true;
         const previous = amount;
+        const previousTypedText = lastTypedText;
         let finished = false;
 
         container.innerHTML = '';
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'tangle-input';
-        input.value = amount.toFixed(config.digits);
+        input.value = lastTypedText !== null ? lastTypedText : amount.toFixed(config.digits);
         // Match the value's look and keep it inline so the layout doesn't jump.
         input.style.color = '#0066cc';
         input.style.font = 'inherit';
@@ -130,18 +172,20 @@ function render({model, el}) {
             if (commit) {
                 const parsed = parseFloat(input.value);
                 if (!isNaN(parsed)) {
-                    let next = Math.max(config.minValue, Math.min(config.maxValue, parsed));
-                    // Snap to the step grid anchored at min_value, then re-clamp.
-                    if (config.stepSize > 0) {
-                        next = config.minValue + Math.round((next - config.minValue) / config.stepSize) * config.stepSize;
-                        next = Math.max(config.minValue, Math.min(config.maxValue, next));
-                    }
+                    // Clamp to bounds but do NOT snap to the step grid, so exact
+                    // values (incl. scientific notation like 2.5e-3) survive.
+                    const next = Math.max(config.minValue, Math.min(config.maxValue, parsed));
                     amount = next;
+                    // Show the literal text only when accepted unchanged; a
+                    // clamped value renders as the clamped number via toFixed.
+                    lastTypedText = next === parsed ? input.value.trim() : null;
                 } else {
                     amount = previous; // Non-numeric input: restore previous value.
+                    lastTypedText = previousTypedText;
                 }
             } else {
                 amount = previous; // Escape / blur cancels.
+                lastTypedText = previousTypedText;
             }
             renderValue();
             updateModel();
