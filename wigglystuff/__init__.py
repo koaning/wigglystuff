@@ -45,6 +45,7 @@ from .nested_table import NestedTable
 from .observable_plot import ObservablePlot
 from .paint import Paint
 from .parallel_coords import ParallelCoordinates
+from .pip import Pip
 from .play_slider import PlaySlider
 from .ridgeline_chart import RidgelineChart
 from .scatter_log import ScatterLog
@@ -107,6 +108,7 @@ __all__ = [
     "ObservablePlot",
     "Paint",
     "ParallelCoordinates",
+    "Pip",
     "PlaySlider",
     "RidgelineChart",
     "ScatterLog",
