@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- New `Pip` widget: `Pip(other_widget)` wraps a widget and adds a button that
+  moves it into a window floating above other windows, so it stays visible while
+  the notebook is scrolled. The wrapped widget is the same object in both places,
+  so its traits are read as before. Demo at `demos/pip.py`.
+
+  This is built on the browser's Document Picture-in-Picture API, and inherits
+  its limits: Chromium and Firefox only, and only from a top-level page. That
+  window is a separate document with its own `window`, so a widget that listens
+  for pointer events on the notebook's `window` never sees the ones that happen
+  while it floats. The window is given the child's own stylesheet and follows
+  the notebook's light or dark setting, but not the notebook's other CSS.
+  `Knob`, `Fader`, `Matrix`, `TangleSlider`, `Slider2D` and
+  `CircularSlider` are dragged that way today, so they float but cannot be
+  dragged there; widgets that use pointer capture work in both places. The
+  reference page lists both groups.
+
+### Changed
+
+- Raised the minimum `anywidget` to `0.11.0`, which is where widget composition
+  became available.
+
 ## [0.5.26] - 2026-08-18
 
 ### Changed

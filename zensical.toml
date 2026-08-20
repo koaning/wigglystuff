@@ -15,6 +15,7 @@ nav = [
         { Slider2D = "reference/slider2d.md" },
         { Knob = "reference/knob.md" },
         { Fader = "reference/fader.md" },
+        { Pip = "reference/pip.md" },
         { BezierCurve = "reference/bezier-curve.md" },
         { CurveEditor = "reference/curve-editor.md" },
         { ChartPuck = "reference/chart-puck.md" },

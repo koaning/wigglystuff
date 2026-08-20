@@ -110,6 +110,9 @@ uv pip install wigglystuff
 <td align="center"><b>Knob</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/knob.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/knob.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/knob.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/knob/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/knob.md">MD</a></td>
 <td align="center"><b>Fader</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fader.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/fader.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fader.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/fader/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/fader.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>Pip</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pip.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/pip.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pip.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/pip/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/pip.md">MD</a></td>
+</tr>
 </table>
 
 ## 3rd party widgets

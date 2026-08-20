@@ -1,0 +1,142 @@
+.pip-root {
+  position: relative;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  color-scheme: light dark;
+
+  /* Everything derives from `currentColor`, so the widget follows the
+     notebook's text color and tracks a light/dark switch for free.
+     Set these to opt out. */
+  --pip-chip-bg: rgb(32 33 36 / 0.85);
+  --pip-chip-bg-hover: rgb(32 33 36 / 0.98);
+  --pip-chip-fg: #fff;
+  --pip-hover-bg: color-mix(in srgb, currentColor 8%, transparent);
+  --pip-panel-bg: color-mix(in srgb, currentColor 5%, transparent);
+  --pip-panel-border: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.dark .pip-root,
+.dark-theme .pip-root,
+[data-theme="dark"] .pip-root {
+  --pip-chip-bg: rgb(248 249 250 / 0.9);
+  --pip-chip-bg-hover: rgb(255 255 255 / 0.98);
+  --pip-chip-fg: #202124;
+}
+
+/* Pop-out chip: overlays the child's top-right corner. Hidden until the
+   container is hovered or the chip has focus, so it reserves no space. */
+.pip-pop {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 7px;
+  background: var(--pip-chip-bg);
+  color: var(--pip-chip-fg);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+  opacity: 0;
+  transform: translateY(-2px) scale(0.95);
+  cursor: pointer;
+  transition: opacity 150ms ease, transform 150ms ease,
+    background-color 150ms ease;
+}
+
+.pip-root:hover .pip-pop,
+.pip-root:focus-within .pip-pop {
+  opacity: 1;
+  transform: none;
+}
+
+.pip-pop:hover {
+  background: var(--pip-chip-bg-hover);
+}
+
+.pip-pop:focus-visible {
+  opacity: 1;
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+.pip-pop:disabled {
+  display: none;
+}
+
+/* While floating, the placeholder is the only affordance. */
+.pip-is-floating .pip-pop {
+  display: none;
+}
+
+/* Placeholder shown while the child is floating. Holds the child's footprint
+   (min-height set from JS at pop-out); the whole panel is clickable. */
+.pip-placeholder {
+  display: none;
+}
+
+.pip-is-floating .pip-placeholder {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  padding: 16px;
+  border: 1px solid var(--pip-panel-border);
+  border-radius: 8px;
+  background: var(--pip-panel-bg);
+  cursor: pointer;
+  animation: pip-appear 160ms ease-out;
+}
+
+@keyframes pip-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+.pip-placeholder svg {
+  width: 28px;
+  height: 28px;
+  opacity: 0.4;
+}
+
+.pip-caption {
+  font-size: 0.8em;
+  opacity: 0.6;
+}
+
+.pip-back {
+  margin-top: 4px;
+  padding: 4px 12px;
+  border: 1px solid var(--pip-panel-border);
+  border-radius: 999px;
+  background: transparent;
+  color: currentColor;
+  opacity: 0.75;
+  font: inherit;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: opacity 150ms ease, background-color 150ms ease;
+}
+
+.pip-placeholder:hover .pip-back,
+.pip-back:focus-visible {
+  opacity: 1;
+  background: var(--pip-hover-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pip-pop {
+    transform: none;
+    transition: opacity 150ms ease, background-color 150ms ease;
+  }
+  .pip-is-floating .pip-placeholder {
+    animation: none;
+  }
+}
