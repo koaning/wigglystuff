@@ -418,4 +418,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/curve-filling.py?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/curve-filling.py/wasm">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/inverse_turing_test.py/wasm?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/inverse-turing-test.webp" alt="Inverse Turing Test"></a>
+<div class="example-content">
+<div class="example-title">Inverse Turing Test</div>
+<div class="example-desc">Flip coins on a floating Pip pad and let beta-binomial n-gram tests judge whether your sequence looks human-made or machine-random. Based on the calmcode post.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/inverse_turing_test.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/inverse_turing_test.py">Source</a></div>
+</div>
 </div>
