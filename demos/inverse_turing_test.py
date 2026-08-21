@@ -6,7 +6,7 @@
 #     "scipy",
 #     "matplotlib",
 #     "anywidget",
-#     "wigglystuff==0.5.26",
+#     "wigglystuff==0.5.27",
 # ]
 # ///
 
