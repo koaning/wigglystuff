@@ -112,6 +112,7 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>Pip</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pip.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/pip.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pip.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/pip/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/pip.md">MD</a></td>
+<td align="center"><b>FloatingPanel</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/floating_panel.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/floatingpanel.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/floating_panel.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/floating-panel/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/floating-panel.md">MD</a></td>
 </tr>
 </table>
 

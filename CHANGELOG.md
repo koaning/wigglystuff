@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.28] - 2026-08-22
+
+### Added
+
+- New `FloatingPanel` widget: `FloatingPanel(child)` pins any marimo content in a
+  draggable panel that stays in view while the notebook scrolls, and minimizes to
+  just its header with the `−` toggle. Unlike `Pip`, the panel is an ordinary
+  in-page element, so it also works inside an iframe such as molab, and the
+  floated content stays fully live. It is a marimo-only display helper (like
+  `Hint`/`WidgetDAG`). Demo at `demos/floating_panel.py`.
+
 ## [0.5.27] - 2026-08-21
 
 ### Added
