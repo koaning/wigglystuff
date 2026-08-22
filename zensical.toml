@@ -16,6 +16,7 @@ nav = [
         { Knob = "reference/knob.md" },
         { Fader = "reference/fader.md" },
         { Pip = "reference/pip.md" },
+        { FloatingPanel = "reference/floating-panel.md" },
         { BezierCurve = "reference/bezier-curve.md" },
         { CurveEditor = "reference/curve-editor.md" },
         { ChartPuck = "reference/chart-puck.md" },

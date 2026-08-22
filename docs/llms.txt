@@ -10,6 +10,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [Slider2D](https://koaning.github.io/wigglystuff/reference/slider2d.md): 2D slider for x/y value selection
 - [Knob](https://koaning.github.io/wigglystuff/reference/knob.md): Audio-panel rotary knob with a configurable sweep, tick scale, discrete detents, and optional Web MIDI learn (bindings persist in browser localStorage)
 - [Pip](https://koaning.github.io/wigglystuff/reference/pip.md): Wraps a widget and adds a button that moves it into a window floating above other windows, so it stays visible while the notebook is scrolled
+- [FloatingPanel](https://koaning.github.io/wigglystuff/reference/floating-panel.md): Pins any marimo content in a draggable in-page panel that stays in view while the notebook scrolls and minimizes to just its header; unlike Pip it works inside an iframe such as molab (marimo-only display helper)
 - [Fader](https://koaning.github.io/wigglystuff/reference/fader.md): Mixing-console fader (vertical or horizontal) with a configurable tick scale, discrete detents, and optional Web MIDI learn
 - [BezierCurve](https://koaning.github.io/wigglystuff/reference/bezier-curve.md): Interactive arbitrary-degree Bezier curve editor with draggable control points
 - [CurveEditor](https://koaning.github.io/wigglystuff/reference/curve-editor.md): Chart-space curve editor with draggable knots, D3 line interpolators, closed paths, and progress output

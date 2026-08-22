@@ -24,6 +24,7 @@ from .env_config import EnvConfig
 from .esm_widget import EsmWidget
 from .excalidraw import Excalidraw
 from .fader import Fader
+from .floating_panel import FloatingPanel
 from .frame_player import FramePlayer
 from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
@@ -90,6 +91,7 @@ __all__ = [
     "EsmWidget",
     "Excalidraw",
     "Fader",
+    "FloatingPanel",
     "FramePlayer",
     "GamepadWidget",
     "GraphWidget",
