@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.29] - 2026-08-24
+
+### Added
+
+- New `MidiButton` widget: a pad you press on-screen or bind to a hardware MIDI
+  pad. Unlike `Knob`/`Fader` (continuous control-change), it learns a MIDI
+  **note** and turns presses into events. `mode="momentary"` (true while held)
+  or `mode="toggle"` (each press flips `value`); `press_timestamp` bumps on every
+  press and `velocity` carries the note-on velocity. Put a built-in `icon` or any
+  emoji/text on the face. MIDI learn is on by default (bindings persist in
+  browser localStorage). Demo at `demos/midi_button.py`.
+
 ## [0.5.28] - 2026-08-22
 
 ### Added

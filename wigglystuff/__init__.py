@@ -40,6 +40,7 @@ from .tangle_latex import TangleLatex
 from .live_edit import LiveEdit, inspect_run
 from .manim_web import ManimWeb
 from .matrix import Matrix
+from .midi_button import MidiButton
 from .module_tree import ModuleTreeWidget
 from .neo4j_widget import Neo4jWidget
 from .nested_table import NestedTable
@@ -104,6 +105,7 @@ __all__ = [
     "LiveEdit",
     "ManimWeb",
     "Matrix",
+    "MidiButton",
     "ModuleTreeWidget",
     "Neo4jWidget",
     "NestedTable",

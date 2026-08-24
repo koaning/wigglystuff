@@ -1,0 +1,138 @@
+.midi-button-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: light dark;
+  padding: 4px;
+
+  /* Palette matches the Knob/Fader family. */
+  --midi-button-body: #f9fafb;
+  --midi-button-border: #9ca3af;
+  --midi-button-fill: #3b82f6;
+  --midi-button-text: #111827;
+  --midi-button-track: #d1d5db;
+}
+
+.dark .midi-button-wrapper,
+.dark-theme .midi-button-wrapper,
+[data-theme="dark"] .midi-button-wrapper {
+  --midi-button-body: #1f2937;
+  --midi-button-border: #4b5563;
+  --midi-button-fill: #60a5fa;
+  --midi-button-text: #f1f5f9;
+  --midi-button-track: #374151;
+}
+
+.midi-button-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--midi-button-text);
+  opacity: 0.85;
+  margin-bottom: 3px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.midi-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--midi-button-text);
+  background: var(--midi-button-body);
+  border: 1.5px solid var(--midi-button-border);
+  border-radius: 14px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  transition: background 0.08s, border-color 0.08s, color 0.08s,
+    box-shadow 0.08s, transform 0.04s;
+}
+
+.midi-button:hover {
+  border-color: var(--midi-button-fill);
+}
+
+.midi-button:active {
+  transform: translateY(1px);
+}
+
+.midi-button.active {
+  color: #fff;
+  background: var(--midi-button-fill);
+  border-color: var(--midi-button-fill);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--midi-button-fill) 28%, transparent);
+}
+
+.midi-button-face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  padding: 0 10px;
+}
+
+/* Icon glyphs scale with the pad; text/emoji faces use the font size above. */
+.midi-button-face.has-icon {
+  padding: 0;
+}
+
+.midi-button-face.has-icon svg {
+  display: block;
+  width: var(--icon-size, 28px);
+  height: var(--icon-size, 28px);
+}
+
+.midi-button-learn {
+  margin-top: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--midi-button-text);
+  background: transparent;
+  border: 1px solid var(--midi-button-track);
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.midi-button-learn:hover:not(:disabled) {
+  border-color: var(--midi-button-fill);
+}
+
+.midi-button-learn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.midi-button-learn.bound {
+  color: #fff;
+  background: var(--midi-button-fill);
+  border-color: var(--midi-button-fill);
+}
+
+.midi-button-learn.learning {
+  color: #fff;
+  background: #ef4444;
+  border-color: #ef4444;
+  animation: midi-button-pulse 1s ease-in-out infinite;
+}
+
+@keyframes midi-button-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
