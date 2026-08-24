@@ -158,7 +158,7 @@ def _(
     set_index,
     set_last_ts,
 ):
-    # Marimo re-runs this cell on *any* traitlet change, including each
+    # marimo re-runs this cell on *any* traitlet change, including each
     # streamed speech token writing to `note`. Gate on `action_timestamp`
     # so we only commit when the user actually presses an action button.
     ts = annot_widget.action_timestamp
