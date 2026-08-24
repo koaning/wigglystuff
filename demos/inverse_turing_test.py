@@ -6,7 +6,7 @@
 #     "scipy",
 #     "matplotlib",
 #     "anywidget",
-#     "wigglystuff==0.5.27",
+#     "wigglystuff==0.5.28",
 # ]
 # ///
 
@@ -38,11 +38,10 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(CoinFlip, Pip, mo, set_seq):
+def _(CoinFlip, FloatingPanel, mo, set_seq):
     coin = mo.ui.anywidget(CoinFlip())
-    panel = mo.ui.anywidget(Pip(coin, width=380, height=280))
     coin.widget.observe(lambda change: set_seq(list(change["new"])), names="sequence")
-    panel
+    FloatingPanel(coin, corner="top-right")
     return (coin,)
 
 
@@ -50,8 +49,8 @@ def _(CoinFlip, Pip, mo, set_seq):
 def _(get_seq, mo):
     seq = get_seq()
     mo.md(
-        f"**{len(seq)} flips so far.** Pop the pad out (top-right button) so it "
-        "floats while you scroll through the charts."
+        f"**{len(seq)} flips so far.** The pad floats in the top-right corner so it "
+        "stays with you while you scroll through the charts."
     )
     return (seq,)
 
@@ -372,9 +371,9 @@ def _(anywidget, traitlets):
         """
 
         _css = """
-        /* Pip floats the pad into a separate window and only mirrors the
-           light/dark class, not the notebook's own colors, so every color here
-           is set explicitly rather than inherited. */
+        /* FloatingPanel portals the pad to document.body, outside the notebook's
+           own styling context, so every color here is set explicitly rather than
+           inherited. */
         .coinflip {
           color-scheme: light dark;
           font-family: system-ui, sans-serif;
@@ -637,9 +636,9 @@ def _():
     import traitlets
     from scipy.stats import beta
 
-    from wigglystuff import Pip
+    from wigglystuff import FloatingPanel
 
-    return Pip, anywidget, beta, mo, np, plt, traitlets
+    return FloatingPanel, anywidget, beta, mo, np, plt, traitlets
 
 
 @app.cell(hide_code=True)
@@ -654,7 +653,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    sim_n = mo.ui.slider(10, 500, value=100, step=10, label="how many flips", show_value=True)
+    sim_n = mo.ui.slider(10, 5000, value=100, step=10, label="how many flips", show_value=True)
     sim_btn = mo.ui.run_button(label="🎲 Simulate random flips")
     mo.vstack(
         [
