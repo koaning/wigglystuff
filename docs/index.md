@@ -321,7 +321,7 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 
 Each widget links to a live demo on [molab](https://molab.marimo.io?utm_source=wigglystuff) where you can interact with and edit the notebook directly in your browser.
 
-## Marimo-only widgets
+## marimo-only widgets
 
 These are **marimo-only** display helpers — they render through marimo's mime protocol and reach into marimo's rendered DOM, so unlike the other widgets they don't run in plain Jupyter. They also appear in the gallery above.
 
