@@ -18,6 +18,7 @@ the link at the top of any page. [`llms.txt`](../llms.txt) lists them all.
 - [Slider2D](slider2d.md) — 2D pointer for two coupled parameters
 - [Knob](knob.md) — audio-panel rotary knob with configurable sweep, detents and MIDI learn
 - [Fader](fader.md) — mixing-console fader with a configurable tick scale and MIDI learn
+- [MidiButton](midi-button.md) — momentary/toggle pad with icon or text faces and Web MIDI note learn
 - [CircularSlider](circular-slider.md) — circular dial for a single value or a span
 - [HoverSlider](hover-slider.md) — reports the committed value and the live hover value
 - [PlaySlider](play-slider.md) — slider with a play/pause button that auto-advances

@@ -69,6 +69,10 @@ def test_import_matrix():
     from wigglystuff.matrix import Matrix
 
 
+def test_import_midi_button():
+    from wigglystuff.midi_button import MidiButton
+
+
 def test_import_paint():
     from wigglystuff.paint import Paint
 
