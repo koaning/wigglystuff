@@ -316,6 +316,28 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 
 Each widget links to a live demo on [molab](https://molab.marimo.io?utm_source=wigglystuff) where you can interact with and edit the notebook directly in your browser.
 
+## Marimo-only widgets
+
+These are **marimo-only** display helpers — they render through marimo's mime protocol and reach into marimo's rendered DOM, so unlike the other widgets they don't run in plain Jupyter. They also appear in the gallery above.
+
+<div class="widget-gallery">
+<div class="gallery-item">
+<div class="gallery-title"><a href="reference/floating-panel/">FloatingPanel</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/floating_panel.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/floatingpanel.webp" alt="FloatingPanel widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/floating_panel.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/floating-panel/">API</a><a href="reference/floating-panel.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title"><a href="reference/widget-dag/">WidgetDAG</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_dag.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/widget-dag.webp" alt="WidgetDAG widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_dag.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/widget-dag/">API</a><a href="reference/widget-dag.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title"><a href="reference/hint/">Hint</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/hint.webp" alt="Hint widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/hint/">API</a><a href="reference/hint.md">MD</a></div>
+</div>
+</div>
+
 ## 3rd party widgets
 
 These widgets depend on 3rd party packages. They still ship with wigglystuff but have demos hosted on [molab](https://molab.marimo.io?utm_source=wigglystuff) because many of the dependencies are not compatible with WASM.
