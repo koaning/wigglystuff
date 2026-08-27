@@ -25,6 +25,7 @@ from .esm_widget import EsmWidget
 from .excalidraw import Excalidraw
 from .fader import Fader
 from .floating_panel import FloatingPanel
+from .formula_animation import FormulaAnimation
 from .frame_player import FramePlayer
 from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
@@ -93,6 +94,7 @@ __all__ = [
     "Excalidraw",
     "Fader",
     "FloatingPanel",
+    "FormulaAnimation",
     "FramePlayer",
     "GamepadWidget",
     "GraphWidget",
