@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.30] - 2026-08-27
+
+### Added
+
+- New `FormulaAnimation` widget: step through a LaTeX derivation one line at a
+  time. Pass a list of `{"tex", "note"}` dicts (JSON-friendly, so an LLM can
+  emit them directly) and the current line sits centered while the previous line
+  floats above it dimmed, with a short caption under the active line. Playback is
+  manual — move with the built-in prev/next buttons, with the arrow keys
+  (click the widget to opt into keyboard control so it never hijacks the
+  notebook's arrows), or by driving the reactive `step` trait from Python (e.g. a
+  marimo slider). `spotlight=True` appends a final step that frames the finished
+  formula alone in an elevated, theme-aware card. Renders with KaTeX and adapts to
+  light/dark via the `theme` trait. Demo at `demos/formula_animation.py`.
+
 ## [0.5.29] - 2026-08-24
 
 ### Added

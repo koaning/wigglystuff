@@ -183,6 +183,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_latex.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/tangle-latex/">API</a><a href="reference/tangle-latex.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title"><a href="reference/formula-animation/">FormulaAnimation</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/formula_animation.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/formulaanimation.webp" alt="FormulaAnimation"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/formula_animation.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/formula-animation/">API</a><a href="reference/formula-animation.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title"><a href="reference/tangle/">Tangle</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/tangle.webp" alt="Tangle widgets"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/tangle/">API</a><a href="reference/tangle.md">MD</a></div>

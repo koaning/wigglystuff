@@ -115,6 +115,9 @@ uv pip install wigglystuff
 <td align="center"><b>FloatingPanel</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/floating_panel.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/floatingpanel.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/floating_panel.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/floating-panel/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/floating-panel.md">MD</a></td>
 <td align="center"><b>MidiButton</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/midi_button.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/midibutton.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/midi_button.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/midi-button/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/midi-button.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>FormulaAnimation</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/formula_animation.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/formulaanimation.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/formula_animation.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/formula-animation/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/formula-animation.md">MD</a></td>
+</tr>
 </table>
 
 ## 3rd party widgets

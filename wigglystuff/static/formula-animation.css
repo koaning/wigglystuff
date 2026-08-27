@@ -1,0 +1,179 @@
+.formula-animation {
+  --fa-surface: #fffdf9;
+  --fa-stage: #f7f5f0;
+  --fa-ink: #25221d;
+  --fa-muted: #706a60;
+  --fa-line: #ddd7cc;
+  --fa-box-bg: #ffffff;
+  --fa-box-ink: #25221d;
+  --fa-ring: #f0a13a;
+  --fa-btn-bg: #ffffff;
+  --fa-btn-hover: #f0ece3;
+  --fa-focus: rgba(240, 161, 58, 0.5);
+
+  display: inline-flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(100%, 680px);
+  min-width: 260px;
+  color: var(--fa-ink);
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+/* "auto" follows the notebook/host theme (e.g. marimo's toggle sets a `.dark`
+   or `[data-theme="dark"]` ancestor), NOT the OS `prefers-color-scheme`. */
+.dark .formula-animation.formula-animation--theme-auto,
+.dark-theme .formula-animation.formula-animation--theme-auto,
+[data-theme="dark"] .formula-animation.formula-animation--theme-auto,
+.formula-animation.formula-animation--theme-dark {
+  --fa-surface: #22201d;
+  --fa-stage: #1b1a18;
+  --fa-ink: #f5f0e8;
+  --fa-muted: #b8b0a4;
+  --fa-line: #3e3933;
+  --fa-box-bg: #2f2b26;
+  --fa-box-ink: #f5f0e8;
+  --fa-ring: #f0a13a;
+  --fa-btn-bg: #2a2723;
+  --fa-btn-hover: #363229;
+  --fa-focus: rgba(240, 161, 58, 0.55);
+  color-scheme: dark;
+}
+
+.formula-animation.formula-animation--theme-light {
+  --fa-surface: #fffdf9;
+  --fa-stage: #f7f5f0;
+  --fa-ink: #25221d;
+  --fa-muted: #706a60;
+  --fa-line: #ddd7cc;
+  --fa-box-bg: #ffffff;
+  --fa-box-ink: #25221d;
+  --fa-ring: #f0a13a;
+  --fa-btn-bg: #ffffff;
+  --fa-btn-hover: #f0ece3;
+  --fa-focus: rgba(240, 161, 58, 0.5);
+  color-scheme: light;
+}
+
+.formula-animation__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fa-ink);
+}
+
+.formula-animation__stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--fa-line);
+  border-radius: 12px;
+  background: var(--fa-stage);
+}
+
+.formula-animation__slot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 420ms ease;
+  will-change: transform, opacity;
+}
+
+.formula-animation__formula {
+  font-size: clamp(1.2rem, 3vw, 1.9rem);
+  color: var(--fa-ink);
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  transition: background 300ms ease, box-shadow 300ms ease, color 300ms ease,
+    padding 300ms ease;
+  padding: 4px 6px;
+  border-radius: 12px;
+}
+
+.formula-animation__formula--framed {
+  background: var(--fa-box-bg);
+  color: var(--fa-box-ink);
+  padding: 18px 30px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+  outline: 2px solid var(--fa-ring);
+  outline-offset: 0;
+}
+
+.formula-animation__formula--framed .katex {
+  color: var(--fa-box-ink);
+}
+
+.formula-animation__caption {
+  margin: 0;
+  height: 1.2em;
+  font-size: 13px;
+  color: var(--fa-muted);
+  text-align: center;
+  transition: opacity 420ms ease;
+}
+
+.formula-animation__controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  outline: none;
+  border-radius: 10px;
+  padding: 2px;
+}
+
+.formula-animation__controls.is-focused {
+  box-shadow: 0 0 0 2px var(--fa-focus);
+}
+
+.formula-animation__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+  border: 1px solid var(--fa-line);
+  border-radius: 8px;
+  background: var(--fa-btn-bg);
+  color: var(--fa-ink);
+  cursor: pointer;
+}
+
+.formula-animation__btn:hover:not(:disabled) {
+  background: var(--fa-btn-hover);
+}
+
+.formula-animation__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.formula-animation__counter {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--fa-ink);
+  min-width: 4.5ch;
+  text-align: center;
+}
+
+.formula-animation__hint {
+  font-size: 12px;
+  color: var(--fa-muted);
+  margin-left: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formula-animation__slot,
+  .formula-animation__formula,
+  .formula-animation__caption {
+    transition: none;
+  }
+}
