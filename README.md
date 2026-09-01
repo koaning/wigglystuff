@@ -117,6 +117,7 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>FormulaAnimation</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/formula_animation.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/formulaanimation.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/formula_animation.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/formula-animation/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/formula-animation.md">MD</a></td>
+<td align="center"><b>TangleFunction</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_function.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/tanglefunction.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_function.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/tangle-function/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/tangle-function.md">MD</a></td>
 </tr>
 </table>
 

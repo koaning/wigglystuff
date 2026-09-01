@@ -58,6 +58,7 @@ from .spline_draw import SplineDraw
 from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget
 from .tangle import TangleChoice, TangleSelect, TangleSlider
+from .tangle_function import TangleFunction
 from .text_compare import TextCompare
 from .treemap import Treemap
 from .three_widget import ThreeWidget
@@ -123,6 +124,7 @@ __all__ = [
     "SplineDraw",
     "SortableList",
     "TangleChoice",
+    "TangleFunction",
     "TangleSelect",
     "TangleSlider",
     "TextCompare",

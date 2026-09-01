@@ -43,6 +43,7 @@ nav = [
         { CopyToClipboard = "reference/copy-to-clipboard.md" },
         { "Tangle Widgets" = "reference/tangle.md" },
         { TangleLatex = "reference/tangle-latex.md" },
+        { TangleFunction = "reference/tangle-function.md" },
         { FormulaAnimation = "reference/formula-animation.md" },
         { GamepadWidget = "reference/gamepad.md" },
         { AnnotationWidget = "reference/annotation.md" },

@@ -35,6 +35,7 @@ syncs back to Python.
 | TangleChoice | `wigglystuff.tangle.TangleChoice` | `choice`, `choices` | Inline toggle among labels |
 | TangleSelect | `wigglystuff.tangle.TangleSelect` | `choice`, `choices` | Dropdown version of the above |
 | TangleLatex | `wigglystuff.tangle_latex.TangleLatex` | `latex`, `parameters`, `values`, `display_mode`, `editor`, `reveal_all_on_drag`, `theme`, `error` | LaTeX formula with draggable `\tangle{name}` numbers/symbols |
+| TangleFunction | `wigglystuff.tangle_function.TangleFunction` | `fn_name`, `parameters`, `param_order`, `values`, `theme`, `width`, `error` | Introspects a typed function into an editable call expression: drag numbers, click-cycle Literal/Enum/bool, edit strings; reads `annotated_types`/pydantic `Field` bounds; unbounded scrubbers by default; syncs `values` to splat into the function |
 | FormulaAnimation | `wigglystuff.formula_animation.FormulaAnimation` | `steps`, `title`, `spotlight`, `step`, `height`, `theme`, `error` | Step through a LaTeX derivation one line at a time (prev/next buttons, opt-in arrow keys, reactive `step`); KaTeX-rendered with an optional final spotlight frame |
 | SortableList | `wigglystuff.sortable_list.SortableList` | `value`, `addable`, `removable`, `editable`, `label` | Drag-and-drop ordering with optional CRUD |
 | CopyToClipboard | `wigglystuff.copy_to_clipboard.CopyToClipboard` | `text_to_copy` | Copies the payload into the OS clipboard |
