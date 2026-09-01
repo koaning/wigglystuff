@@ -1,0 +1,145 @@
+.tangle-fn {
+  --tf-surface: #fffdf9;
+  --tf-ink: #25221d;
+  --tf-muted: #8a8378;
+  --tf-line: #ddd7cc;
+  --tf-number: #246bce;
+  --tf-choice: #147a68;
+  --tf-string: #b45b1b;
+  display: inline-block;
+  width: min(100%, 560px);
+  padding: 14px 16px;
+  border: 1px solid var(--tf-line);
+  border-radius: 10px;
+  background: var(--tf-surface);
+  color: var(--tf-ink);
+  color-scheme: light dark;
+  font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.98rem;
+  line-height: 1.9;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tangle-fn {
+    --tf-surface: #22201d;
+    --tf-ink: #f5f0e8;
+    --tf-muted: #9a9286;
+    --tf-line: #3e3933;
+    --tf-number: #75a7ff;
+    --tf-choice: #5ed5bd;
+    --tf-string: #ffad66;
+  }
+}
+
+.dark .tangle-fn,
+.dark-theme .tangle-fn,
+[data-theme="dark"] .tangle-fn,
+.tangle-fn.tangle-fn--theme-dark {
+  --tf-surface: #22201d;
+  --tf-ink: #f5f0e8;
+  --tf-muted: #9a9286;
+  --tf-line: #3e3933;
+  --tf-number: #75a7ff;
+  --tf-choice: #5ed5bd;
+  --tf-string: #ffad66;
+  color-scheme: dark;
+}
+
+.tangle-fn.tangle-fn--theme-light {
+  --tf-surface: #fffdf9;
+  --tf-ink: #25221d;
+  --tf-muted: #8a8378;
+  --tf-line: #ddd7cc;
+  --tf-number: #246bce;
+  --tf-choice: #147a68;
+  --tf-string: #b45b1b;
+  color-scheme: light;
+}
+
+.tangle-fn__line {
+  display: block;
+  white-space: nowrap;
+}
+
+.tangle-fn.is-multiline .tangle-fn__line {
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.tangle-fn__key {
+  color: var(--tf-muted);
+}
+
+.tangle-fn__val {
+  border-radius: 0.2em;
+  outline: none;
+  padding: 0 0.1em;
+  touch-action: none;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.tangle-fn__val:hover,
+.tangle-fn__val:focus-visible,
+.tangle-fn__val.is-active {
+  background: color-mix(in srgb, currentColor, transparent 86%);
+  box-shadow: 0 0 0 0.12em color-mix(in srgb, currentColor, transparent 86%);
+}
+
+.tangle-fn__val--number {
+  color: var(--tf-number);
+  cursor: ew-resize;
+  font-variant-numeric: tabular-nums;
+}
+
+.tangle-fn__val--number.is-active {
+  cursor: grabbing;
+}
+
+.tangle-fn__val--choice {
+  color: var(--tf-choice);
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.tangle-fn__val--string {
+  color: var(--tf-string);
+  cursor: text;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.tangle-fn.is-dragging,
+.tangle-fn.is-dragging * {
+  cursor: ew-resize !important;
+  user-select: none !important;
+}
+
+.tangle-fn__editor {
+  box-sizing: content-box;
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--tf-ink), transparent 72%);
+  border-radius: 4px;
+  background: color-mix(in srgb, currentColor, transparent 92%);
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  vertical-align: baseline;
+  padding: 0 2px;
+  outline: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.tangle-fn__editor:focus {
+  border-color: color-mix(in srgb, currentColor, transparent 40%);
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor, transparent 82%);
+}
+
+.tangle-fn__editor.is-invalid {
+  border-color: #c9382b;
+  box-shadow: 0 0 0 2px rgb(201 56 43 / 0.2);
+}

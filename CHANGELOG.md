@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.31] - 2026-09-01
+
+### Added
+
+- New `TangleFunction` widget: turn a typed Python function into an interactive
+  call expression. It introspects the signature and renders
+  `train(lr=0.01, epochs=10, optimizer='adam', shuffle=True, name='run-1')` where
+  each argument is editable in place — numbers drag horizontally to scrub (and
+  click to type an exact value), `Literal`/`Enum`/`bool` arguments click to cycle
+  through their known options, and strings are click-to-edit. The live arguments
+  sync to a plain `values` dict, ready to splat straight into the function
+  (`fn(**tf.value["values"])`). Numbers are unbounded scrubbers by default; give
+  one a range or a step by annotating it with
+  [`annotated_types`](https://pypi.org/project/annotated-types/) constraints
+  (`Ge`/`Le`/`Gt`/`Lt`/`MultipleOf`) — the same constraints pydantic uses, so
+  `pydantic.Field(ge=..., le=...)` works too — or via a `params=` override. Long
+  signatures wrap to a black-style one-argument-per-line layout, and it adapts to
+  light/dark via the `theme` trait. Demo at `demos/tangle_function.py`.
+
 ## [0.5.30] - 2026-08-27
 
 ### Added
