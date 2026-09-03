@@ -54,7 +54,6 @@ test-browser = [
 ]
 docs = [
     "altair>=6.0.0",
-    "black>=24.8.0",
     "marimo>=0.18.0",
     "mkdocstrings[python]>=0.25.1",
     "mohtml>=0.1.11",
