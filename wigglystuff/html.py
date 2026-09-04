@@ -7,6 +7,36 @@ import anywidget
 import traitlets
 
 
+def _in_notebook() -> bool:
+    """Return True when a notebook front-end (marimo or jupyter) is present.
+
+    Used to decide whether a widget should also render into the terminal.
+    Anything that is not a notebook counts as "script mode" (including a bare
+    ``python`` REPL, where a rich terminal bar is perfectly welcome).
+    """
+    try:
+        import marimo as mo
+
+        if mo.running_in_notebook():
+            return True
+    except Exception:
+        pass
+    try:
+        from IPython import get_ipython
+
+        ip = get_ipython()
+        if ip is not None and ip.__class__.__name__ == "ZMQInteractiveShell":
+            return True
+    except Exception:
+        pass
+    return False
+
+
+# rich allows only one live display per process, so we track the active one and
+# retire it before starting the next (lets sequential ProgressBars each render).
+_active_rich_progress = None
+
+
 class ImageRefreshWidget(anywidget.AnyWidget):
     """A widget that displays an image and refreshes when the source changes.
 
@@ -104,6 +134,12 @@ class ProgressBar(anywidget.AnyWidget):
     One of the main benefits of this utility is that you have a progress bar
     that doesn't depend on ipywidgets while you still have something that
     works across notebook projects.
+
+    When used in **script mode** (outside a marimo/jupyter notebook) and the
+    optional ``rich`` library is installed, the same progress is mirrored into a
+    fancy animated bar in the terminal. This needs no changes to your loop code:
+    just keep setting ``.value``. Install rich with ``pip install rich``. If
+    ``rich`` is not installed, or you are in a notebook, this does nothing extra.
 
     Attributes:
         value (int): The current progress value. Defaults to 0.
@@ -209,3 +245,74 @@ class ProgressBar(anywidget.AnyWidget):
         self.show_text = show_text
         self.width = width
         self.height = height
+
+        # In script mode, mirror progress into a rich terminal bar (if rich is
+        # installed). The display is created lazily on the first value change.
+        self._rich_progress = None
+        self._rich_task = None
+        self._rich_enabled = False
+        if not _in_notebook():
+            try:
+                import rich  # noqa: F401 -- availability probe only
+
+                self._rich_enabled = True
+                self.observe(self._on_value_change, names=["value", "max_value"])
+            except Exception:
+                self._rich_enabled = False
+
+    def _ensure_rich(self) -> None:
+        if self._rich_progress is not None:
+            return
+        from rich.progress import (
+            BarColumn,
+            MofNCompleteColumn,
+            Progress,
+            SpinnerColumn,
+            TaskProgressColumn,
+            TimeRemainingColumn,
+        )
+
+        global _active_rich_progress
+        # Only one rich live display can be active at a time; retire the previous.
+        if _active_rich_progress is not None:
+            try:
+                _active_rich_progress.stop()
+            except Exception:
+                pass
+            _active_rich_progress = None
+
+        columns = [SpinnerColumn(style=self.color), BarColumn(complete_style=self.color)]
+        if self.show_text:
+            columns += [TaskProgressColumn(), MofNCompleteColumn(), TimeRemainingColumn()]
+        try:
+            self._rich_progress = Progress(*columns, transient=False)
+            self._rich_progress.start()
+        except Exception:
+            self._rich_progress = None
+            self._rich_enabled = False
+            return
+        _active_rich_progress = self._rich_progress
+        self._rich_task = self._rich_progress.add_task("", total=self.max_value)
+        import atexit
+
+        atexit.register(self._stop_rich)
+
+    def _on_value_change(self, change) -> None:
+        if not self._rich_enabled:
+            return
+        self._ensure_rich()
+        if self._rich_progress is None:
+            return
+        self._rich_progress.update(
+            self._rich_task, completed=self.value, total=self.max_value
+        )
+
+    def _stop_rich(self) -> None:
+        global _active_rich_progress
+        if self._rich_progress is not None:
+            try:
+                self._rich_progress.stop()
+            finally:
+                if _active_rich_progress is self._rich_progress:
+                    _active_rich_progress = None
+                self._rich_progress = None

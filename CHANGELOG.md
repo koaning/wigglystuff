@@ -16,6 +16,13 @@ All notable changes to this project will be documented in this file.
   stays visible when the panel is minimized, and collapsing now preserves the
   panel's expanded width so the header stays a readable bar instead of shrinking
   to just the grip and toggle.
+- `ProgressBar` now mirrors its progress into a fancy animated terminal bar when
+  used in **script mode** (outside a marimo/jupyter notebook) and the optional
+  [`rich`](https://github.com/Textualize/rich) library is installed. No loop
+  changes are needed — each `bar.value` assignment updates a spinner + colored
+  bar + percentage + `M/N` count + time-remaining display, and the bar tracks the
+  value in both directions. Install `rich` with `pip install rich`; without it,
+  or inside a notebook, behavior is unchanged.
 
 ## [0.5.31] - 2026-09-01
 
