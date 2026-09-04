@@ -17,7 +17,8 @@ class _FloatDrag(anywidget.AnyWidget):
     header there, promotes the root to ``position: fixed``, and wires drag and
     the minimize toggle. ``x``/``y`` hold the dragged viewport position (``-1``
     means "not yet dragged -- use ``corner``"); ``width`` of ``None`` shrink-wraps
-    to content; ``collapsed`` hides the body, leaving just the draggable header.
+    to content; ``collapsed`` hides the body, leaving just the draggable header
+    (which keeps its expanded width); ``title`` is an optional header caption.
     """
 
     _esm = Path(__file__).parent / "static" / "floating-panel.js"
@@ -26,6 +27,7 @@ class _FloatDrag(anywidget.AnyWidget):
     corner = traitlets.Unicode("bottom-right").tag(sync=True)
     width = traitlets.Int(allow_none=True, default_value=None).tag(sync=True)
     collapsed = traitlets.Bool(False).tag(sync=True)
+    title = traitlets.Unicode("").tag(sync=True)
 
 
 def _require_marimo_notebook():
@@ -73,7 +75,11 @@ class FloatingPanel:
             width, e.g. to reflow long text.
         collapsed: Start minimized, showing only the draggable header. The
             header's ``−``/``+`` toggle collapses and expands it; nothing is ever
-            fully dismissed, so the content is always one click away.
+            fully dismissed, so the content is always one click away. Collapsing
+            keeps the panel's expanded width so the header stays a readable bar.
+        title: Optional caption shown on the header bar, next to the drag grip.
+            It stays visible when the panel is minimized, so a collapsed panel is
+            still identifiable. Long titles truncate with an ellipsis.
 
     Example:
         ```python
@@ -92,6 +98,7 @@ class FloatingPanel:
         corner: str = "bottom-right",
         width: Optional[int] = None,
         collapsed: bool = False,
+        title: str = "",
     ) -> None:
         if corner not in CORNERS:
             raise ValueError(f"corner must be one of {CORNERS}, got {corner!r}")
@@ -101,6 +108,7 @@ class FloatingPanel:
         self.corner = corner
         self.width = width
         self.collapsed = collapsed
+        self.title = title
         self._html = None
 
     def _repr_mimebundle_(self, **kwargs):
@@ -131,7 +139,10 @@ class FloatingPanel:
         # the wrapper minimal here.
         overlay = mo.ui.anywidget(
             _FloatDrag(
-                corner=self.corner, width=self.width, collapsed=self.collapsed
+                corner=self.corner,
+                width=self.width,
+                collapsed=self.collapsed,
+                title=self.title,
             )
         )
         return (

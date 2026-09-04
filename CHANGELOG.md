@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `FloatingPanel`'s header `−`/`+` toggle now actually collapses and expands the
+  panel. The click applies the change to the DOM directly instead of waiting on
+  the `collapsed` trait round-trip, which did not reliably repaint.
+
+### Added
+
+- `FloatingPanel` gains an optional `title` caption shown on the header bar. It
+  stays visible when the panel is minimized, and collapsing now preserves the
+  panel's expanded width so the header stays a readable bar instead of shrinking
+  to just the grip and toggle.
+
 ## [0.5.31] - 2026-09-01
 
 ### Added
