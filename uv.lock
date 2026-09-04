@@ -30,15 +30,6 @@ wheels = [
 ]
 
 [[package]]
-name = "annotated-types"
-version = "0.8.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/5f/56/a8120250d128bed162cd73c76d45f6ef9991f3e068f62a8ee060afa3104a/annotated_types-0.8.0.tar.gz", hash = "sha256:13b2beaad985e05e2d6407ee4c4f35590b11f8d693a258a561055cac8f64cab7", size = 15893, upload-time = "2026-07-23T20:16:13.995Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/91/8acff4f5e50511b911bbccb72b8628a49c68ce14148cd9f6431094859a90/annotated_types-0.8.0-py3-none-any.whl", hash = "sha256:f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0", size = 13427, upload-time = "2026-07-23T20:16:12.938Z" },
-]
-
-[[package]]
 name = "anyio"
 version = "4.15.0"
 source = { registry = "https://pypi.org/simple" }
@@ -3479,10 +3470,9 @@ wheels = [
 
 [[package]]
 name = "wigglystuff"
-version = "0.5.31"
+version = "0.5.32"
 source = { editable = "." }
 dependencies = [
-    { name = "annotated-types" },
     { name = "anywidget" },
     { name = "drawdata" },
 ]
@@ -3540,7 +3530,6 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "altair", marker = "extra == 'docs'", specifier = ">=6.0.0" },
-    { name = "annotated-types", specifier = ">=0.8.0" },
     { name = "anywidget", specifier = ">=0.11.0" },
     { name = "drawdata" },
     { name = "marimo", marker = "extra == 'docs'", specifier = ">=0.18.0" },
