@@ -57,8 +57,9 @@ def _(mo):
 @app.cell
 def _(FloatingPanel, counter, mo, slider):
     # Float a small control panel in the top-right corner. Drag it by the header.
-    # With no `width`, the panel shrink-wraps to its content.
-    FloatingPanel(mo.vstack([slider, counter]), corner="top-right")
+    # With no `width`, the panel shrink-wraps to its content. The `title` shows on
+    # the header bar and stays visible when the panel is minimized.
+    FloatingPanel(mo.vstack([slider, counter]), corner="top-right", title="Controls")
     return
 
 
@@ -83,8 +84,9 @@ def _(mo):
 @app.cell
 def _(CircularSlider, FloatingPanel):
     # A wigglystuff widget floated in the bottom-left corner (shrink-wrapped).
+    # Minimize it with the − and the "Volume" title still labels the bar.
     dial = CircularSlider(value=40, label="volume")
-    FloatingPanel(dial, corner="bottom-left")
+    FloatingPanel(dial, corner="bottom-left", title="Volume")
     return
 
 

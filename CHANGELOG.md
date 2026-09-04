@@ -2,10 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.32] - 2026-09-04
+
+### Fixed
+
+- `FloatingPanel`'s header `−`/`+` toggle now actually collapses and expands the
+  panel. The click applies the change to the DOM directly instead of waiting on
+  the `collapsed` trait round-trip, which did not reliably repaint.
 
 ### Added
 
+- `FloatingPanel` gains an optional `title` caption shown on the header bar. It
+  stays visible when the panel is minimized, and collapsing now preserves the
+  panel's expanded width so the header stays a readable bar instead of shrinking
+  to just the grip and toggle.
 - `ProgressBar` now mirrors its progress into a fancy animated terminal bar when
   used in **script mode** (outside a marimo/jupyter notebook) and the optional
   [`rich`](https://github.com/Textualize/rich) library is installed. No loop

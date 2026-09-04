@@ -56,6 +56,15 @@ const HEADER_STYLE = {
   userSelect: "none",
 };
 
+const TITLE_STYLE = {
+  fontSize: "13px",
+  fontWeight: "600",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  opacity: "0.85",
+};
+
 const BTN_STYLE = {
   display: "grid",
   placeItems: "center",
@@ -94,13 +103,29 @@ function render({ model, el }) {
   grip.style.opacity = "0.5";
   grip.innerHTML = GRIP_ICON;
 
+  // Grip + optional title share the left of the header; the title truncates
+  // with an ellipsis rather than forcing the panel wider.
+  const left = document.createElement("div");
+  Object.assign(left.style, {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    minWidth: "0",
+    overflow: "hidden",
+  });
+  const titleEl = document.createElement("span");
+  titleEl.setAttribute("data-fp-title", "");
+  Object.assign(titleEl.style, TITLE_STYLE);
+  left.append(grip, titleEl);
+
   const toggleBtn = document.createElement("button");
   toggleBtn.type = "button";
   toggleBtn.setAttribute("data-fp-toggle", "");
   Object.assign(toggleBtn.style, BTN_STYLE);
 
-  header.append(grip, toggleBtn);
+  header.append(left, toggleBtn);
   root.prepend(header);
+  applyTitle();
 
   // Promote the root to the fixed panel and give the body room to scroll.
   // With no explicit width the panel shrink-wraps to its content (a fixed
@@ -134,10 +159,24 @@ function render({ model, el }) {
     root.style.width = w ? `${w}px` : "";
   }
 
+  /** Shows the optional panel title in the header. */
+  function applyTitle() {
+    titleEl.textContent = model.get("title") || "";
+  }
+
   /** Collapses the panel to just its header, or expands it again. */
   function applyCollapsed() {
     const collapsed = model.get("collapsed");
-    if (body) body.style.display = collapsed ? "none" : "";
+    if (collapsed) {
+      // Freeze the current width before hiding the body so the collapsed
+      // header keeps the panel's expanded width instead of shrinking to fit
+      // just the grip and toggle. A fixed ``width`` already holds itself.
+      if (!model.get("width")) root.style.width = `${root.offsetWidth}px`;
+      if (body) body.style.display = "none";
+    } else {
+      if (body) body.style.display = "";
+      applyWidth(); // restore the shrink-wrap (or fixed) width
+    }
     toggleBtn.textContent = collapsed ? "+" : "−"; // + / minus
     toggleBtn.title = collapsed ? "Expand" : "Minimize";
     toggleBtn.setAttribute("aria-label", toggleBtn.title);
@@ -196,12 +235,17 @@ function render({ model, el }) {
   toggleBtn.addEventListener("click", () => {
     model.set("collapsed", !model.get("collapsed"));
     model.save_changes();
+    // Repaint immediately: a value written from the frontend does not reliably
+    // fire the local ``change:collapsed`` listener, so relying on it alone would
+    // leave the click with no visible effect.
+    applyCollapsed();
   });
 
   model.on("change:x", place);
   model.on("change:y", place);
   model.on("change:corner", place);
   model.on("change:width", applyWidth);
+  model.on("change:title", applyTitle);
   model.on("change:collapsed", applyCollapsed);
 
   place();
