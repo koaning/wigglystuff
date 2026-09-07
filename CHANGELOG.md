@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `HoverSlider` now preserves a `float` value that happens to land on a whole
+  number (e.g. `HoverSlider(start=0, stop=10, step=1, value=2.5)` and
+  `HoverSlider(steps=[1, 2.5, 4])` keep `value` a `float`). The number traitlets
+  used `Union([Int(), Float()])`, which silently coerced whole floats like `2.0`
+  to `int` before the snapping validator ran; they now use a type-preserving
+  trait so int-vs-float dtype is kept end to end.
+
 ## [0.5.32] - 2026-09-04
 
 ### Fixed
