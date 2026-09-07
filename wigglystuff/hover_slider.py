@@ -5,9 +5,31 @@ import anywidget
 import traitlets
 
 
-def _num() -> traitlets.Union:
-    """A traitlet that accepts an int or a float without casting ints to floats."""
-    return traitlets.Union([traitlets.Int(), traitlets.Float()])
+class _Number(traitlets.TraitType):
+    """Accept an int or a float, storing each *exactly* as given.
+
+    ``traitlets.Union([Int(), Float()])`` looks right but silently coerces
+    whole-valued floats to int (``2.0 -> 2``) because ``Int().validate`` accepts
+    integer-valued floats. That coercion runs before our ``_snap_value``
+    cross-validator, so it would erase the float dtype of any value that happens
+    to land on a whole number. Storing the number untouched keeps ``2.0`` a float
+    and ``2`` an int; snapping/casting is left to ``_snap_value``.
+    """
+
+    info_text = "an int or a float"
+    default_value = 0
+
+    def validate(self, obj: Any, value: Any) -> Union[int, float]:
+        if hasattr(value, "item"):  # unwrap numpy scalars sent over the wire
+            value = value.item()
+        if not _is_number(value):
+            self.error(obj, value)
+        return value
+
+
+def _num() -> _Number:
+    """A traitlet that accepts an int or a float without coercing between them."""
+    return _Number()
 
 
 def _is_number(value: Any) -> bool:
@@ -102,16 +124,10 @@ class HoverSlider(anywidget.AnyWidget):
     hover_value = _num().tag(sync=True)
     hovering = traitlets.Bool(False).tag(sync=True)
 
-    start = traitlets.Union([traitlets.Int(), traitlets.Float()], default_value=0).tag(
-        sync=True
-    )
-    stop = traitlets.Union([traitlets.Int(), traitlets.Float()], default_value=100).tag(
-        sync=True
-    )
+    start = _Number(default_value=0).tag(sync=True)
+    stop = _Number(default_value=100).tag(sync=True)
     # None in `steps` mode, mirroring mo.ui.slider.step.
-    step = traitlets.Union(
-        [traitlets.Int(), traitlets.Float()], default_value=1, allow_none=True
-    ).tag(sync=True)
+    step = _Number(default_value=1, allow_none=True).tag(sync=True)
     # An empty list means linear mode, so JS can just test `steps.length`.
     steps = traitlets.List(_num(), default_value=[]).tag(sync=True)
 
