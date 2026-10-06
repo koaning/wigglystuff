@@ -38,3 +38,14 @@ def test_values_non_exact_multiple_stops_below_max():
     # <= max_value rather than overshoot it.
     s = PlaySlider(min_value=0, max_value=2, step=0.7)
     assert s.values == [0.0, 0.7, 1.4]
+
+
+def test_values_precision_follows_step_and_min_value():
+    # Scientific-notation steps used to read as 0 decimals, collapsing every
+    # value to 0 or 1.
+    tiny = PlaySlider(min_value=0, max_value=0.0001, step=1e-05).values
+    assert len(tiny) == 11
+    assert tiny[1] == 1e-05 and tiny[-1] == 0.0001
+    # min_value's decimals count too, so 0.25 is not rounded down to 0.2.
+    offset = PlaySlider(min_value=0.25, max_value=0.65, step=0.1).values
+    assert offset == [0.25, 0.35, 0.45, 0.55, 0.65]

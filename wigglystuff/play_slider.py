@@ -1,3 +1,5 @@
+import math
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Optional
 
@@ -73,13 +75,18 @@ class PlaySlider(anywidget.AnyWidget):
     @property
     def values(self):
         """All discrete values from min_value to max_value (inclusive) at the current step."""
-        step_str = str(self.step)
-        precision = len(step_str.rstrip("0").split(".")[-1]) if "." in step_str else 0
-        result = []
-        v = self.min_value
-        # Round before comparing: 20 additions of 0.05 give 1.0000000000000002,
-        # which would skip max_value=1.
-        while round(v, precision) <= self.max_value:
-            result.append(round(v, precision))
-            v += self.step
-        return result
+        # Round to the decimals of both step and min_value, so min_value=0.25
+        # with step=0.1 keeps 0.25. repr/Decimal also reads "1e-05" correctly.
+        precision = max(_decimals(self.step), _decimals(self.min_value))
+        # Count the steps up front instead of summing floats: adding 0.05
+        # twenty times gives 1.0000000000000002, which would skip max_value=1.
+        n_steps = math.floor((self.max_value - self.min_value) / self.step + 1e-9)
+        return [
+            round(self.min_value + i * self.step, precision)
+            for i in range(n_steps + 1)
+        ]
+
+
+def _decimals(x):
+    """Number of decimal places in x, e.g. 0.25 -> 2 and 1e-05 -> 5."""
+    return max(0, -Decimal(repr(x)).as_tuple().exponent)
