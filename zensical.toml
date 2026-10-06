@@ -135,10 +135,10 @@ name = "GitHub"
 # ----------------------------------------------------------------------------
 # Plugins
 # ----------------------------------------------------------------------------
-[project.plugins.mkdocstrings.config.handlers.python]
+[project.plugins.mkdocstrings.handlers.python]
 paths = ["."]
 
-[project.plugins.mkdocstrings.config.handlers.python.options]
+[project.plugins.mkdocstrings.handlers.python.options]
 docstring_style = "google"
 merge_init_into_class = true
 show_source = true
