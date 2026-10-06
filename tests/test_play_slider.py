@@ -19,9 +19,8 @@ def test_construction_validates_bounds_and_step():
 
 
 def test_values_reaches_max_with_float_drift_step():
-    # 1 / 0.05 == 20 exactly, so max_value is an exact multiple of step,
-    # but repeated float addition drifts past 1.0 before reaching it 
-    # the fixed-point loop must still land on the endpoint.
+    # max_value is an exact multiple of step, but adding 0.05 twenty times
+    # gives 1.0000000000000002; the endpoint must still be included.
     s = PlaySlider(min_value=0, max_value=1, step=0.05)
     values = s.values
     assert len(values) == 21

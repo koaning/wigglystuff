@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `PlaySlider.values` now includes `max_value` when it is a multiple of `step`.
+  Float drift meant `PlaySlider(min_value=0, max_value=1, step=0.05).values`
+  stopped at `0.95` instead of `1.0`.
+
 ## [0.5.33] - 2026-10-06
 
 ### Added
@@ -31,12 +39,6 @@ All notable changes to this project will be documented in this file.
   used `Union([Int(), Float()])`, which silently coerced whole floats like `2.0`
   to `int` before the snapping validator ran; they now use a type-preserving
   trait so int-vs-float dtype is kept end to end.
-- `PlaySlider.values` now reaches `max_value` when it is an exact multiple of
-  `step` (e.g. `PlaySlider(min_value=0, max_value=1, step=0.05).values` used
-  to stop at `0.95`, never `1.0`). The loop accumulated `v += step` as a raw
-  float and compared it unrounded, so binary float drift could push `v` a
-  hair past `max_value` right when it should have landed on it exactly,
-  silently dropping the last value.
 
 ## [0.5.32] - 2026-09-04
 
