@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `PlaySlider.values` now includes `max_value` when it is a multiple of `step`.
+  Float drift meant `PlaySlider(min_value=0, max_value=1, step=0.05).values`
+  stopped at `0.95` instead of `1.0`. It also now rounds to the decimals of
+  both `step` and `min_value`, so `min_value=0.25, step=0.1` no longer rounds
+  values down to `0.2`, and scientific-notation steps like `1e-05` no longer
+  collapse every value to `0` or `1`. The frontend's snapping uses the same rule.
+
 ## [0.5.33] - 2026-10-06
 
 ### Added

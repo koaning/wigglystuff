@@ -57,10 +57,16 @@ function render({ model, el }) {
     btn.innerHTML = model.get("playing") ? PAUSE_ICON : PLAY_ICON;
   }
 
+  // Decimal places in x, e.g. 0.25 -> 2 and 1e-7 -> 7.
+  function decimals(x) {
+    const [mantissa, exponent] = String(x).toLowerCase().split("e");
+    const dot = mantissa.indexOf(".");
+    const digits = dot === -1 ? 0 : mantissa.length - dot - 1;
+    return Math.max(0, digits - Number(exponent || 0));
+  }
+
   function getPrecision() {
-    const s = String(model.get("step"));
-    const dot = s.indexOf(".");
-    return dot === -1 ? 0 : s.length - dot - 1;
+    return Math.max(decimals(model.get("step")), decimals(model.get("min_value")));
   }
 
   function snap(val) {
