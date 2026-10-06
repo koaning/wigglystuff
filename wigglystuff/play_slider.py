@@ -77,7 +77,9 @@ class PlaySlider(anywidget.AnyWidget):
         precision = len(step_str.rstrip("0").split(".")[-1]) if "." in step_str else 0
         result = []
         v = self.min_value
-        while v <= self.max_value:
+        # Round before comparing: 20 additions of 0.05 give 1.0000000000000002,
+        # which would skip max_value=1.
+        while round(v, precision) <= self.max_value:
             result.append(round(v, precision))
             v += self.step
         return result
