@@ -22,8 +22,9 @@ Bret Victor's Tangle. `TangleSlider` renders a number you drag left and right,
 is the same choice as a dropdown. Interpolate one into a markdown string and the
 sentence itself becomes the interface.
 
-See also: [TangleLatex](tangle-latex.md) for draggable numbers inside a KaTeX
-formula, [HoverSlider](hover-slider.md) for a conventional track that also reports
+See also: [TangleDistribution](tangle-distribution.md) for an inline number that
+carries a whole distribution (mean ± spread),
+[TangleLatex](tangle-latex.md) for draggable numbers inside a KaTeX formula, [HoverSlider](hover-slider.md) for a conventional track that also reports
 what the pointer is over, and [SortableList](sortable-list.md) for reordering a set
 of options instead of picking one.
 
