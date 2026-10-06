@@ -2,7 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.33] - 2026-10-06
+
+### Added
+
+- New `TangleDistribution` widget: a Tangle-style inline control that holds a
+  whole distribution instead of a single number. Drag left/right and up/down to
+  change its two parameters; while dragging, a small chart floats above the page
+  showing the starting shape (dashed) against the current one, with the axes
+  refitted every frame. Fourteen families are supported, named after
+  `scipy.stats` and using its parameters: `norm`, `lognorm`, `gamma`, `expon`,
+  `weibull_min`, `uniform`, `laplace`, `logistic`, `beta` (continuous) and
+  `poisson`, `binom`, `nbinom`, `geom`, `randint` (discrete, previewed as bars).
+  `params` holds the committed values and only changes on release, while
+  `live_params` and `dragging` stream the in-progress drag, so a notebook can
+  compare the old and new distribution live. The inline text comes from a
+  `template` (default `"{mean} ± {sd}"`) whose placeholders are the parameters
+  plus `mean`/`sd` (listed by `template_fields`). Built-in `cdf`, `ppf`,
+  `pdf`/`pmf`, `sample`, `mean` and `sd` need no scipy; the maths lives in
+  `wigglystuff/_distributions.py` and is tested against scipy. Demo at
+  `demos/tangle_distribution.py`.
 
 ### Fixed
 

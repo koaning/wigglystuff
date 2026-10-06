@@ -132,3 +132,7 @@ def test_requires_python_matches_tomllib_availability():
     pyproject = Path(__file__).parent.parent / "pyproject.toml"
     data = tomllib.loads(pyproject.read_text())
     assert data["project"]["requires-python"] == ">=3.11"
+
+
+def test_import_tangle_distribution():
+    from wigglystuff.tangle import TangleDistribution
