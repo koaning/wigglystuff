@@ -1,11 +1,20 @@
 ---
 title: "TangleDistribution: drag a whole distribution inline"
 description: TangleDistribution is a Tangle-style inline control that holds a probability distribution. Drag left/right and up/down to change its two parameters, watch a live preview of the shape, and read cdf, ppf, pdf/pmf and samples back in Python.
+image: tangledistribution
+image_alt: An inline 35.0 ± 1.5 °C value being dragged, with a floating chart comparing the dashed starting bell curve to the current one
 ---
 
 # TangleDistribution API
 
-Try it live: [open the demo notebook in molab](https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_distribution.py/wasm?utm_source=wigglystuff).
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="tangle_distribution" data-demo-title="TangleDistribution live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/tangledistribution.webp" alt="An inline 35.0 ± 1.5 °C value being dragged, with a floating chart comparing the dashed starting bell curve to the current one" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
 
 Sometimes a single number is too confident. `TangleDistribution` puts a whole
 distribution inside your prose, rendered as `50.0 ± 10.0` by default. Drag
