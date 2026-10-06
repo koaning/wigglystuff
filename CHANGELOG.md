@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `ParallelCoordinates` now correctly shows each column's right-click menu.
+
 ## [0.5.33] - 2026-10-06
 
 ### Added
