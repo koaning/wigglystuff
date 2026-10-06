@@ -1,11 +1,30 @@
 {% extends "base.html" %}
 
 {% block extrahead %}
-<!-- Privacy-friendly analytics by Plausible -->
-<script async src="https://plausible.io/js/pa-oJ2OItBA-IjJp4EDK88ZJ.js"></script>
+<!-- Privacy-friendly analytics by Plausible: plausible.io + a self-hosted instance -->
 <script>
-  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-  plausible.init()
+  {#- Each pa-*.js script bails out ("already initialized, skipping init") when
+      window.plausible is a live tracker, so two plain <script> tags would leave
+      the second one dead. Load them one after the other instead, each against a
+      fresh `{o: {}}` stub -- that makes the script init itself on load. Each
+      tracker keeps its own state and listeners; window.plausible just ends up
+      pointing at the last one. -#}
+  (function () {
+    var trackers = [
+      "https://plausible.io/js/pa-oJ2OItBA-IjJp4EDK88ZJ.js",
+      "https://plausible-host.exe.xyz/js/pa-R2omGWSQSqFs1g_RX7mqQ.js",
+    ];
+    function load(i) {
+      if (i >= trackers.length) return;
+      window.plausible = { o: {} };
+      var script = document.createElement("script");
+      script.async = true;
+      script.src = trackers[i];
+      script.onload = script.onerror = function () { load(i + 1); };
+      document.head.appendChild(script);
+    }
+    load(0);
+  })();
 </script>
 
 {#- Social cards. Zensical's base.html emits no og:/twitter: tags at all, so
