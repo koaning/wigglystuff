@@ -29,6 +29,9 @@ function toRgbString(cssColor) {
   return `rgb(${r}, ${g}, ${b})`;
 }
 
+// HiPlot hides categorical axes with more distinct values than this.
+const MAX_CATEGORIES = 80;
+
 const CATEGORICAL_COLOR_SCHEME = [
   "rgb(31, 119, 180)",
   "rgb(255, 127, 14)",
@@ -62,6 +65,38 @@ function render({ model, el }) {
   let clearPendingDragEndGuard = null;
   let filterHistoryListenerInstalled = false;
   let lastRenderedDark = null;
+
+  // HiPlot state that survives re-renders, with two fixes on top:
+  // - ParallelPlot sorts its saved column order backwards when it mounts, so
+  //   every re-render flipped the axes. Hand it the order pre-reversed.
+  // - "Use for coloring" in the column menu overwrites "color_by". Push that
+  //   choice back to the traitlet.
+  class WidgetState extends PersistentStateInMemory {
+    get(name, defValue) {
+      const value = super.get(name, defValue);
+      if (this.prefix + name === `${DefaultPlugins.PARALLEL_PLOT}.order` && Array.isArray(value)) {
+        return [...value].reverse();
+      }
+      return value;
+    }
+    set(name, value) {
+      const isMenuPick =
+        this.prefix + name === "color_by" &&
+        this.params.color_by !== undefined &&
+        value !== (model.get("color_by") || "");
+      super.set(name, value);
+      if (isMenuPick) {
+        // Wait for HiPlot to finish its update; the change re-renders.
+        setTimeout(() => {
+          model.set("color_by", value);
+          model.save_changes();
+        });
+      }
+    }
+    children(name) {
+      return new WidgetState(this.prefix + name, this.params);
+    }
+  }
 
   function applyHeaderLayout() {
     const headerRow = el.querySelector(".pc-wrapper .container-fluid .d-flex.flex-wrap");
@@ -224,6 +259,22 @@ function render({ model, el }) {
     };
   }
 
+  // A column switched to "Categorical" with more than MAX_CATEGORIES values
+  // gets hidden on the next render, and HiPlot won't offer to restore it. So
+  // drop that item from the column menu. Each HiPlot mount has its own menu.
+  const categoricalGuard = {};
+  function addCategoricalGuard(hiplot) {
+    const menu = hiplot.contextMenuRef.current;
+    menu.removeCallbacks(categoricalGuard);
+    menu.addCallback((column, cm) => {
+      const pd = hiplot.state.params_def[column];
+      if (!pd || pd.distinct_values.length <= MAX_CATEGORIES) return;
+      cm.querySelectorAll(".dropdown-item:not(.disabled)").forEach((item) => {
+        if (item.textContent === "Categorical") item.remove();
+      });
+    }, categoricalGuard);
+  }
+
   function ensureFilterHistoryListener() {
     if (filterHistoryListenerInstalled) return;
 
@@ -352,6 +403,11 @@ function render({ model, el }) {
     const width = model.get("width") || 0;
     const dark = isDark();
     persistentState[`${DefaultPlugins.PARALLEL_PLOT}.height`] = height;
+    // HiPlot prefers its persisted color column over the experiment's, so
+    // reset it from the model or Python-side color_by changes are ignored.
+    const colorBy = model.get("color_by") || "";
+    if (colorBy) persistentState.color_by = colorBy;
+    else delete persistentState.color_by;
     lastRenderedDark = dark;
 
     if (!experiment) {
@@ -372,7 +428,10 @@ function render({ model, el }) {
         style: { width: width > 0 ? `${width}px` : "100%" },
       },
         React.createElement(HiPlot, {
-          ref: hiplotRef,
+          ref: (instance) => {
+            hiplotRef.current = instance;
+            if (instance) addCategoricalGuard(instance);
+          },
           key:
             (model.get("data") || []).length +
             "_" +
@@ -387,7 +446,7 @@ function render({ model, el }) {
           plugins,
           dark,
           onChange: buildOnChange(),
-          persistentState: new PersistentStateInMemory("", persistentState),
+          persistentState: new WidgetState("", persistentState),
           asserts: false,
         })
       )

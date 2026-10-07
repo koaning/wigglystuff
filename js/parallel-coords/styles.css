@@ -24,6 +24,8 @@
     --pc-restore: #6b7280;
     --pc-restore-bg: #f3f4f6;
     --pc-grip: #9ca3af;
+    --pc-menu-shadow: 0 10px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+    position: relative;
 }
 
 .pc-wrapper .hip_thm--dark {
@@ -42,6 +44,7 @@
     --pc-restore: #d1d5db;
     --pc-restore-bg: #374151;
     --pc-grip: #9ca3af;
+    --pc-menu-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
 }
 
 .pc-wrapper .pplot-root {
@@ -289,4 +292,72 @@
 .pc-wrapper .label-name + div {
     display: none !important;
     visibility: hidden !important;
+}
+
+.pc-wrapper .dropdown-menu.context-menu {
+    background: var(--pc-bg);
+    border: 1px solid var(--pc-border);
+    border-radius: 8px;
+    box-shadow: var(--pc-menu-shadow);
+    color: var(--pc-text);
+    font-family: inherit;
+    font-size: 12px !important; /* beats HiPlot's inline font-size: 16px */
+    margin: 0;
+    min-width: 184px;
+    padding: 4px;
+    position: absolute;
+    z-index: 20;
+}
+
+.pc-wrapper .context-menu .dropdown-header {
+    color: var(--pc-text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin: 0;
+    padding: 6px 8px 4px;
+    text-transform: uppercase;
+}
+
+.pc-wrapper .context-menu .dropdown-item {
+    background: transparent;
+    border-radius: 5px;
+    color: var(--pc-text);
+    cursor: pointer;
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    padding: 5px 10px 5px 26px;
+    position: relative;
+}
+
+.pc-wrapper .context-menu .dropdown-item:hover,
+.pc-wrapper .context-menu .dropdown-item:focus,
+.pc-wrapper .context-menu .dropdown-item:active {
+    background: var(--pc-hover);
+    color: var(--pc-text);
+}
+
+.pc-wrapper .context-menu .dropdown-item:focus-visible {
+    outline: 2px solid var(--pc-focus);
+    outline-offset: -2px;
+}
+
+/* HiPlot disables the item matching the current state (active scaling, current color column). */
+.pc-wrapper .context-menu .dropdown-item.disabled {
+    color: var(--pc-text);
+    font-weight: 600;
+}
+
+.pc-wrapper .context-menu .dropdown-item.disabled::before {
+    color: var(--pc-focus);
+    content: "✓";
+    left: 9px;
+    position: absolute;
+}
+
+.pc-wrapper .context-menu .dropdown-divider {
+    border-top: 1px solid var(--pc-border);
+    margin: 4px 0;
 }

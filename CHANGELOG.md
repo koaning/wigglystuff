@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `ParallelCoordinates`' column right-click menu is now styled to match the
+  widget and opens at the cursor. "Use for coloring" in that menu now updates
+  `color_by`, and setting `color_by` from Python after the first render now
+  recolors the plot. The axes no longer flip order on every re-render (theme
+  toggle, `height` or `color_by` change), and the menu no longer offers
+  "Categorical" for numeric columns with more than 80 distinct values, which
+  HiPlot would hide for good.
 - `PlaySlider.values` now includes `max_value` when it is a multiple of `step`.
   Float drift meant `PlaySlider(min_value=0, max_value=1, step=0.05).values`
   stopped at `0.95` instead of `1.0`. It also now rounds to the decimals of
