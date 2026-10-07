@@ -314,6 +314,7 @@
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.04em;
+    margin: 0;
     padding: 6px 8px 4px;
     text-transform: uppercase;
 }
@@ -346,7 +347,6 @@
 /* HiPlot disables the item matching the current state (active scaling, current color column). */
 .pc-wrapper .context-menu .dropdown-item.disabled {
     color: var(--pc-text);
-    cursor: default;
     font-weight: 600;
 }
 
