@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- New `TraceView` widget for OpenTelemetry traces. Each span is a row in an
+  indented parent/child tree with its state, a timeline bar, and its duration;
+  span links show as dashed curves. Add `view.span_processor()` to a
+  `TracerProvider` to stream spans in live as they start and end (running spans
+  grow in place), or load existing data with `TraceView.from_otlp(...)` (OTLP/JSON
+  dicts, files, or JSON lines; no OpenTelemetry install needed) or
+  `TraceView.from_spans(...)`. Includes a replay scrubber, collapsible subtrees,
+  a trace picker, a details panel with attributes and events, and a progress bar
+  for spans with `progress.done`/`progress.total` attributes. Install the
+  optional `otel` extra (`wigglystuff[otel]`) for live capture.
+
 ## [0.5.34] - 2026-10-07
 
 ### Fixed
