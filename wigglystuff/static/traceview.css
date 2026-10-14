@@ -435,3 +435,10 @@
   --tv-control: #26282c;
   --tv-shadow: rgba(0, 0, 0, 0.4);
 }
+
+/* --- keyboard focus ---------------------------------------------------------- */
+.traceview:focus { outline: none; }
+.traceview:focus-visible {
+  outline: 2px solid var(--tv-run-bar);
+  outline-offset: 2px;
+}

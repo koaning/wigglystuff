@@ -97,6 +97,7 @@ function formatValue(v) {
 
 function render({ model, el: host }) {
   const root = el("div", "traceview");
+  root.tabIndex = 0; // focusable: keyboard shortcuts only fire once focused.
   host.appendChild(root);
 
   // The header controls are built once and only updated on redraw: replacing a
@@ -133,6 +134,9 @@ function render({ model, el: host }) {
   let lastFrameT = 0;
   let scrollTop = 0;
   let pickerKey = "";
+  let lastRows = []; // visible rows as of the last draw, for keyboard moves
+  let scrollToSelected = false;
+  let focused = false;
 
   function current() {
     const traces = groupTraces(model.get("spans") || []);
@@ -202,7 +206,7 @@ function render({ model, el: host }) {
     model.set("selected_span_id", null);
     model.save_changes();
   });
-  playBtn.addEventListener("click", () => {
+  function togglePlay() {
     if (playing) {
       stopPlaying();
       setCursor(localCursor, true);
@@ -210,7 +214,8 @@ function render({ model, el: host }) {
       startPlaying();
     }
     draw();
-  });
+  }
+  playBtn.addEventListener("click", togglePlay);
   scrub.addEventListener("input", () => {
     stopPlaying();
     const v = Number(scrub.value);
@@ -231,6 +236,9 @@ function render({ model, el: host }) {
     downKey = ev.button === 0 ? actionKey(ev) : null;
   });
   content.addEventListener("pointerup", (ev) => {
+    // Keep focus on the widget itself: a clicked toggle/close button is replaced
+    // on the next draw, which would drop focus (and the shortcuts) on the page.
+    root.focus({ preventScroll: true });
     const key = actionKey(ev);
     if (key && key === downKey) {
       const [action, spanId] = key.split(":");
@@ -250,10 +258,81 @@ function render({ model, el: host }) {
   });
 
   function select(spanId) {
-    const next = model.get("selected_span_id") === spanId ? null : spanId;
-    model.set("selected_span_id", next);
+    setSelected(model.get("selected_span_id") === spanId ? null : spanId);
+  }
+
+  function setSelected(spanId) {
+    model.set("selected_span_id", spanId);
     model.save_changes();
   }
+
+  // --- keyboard (scoped to this widget, never the whole notebook) ------------
+  // Tree-view keys, like a file explorer: arrows move and fold, Enter folds,
+  // Esc closes the details, Space replays.
+  root.addEventListener("focusin", () => {
+    if (!focused) {
+      focused = true;
+      draw();
+    }
+  });
+  root.addEventListener("focusout", (ev) => {
+    if (focused && !root.contains(ev.relatedTarget)) {
+      focused = false;
+      draw();
+    }
+  });
+  root.addEventListener("keydown", (ev) => {
+    if (ev.target === picker || ev.target === scrub) return; // they use arrows themselves
+    if (ev.target === playBtn && (ev.key === " " || ev.key === "Enter")) return;
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    const rows = lastRows;
+    const row = rows.find((r) => r.span.span_id === model.get("selected_span_id"));
+    const moveTo = (r) => {
+      if (!r) return;
+      scrollToSelected = true;
+      setSelected(r.span.span_id);
+    };
+    const isCollapsed = (r) => (model.get("collapsed") || []).includes(r.span.span_id);
+    switch (ev.key) {
+      case "ArrowDown":
+      case "j":
+        moveTo(row ? rows[row.index + 1] : rows[0]);
+        break;
+      case "ArrowUp":
+      case "k":
+        moveTo(row ? rows[row.index - 1] : rows[rows.length - 1]);
+        break;
+      case "ArrowRight":
+        if (!row || !row.nKids) break;
+        if (isCollapsed(row)) toggleCollapsed(row.span.span_id);
+        else moveTo(rows[row.index + 1]);
+        break;
+      case "ArrowLeft":
+        if (!row) break;
+        if (row.nKids && !isCollapsed(row)) toggleCollapsed(row.span.span_id);
+        else moveTo(row.parentRow);
+        break;
+      case "Home":
+        moveTo(rows[0]);
+        break;
+      case "End":
+        moveTo(rows[rows.length - 1]);
+        break;
+      case "Enter":
+        if (row && row.nKids) toggleCollapsed(row.span.span_id);
+        break;
+      case "Escape":
+        if (model.get("selected_span_id") === null) return; // let Esc through
+        setSelected(null);
+        break;
+      case " ":
+        if (current().trace) togglePlay();
+        break;
+      default:
+        return;
+    }
+    ev.preventDefault();
+  });
 
   function toggleCollapsed(spanId) {
     const list = model.get("collapsed") || [];
@@ -362,6 +441,7 @@ function render({ model, el: host }) {
     // expanding/collapsing a row never shifts anything under the pointer.
     const collapsed = new Set(model.get("collapsed") || []);
     const rows = buildRows(trace.spans, collapsed);
+    lastRows = rows;
     const isNum = (v) => typeof v === "number" && isFinite(v);
     const hasProgress = trace.spans.some(
       (s) => isNum(s.attributes["progress.done"]) && isNum(s.attributes["progress.total"]),
@@ -410,6 +490,7 @@ function render({ model, el: host }) {
     const rowById = new Map(rows.map((r) => [r.span.span_id, r]));
     const nameById = new Map(trace.spans.map((s) => [s.span_id, s.name]));
     const ticksList = ticks(scale);
+    let scrollTarget = null;
 
     for (const row of rows) {
       const s = row.span;
@@ -453,6 +534,7 @@ function render({ model, el: host }) {
       const isCollapsed = collapsed.has(s.span_id);
       if (row.nKids) {
         const toggle = action(el("button", "tv-toggle", isCollapsed ? "+" : "−"), "toggle", s.span_id);
+        toggle.tabIndex = -1; // rebuilt every draw, so it can't hold focus; use ←/→ instead
         toggle.title = isCollapsed ? `Expand ${row.nKids} child spans` : "Collapse";
         name.appendChild(toggle);
       } else {
@@ -530,9 +612,12 @@ function render({ model, el: host }) {
 
       line.appendChild(el("div", "tv-right tv-dur", st.state === "pending" ? "—" : fmt(st.end - st.start)));
       body.appendChild(line);
+      if (isSelected && scrollToSelected) scrollTarget = line;
     }
     content.appendChild(scroller);
     scroller.scrollTop = scrollTop;
+    if (scrollTarget) scrollTarget.scrollIntoView({ block: "nearest" });
+    scrollToSelected = false;
 
     // --- details drawer for the selected span, else the latest event ----------
     const selected = trace.spans.find((s) => s.span_id === selectedId);
@@ -543,7 +628,9 @@ function render({ model, el: host }) {
 
     const foot = el("div", "tv-foot");
     foot.appendChild(el("span", null, `trace ${trace.id.slice(0, 12)} · ${fmt(dur)}`));
-    foot.appendChild(el("span", null, selected ? "click the row again to close" : "click a row for details"));
+    let hint = selected ? "click the row again to close" : "click a row for details";
+    if (focused) hint = "↑↓ move · ←→ fold · space replay" + (selected ? " · esc close" : "");
+    foot.appendChild(el("span", null, hint));
     content.appendChild(foot);
 
     scheduleLive(ext.anyRunning && cursor === null && !playing);
@@ -587,6 +674,7 @@ function render({ model, el: host }) {
     ].filter(Boolean);
     top.appendChild(el("span", "tv-muted", facts.join(" · ")));
     const close = action(el("button", "tv-close", "×"), "select", s.span_id);
+    close.tabIndex = -1; // Esc closes from the keyboard
     close.title = "Close";
     top.appendChild(close);
     box.appendChild(top);
