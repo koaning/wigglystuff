@@ -62,6 +62,7 @@ from .tangle_function import TangleFunction
 from .text_compare import TextCompare
 from .treemap import Treemap
 from .three_widget import ThreeWidget
+from .trace_view import TraceView
 from .widget_dag import WidgetDAG
 from .utils import forecast_chart
 from .webcam_capture import WebcamCapture
@@ -132,6 +133,7 @@ __all__ = [
     "Treemap",
     "WebkitSpeechToTextWidget",
     "ThreeWidget",
+    "TraceView",
     "WidgetDAG",
     "WebcamCapture",
     "HoverSlider",

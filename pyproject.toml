@@ -1,6 +1,6 @@
 [project]
 name = "wigglystuff"
-version = "0.5.34"
+version = "0.5.35"
 description = "Collection of Anywidget Widgets"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -35,6 +35,12 @@ torch = [
 neo4j = [
     "neo4j>=5.0.0",
 ]
+otel = [
+    "opentelemetry-sdk>=1.20.0",
+]
+weave = [
+    "weave>=0.53.12",
+]
 pytest = [
     "pytest>=8.3.3",
 ]
@@ -42,7 +48,9 @@ test = [
     "pytest>=8.3.3",
     "pytest-check-links>=0.10.0",
     "marimo>=0.23.3",
+    "opentelemetry-sdk>=1.20.0",
     "scikit-learn>=1.0",
+    "weave>=0.53.12",
     "matplotlib>=3.0",
     "pandas>=2.3.3",
     "polars>=1.36.1",
