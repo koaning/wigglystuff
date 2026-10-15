@@ -44,9 +44,11 @@ def _(mo):
     ### Live, in-process
 
     `view.span_processor()` is an OTel `SpanProcessor`: add it to a
-    `TracerProvider` and spans stream into the widget as they start and end.
-    The cell below runs a fake research agent — rerun it to get another trace,
-    then use the dropdown to switch between runs.
+    `TracerProvider` once, and from then on every
+    `with tracer.start_as_current_span(...)` block made through that provider
+    streams into the widget as spans start and end. The cell below runs a fake
+    research agent — rerun it to get another trace, then use the dropdown to
+    switch between runs.
     """)
     return
 
@@ -68,6 +70,18 @@ def _(live_view, mo):
     run_agent = mo.ui.run_button(label="Run the agent again")
     mo.vstack([live_view, run_agent])
     return (run_agent,)
+
+
+@app.cell
+def _(fake_llm, tracer):
+    with tracer.start_as_current_span("agent.run") as _run:
+        fake_llm(
+            "llm.answer",
+            "Summarize growth per capital.",
+            "Dublin, Madrid and Warsaw grew fastest; Riga and Vilnius shrank.",
+            1.0,
+        )
+    return
 
 
 @app.cell(hide_code=True)
@@ -123,7 +137,7 @@ def _(run_agent, tracer):
             "Dublin, Madrid and Warsaw grew fastest; Riga and Vilnius shrank.",
             1.0,
         )
-    return
+    return (fake_llm,)
 
 
 @app.cell(hide_code=True)

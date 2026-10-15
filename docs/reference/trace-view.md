@@ -26,10 +26,13 @@ queue consumer pointing at the producer — are drawn as dashed curves.
 There are three ways to get spans in:
 
 - **Live, in-process** — `view.span_processor()` is an OpenTelemetry
-  `SpanProcessor`. Add it to a `TracerProvider` and spans stream into the widget
-  as they start and end; running spans grow live. Needs `opentelemetry-sdk`
-  (`pip install wigglystuff[otel]`). Anything built on OpenTelemetry, such as
-  Logfire or Pydantic AI, can use the same processor.
+  `SpanProcessor`. Add it to a `TracerProvider` once; from then on every span
+  made by that provider's tracers streams into the widget as it starts and
+  ends, and running spans grow live. There is no widget-level context manager
+  for this because OpenTelemetry already has one: `with
+  tracer.start_as_current_span(...)` is the block, and the widget sees it.
+  Needs `opentelemetry-sdk` (`pip install wigglystuff[otel]`). Anything built
+  on OpenTelemetry, such as Logfire or Pydantic AI, can use the same processor.
 - **From data** — `TraceView.from_otlp(...)` reads OTLP/JSON (a dict, a list of
   dicts, a file, or the JSON lines the Collector's file exporter writes), and
   `TraceView.from_spans(...)` takes SDK spans such as
@@ -37,8 +40,13 @@ There are three ways to get spans in:
   OpenTelemetry install.
 - **From W&B Weave** — `with view.capture_weave():` shows the calls of any
   `@weave.op` function called inside the block, live, after `weave.init(...)`
-  (`pip install wigglystuff[weave]`). `TraceView.from_weave(...)` loads stored
-  calls from `client.get_calls(...)` (or the service API's call dicts).
+  (`pip install wigglystuff[weave]`). Weave has no processor hook, so this
+  context manager is the Weave stand-in for `add_span_processor`: it hooks the
+  Weave client for the duration of the block and unhooks it afterwards. The
+  spans themselves still come from your `@weave.op` calls, just as they come
+  from `start_as_current_span` with OpenTelemetry. `TraceView.from_weave(...)`
+  loads stored calls from `client.get_calls(...)` (or the service API's call
+  dicts).
 
 ```python
 from opentelemetry.sdk.trace import TracerProvider
@@ -49,7 +57,7 @@ provider = TracerProvider()
 provider.add_span_processor(view.span_processor())
 tracer = provider.get_tracer("notebook")
 
-with tracer.start_as_current_span("agent.run"):
+with tracer.start_as_current_span("agent.run"):  # this block is the trace
     ...
 ```
 

@@ -44,7 +44,10 @@ def _(mo):
 
     Call your `@weave.op` as usual, inside `with view.capture_weave():`.
     The calls made in that block stream into the widget as each op starts
-    and ends, and still go to W&B as usual. This part needs a W&B account
+    and ends, and still go to W&B as usual. Weave has no span-processor hook,
+    so this context manager is the Weave counterpart of
+    `provider.add_span_processor(view.span_processor())` on the OpenTelemetry
+    side, scoped to one block. This part needs a W&B account
     (`wandb login` or `WANDB_API_KEY`).
     """)
     return
@@ -76,7 +79,7 @@ def _(TraceView, mo):
     live_view = TraceView(title="support_bot")
     run_bot = mo.ui.run_button(label="Answer a ticket")
     mo.vstack([live_view, run_bot])
-    return live_view, run_bot
+    return (live_view,)
 
 
 @app.cell
@@ -115,17 +118,21 @@ def _(mo):
     mo.md(r"""
     ### Seeing changes live
 
-    Press **Answer a ticket** above: the cell below runs the bot inside
-    `live_view.capture_weave()`, so each call shows up in the widget as it happens.
+    You can also trigger a change manually using the `live_view.capture_weave()` context manager.
     """)
     return
 
 
 @app.cell
-def _(answer_ticket, live_view, mo, project, run_bot):
+def _(live_view):
+    live_view
+    return
+
+
+@app.cell
+def _(answer_ticket, live_view, mo, project):
     # Guard on `project`, not `client`: when weave.init was skipped, `client` does not exist yet.
     mo.stop(not project.value, mo.md("*Enter a W&B project above first.*"))
-    mo.stop(not run_bot.value, mo.md("*Press the button above to run the bot.*"))
     with live_view.capture_weave():
         # .call() also returns the Call record, so the cell below knows which trace to load.
         _answer, root_call = answer_ticket.call("Where is my order #1042?")

@@ -246,7 +246,10 @@ class TraceView(anywidget.AnyWidget):
     Click a row for its attributes and events; drag the replay scrubber (or press
     *Replay*) to watch the trace unfold.
 
-    Live, in-process (requires ``opentelemetry-sdk``)::
+    Live, in-process (requires ``opentelemetry-sdk``). Attach the processor
+    once; after that every ``with tracer.start_as_current_span(...)`` block
+    made through that provider shows up, so no widget-level context manager
+    is needed::
 
         view = TraceView(title="agent run")
         provider.add_span_processor(view.span_processor())
@@ -258,7 +261,9 @@ class TraceView(anywidget.AnyWidget):
         TraceView.from_spans(exporter.get_finished_spans())
         TraceView.from_weave(client.get_calls(...))     # W&B Weave calls
 
-    W&B Weave ``@weave.op`` calls, live (after ``weave.init(...)``)::
+    W&B Weave ``@weave.op`` calls, live (after ``weave.init(...)``). Weave has
+    no processor hook, so this context manager plays the role of
+    ``add_span_processor`` for the duration of the block::
 
         with view.capture_weave():
             answer_ticket("Where is my order?")
