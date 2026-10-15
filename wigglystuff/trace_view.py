@@ -4,8 +4,10 @@ import base64
 import json
 import threading
 import time
+from contextlib import contextmanager
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Iterable, Iterator
 
 import anywidget
 import traitlets
@@ -22,8 +24,12 @@ def _json_safe(value: Any) -> Any:
         return {str(k): _json_safe(v) for k, v in value.items()}
     if isinstance(value, bytes):
         return value.hex()
-    if value is None or isinstance(value, (str, bool, int, float)):
-        return value
+    if value is None:
+        return None
+    # Rebuild subclasses (Weave's BoxedStr/BoxedInt) as plain values so they serialize.
+    for kind in (bool, int, float, str):
+        if isinstance(value, kind):
+            return kind(value)
     return str(value)
 
 
@@ -139,6 +145,66 @@ def span_to_dict(span: Any) -> dict[str, Any]:
     }
 
 
+def _weave_ms(value: Any) -> float | None:
+    """Weave timestamps are datetimes (SDK) or ISO strings (service API JSON)."""
+    if value is None:
+        return None
+    if isinstance(value, str):
+        value = datetime.fromisoformat(value)
+    return value.timestamp() * 1000
+
+
+def call_to_dict(call: Any) -> dict[str, Any]:
+    """Normalize a W&B Weave call (a ``client.get_calls()`` item or its dict form)."""
+
+    def get(key: str) -> Any:
+        return call.get(key) if isinstance(call, dict) else getattr(call, key, None)
+
+    # op_name is a ref like "weave:///entity/project/op/my_fn:digest"; keep "my_fn".
+    op_name = get("op_name") or ""
+    short_name = op_name.rsplit("/", 1)[-1].split(":", 1)[0]
+    # Weave's own bookkeeping ("weave" metadata, per-status call counts) is noise here.
+    summary = {k: v for k, v in (get("summary") or {}).items() if k not in ("weave", "status_counts")}
+    extra = {k: v for k, v in (get("attributes") or {}).items() if k != "weave"}
+    end_ms = _weave_ms(get("ended_at"))
+
+    # Weave stores exceptions as a JSON string: {"type", "message", "traceback": [frames]}.
+    # Show it like an OTel exception event so the details panel lists the stack.
+    exception = get("exception")
+    message, events = "", []
+    if exception:
+        try:
+            info = json.loads(exception)
+        except (TypeError, ValueError):
+            info = {"message": str(exception)}
+        message = ": ".join(str(part) for part in (info.get("type"), info.get("message")) if part)
+        stack = "\n".join(
+            f'File "{f.get("filename")}", line {f.get("line_number")}, in {f.get("function_name")}\n    {f.get("text")}'
+            for f in info.get("traceback") or []
+        )
+        attrs = {"exception.type": info.get("type"), "exception.message": info.get("message"), "exception.stacktrace": stack}
+        events = [{"t_ms": end_ms or 0.0, "name": "exception", "attributes": {k: v for k, v in attrs.items() if v}}]
+    # Calls from client.get_calls() hold boxed values (BoxedStr ids, BoxedInt inputs),
+    # so the whole dict goes through _json_safe, not just the attributes.
+    return _json_safe(
+        {
+            "span_id": get("id"),
+            "parent_id": get("parent_id"),
+            "trace_id": get("trace_id"),
+            "name": get("display_name") or short_name,
+            "service": None,
+            "kind": "internal",
+            "start_ms": _weave_ms(get("started_at")) or 0.0,
+            "end_ms": end_ms,
+            "status": "error" if exception else "ok",
+            "status_message": message,
+            "attributes": {"op_name": op_name, "inputs": get("inputs"), "output": get("output"), "summary": summary, **extra},
+            "events": events,
+            "links": [],
+        }
+    )
+
+
 class TraceView(anywidget.AnyWidget):
     """Waterfall viewer for OpenTelemetry traces, live or loaded from a file.
 
@@ -157,6 +223,12 @@ class TraceView(anywidget.AnyWidget):
 
         TraceView.from_otlp("traces.json")              # OTLP/JSON or JSON lines
         TraceView.from_spans(exporter.get_finished_spans())
+        TraceView.from_weave(client.get_calls(...))     # W&B Weave calls
+
+    W&B Weave ``@weave.op`` calls, live (after ``weave.init(...)``)::
+
+        with view.capture_weave():
+            answer_ticket("Where is my order?")
 
     A span with numeric ``progress.done`` and ``progress.total`` attributes gets
     a progress bar.
@@ -236,6 +308,15 @@ class TraceView(anywidget.AnyWidget):
         """Build from OpenTelemetry SDK spans, e.g. ``InMemorySpanExporter.get_finished_spans()``."""
         return cls([span_to_dict(span) for span in spans], **kwargs)
 
+    @classmethod
+    def from_weave(cls, calls: Iterable[Any], **kwargs: Any) -> "TraceView":
+        """Build from W&B Weave calls, e.g. ``client.get_calls(filter={"trace_ids": [...]})``.
+
+        Accepts the SDK's call objects or plain dicts (service API JSON); no
+        ``weave`` install needed for the dict form.
+        """
+        return cls([call_to_dict(call) for call in calls], **kwargs)
+
     def span_processor(self) -> Any:
         """An OpenTelemetry ``SpanProcessor`` that streams spans into this widget.
 
@@ -256,6 +337,38 @@ class TraceView(anywidget.AnyWidget):
                 view._record(span)
 
         return TraceViewProcessor()
+
+    @contextmanager
+    def capture_weave(self) -> Iterator[None]:
+        """Show the W&B Weave ``@weave.op`` calls made inside this ``with`` block, live.
+
+        Needs ``weave.init(...)`` first; the calls still go to W&B as usual.
+        Weave has no public call hook, so while the block runs this wraps the
+        client's ``create_call``/``finish_call``.
+        """
+        import weave
+
+        client = weave.get_client()
+        if client is None:
+            raise RuntimeError("no Weave client: call weave.init(...) first")
+        create_call, finish_call = client.create_call, client.finish_call
+
+        def create_call_and_record(*args: Any, **kwargs: Any) -> Any:
+            call = create_call(*args, **kwargs)
+            self._record_call(call)
+            return call
+
+        def finish_call_and_record(call: Any, *args: Any, **kwargs: Any) -> Any:
+            result = finish_call(call, *args, **kwargs)
+            self._record_call(call)
+            return result
+
+        client.create_call, client.finish_call = create_call_and_record, finish_call_and_record
+        try:
+            yield
+        finally:
+            client.create_call, client.finish_call = create_call, finish_call
+            self._sync()  # send any update the throttle held back
 
     def add_spans(self, spans: Iterable[Any]) -> None:
         """Add (or update, by ``span_id``) OpenTelemetry SDK spans or span dicts."""
@@ -292,6 +405,13 @@ class TraceView(anywidget.AnyWidget):
                 self._running[data["span_id"]] = span
             else:
                 self._running.pop(data["span_id"], None)
+        if time.monotonic() - self._last_sync >= self.sync_throttle_ms / 1000:
+            self._sync()
+
+    def _record_call(self, call: Any) -> None:
+        data = call_to_dict(call)
+        with self._lock:
+            self._by_id[data["span_id"]] = data
         if time.monotonic() - self._last_sync >= self.sync_throttle_ms / 1000:
             self._sync()
 

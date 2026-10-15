@@ -2,7 +2,7 @@
 title: "TraceView: visualize OpenTelemetry traces"
 description: TraceView draws OpenTelemetry traces in marimo as a live waterfall, one row per span with a parent/child tree, states, timeline bars, a replay scrubber, and a details panel. Stream spans in-process or load OTLP/JSON.
 image: traceview
-image_alt: TraceView widget showing a checkout trace across four services as an indented span tree with timeline bars
+image_alt: TraceView widget showing a support-bot trace as an indented span tree, with a failed lookup_order span open in the details panel
 ---
 
 # TraceView API
@@ -10,7 +10,7 @@ image_alt: TraceView widget showing a checkout trace across four services as an 
 <!-- no-md -->
 <div class="wiggly-demo-wrap">
 <button class="wiggly-demo" type="button" data-demo="traceview" data-demo-title="TraceView live demo">
-<img class="wiggly-demo__poster" src="../assets/gallery/traceview.webp" alt="TraceView widget showing a checkout trace across four services as an indented span tree with timeline bars" decoding="async">
+<img class="wiggly-demo__poster" src="../assets/gallery/traceview.webp" alt="TraceView widget showing a support-bot trace as an indented span tree, with a failed lookup_order span open in the details panel" decoding="async">
 <span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
 </button>
 </div>

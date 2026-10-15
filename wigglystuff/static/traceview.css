@@ -130,7 +130,7 @@
   font-size: 12px;
   height: 24px;
 }
-.traceview .tv-right { text-align: right; }
+.traceview .tv-right { text-align: right; padding-right: 10px; }
 .traceview .tv-axis { position: relative; height: 100%; }
 .traceview .tv-axis span {
   position: absolute;

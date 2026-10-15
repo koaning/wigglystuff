@@ -16,6 +16,7 @@ classifiers = [
 dependencies = [
     "anywidget>=0.11.0",
     "drawdata",
+    "weave>=0.53.12",
 ]
 
 [project.optional-dependencies]
