@@ -1,6 +1,17 @@
 import json
+from datetime import datetime, timezone
+from types import SimpleNamespace
+from unittest.mock import MagicMock
 
 import pytest
+import weave
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+from weave.trace.box import box
+from weave.trace.context import weave_client_context
+from weave.trace.weave_client import WeaveClient
 
 from wigglystuff import TraceView
 
@@ -82,9 +93,6 @@ def test_selected_span_clear_and_validation():
 
 
 def test_span_processor_streams_running_and_ended_spans():
-    pytest.importorskip("opentelemetry.sdk")
-    from opentelemetry.sdk.resources import Resource
-    from opentelemetry.sdk.trace import TracerProvider
 
     view = TraceView()
     provider = TracerProvider(resource=Resource.create({"service.name": "demo"}))
@@ -105,9 +113,6 @@ def test_span_processor_streams_running_and_ended_spans():
     assert child["parent_id"] == root["span_id"]
 
     # from_spans/add_spans take the SDK's finished spans too
-    from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-    from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-
     exporter = InMemorySpanExporter()
     provider.add_span_processor(SimpleSpanProcessor(exporter))
     with tracer.start_as_current_span("again"):
@@ -118,14 +123,19 @@ def test_span_processor_streams_running_and_ended_spans():
     assert len(loaded.spans) == 1  # same span_id is updated, not duplicated
 
 
-class _Boxed(str):
-    """Stands in for weave's BoxedStr: a str subclass that must not leak to the browser."""
+@pytest.fixture
+def weave_client():
+    """A real WeaveClient whose trace server is a mock, so no W&B login is needed."""
+    server = MagicMock()
+    for method in ("obj_create", "file_create", "table_create"):
+        getattr(server, method).return_value.digest = "abc123"
+    client = WeaveClient("entity", "project", server, ensure_project_exists=False)
+    weave_client_context.set_weave_client_global(client)
+    yield client
+    weave_client_context.set_weave_client_global(None)
 
 
 def test_from_weave_normalizes_calls():
-    from datetime import datetime, timezone
-    from types import SimpleNamespace
-
     failed = {
         "id": "c2",
         "parent_id": "c1",
@@ -139,14 +149,16 @@ def test_from_weave_normalizes_calls():
         "summary": {"weave": {"status": "error"}, "status_counts": {}, "usage": {"m": {"prompt_tokens": 5}}},
         "attributes": {"weave": {"os": "mac"}, "env": "prod"},
     }
+    # client.get_calls() hands back boxed values (BoxedStr ids, BoxedInt inputs, ...)
     running = SimpleNamespace(
-        id=_Boxed("c1"), parent_id=None, trace_id=_Boxed("t1"), op_name="weave:///acme/bot/op/answer:abc",
-        display_name="Answer ticket", started_at=datetime(2026, 10, 14, 9, tzinfo=timezone.utc), ended_at=None,
-        inputs={}, output=None, exception=None, summary=None, attributes=None,
+        id=box("c1"), parent_id=None, trace_id=box("t1"), op_name="weave:///acme/bot/op/answer:abc",
+        display_name="Answer ticket", started_at=box(datetime(2026, 10, 14, 9, tzinfo=timezone.utc)), ended_at=None,
+        inputs={"attempt": box(1)}, output=None, exception=None, summary=None, attributes=None,
     )
     root, child = TraceView.from_weave([running, failed]).spans
 
     assert type(root["span_id"]) is str and type(root["trace_id"]) is str
+    assert type(root["attributes"]["inputs"]["attempt"]) is int
     assert root["name"] == "Answer ticket" and root["end_ms"] is None and root["status"] == "ok"
     assert child["name"] == "lookup_order" and child["parent_id"] == "c1"
     assert child["end_ms"] - child["start_ms"] == 500
@@ -156,43 +168,37 @@ def test_from_weave_normalizes_calls():
     assert child["attributes"]["env"] == "prod" and "weave" not in child["attributes"]
 
 
-def test_capture_weave_records_only_calls_inside_the_block(monkeypatch):
-    import sys
-    from datetime import datetime, timezone
-    from types import SimpleNamespace
+def test_capture_weave_records_only_calls_inside_the_block(weave_client):
+    @weave.op
+    def child(x: int) -> int:
+        if x == 2:
+            raise ValueError("nope")
+        return x
 
-    class FakeClient:
-        def create_call(self, op, inputs, parent=None):
-            return SimpleNamespace(
-                id=f"c{len(inputs)}{op}", parent_id=parent, trace_id="t", op_name=op, display_name=None,
-                started_at=datetime.now(timezone.utc), ended_at=None, inputs=inputs, output=None,
-                exception=None, summary={}, attributes={},
-            )
-
-        def finish_call(self, call, output=None, exception=None):
-            call.ended_at, call.output = datetime.now(timezone.utc), output
-            call.exception = repr(exception) if exception else None
-
-    client = FakeClient()
-    monkeypatch.setitem(sys.modules, "weave", SimpleNamespace(get_client=lambda: client))
-
-    def op(name):
-        client.finish_call(client.create_call(name, {}), output=name)
+    @weave.op
+    def parent(n: int) -> list:
+        return [child(i) for i in range(n)]
 
     view = TraceView()
-    op("before")
+    parent(1)
     with view.capture_weave():
-        op("inside")
-        assert view.spans[0]["end_ms"] is not None
-    op("after")
-    assert [s["name"] for s in view.spans] == ["inside"]
+        result, call = parent.call(2)
+    parent(1)
+
+    assert result == [0, 1]
+    root, *children = view.spans
+    assert root["span_id"] == call.id and root["name"] == "parent"
+    assert [c["parent_id"] for c in children] == [call.id, call.id]
+    assert all(s["end_ms"] is not None for s in view.spans)
 
     with pytest.raises(ValueError), view.capture_weave():
-        client.create_call("boom", {})
-        raise ValueError("boom")
-    assert view.spans[-1]["end_ms"] is None  # started, never finished
-    assert "create_call" not in vars(client) or vars(client)["create_call"].__func__ is FakeClient.create_call
+        parent(3)
+    assert [s["status_message"] for s in view.spans if s["status"] == "error"] == ["ValueError: nope"] * 2
 
-    monkeypatch.setitem(sys.modules, "weave", SimpleNamespace(get_client=lambda: None))
+    n_spans = len(view.spans)
+    parent(1)  # the client is unhooked again, even after an error
+    assert len(view.spans) == n_spans
+
+    weave_client_context.set_weave_client_global(None)
     with pytest.raises(RuntimeError), view.capture_weave():
         pass

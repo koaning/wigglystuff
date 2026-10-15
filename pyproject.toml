@@ -50,6 +50,7 @@ test = [
     "marimo>=0.23.3",
     "opentelemetry-sdk>=1.20.0",
     "scikit-learn>=1.0",
+    "weave>=0.53.12",
     "matplotlib>=3.0",
     "pandas>=2.3.3",
     "polars>=1.36.1",

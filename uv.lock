@@ -4485,6 +4485,7 @@ test = [
     { name = "pytest" },
     { name = "pytest-check-links" },
     { name = "scikit-learn" },
+    { name = "weave" },
 ]
 test-browser = [
     { name = "marimo" },
@@ -4532,6 +4533,7 @@ requires-dist = [
     { name = "pytest-playwright", marker = "extra == 'test-browser'", specifier = ">=0.6.2" },
     { name = "scikit-learn", marker = "extra == 'test'", specifier = ">=1.0" },
     { name = "torch", marker = "extra == 'torch'", specifier = ">=2.10.0" },
+    { name = "weave", marker = "extra == 'test'", specifier = ">=0.53.12" },
     { name = "weave", marker = "extra == 'weave'", specifier = ">=0.53.12" },
 ]
 provides-extras = ["numpy", "pillow", "all", "torch", "neo4j", "otel", "weave", "pytest", "test", "test-browser", "docs"]
