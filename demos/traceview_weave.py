@@ -58,12 +58,17 @@ def _(mo):
 
 
 @app.cell
-def _(mo, project):
+def _():
     import weave
 
+    return (weave,)
+
+
+@app.cell
+def _(mo, project, weave):
     mo.stop(not project.value, mo.md("*Enter a W&B project above to connect.*"))
     client = weave.init(project.value)
-    return client, weave
+    return (client,)
 
 
 @app.cell(expand_output=True)
@@ -117,7 +122,9 @@ def _(mo):
 
 
 @app.cell
-def _(answer_ticket, live_view, mo, run_bot):
+def _(answer_ticket, live_view, mo, project, run_bot):
+    # Guard on `project`, not `client`: when weave.init was skipped, `client` does not exist yet.
+    mo.stop(not project.value, mo.md("*Enter a W&B project above first.*"))
     mo.stop(not run_bot.value, mo.md("*Press the button above to run the bot.*"))
     with live_view.capture_weave():
         # .call() also returns the Call record, so the cell below knows which trace to load.
