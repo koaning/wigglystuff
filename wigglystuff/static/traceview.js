@@ -122,7 +122,7 @@ function render({ model, el: host }) {
   let dur = 1; // duration of the trace on screen, as of the last draw
   let frame = null;
   let liveFrame = null;
-  let lastLiveDraw = 0;
+  let lastLiveTick = 0;
   // Live-follow state. A rerun starts a new trace that replaces the one on
   // screen; we keep the old row count and time scale while it runs so the page
   // doesn't shrink and regrow (moving everything below) and bars don't rescale
@@ -137,6 +137,9 @@ function render({ model, el: host }) {
   let lastRows = []; // visible rows as of the last draw, for keyboard moves
   let scrollToSelected = false;
   let focused = false;
+  // What the live loop patches between full draws: the running rows' bar and
+  // duration cell, plus the bits of chrome that show the trace length.
+  let live = { bars: [], traceStart: 0, finishedEnd: 0, foot: null };
 
   function current() {
     const traces = groupTraces(model.get("spans") || []);
@@ -491,6 +494,10 @@ function render({ model, el: host }) {
     const nameById = new Map(trace.spans.map((s) => [s.span_id, s.name]));
     const ticksList = ticks(scale);
     let scrollTarget = null;
+    live = { bars: [], traceStart: trace.start, finishedEnd: 0, foot: null };
+    for (const s of trace.spans) {
+      if (s.end_ms !== null && s.end_ms !== undefined) live.finishedEnd = Math.max(live.finishedEnd, s.end_ms - trace.start);
+    }
 
     for (const row of rows) {
       const s = row.span;
@@ -582,6 +589,7 @@ function render({ model, el: host }) {
         grid.style.left = (tick / scale) * 100 + "%";
         lane.appendChild(grid);
       }
+      let bar = null;
       if (st.state !== "pending") {
         const width = ((st.end - st.start) / scale) * 100;
         if (width < 0.4 && st.state !== "running") {
@@ -589,7 +597,7 @@ function render({ model, el: host }) {
           dot.style.left = (st.start / scale) * 100 + "%";
           lane.appendChild(dot);
         } else {
-          const bar = el("span", `tv-bar tv-bar-${st.state}`);
+          bar = el("span", `tv-bar tv-bar-${st.state}`);
           bar.style.left = (st.start / scale) * 100 + "%";
           bar.style.width = Math.max(width, 0.4) + "%";
           lane.appendChild(bar);
@@ -610,7 +618,9 @@ function render({ model, el: host }) {
       }
       line.appendChild(lane);
 
-      line.appendChild(el("div", "tv-right tv-dur", st.state === "pending" ? "—" : fmt(st.end - st.start)));
+      const durEl = el("div", "tv-right tv-dur", st.state === "pending" ? "—" : fmt(st.end - st.start));
+      line.appendChild(durEl);
+      if (st.state === "running" && bar) live.bars.push({ bar, durEl, start: st.start });
       body.appendChild(line);
       if (isSelected && scrollToSelected) scrollTarget = line;
     }
@@ -627,7 +637,8 @@ function render({ model, el: host }) {
     }
 
     const foot = el("div", "tv-foot");
-    foot.appendChild(el("span", null, `trace ${trace.id.slice(0, 12)} · ${fmt(dur)}`));
+    live.foot = el("span", null, `trace ${trace.id.slice(0, 12)} · ${fmt(dur)}`);
+    foot.appendChild(live.foot);
     let hint = selected ? "click the row again to close" : "click a row for details";
     if (focused) hint = "↑↓ move · ←→ fold · space replay" + (selected ? " · esc close" : "");
     foot.appendChild(el("span", null, hint));
@@ -716,21 +727,40 @@ function render({ model, el: host }) {
     return box;
   }
 
-  // While spans are running live, redraw every animation frame so bars grow
-  // smoothly (a few times a second for big traces, where a redraw costs more).
+  // While spans are running live, only the running bars and the trace length
+  // change between kernel updates, so each frame patches those in place; a full
+  // draw() happens only when a bar reaches the right edge and the scale grows.
+  function liveTick() {
+    const now = Date.now() + clockOffset - live.traceStart;
+    if (now > scale) {
+      draw(); // rescales and re-arms the loop itself
+      return;
+    }
+    dur = Math.max(now, live.finishedEnd, 1);
+    for (const { bar, durEl, start } of live.bars) {
+      bar.style.width = Math.max(((now - start) / scale) * 100, 0.4) + "%";
+      durEl.textContent = fmt(now - start);
+    }
+    scrub.max = dur;
+    scrub.value = dur;
+    clock.textContent = fmt(dur);
+    live.foot.textContent = `trace ${shownTraceId.slice(0, 12)} · ${fmt(dur)}`;
+    scheduleLive(true);
+  }
+
+  // Bars grow slowly, so ~30 ticks a second look the same as one per frame
+  // and cost a third as much on a 120 Hz display.
   function scheduleLive(on) {
     if (on && !liveFrame) {
-      const loop = (now) => {
-        const big = (model.get("spans") || []).length > 300;
-        if (big && now - lastLiveDraw < 250) {
-          liveFrame = requestAnimationFrame(loop);
+      liveFrame = requestAnimationFrame((now) => {
+        liveFrame = null;
+        if (now - lastLiveTick < 30) {
+          scheduleLive(true);
           return;
         }
-        liveFrame = null;
-        lastLiveDraw = now;
-        draw();
-      };
-      liveFrame = requestAnimationFrame(loop);
+        lastLiveTick = now;
+        liveTick();
+      });
     }
     if (!on && liveFrame) {
       cancelAnimationFrame(liveFrame);
@@ -760,4 +790,3 @@ function render({ model, el: host }) {
 }
 
 export default { render };
-export { buildRows, groupTraces, spanState, ticks }; // exported for tests

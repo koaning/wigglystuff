@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import base64
+import binascii
 import json
+import math
 import threading
 import time
 from contextlib import contextmanager
@@ -26,6 +28,8 @@ def _json_safe(value: Any) -> Any:
         return value.hex()
     if value is None:
         return None
+    if isinstance(value, float) and not math.isfinite(value):
+        return str(value)  # NaN/inf are not valid JSON; the browser would reject the message
     # Rebuild subclasses (Weave's BoxedStr/BoxedInt) as plain values so they serialize.
     for kind in (bool, int, float, str):
         if isinstance(value, kind):
@@ -64,7 +68,11 @@ def _otlp_id(raw: str | None) -> str | None:
         int(raw, 16)
         return raw.lower()
     except ValueError:
-        return base64.b64decode(raw).hex()
+        pass
+    try:
+        return base64.b64decode(raw, validate=True).hex()
+    except (binascii.Error, ValueError):
+        raise ValueError(f"not a hex or base64 span id: {raw!r}") from None
 
 
 def _otlp_enum(raw: Any, names: list[str], prefix: str) -> str:
@@ -101,6 +109,31 @@ def _span_from_otlp(span: dict[str, Any], service: str | None) -> dict[str, Any]
         ],
         "links": [_otlp_id(link.get("spanId")) for link in span.get("links") or []],
     }
+
+
+_SPAN_DEFAULTS: dict[str, Any] = {
+    "parent_id": None,
+    "trace_id": "",
+    "name": "",
+    "service": None,
+    "kind": "internal",
+    "start_ms": 0.0,
+    "end_ms": None,
+    "status": "unset",
+    "status_message": "",
+    "attributes": {},
+    "events": [],
+    "links": [],
+}
+
+
+def _normalize_span(data: dict[str, Any]) -> dict[str, Any]:
+    """Fill in the keys the frontend reads, so a hand-written span dict can't blank the widget."""
+    if not data.get("span_id"):
+        raise ValueError("a span dict needs a non-empty 'span_id'")
+    out = {key: (value.copy() if isinstance(value, (dict, list)) else value) for key, value in _SPAN_DEFAULTS.items()}
+    out.update(data)
+    return out
 
 
 def spans_from_otlp(doc: dict[str, Any]) -> list[dict[str, Any]]:
@@ -269,7 +302,7 @@ class TraceView(anywidget.AnyWidget):
             raise ValueError("height must be >= 0")
         if sync_throttle_ms < 0:
             raise ValueError("sync_throttle_ms must be >= 0")
-        spans = list(spans or [])
+        spans = [_normalize_span(span) for span in spans or []]
         super().__init__(
             spans=spans,
             title=title,
@@ -374,7 +407,7 @@ class TraceView(anywidget.AnyWidget):
         """Add (or update, by ``span_id``) OpenTelemetry SDK spans or span dicts."""
         with self._lock:
             for span in spans:
-                data = span if isinstance(span, dict) else span_to_dict(span)
+                data = _normalize_span(span) if isinstance(span, dict) else span_to_dict(span)
                 self._by_id[data["span_id"]] = data
         self._sync()
 
@@ -405,15 +438,22 @@ class TraceView(anywidget.AnyWidget):
                 self._running[data["span_id"]] = span
             else:
                 self._running.pop(data["span_id"], None)
-        if time.monotonic() - self._last_sync >= self.sync_throttle_ms / 1000:
+            idle = not self._running
+        # When the last running span ends there is no "next span" to carry a
+        # throttled update, so always sync then or the trace stays Running forever.
+        if idle or self._throttle_elapsed():
             self._sync()
 
     def _record_call(self, call: Any) -> None:
         data = call_to_dict(call)
         with self._lock:
             self._by_id[data["span_id"]] = data
-        if time.monotonic() - self._last_sync >= self.sync_throttle_ms / 1000:
+        root_ended = data["end_ms"] is not None and data["parent_id"] is None
+        if root_ended or self._throttle_elapsed():
             self._sync()
+
+    def _throttle_elapsed(self) -> bool:
+        return time.monotonic() - self._last_sync >= self.sync_throttle_ms / 1000
 
     def _sync(self) -> None:
         with self._lock:

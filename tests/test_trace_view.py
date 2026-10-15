@@ -90,6 +90,15 @@ def test_selected_span_clear_and_validation():
         TraceView(height=-1)
     with pytest.raises(ValueError):
         TraceView(sync_throttle_ms=-1)
+    # hand-written span dicts get the keys the frontend reads, or a clear error
+    assert TraceView([{"span_id": "a"}]).spans[0]["events"] == []
+    with pytest.raises(ValueError):
+        TraceView([{"name": "no id"}])
+    with pytest.raises(ValueError):
+        TraceView.from_otlp({"resourceSpans": [{"scopeSpans": [{"spans": [{"spanId": "zz"}]}]}]})
+    # NaN is not JSON; it must not reach the browser as a float
+    nan_call = {"id": "c", "trace_id": "t", "op_name": "f", "inputs": {"x": float("nan")}}
+    assert TraceView.from_weave([nan_call]).spans[0]["attributes"]["inputs"]["x"] == "nan"
 
 
 def test_span_processor_streams_running_and_ended_spans():
@@ -121,6 +130,17 @@ def test_span_processor_streams_running_and_ended_spans():
     assert [s["name"] for s in loaded.spans] == ["again"]
     loaded.add_spans(exporter.get_finished_spans())
     assert len(loaded.spans) == 1  # same span_id is updated, not duplicated
+
+
+def test_throttle_still_sends_the_final_update():
+    view = TraceView(sync_throttle_ms=60_000)
+    provider = TracerProvider()
+    provider.add_span_processor(view.span_processor())
+    with provider.get_tracer("test").start_as_current_span("root"):
+        with provider.get_tracer("test").start_as_current_span("child"):
+            pass
+        assert len(view.spans) == 1  # only the root's start got through; the child was throttled, as designed
+    assert [s["end_ms"] is not None for s in view.spans] == [True, True]  # ...but the trace going idle always syncs
 
 
 @pytest.fixture

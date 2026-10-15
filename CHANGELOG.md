@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - New `TraceView` widget for OpenTelemetry traces. Each span is a row in an
   indented parent/child tree with its state, a timeline bar, and its duration;
-  span links show as dashed curves. Install the optional `otel` extra (`wigglystuff[otel]`) 
+  span links show as dashed curves. Install the optional `otel` extra (`wigglystuff[otel]`)
   for live capture.
 - `TraceView` works with W&B Weave: call a `@weave.op` function inside
   `with view.capture_weave():` to watch its calls live, or load stored calls

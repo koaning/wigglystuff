@@ -69,9 +69,9 @@ def _(mo, project):
 @app.cell(expand_output=True)
 def _(TraceView, mo):
     live_view = TraceView(title="support_bot")
-    run_bot = mo.ui.run_button(label="Answer another ticket")
+    run_bot = mo.ui.run_button(label="Answer a ticket")
     mo.vstack([live_view, run_bot])
-    return (live_view,)
+    return live_view, run_bot
 
 
 @app.cell
@@ -108,22 +108,17 @@ def _(weave):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Seeing changes live
+    ### Seeing changes live
 
-    You can use the `live_view.capture_weave()` context manager to view a call live in the widget.
+    Press **Answer a ticket** above: the cell below runs the bot inside
+    `live_view.capture_weave()`, so each call shows up in the widget as it happens.
     """)
     return
 
 
-@app.cell(expand_output=True)
-def _(live_view):
-    live_view
-    return
-
-
 @app.cell
-def _(answer_ticket, live_view):
-    # Run this manually.
+def _(answer_ticket, live_view, mo, run_bot):
+    mo.stop(not run_bot.value, mo.md("*Press the button above to run the bot.*"))
     with live_view.capture_weave():
         # .call() also returns the Call record, so the cell below knows which trace to load.
         _answer, root_call = answer_ticket.call("Where is my order #1042?")
