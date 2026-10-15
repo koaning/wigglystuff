@@ -23,7 +23,7 @@ events, fold a subtree with `−`/`+`, and press **Replay** (or drag the scrubbe
 to watch the trace unfold. Span *links* — "caused by, but not part of", like a
 queue consumer pointing at the producer — are drawn as dashed curves.
 
-There are two ways to get spans in:
+There are three ways to get spans in:
 
 - **Live, in-process** — `view.span_processor()` is an OpenTelemetry
   `SpanProcessor`. Add it to a `TracerProvider` and spans stream into the widget
@@ -35,6 +35,10 @@ There are two ways to get spans in:
   `TraceView.from_spans(...)` takes SDK spans such as
   `InMemorySpanExporter.get_finished_spans()`. Loading OTLP needs no
   OpenTelemetry install.
+- **From W&B Weave** — `with view.capture_weave():` shows the calls of any
+  `@weave.op` function called inside the block, live, after `weave.init(...)`
+  (`pip install wigglystuff[weave]`). `TraceView.from_weave(...)` loads stored
+  calls from `client.get_calls(...)` (or the service API's call dicts).
 
 ```python
 from opentelemetry.sdk.trace import TracerProvider
@@ -47,6 +51,20 @@ tracer = provider.get_tracer("notebook")
 
 with tracer.start_as_current_span("agent.run"):
     ...
+```
+
+With Weave, call your op as usual inside the block:
+
+```python
+import weave
+from wigglystuff import TraceView
+
+weave.init("my-project")
+view = TraceView(title="support bot")
+view  # display it, then in another cell:
+
+with view.capture_weave():
+    answer_ticket("Where is my order?")
 ```
 
 A span with numeric `progress.done` and `progress.total` attributes gets a

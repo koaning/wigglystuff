@@ -1,6 +1,6 @@
 [project]
 name = "wigglystuff"
-version = "0.5.34"
+version = "0.5.35"
 description = "Collection of Anywidget Widgets"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -16,7 +16,6 @@ classifiers = [
 dependencies = [
     "anywidget>=0.11.0",
     "drawdata",
-    "weave>=0.53.12",
 ]
 
 [project.optional-dependencies]
@@ -38,6 +37,9 @@ neo4j = [
 ]
 otel = [
     "opentelemetry-sdk>=1.20.0",
+]
+weave = [
+    "weave>=0.53.12",
 ]
 pytest = [
     "pytest>=8.3.3",

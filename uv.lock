@@ -4439,12 +4439,11 @@ wheels = [
 
 [[package]]
 name = "wigglystuff"
-version = "0.5.34"
+version = "0.5.35"
 source = { editable = "." }
 dependencies = [
     { name = "anywidget" },
     { name = "drawdata" },
-    { name = "weave" },
 ]
 
 [package.optional-dependencies]
@@ -4495,6 +4494,9 @@ test-browser = [
 torch = [
     { name = "torch" },
 ]
+weave = [
+    { name = "weave" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -4530,9 +4532,9 @@ requires-dist = [
     { name = "pytest-playwright", marker = "extra == 'test-browser'", specifier = ">=0.6.2" },
     { name = "scikit-learn", marker = "extra == 'test'", specifier = ">=1.0" },
     { name = "torch", marker = "extra == 'torch'", specifier = ">=2.10.0" },
-    { name = "weave", specifier = ">=0.53.12" },
+    { name = "weave", marker = "extra == 'weave'", specifier = ">=0.53.12" },
 ]
-provides-extras = ["numpy", "pillow", "all", "torch", "neo4j", "otel", "pytest", "test", "test-browser", "docs"]
+provides-extras = ["numpy", "pillow", "all", "torch", "neo4j", "otel", "weave", "pytest", "test", "test-browser", "docs"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "zensical", specifier = ">=0.0.38" }]

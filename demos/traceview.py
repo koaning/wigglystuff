@@ -4,7 +4,7 @@
 #     "anywidget",
 #     "marimo",
 #     "opentelemetry-sdk",
-#     "wigglystuff==0.5.34",
+#     "wigglystuff==0.5.35",
 # ]
 # ///
 

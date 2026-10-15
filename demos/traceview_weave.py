@@ -4,7 +4,7 @@
 #     "anywidget",
 #     "marimo",
 #     "weave",
-#     "wigglystuff==0.5.34",
+#     "wigglystuff==0.5.35",
 # ]
 # ///
 
@@ -123,10 +123,11 @@ def _(live_view):
 
 @app.cell
 def _(answer_ticket, live_view):
-    # Run this manually. 
+    # Run this manually.
     with live_view.capture_weave():
-        answer_ticket.call("Where is my order #1042?")
-    return
+        # .call() also returns the Call record, so the cell below knows which trace to load.
+        _answer, root_call = answer_ticket.call("Where is my order #1042?")
+    return (root_call,)
 
 
 @app.cell(hide_code=True)
