@@ -143,6 +143,58 @@ def _(run_agent, tracer):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
+    ### Concurrent work
+
+    Nothing extra is needed for asyncio: spans started inside tasks keep their
+    parent through `contextvars`, so a fan-out shows up as overlapping bars
+    under one parent. This cell fetches three sources at once and then merges
+    them; press the button to run it again.
+    """)
+    return
+
+
+@app.cell
+def _(TraceView):
+    from opentelemetry.sdk.resources import Resource as _Resource
+    from opentelemetry.sdk.trace import TracerProvider as _TracerProvider
+
+    fan_out_view = TraceView(title="gather_sources")
+    fan_out_provider = _TracerProvider(resource=_Resource.create({"service.name": "research-agent"}))
+    fan_out_provider.add_span_processor(fan_out_view.span_processor())
+    fan_out_tracer = fan_out_provider.get_tracer("demo")
+    return fan_out_tracer, fan_out_view
+
+
+@app.cell(expand_output=True)
+def _(fan_out_view, mo):
+    run_fan_out = mo.ui.run_button(label="Fan out again")
+    mo.vstack([fan_out_view, run_fan_out])
+    return (run_fan_out,)
+
+
+@app.cell(hide_code=True)
+async def _(fan_out_tracer, run_fan_out):
+    import asyncio
+
+    run_fan_out.value  # rerun this cell on click
+
+    async def fetch_source(source, seconds):
+        with fan_out_tracer.start_as_current_span(f"fetch {source}") as span:
+            span.set_attribute("source", source)
+            await asyncio.sleep(seconds)
+            with fan_out_tracer.start_as_current_span("parse"):
+                await asyncio.sleep(0.15)
+
+    with fan_out_tracer.start_as_current_span("gather_sources"):
+        await asyncio.gather(fetch_source("eurostat", 0.6), fetch_source("worldbank", 1.1), fetch_source("un_data", 0.8))
+        with fan_out_tracer.start_as_current_span("llm.merge"):
+            await asyncio.sleep(0.5)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
     ### Load existing traces
 
     `TraceView.from_otlp(...)` reads OTLP/JSON — a dict, a file, or the JSON
