@@ -270,6 +270,10 @@ class TraceView(anywidget.AnyWidget):
 
     A span with numeric ``progress.done`` and ``progress.total`` attributes gets
     a progress bar.
+
+    Picking an older trace from the menu pins it. With ``show_latest=True`` (the
+    default, and the *Follow latest* button in the header) the next new trace
+    takes the view back to following live; turning it on jumps there right away.
     """
 
     _esm = Path(__file__).parent / "static" / "traceview.js"
@@ -293,6 +297,9 @@ class TraceView(anywidget.AnyWidget):
     now_ms = traitlets.Float(0.0).tag(sync=True)
     # Minimum ms between live syncs; skipped updates go out with the next span.
     sync_throttle_ms = traitlets.Int(0)
+    # When a new trace starts, drop a pinned trace_id so the view follows it.
+    # The "Follow latest" button in the header toggles this.
+    show_latest = traitlets.Bool(True).tag(sync=True)
 
     def __init__(
         self,
@@ -301,6 +308,7 @@ class TraceView(anywidget.AnyWidget):
         title: str = "Trace",
         height: int = 0,
         sync_throttle_ms: int = 0,
+        show_latest: bool = True,
         **kwargs: Any,
     ) -> None:
         if height < 0:
@@ -313,11 +321,13 @@ class TraceView(anywidget.AnyWidget):
             title=title,
             height=height,
             sync_throttle_ms=sync_throttle_ms,
+            show_latest=show_latest,
             now_ms=time.time() * 1000,
             **kwargs,
         )
         self._lock = threading.Lock()
         self._by_id: dict[str, dict[str, Any]] = {s["span_id"]: s for s in spans}
+        self._trace_ids = {s["trace_id"] for s in spans}
         # SDK spans that haven't ended yet; re-read on every sync so attribute
         # changes (like progress) made while they run show up.
         self._running: dict[str, Any] = {}
@@ -421,11 +431,19 @@ class TraceView(anywidget.AnyWidget):
         with self._lock:
             self._by_id = {}
             self._running = {}
+            self._trace_ids = set()
         self.spans = []
         self.trace_id = ""
         self.selected_span_id = None
         self.cursor_ms = None
         self.collapsed = []
+
+    @traitlets.observe("show_latest")
+    def _jump_to_latest(self, change: dict[str, Any]) -> None:
+        if change["new"] and self.trace_id:
+            self.trace_id = ""
+            self.selected_span_id = None
+            self.cursor_ms = None
 
     @property
     def selected_span(self) -> dict[str, Any] | None:
@@ -465,6 +483,13 @@ class TraceView(anywidget.AnyWidget):
             for span_id, span in self._running.items():
                 self._by_id[span_id] = span_to_dict(span)
             spans = list(self._by_id.values())
+            trace_ids = {s["trace_id"] for s in spans}
+            new_trace = not trace_ids <= self._trace_ids
+            self._trace_ids = trace_ids
         self._last_sync = time.monotonic()
         self.now_ms = time.time() * 1000
         self.spans = spans
+        if new_trace and self.show_latest and self.trace_id:
+            self.trace_id = ""
+            self.selected_span_id = None
+            self.cursor_ms = None

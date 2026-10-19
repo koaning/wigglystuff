@@ -107,12 +107,14 @@ function render({ model, el: host }) {
   const titleEl = el("span", "tv-title");
   const subtitleEl = el("span", "tv-subtitle");
   const picker = el("select", "tv-picker");
+  const followBtn = el("button", "tv-follow", "Follow latest");
+  followBtn.title = "Jump to each new trace as it starts";
   const playBtn = el("button", "tv-play");
   const scrub = el("input", "tv-scrub");
   scrub.type = "range";
   scrub.min = 0;
   const clock = el("span", "tv-clock");
-  header.append(titleEl, subtitleEl, picker, playBtn, scrub, clock);
+  header.append(titleEl, subtitleEl, picker, followBtn, playBtn, scrub, clock);
   const content = el("div");
   root.append(header, content);
 
@@ -209,6 +211,16 @@ function render({ model, el: host }) {
     model.set("selected_span_id", null);
     model.save_changes();
   });
+  // Turning this on also jumps to the latest trace (done kernel-side).
+  followBtn.addEventListener("click", () => {
+    const on = !model.get("show_latest");
+    if (on) {
+      stopPlaying();
+      setCursor(null, false);
+    }
+    model.set("show_latest", on);
+    model.save_changes();
+  });
   function togglePlay() {
     if (playing) {
       stopPlaying();
@@ -286,7 +298,7 @@ function render({ model, el: host }) {
   });
   root.addEventListener("keydown", (ev) => {
     if (ev.target === picker || ev.target === scrub) return; // they use arrows themselves
-    if (ev.target === playBtn && (ev.key === " " || ev.key === "Enter")) return;
+    if ((ev.target === playBtn || ev.target === followBtn) && (ev.key === " " || ev.key === "Enter")) return;
     if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
     const rows = lastRows;
     const row = rows.find((r) => r.span.span_id === model.get("selected_span_id"));
@@ -365,6 +377,9 @@ function render({ model, el: host }) {
       );
     }
     picker.style.display = traces.length > 1 ? "" : "none";
+    followBtn.style.display = picker.style.display;
+    followBtn.classList.toggle("tv-on", model.get("show_latest"));
+    followBtn.setAttribute("aria-pressed", String(model.get("show_latest")));
     if (trace && picker.value !== trace.id) picker.value = trace.id;
     playBtn.textContent = playing ? "Pause" : "Replay";
     playBtn.classList.toggle("tv-playing", playing);
@@ -778,7 +793,7 @@ function render({ model, el: host }) {
       draw();
     }
   });
-  for (const name of ["trace_id", "selected_span_id", "collapsed", "title", "height"]) {
+  for (const name of ["trace_id", "show_latest", "selected_span_id", "collapsed", "title", "height"]) {
     model.on(`change:${name}`, draw);
   }
   draw();

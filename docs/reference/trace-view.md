@@ -78,7 +78,14 @@ with view.capture_weave():
 A span with numeric `progress.done` and `progress.total` attributes gets a
 progress bar. Updates are sent from the thread that starts or ends a span, so
 spans finishing on background threads show up with the next update from the
-notebook's own thread.
+notebook's own thread. asyncio needs nothing extra: spans started inside tasks
+keep their parent through `contextvars`, so concurrent work shows as
+overlapping bars under one parent.
+
+Picking an older trace from the menu pins it on screen. While *Follow latest*
+is on (the default, `show_latest=True`) the next trace that starts takes the
+view back to following live. Click the button, or set `show_latest=False`, to
+keep the picked trace pinned instead.
 
 See also: [AsyncFlow](async-flow.md) for a timeline of asyncio tasks without any
 instrumentation, and [LiveEdit](live-edit.md) for a pass-by-pass trace of one
@@ -92,6 +99,7 @@ Python function.
 | --- | --- | --- |
 | `spans` | `list[dict]` | Normalized spans: `span_id`, `parent_id`, `trace_id`, `name`, `service`, `kind`, `start_ms`, `end_ms` (epoch ms, `None` while running), `status`, `status_message`, `attributes`, `events`, `links`. |
 | `trace_id` | `str` | Trace on screen; `""` follows the most recently started one. |
+| `show_latest` | `bool` | *Follow latest* button: a new trace clears a pinned `trace_id`; turning it on jumps to the latest trace. |
 | `selected_span_id` | `str \| None` | Set by clicking a row; read the span with `selected_span`. |
 | `cursor_ms` | `float \| None` | Replay position in ms since the trace started; `None` shows everything. |
 | `collapsed` | `list[str]` | Span ids whose subtrees are folded. |

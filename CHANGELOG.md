@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `TraceView` jumps back to following live when a new trace starts, even after
+  you picked an older trace from the menu. A *Follow latest* button next to the
+  menu (the synced `show_latest` traitlet, on by default) turns this off to keep
+  the picked trace pinned.
+
 ## [0.5.35] - 2026-10-15
 
 ### Added

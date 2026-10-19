@@ -48,6 +48,7 @@
 .traceview .tv-title { font-size: 16px; font-weight: 650; }
 .traceview .tv-subtitle { color: var(--tv-muted); }
 .traceview .tv-picker,
+.traceview .tv-follow,
 .traceview .tv-play {
   font: inherit;
   color: inherit;
@@ -66,6 +67,7 @@
   background-position: right 11px center;
 }
 .traceview .tv-play { margin-left: auto; }
+.traceview .tv-follow.tv-on,
 .traceview .tv-play.tv-playing {
   background: var(--tv-selected);
   border-color: var(--tv-selected-border);
