@@ -1,0 +1,555 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.25.1",
+    "script_metadata_hash": "33568ae8934971ff8713ab9f51c00d77"
+  },
+  "cells": [
+    {
+      "id": "setup",
+      "code_hash": "1ea782648ae52466f78dafd65378471b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "d7fca6abe5e5f787780a377103ed63ce",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"growing-a-minimum-spanning-tree\">Growing a minimum spanning tree</h1>\n<span class=\"paragraph\">Connect every pair of points. The cheapest set of lines that still links them\nall is the <em>minimum spanning tree</em>. Two classic ways to grow one:</span>\n<ul>\n<li><strong>Prim</strong>: grow one tree outward from a start point.</li>\n<li><strong>Kruskal</strong>: take edges shortest-first, merging small trees into one.</li>\n</ul>\n<span class=\"paragraph\">Press play, or drag the timeline to scrub.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "d878c4db170c0207bc1afb55218a81c7",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "80fb384f0a65c08c9711cb6474ff16aa",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "2970f00a8bc21f6b27f763a7ccb019d5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 2rem'><marimo-ui-element object-id='bkHC-0' random-id='a36c6252-fbfc-1707-7203-f44e1294e6ed'><marimo-slider data-initial-value='12' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003epoints&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='5' data-stop='20' data-steps='[]' data-debounce='true' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='true' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element><marimo-ui-element object-id='bkHC-1' random-id='1eda9aaf-77c7-0885-48c4-1e59249c2d9e'><marimo-number data-initial-value='4' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eseed&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='0' data-stop='999' data-debounce='false' data-full-width='false' data-disabled='false'></marimo-number></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "b8caad37961ffaaf90beabbefd45575b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "9ae259448b4fa225c0c1f7424d18c650",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "b5e8a195b1f934a2e9c00828939222be",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "df2cafaf23ca79312423af3d361ce27a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"prim-one-tree-grows-outward\">Prim: one tree grows outward</h2>\n<span class=\"paragraph\">Pop the cheapest edge leaving the tree (<strong>blue</strong>), add its far end, push that\npoint's edges (<strong>orange</strong>). Stale edges get skipped (<strong>red</strong>).\nTimeline: heap size.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "40824e09d6d7aa8bf5500fb404a028a9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "72debc34186b5152cecfe9fb182bd84f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "d7d5e374a4bb3a8efa8e8a2f8a7745ea",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='Kclp-0' random-id='8fd5e93d-8a7d-1c9d-0fd2-16ea77f53be1'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;e06305ebfffa4bc196ac7b4227b44aac&quot;}' data-label='null' data-model-id='&quot;e06305ebfffa4bc196ac7b4227b44aac&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "0fa11c2ea6b13032b70d061a29b0cf9e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"kruskal-a-forest-merges\">Kruskal: a forest merges</h2>\n<span class=\"paragraph\">Walk the edges shortest-first. Keep one that joins two fragments, skip one that\nwould close a cycle (<strong>red</strong>). Timeline: number of fragments.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "e458689b560fa68b2f8ec1bf22e8b307",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "62e8365c2ae90d38cec3c1ff1819f1df",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "5bb56b61d45dcaed62a552bdf09755bf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "e06dfe59935bd86b62c402ed40a5219f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "8fc65f9fc21ede2e852c9ac2b53bc113",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='ROlb-0' random-id='3b741b64-c748-174f-eab9-c5b82327d13b'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;f2f374b1f9f54038a402616fcf718953&quot;}' data-label='null' data-model-id='&quot;f2f374b1f9f54038a402616fcf718953&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "00e0aa09610fdc8b4892af12b163c580",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"or-use-the-geometry\">Or use the geometry</h2>\n<span class=\"paragraph\">For points on a plane, the MST always lies on the <em>Delaunay triangulation</em>:\nabout 3n edges instead of n\u00b2/2. So build that first, then run Kruskal on it.</span>\n<ol>\n<li><strong>Triangulate</strong>, starting from one huge helper triangle around everything.\n   Each new point: find the triangles whose circle holds it (<strong>red</strong>), cut them\n   out, fan new ones from the point (<strong>blue</strong>). The view zooms in as points\n   arrive; the helper's corners (dashed) are dropped at the end.</li>\n<li><strong>Kruskal</strong> on the triangle edges only: blue is the current edge, red dashed\n   would close a cycle.</li>\n</ol></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "932dc0e394e7a14e411f449fbb2a34ba",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "498de2dcd4538d7f5d5fe58adadd24d5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "eaa8a8c5c06dbbf5869c6d7b30c231d4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "94d78f6b013f5d55cabadbdc7caf3075",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "91d698edec1e252cc00ea2747e0b5962",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "a870e482c17c90b1ee904619dfa74db0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "3f513cf173e5e24ef05578face37da3c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='ZBYS-0' random-id='cb3c5108-d06c-3a23-fe01-894c280a6bc2'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;5faba8a8f7084e22a158a68b7a07a89c&quot;}' data-label='null' data-model-id='&quot;5faba8a8f7084e22a158a68b7a07a89c&quot;'></marimo-anywidget></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "5991679a6fe3d64ff77747bc2914e93c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Checking every triangle for every new point makes this slow (1.6 s at 1,600\npoints), so the benchmark builds the same triangulation with scipy, in C.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "432d1e2e7855e890e15b03308ce4f8de",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"which-one-is-faster\">Which one is faster?</h2>\n<span class=\"paragraph\">The same functions race on two graphs:</span>\n<ul>\n<li><strong>complete</strong>: every pair linked, up to 1,600 points</li>\n<li><strong>sparse</strong>: 6 nearest neighbours each, up to 102,400 points</li>\n</ul>\n<span class=\"paragraph\">Plus <strong>Prim without a heap</strong> (a plain list of the cheapest edge to each point,\nscanned every round) and, on the complete graph, <strong>Delaunay + Kruskal</strong>.\nAnything slower than half a second per run drops out. Takes ~30 s, so it waits\nfor the button.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "xXTn",
+      "code_hash": "20a75a7d02d25a5ab744189cb3adbe9a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "AjVT",
+      "code_hash": "f49e73b8c78a69259603fe12ab86a38e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "pHFh",
+      "code_hash": "3522b5f116488ed1d8e08031783521cc",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "NCOB",
+      "code_hash": "f6566025b807dd2a6f92ecd288de1357",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='NCOB-0' random-id='2f928ffa-f090-dc32-9bf7-a2a112b4ce15'><marimo-button data-initial-value='0' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eRun the benchmark&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-kind='&quot;neutral&quot;' data-disabled='false' data-full-width='false'></marimo-button></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aqbW",
+      "code_hash": "d37f441a2edafc76c85afe594916a439",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><em>Press the button above to run the benchmark.</em></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TRpd",
+      "code_hash": "4067175640a9f6274734e2848bb2cb1a",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "ancestor-stopped",
+          "evalue": "This cell wasn't run because an ancestor was stopped with `mo.stop`: ",
+          "traceback": []
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TXez",
+      "code_hash": "6ea3527a8a596f2325cdab74af36f25b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><ul>\n<li><strong>Complete graph:</strong> no-heap Prim wins. Each edge is one list update for it. The\n  heap version pushes 1.28M edges at 1,600 points to use 1,599; Kruskal sorts\n  them all first.</li>\n<li><strong>Sparse graph:</strong> no-heap Prim still scans all n points each round, so it\n  drops out early. Heap Prim and Kruskal tie.</li>\n<li><strong>Points on a plane:</strong> skip the complete graph. Delaunay + Kruskal finds the\n  same tree at 1,600 points in ~6 ms, against ~160 ms for the best of the rest.</li>\n</ul>\n<span class=\"paragraph\">Dense graph: scan a list. Sparse graph: use a heap or a sort.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "dNNg",
+      "code_hash": "723c5a48cc2812225d3d2c0ba7c5e584",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"when-does-kruskal-win\">When does Kruskal win?</h2>\n<span class=\"paragraph\"><strong>1. Islands.</strong> Prim stops at the edge of its own island. Kruskal returns one\ntree per island, for free.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "yCnT",
+      "code_hash": "22ead0db3d7e2281a99c350de8921136",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "wlCL",
+      "code_hash": "9a74b623503d24e74540057b1f7a271f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='wlCL-0' random-id='457c9b1d-007c-7ee4-b3ff-9077631b342f'><marimo-slider data-initial-value='2' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eneighbours per point&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='1' data-stop='6' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='true' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "kqZH",
+      "code_hash": "6f32ff3e673d138d3049e99b80f57c05",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 2rem'><div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><strong>Prim</strong> reaches 74 of 150 points</span></span><svg width=\"420\" height=\"420\" viewBox=\"0 0 420 420\"><rect width=\"420\" height=\"420\" rx=\"8\" fill=\"#f8fafc\"/><path d=\"M111.8,62.4L132.0,60.1M111.8,62.4L101.3,46.1M111.8,62.4L89.6,79.5M171.3,81.6L177.6,99.4M171.3,81.6L189.2,74.8M171.3,81.6L188.4,76.3M48.7,173.4L37.7,180.7M48.7,173.4L75.6,158.9M365.5,321.8L352.2,339.5M365.5,321.8L383.4,312.4M365.5,321.8L355.7,311.8M365.5,321.8L377.2,332.7M308.6,106.6L321.8,96.0M308.6,106.6L325.0,90.1M223.6,126.9L227.7,135.7M223.6,126.9L207.9,150.0M88.2,63.5L101.3,46.1M88.2,63.5L76.7,43.1M88.2,63.5L89.6,79.5M103.8,369.0L116.6,395.1M103.8,369.0L116.5,354.8M103.8,369.0L102.5,349.1M332.4,324.1L325.3,315.3M332.4,324.1L355.7,311.8M332.4,324.1L322.0,324.3M321.8,96.0L325.0,90.1M139.3,257.2L143.3,231.8M139.3,257.2L149.2,268.4M296.3,341.9L254.8,328.3M296.3,341.9L301.7,369.0M296.3,341.9L322.0,324.3M351.4,56.3L360.4,61.6M351.4,56.3L367.1,28.9M351.4,56.3L350.0,67.1M351.4,56.3L331.9,55.7M249.4,273.9L267.6,279.2M249.4,273.9L205.0,290.2M249.4,273.9L275.7,250.7M212.2,90.1L189.2,74.8M212.2,90.1L188.4,76.3M200.2,57.2L207.9,58.6M200.2,57.2L204.1,52.2M371.7,346.0L352.2,339.5M371.7,346.0L358.7,367.9M371.7,346.0L377.2,332.7M227.7,135.7L259.4,126.8M227.7,135.7L238.3,154.4M362.1,236.9L369.2,234.3M362.1,236.9L350.6,228.8M362.1,236.9L345.7,250.2M213.1,178.0L199.3,151.5M213.1,178.0L199.4,219.8M213.1,178.0L226.1,165.8M213.1,178.0L207.9,150.0M246.8,184.3L245.1,205.8M246.8,184.3L241.3,208.2M84.0,137.5L112.3,147.2M84.0,137.5L75.6,158.9M326.3,40.1L331.9,55.7M326.3,40.1L312.9,48.9M41.2,257.0L39.9,283.4M41.2,257.0L66.6,255.0M128.3,222.9L143.3,231.8M128.3,222.9L110.9,205.0M128.3,222.9L140.0,226.7M199.3,151.5L207.9,150.0M395.0,96.8L383.5,59.4M395.0,96.8L378.6,82.9M177.6,99.4L188.4,76.3M259.4,126.8L273.8,147.0M156.4,301.9L149.2,268.4M156.4,301.9L181.2,321.0M156.4,301.9L156.7,309.2M143.3,231.8L140.0,226.7M360.4,61.6L379.7,51.7M360.4,61.6L358.4,71.5M360.4,61.6L383.5,59.4M46.9,109.1L30.8,131.5M46.9,109.1L44.6,86.7M46.9,109.1L35.8,118.6M308.6,252.9L321.4,263.0M308.6,252.9L316.7,252.0M112.3,147.2L114.0,176.8M112.3,147.2L145.5,135.8M90.0,194.8L69.5,220.9M90.0,194.8L114.0,176.8M90.0,194.8L110.9,205.0M39.9,283.4L27.9,335.6M39.9,283.4L67.5,266.4M357.3,379.2L358.7,367.9M357.3,379.2L385.2,381.8M297.4,381.1L301.7,369.0M297.4,381.1L306.8,384.3M30.8,131.5L35.8,118.6M383.4,312.4L377.2,332.7M176.7,374.9L166.0,381.8M176.7,374.9L197.7,363.0M176.7,374.9L173.7,372.3M254.8,328.3L225.6,360.3M133.1,95.2L132.0,60.1M133.1,95.2L114.2,101.4M133.1,95.2L145.5,135.8M189.2,74.8L188.4,76.3M166.0,381.8L173.7,372.3M147.2,27.5L132.0,60.1M147.2,27.5L105.3,25.2M40.7,87.1L44.6,86.7M40.7,87.1L46.5,86.2M315.6,158.9L311.9,176.3M315.6,158.9L316.9,139.8M315.6,158.9L310.8,158.7M132.0,60.1L101.3,46.1M389.2,181.7L391.4,201.7M389.2,181.7L392.5,173.9M389.2,181.7L359.5,162.4M101.3,46.1L76.7,43.1M101.3,46.1L105.3,25.2M44.6,86.7L46.5,86.2M44.6,86.7L54.7,77.5M275.8,79.7L270.3,73.6M275.8,79.7L254.9,58.8M39.2,206.5L69.5,220.9M39.2,206.5L37.7,180.7M116.6,395.1L123.8,367.3M311.9,176.3L310.8,158.7M391.4,201.7L392.5,173.9M114.0,176.8L110.9,205.0M116.5,354.8L110.1,347.5M116.5,354.8L102.5,349.1M116.5,354.8L123.8,367.3M116.5,354.8L115.3,339.3M333.1,209.5L327.1,220.4M333.1,209.5L309.5,218.6M333.1,209.5L353.3,214.6M114.2,101.4L89.6,79.5M110.1,347.5L102.5,349.1M110.1,347.5L86.3,349.2M110.1,347.5L115.3,339.3M76.7,43.1L105.3,25.2M76.7,43.1L33.8,36.7M76.7,43.1L32.6,31.5M369.2,234.3L350.6,228.8M369.2,234.3L390.7,257.1M392.5,173.9L359.5,162.4M359.2,267.3L384.3,272.2M359.2,267.3L345.7,250.2M318.2,301.0L325.3,315.3M318.2,301.0L322.0,324.3M207.9,58.6L204.1,52.2M102.5,349.1L86.3,349.2M358.7,367.9L385.2,381.8M321.4,263.0L316.7,252.0M327.1,220.4L309.5,218.6M267.6,279.2L275.7,250.7M123.8,367.3L140.5,363.6M379.7,51.7L367.1,28.9M379.7,51.7L383.5,59.4M272.6,40.6L288.3,26.1M272.6,40.6L254.9,58.8M358.4,71.5L350.0,67.1M358.4,71.5L351.9,96.9M358.4,71.5L378.6,82.9M384.3,272.2L390.7,257.1M46.5,86.2L54.7,77.5M260.3,235.7L275.7,250.7M260.3,235.7L241.3,208.2M301.7,369.0L306.8,384.3M325.3,315.3L322.0,324.3M350.6,228.8L353.3,214.6M350.9,99.0L351.9,96.9M350.9,99.0L325.0,90.1M273.8,147.0L238.3,154.4M199.4,219.8L241.3,208.2M33.8,36.7L32.6,31.5M245.1,205.8L241.3,208.2M27.9,335.6L86.3,349.2M331.9,55.7L312.9,48.9M226.1,165.8L207.9,150.0M226.1,165.8L238.3,154.4M316.9,139.8L310.8,158.7M66.6,255.0L90.8,267.4M66.6,255.0L67.5,266.4M185.4,343.1L181.2,321.0M185.4,343.1L197.7,363.0M312.9,48.9L288.3,26.1M136.5,335.2L115.3,339.3M136.5,335.2L137.7,346.7M181.2,321.0L205.0,290.2M181.2,321.0L156.7,309.2M225.6,360.3L197.7,363.0M225.6,360.3L237.5,372.9M140.5,363.6L137.7,346.7M197.7,363.0L237.5,372.9M270.3,73.6L254.9,58.8M90.8,267.4L67.5,266.4\" stroke=\"#cbd5e1\" stroke-width=\"1.5\" stroke-linecap=\"round\" fill=\"none\" /><path d=\"M111.8,62.4L101.3,46.1M111.8,62.4L132.0,60.1M101.3,46.1L105.3,25.2M101.3,46.1L88.2,63.5M88.2,63.5L89.6,79.5M88.2,63.5L76.7,43.1M89.6,79.5L114.2,101.4M114.2,101.4L133.1,95.2M132.0,60.1L147.2,27.5M133.1,95.2L145.5,135.8M145.5,135.8L112.3,147.2M112.3,147.2L114.0,176.8M114.0,176.8L110.9,205.0M110.9,205.0L90.0,194.8M110.9,205.0L128.3,222.9M128.3,222.9L140.0,226.7M140.0,226.7L143.3,231.8M143.3,231.8L139.3,257.2M139.3,257.2L149.2,268.4M112.3,147.2L84.0,137.5M84.0,137.5L75.6,158.9M75.6,158.9L48.7,173.4M48.7,173.4L37.7,180.7M37.7,180.7L39.2,206.5M90.0,194.8L69.5,220.9M149.2,268.4L156.4,301.9M156.4,301.9L156.7,309.2M156.7,309.2L181.2,321.0M181.2,321.0L185.4,343.1M185.4,343.1L197.7,363.0M197.7,363.0L176.7,374.9M176.7,374.9L173.7,372.3M173.7,372.3L166.0,381.8M197.7,363.0L225.6,360.3M225.6,360.3L237.5,372.9M181.2,321.0L205.0,290.2M76.7,43.1L33.8,36.7M33.8,36.7L32.6,31.5M225.6,360.3L254.8,328.3M254.8,328.3L296.3,341.9M296.3,341.9L301.7,369.0M301.7,369.0L297.4,381.1M297.4,381.1L306.8,384.3M296.3,341.9L322.0,324.3M322.0,324.3L325.3,315.3M322.0,324.3L332.4,324.1M325.3,315.3L318.2,301.0M332.4,324.1L355.7,311.8M355.7,311.8L365.5,321.8M365.5,321.8L377.2,332.7M377.2,332.7L371.7,346.0M365.5,321.8L383.4,312.4M371.7,346.0L352.2,339.5M371.7,346.0L358.7,367.9M358.7,367.9L357.3,379.2M357.3,379.2L385.2,381.8M205.0,290.2L249.4,273.9M249.4,273.9L267.6,279.2M267.6,279.2L275.7,250.7M275.7,250.7L260.3,235.7M260.3,235.7L241.3,208.2M241.3,208.2L245.1,205.8M245.1,205.8L246.8,184.3M241.3,208.2L199.4,219.8M199.4,219.8L213.1,178.0M213.1,178.0L226.1,165.8M226.1,165.8L238.3,154.4M238.3,154.4L227.7,135.7M227.7,135.7L223.6,126.9M226.1,165.8L207.9,150.0M207.9,150.0L199.3,151.5M227.7,135.7L259.4,126.8M259.4,126.8L273.8,147.0\" stroke=\"#0f172a\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\" /><circle cx=\"111.8\" cy=\"62.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"171.3\" cy=\"81.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"48.7\" cy=\"173.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"365.5\" cy=\"321.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"308.6\" cy=\"106.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"223.6\" cy=\"126.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"88.2\" cy=\"63.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"103.8\" cy=\"369.0\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"332.4\" cy=\"324.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"321.8\" cy=\"96.0\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"139.3\" cy=\"257.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"296.3\" cy=\"341.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"351.4\" cy=\"56.3\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"249.4\" cy=\"273.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"212.2\" cy=\"90.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"200.2\" cy=\"57.2\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"371.7\" cy=\"346.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"227.7\" cy=\"135.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"362.1\" cy=\"236.9\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"352.2\" cy=\"339.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"213.1\" cy=\"178.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"246.8\" cy=\"184.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"84.0\" cy=\"137.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"326.3\" cy=\"40.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"41.2\" cy=\"257.0\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"128.3\" cy=\"222.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"199.3\" cy=\"151.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"395.0\" cy=\"96.8\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"177.6\" cy=\"99.4\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"259.4\" cy=\"126.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"156.4\" cy=\"301.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"143.3\" cy=\"231.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"360.4\" cy=\"61.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"46.9\" cy=\"109.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"308.6\" cy=\"252.9\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"112.3\" cy=\"147.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"90.0\" cy=\"194.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"39.9\" cy=\"283.4\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"357.3\" cy=\"379.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"297.4\" cy=\"381.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"30.8\" cy=\"131.5\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"383.4\" cy=\"312.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"176.7\" cy=\"374.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"254.8\" cy=\"328.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"133.1\" cy=\"95.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"189.2\" cy=\"74.8\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"166.0\" cy=\"381.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"147.2\" cy=\"27.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"40.7\" cy=\"87.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"315.6\" cy=\"158.9\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"132.0\" cy=\"60.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"389.2\" cy=\"181.7\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"101.3\" cy=\"46.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"44.6\" cy=\"86.7\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"275.8\" cy=\"79.7\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"39.2\" cy=\"206.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"116.6\" cy=\"395.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"69.5\" cy=\"220.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"311.9\" cy=\"176.3\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"391.4\" cy=\"201.7\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"114.0\" cy=\"176.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"37.7\" cy=\"180.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"116.5\" cy=\"354.8\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"333.1\" cy=\"209.5\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"35.8\" cy=\"118.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"114.2\" cy=\"101.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"110.1\" cy=\"347.5\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"76.7\" cy=\"43.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"369.2\" cy=\"234.3\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"392.5\" cy=\"173.9\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"359.2\" cy=\"267.3\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"318.2\" cy=\"301.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"207.9\" cy=\"58.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"102.5\" cy=\"349.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"358.7\" cy=\"367.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"149.2\" cy=\"268.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"321.4\" cy=\"263.0\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"327.1\" cy=\"220.4\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"267.6\" cy=\"279.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"123.8\" cy=\"367.3\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"379.7\" cy=\"51.7\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"385.2\" cy=\"381.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"272.6\" cy=\"40.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"358.4\" cy=\"71.5\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"384.3\" cy=\"272.2\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"46.5\" cy=\"86.2\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"260.3\" cy=\"235.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"301.7\" cy=\"369.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"105.3\" cy=\"25.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"367.1\" cy=\"28.9\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"350.0\" cy=\"67.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"325.3\" cy=\"315.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"350.6\" cy=\"228.8\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"350.9\" cy=\"99.0\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"273.8\" cy=\"147.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"355.7\" cy=\"311.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"199.4\" cy=\"219.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"33.8\" cy=\"36.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"245.1\" cy=\"205.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"345.7\" cy=\"250.2\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"75.6\" cy=\"158.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"309.5\" cy=\"218.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"27.9\" cy=\"335.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"331.9\" cy=\"55.7\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"226.1\" cy=\"165.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"316.9\" cy=\"139.8\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"110.9\" cy=\"205.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"383.5\" cy=\"59.4\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"66.6\" cy=\"255.0\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"353.3\" cy=\"214.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"185.4\" cy=\"343.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"312.9\" cy=\"48.9\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"351.9\" cy=\"96.9\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"136.5\" cy=\"335.2\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"181.2\" cy=\"321.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"86.3\" cy=\"349.2\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"89.6\" cy=\"79.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"207.9\" cy=\"150.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"225.6\" cy=\"360.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"288.3\" cy=\"26.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"140.0\" cy=\"226.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"205.0\" cy=\"290.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"204.1\" cy=\"52.2\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"115.3\" cy=\"339.3\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"156.7\" cy=\"309.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"390.7\" cy=\"257.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"275.7\" cy=\"250.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"140.5\" cy=\"363.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"197.7\" cy=\"363.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"137.7\" cy=\"346.7\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"316.7\" cy=\"252.0\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"188.4\" cy=\"76.3\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"310.8\" cy=\"158.7\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"270.3\" cy=\"73.6\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"54.7\" cy=\"77.5\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"325.0\" cy=\"90.1\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"359.5\" cy=\"162.4\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"238.3\" cy=\"154.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"254.9\" cy=\"58.8\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"173.7\" cy=\"372.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"90.8\" cy=\"267.4\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"145.5\" cy=\"135.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"32.6\" cy=\"31.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"377.2\" cy=\"332.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"322.0\" cy=\"324.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"378.6\" cy=\"82.9\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"241.3\" cy=\"208.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"237.5\" cy=\"372.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"306.8\" cy=\"384.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"67.5\" cy=\"266.4\" r=\"4\" fill=\"#ffffff\" stroke=\"#0f172a\" stroke-width=\"1.5\"/></svg></div><div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><strong>Kruskal</strong> spans all 10 islands</span></span><svg width=\"420\" height=\"420\" viewBox=\"0 0 420 420\"><rect width=\"420\" height=\"420\" rx=\"8\" fill=\"#f8fafc\"/><path d=\"M111.8,62.4L132.0,60.1M111.8,62.4L101.3,46.1M111.8,62.4L89.6,79.5M171.3,81.6L177.6,99.4M171.3,81.6L189.2,74.8M171.3,81.6L188.4,76.3M48.7,173.4L37.7,180.7M48.7,173.4L75.6,158.9M365.5,321.8L352.2,339.5M365.5,321.8L383.4,312.4M365.5,321.8L355.7,311.8M365.5,321.8L377.2,332.7M308.6,106.6L321.8,96.0M308.6,106.6L325.0,90.1M223.6,126.9L227.7,135.7M223.6,126.9L207.9,150.0M88.2,63.5L101.3,46.1M88.2,63.5L76.7,43.1M88.2,63.5L89.6,79.5M103.8,369.0L116.6,395.1M103.8,369.0L116.5,354.8M103.8,369.0L102.5,349.1M332.4,324.1L325.3,315.3M332.4,324.1L355.7,311.8M332.4,324.1L322.0,324.3M321.8,96.0L325.0,90.1M139.3,257.2L143.3,231.8M139.3,257.2L149.2,268.4M296.3,341.9L254.8,328.3M296.3,341.9L301.7,369.0M296.3,341.9L322.0,324.3M351.4,56.3L360.4,61.6M351.4,56.3L367.1,28.9M351.4,56.3L350.0,67.1M351.4,56.3L331.9,55.7M249.4,273.9L267.6,279.2M249.4,273.9L205.0,290.2M249.4,273.9L275.7,250.7M212.2,90.1L189.2,74.8M212.2,90.1L188.4,76.3M200.2,57.2L207.9,58.6M200.2,57.2L204.1,52.2M371.7,346.0L352.2,339.5M371.7,346.0L358.7,367.9M371.7,346.0L377.2,332.7M227.7,135.7L259.4,126.8M227.7,135.7L238.3,154.4M362.1,236.9L369.2,234.3M362.1,236.9L350.6,228.8M362.1,236.9L345.7,250.2M213.1,178.0L199.3,151.5M213.1,178.0L199.4,219.8M213.1,178.0L226.1,165.8M213.1,178.0L207.9,150.0M246.8,184.3L245.1,205.8M246.8,184.3L241.3,208.2M84.0,137.5L112.3,147.2M84.0,137.5L75.6,158.9M326.3,40.1L331.9,55.7M326.3,40.1L312.9,48.9M41.2,257.0L39.9,283.4M41.2,257.0L66.6,255.0M128.3,222.9L143.3,231.8M128.3,222.9L110.9,205.0M128.3,222.9L140.0,226.7M199.3,151.5L207.9,150.0M395.0,96.8L383.5,59.4M395.0,96.8L378.6,82.9M177.6,99.4L188.4,76.3M259.4,126.8L273.8,147.0M156.4,301.9L149.2,268.4M156.4,301.9L181.2,321.0M156.4,301.9L156.7,309.2M143.3,231.8L140.0,226.7M360.4,61.6L379.7,51.7M360.4,61.6L358.4,71.5M360.4,61.6L383.5,59.4M46.9,109.1L30.8,131.5M46.9,109.1L44.6,86.7M46.9,109.1L35.8,118.6M308.6,252.9L321.4,263.0M308.6,252.9L316.7,252.0M112.3,147.2L114.0,176.8M112.3,147.2L145.5,135.8M90.0,194.8L69.5,220.9M90.0,194.8L114.0,176.8M90.0,194.8L110.9,205.0M39.9,283.4L27.9,335.6M39.9,283.4L67.5,266.4M357.3,379.2L358.7,367.9M357.3,379.2L385.2,381.8M297.4,381.1L301.7,369.0M297.4,381.1L306.8,384.3M30.8,131.5L35.8,118.6M383.4,312.4L377.2,332.7M176.7,374.9L166.0,381.8M176.7,374.9L197.7,363.0M176.7,374.9L173.7,372.3M254.8,328.3L225.6,360.3M133.1,95.2L132.0,60.1M133.1,95.2L114.2,101.4M133.1,95.2L145.5,135.8M189.2,74.8L188.4,76.3M166.0,381.8L173.7,372.3M147.2,27.5L132.0,60.1M147.2,27.5L105.3,25.2M40.7,87.1L44.6,86.7M40.7,87.1L46.5,86.2M315.6,158.9L311.9,176.3M315.6,158.9L316.9,139.8M315.6,158.9L310.8,158.7M132.0,60.1L101.3,46.1M389.2,181.7L391.4,201.7M389.2,181.7L392.5,173.9M389.2,181.7L359.5,162.4M101.3,46.1L76.7,43.1M101.3,46.1L105.3,25.2M44.6,86.7L46.5,86.2M44.6,86.7L54.7,77.5M275.8,79.7L270.3,73.6M275.8,79.7L254.9,58.8M39.2,206.5L69.5,220.9M39.2,206.5L37.7,180.7M116.6,395.1L123.8,367.3M311.9,176.3L310.8,158.7M391.4,201.7L392.5,173.9M114.0,176.8L110.9,205.0M116.5,354.8L110.1,347.5M116.5,354.8L102.5,349.1M116.5,354.8L123.8,367.3M116.5,354.8L115.3,339.3M333.1,209.5L327.1,220.4M333.1,209.5L309.5,218.6M333.1,209.5L353.3,214.6M114.2,101.4L89.6,79.5M110.1,347.5L102.5,349.1M110.1,347.5L86.3,349.2M110.1,347.5L115.3,339.3M76.7,43.1L105.3,25.2M76.7,43.1L33.8,36.7M76.7,43.1L32.6,31.5M369.2,234.3L350.6,228.8M369.2,234.3L390.7,257.1M392.5,173.9L359.5,162.4M359.2,267.3L384.3,272.2M359.2,267.3L345.7,250.2M318.2,301.0L325.3,315.3M318.2,301.0L322.0,324.3M207.9,58.6L204.1,52.2M102.5,349.1L86.3,349.2M358.7,367.9L385.2,381.8M321.4,263.0L316.7,252.0M327.1,220.4L309.5,218.6M267.6,279.2L275.7,250.7M123.8,367.3L140.5,363.6M379.7,51.7L367.1,28.9M379.7,51.7L383.5,59.4M272.6,40.6L288.3,26.1M272.6,40.6L254.9,58.8M358.4,71.5L350.0,67.1M358.4,71.5L351.9,96.9M358.4,71.5L378.6,82.9M384.3,272.2L390.7,257.1M46.5,86.2L54.7,77.5M260.3,235.7L275.7,250.7M260.3,235.7L241.3,208.2M301.7,369.0L306.8,384.3M325.3,315.3L322.0,324.3M350.6,228.8L353.3,214.6M350.9,99.0L351.9,96.9M350.9,99.0L325.0,90.1M273.8,147.0L238.3,154.4M199.4,219.8L241.3,208.2M33.8,36.7L32.6,31.5M245.1,205.8L241.3,208.2M27.9,335.6L86.3,349.2M331.9,55.7L312.9,48.9M226.1,165.8L207.9,150.0M226.1,165.8L238.3,154.4M316.9,139.8L310.8,158.7M66.6,255.0L90.8,267.4M66.6,255.0L67.5,266.4M185.4,343.1L181.2,321.0M185.4,343.1L197.7,363.0M312.9,48.9L288.3,26.1M136.5,335.2L115.3,339.3M136.5,335.2L137.7,346.7M181.2,321.0L205.0,290.2M181.2,321.0L156.7,309.2M225.6,360.3L197.7,363.0M225.6,360.3L237.5,372.9M140.5,363.6L137.7,346.7M197.7,363.0L237.5,372.9M270.3,73.6L254.9,58.8M90.8,267.4L67.5,266.4\" stroke=\"#cbd5e1\" stroke-width=\"1.5\" stroke-linecap=\"round\" fill=\"none\" /><path d=\"M189.2,74.8L188.4,76.3M44.6,86.7L46.5,86.2M350.9,99.0L351.9,96.9M40.7,87.1L44.6,86.7M176.7,374.9L173.7,372.3M245.1,205.8L241.3,208.2M315.6,158.9L310.8,158.7M33.8,36.7L32.6,31.5M143.3,231.8L140.0,226.7M200.2,57.2L204.1,52.2M321.8,96.0L325.0,90.1M156.4,301.9L156.7,309.2M207.9,58.6L204.1,52.2M362.1,236.9L369.2,234.3M110.1,347.5L102.5,349.1M308.6,252.9L316.7,252.0M275.8,79.7L270.3,73.6M389.2,181.7L392.5,173.9M379.7,51.7L383.5,59.4M199.3,151.5L207.9,150.0M358.4,71.5L350.0,67.1M325.3,315.3L322.0,324.3M223.6,126.9L227.7,135.7M116.5,354.8L110.1,347.5M110.1,347.5L115.3,339.3M297.4,381.1L306.8,384.3M360.4,61.6L358.4,71.5M332.4,324.1L322.0,324.3M351.4,56.3L360.4,61.6M357.3,379.2L358.7,367.9M66.6,255.0L67.5,266.4M136.5,335.2L137.7,346.7M321.4,263.0L316.7,252.0M46.5,86.2L54.7,77.5M128.3,222.9L140.0,226.7M166.0,381.8L173.7,372.3M333.1,209.5L327.1,220.4M297.4,381.1L301.7,369.0M48.7,173.4L37.7,180.7M30.8,131.5L35.8,118.6M365.5,321.8L355.7,311.8M362.1,236.9L350.6,228.8M371.7,346.0L377.2,332.7M350.6,228.8L353.3,214.6M116.5,354.8L123.8,367.3M46.9,109.1L35.8,118.6M139.3,257.2L149.2,268.4M318.2,301.0L325.3,315.3M365.5,321.8L377.2,332.7M326.3,40.1L312.9,48.9M88.2,63.5L89.6,79.5M102.5,349.1L86.3,349.2M384.3,272.2L390.7,257.1M326.3,40.1L331.9,55.7M226.1,165.8L238.3,154.4M308.6,106.6L321.8,96.0M140.5,363.6L137.7,346.7M123.8,367.3L140.5,363.6M225.6,360.3L237.5,372.9M311.9,176.3L310.8,158.7M327.1,220.4L309.5,218.6M213.1,178.0L226.1,165.8M171.3,81.6L188.4,76.3M171.3,81.6L177.6,99.4M249.4,273.9L267.6,279.2M103.8,369.0L116.5,354.8M315.6,158.9L316.9,139.8M111.8,62.4L101.3,46.1M351.4,56.3L331.9,55.7M133.1,95.2L114.2,101.4M389.2,181.7L391.4,201.7M365.5,321.8L383.4,312.4M111.8,62.4L132.0,60.1M371.7,346.0L352.2,339.5M333.1,209.5L353.3,214.6M362.1,236.9L345.7,250.2M101.3,46.1L105.3,25.2M270.3,73.6L254.9,58.8M272.6,40.6L288.3,26.1M395.0,96.8L378.6,82.9M227.7,135.7L238.3,154.4M260.3,235.7L275.7,250.7M246.8,184.3L245.1,205.8M360.4,61.6L379.7,51.7M359.2,267.3L345.7,250.2M88.2,63.5L101.3,46.1M46.9,109.1L44.6,86.7M185.4,343.1L181.2,321.0M84.0,137.5L75.6,158.9M358.4,71.5L378.6,82.9M90.0,194.8L110.9,205.0M90.8,267.4L67.5,266.4M185.4,343.1L197.7,363.0M88.2,63.5L76.7,43.1M176.7,374.9L197.7,363.0M226.1,165.8L207.9,150.0M259.4,126.8L273.8,147.0M128.3,222.9L110.9,205.0M272.6,40.6L254.9,58.8M41.2,257.0L66.6,255.0M371.7,346.0L358.7,367.9M359.2,267.3L384.3,272.2M139.3,257.2L143.3,231.8M39.2,206.5L37.7,180.7M379.7,51.7L367.1,28.9M358.4,71.5L351.9,96.9M332.4,324.1L355.7,311.8M41.2,257.0L39.9,283.4M181.2,321.0L156.7,309.2M350.9,99.0L325.0,90.1M212.2,90.1L188.4,76.3M296.3,341.9L301.7,369.0M225.6,360.3L197.7,363.0M357.3,379.2L385.2,381.8M114.0,176.8L110.9,205.0M116.6,395.1L123.8,367.3M267.6,279.2L275.7,250.7M112.3,147.2L114.0,176.8M84.0,137.5L112.3,147.2M48.7,173.4L75.6,158.9M296.3,341.9L322.0,324.3M227.7,135.7L259.4,126.8M114.2,101.4L89.6,79.5M90.0,194.8L69.5,220.9M260.3,235.7L241.3,208.2M312.9,48.9L288.3,26.1M156.4,301.9L149.2,268.4M392.5,173.9L359.5,162.4M112.3,147.2L145.5,135.8M147.2,27.5L132.0,60.1M181.2,321.0L205.0,290.2M133.1,95.2L145.5,135.8M76.7,43.1L33.8,36.7M254.8,328.3L225.6,360.3M199.4,219.8L241.3,208.2M296.3,341.9L254.8,328.3M213.1,178.0L199.4,219.8M249.4,273.9L205.0,290.2M39.9,283.4L27.9,335.6M27.9,335.6L86.3,349.2\" stroke=\"#0f172a\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\" /><circle cx=\"111.8\" cy=\"62.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"171.3\" cy=\"81.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"48.7\" cy=\"173.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"365.5\" cy=\"321.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"308.6\" cy=\"106.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"223.6\" cy=\"126.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"88.2\" cy=\"63.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"103.8\" cy=\"369.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"332.4\" cy=\"324.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"321.8\" cy=\"96.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"139.3\" cy=\"257.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"296.3\" cy=\"341.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"351.4\" cy=\"56.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"249.4\" cy=\"273.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"212.2\" cy=\"90.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"200.2\" cy=\"57.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"371.7\" cy=\"346.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"227.7\" cy=\"135.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"362.1\" cy=\"236.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"352.2\" cy=\"339.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"213.1\" cy=\"178.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"246.8\" cy=\"184.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"84.0\" cy=\"137.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"326.3\" cy=\"40.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"41.2\" cy=\"257.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"128.3\" cy=\"222.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"199.3\" cy=\"151.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"395.0\" cy=\"96.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"177.6\" cy=\"99.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"259.4\" cy=\"126.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"156.4\" cy=\"301.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"143.3\" cy=\"231.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"360.4\" cy=\"61.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"46.9\" cy=\"109.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"308.6\" cy=\"252.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"112.3\" cy=\"147.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"90.0\" cy=\"194.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"39.9\" cy=\"283.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"357.3\" cy=\"379.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"297.4\" cy=\"381.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"30.8\" cy=\"131.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"383.4\" cy=\"312.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"176.7\" cy=\"374.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"254.8\" cy=\"328.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"133.1\" cy=\"95.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"189.2\" cy=\"74.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"166.0\" cy=\"381.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"147.2\" cy=\"27.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"40.7\" cy=\"87.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"315.6\" cy=\"158.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"132.0\" cy=\"60.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"389.2\" cy=\"181.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"101.3\" cy=\"46.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"44.6\" cy=\"86.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"275.8\" cy=\"79.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"39.2\" cy=\"206.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"116.6\" cy=\"395.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"69.5\" cy=\"220.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"311.9\" cy=\"176.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"391.4\" cy=\"201.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"114.0\" cy=\"176.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"37.7\" cy=\"180.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"116.5\" cy=\"354.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"333.1\" cy=\"209.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"35.8\" cy=\"118.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"114.2\" cy=\"101.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"110.1\" cy=\"347.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"76.7\" cy=\"43.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"369.2\" cy=\"234.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"392.5\" cy=\"173.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"359.2\" cy=\"267.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"318.2\" cy=\"301.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"207.9\" cy=\"58.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"102.5\" cy=\"349.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"358.7\" cy=\"367.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"149.2\" cy=\"268.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"321.4\" cy=\"263.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"327.1\" cy=\"220.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"267.6\" cy=\"279.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"123.8\" cy=\"367.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"379.7\" cy=\"51.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"385.2\" cy=\"381.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"272.6\" cy=\"40.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"358.4\" cy=\"71.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"384.3\" cy=\"272.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"46.5\" cy=\"86.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"260.3\" cy=\"235.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"301.7\" cy=\"369.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"105.3\" cy=\"25.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"367.1\" cy=\"28.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"350.0\" cy=\"67.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"325.3\" cy=\"315.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"350.6\" cy=\"228.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"350.9\" cy=\"99.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"273.8\" cy=\"147.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"355.7\" cy=\"311.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"199.4\" cy=\"219.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"33.8\" cy=\"36.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"245.1\" cy=\"205.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"345.7\" cy=\"250.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"75.6\" cy=\"158.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"309.5\" cy=\"218.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"27.9\" cy=\"335.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"331.9\" cy=\"55.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"226.1\" cy=\"165.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"316.9\" cy=\"139.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"110.9\" cy=\"205.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"383.5\" cy=\"59.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"66.6\" cy=\"255.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"353.3\" cy=\"214.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"185.4\" cy=\"343.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"312.9\" cy=\"48.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"351.9\" cy=\"96.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"136.5\" cy=\"335.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"181.2\" cy=\"321.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"86.3\" cy=\"349.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"89.6\" cy=\"79.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"207.9\" cy=\"150.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"225.6\" cy=\"360.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"288.3\" cy=\"26.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"140.0\" cy=\"226.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"205.0\" cy=\"290.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"204.1\" cy=\"52.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"115.3\" cy=\"339.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"156.7\" cy=\"309.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"390.7\" cy=\"257.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"275.7\" cy=\"250.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"140.5\" cy=\"363.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"197.7\" cy=\"363.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"137.7\" cy=\"346.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"316.7\" cy=\"252.0\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"188.4\" cy=\"76.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"310.8\" cy=\"158.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"270.3\" cy=\"73.6\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"54.7\" cy=\"77.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"325.0\" cy=\"90.1\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"359.5\" cy=\"162.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"238.3\" cy=\"154.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"254.9\" cy=\"58.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"173.7\" cy=\"372.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"90.8\" cy=\"267.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"145.5\" cy=\"135.8\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"32.6\" cy=\"31.5\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"377.2\" cy=\"332.7\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"322.0\" cy=\"324.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"378.6\" cy=\"82.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"241.3\" cy=\"208.2\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"237.5\" cy=\"372.9\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"306.8\" cy=\"384.3\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><circle cx=\"67.5\" cy=\"266.4\" r=\"4\" fill=\"#0f172a\" stroke=\"#0f172a\" stroke-width=\"1.5\"/></svg></div></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "wAgl",
+      "code_hash": "4de88effe14802b2b27608b251c3aa31",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><strong>2. Many points, medium density.</strong> At 51,200 points with 12+ neighbours each,\nKruskal is 10\u201320% faster. At 25,600 they tie, so it's a narrow win.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "rEll",
+      "code_hash": "3ae108074b8153152ef41d1d0a8df6b9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><em>Press the button above to run this one too.</em></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "dGlV",
+      "code_hash": "8e167c6127e644e76aeb7795c65aef7d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"same-tree-different-route\">Same tree, different route</h2>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>total length</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Prim</td>\n<td>2.3358</td>\n</tr>\n<tr>\n<td>Kruskal</td>\n<td>2.3358</td>\n</tr>\n<tr>\n<td>Delaunay + Kruskal</td>\n<td>2.3358</td>\n</tr>\n</tbody>\n</table>\n<span class=\"paragraph\">All three find the same tree; only the order differs.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

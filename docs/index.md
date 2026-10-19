@@ -483,4 +483,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/inverse_turing_test.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/inverse_turing_test.py">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_mst.py/wasm?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/state-viewer-mst.webp" alt="Minimum Spanning Tree"></a>
+<div class="example-content">
+<div class="example-title">Minimum Spanning Tree</div>
+<div class="example-desc">Watch Prim grow one tree and Kruskal merge a forest, line by line, with StateViewer, then benchmark both on complete and sparse graphs.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_mst.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/state_viewer_mst.py">Source</a></div>
+</div>
 </div>
