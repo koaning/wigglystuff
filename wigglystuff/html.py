@@ -1,5 +1,6 @@
 import base64
 import io
+import threading
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -35,6 +36,8 @@ def _in_notebook() -> bool:
 # rich allows only one live display per process, so we track the active one and
 # retire it before starting the next (lets sequential ProgressBars each render).
 _active_rich_progress = None
+# Guards the lazy rich setup and updates, since .value may be set from threads.
+_rich_lock = threading.RLock()
 
 
 class ImageRefreshWidget(anywidget.AnyWidget):
@@ -300,19 +303,21 @@ class ProgressBar(anywidget.AnyWidget):
     def _on_value_change(self, change) -> None:
         if not self._rich_enabled:
             return
-        self._ensure_rich()
-        if self._rich_progress is None:
-            return
-        self._rich_progress.update(
-            self._rich_task, completed=self.value, total=self.max_value
-        )
+        with _rich_lock:
+            self._ensure_rich()
+            if self._rich_progress is None:
+                return
+            self._rich_progress.update(
+                self._rich_task, completed=self.value, total=self.max_value
+            )
 
     def _stop_rich(self) -> None:
         global _active_rich_progress
-        if self._rich_progress is not None:
-            try:
-                self._rich_progress.stop()
-            finally:
-                if _active_rich_progress is self._rich_progress:
-                    _active_rich_progress = None
-                self._rich_progress = None
+        with _rich_lock:
+            if self._rich_progress is not None:
+                try:
+                    self._rich_progress.stop()
+                finally:
+                    if _active_rich_progress is self._rich_progress:
+                        _active_rich_progress = None
+                    self._rich_progress = None

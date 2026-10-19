@@ -11,6 +11,12 @@ All notable changes to this project will be documented in this file.
   menu (the synced `show_latest` traitlet, on by default) turns this off to keep
   the picked trace pinned.
 
+### Fixed
+
+- `ProgressBar` no longer crashes with a `KeyError` in script mode when `.value`
+  is set from several threads at once (for example from an sklearn callback
+  under joblib's threading backend) with `rich` installed.
+
 ## [0.5.35] - 2026-10-15
 
 ### Added
