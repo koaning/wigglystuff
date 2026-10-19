@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `TraceView` jumps back to following live when a new trace starts, even after
+  you picked an older trace from the menu. A *Follow latest* button next to the
+  menu (the synced `show_latest` traitlet, on by default) turns this off to keep
+  the picked trace pinned.
+
+## [0.5.35] - 2026-10-15
+
+### Added
+
+- New `TraceView` widget for OpenTelemetry traces. Each span is a row in an
+  indented parent/child tree with its state, a timeline bar, and its duration;
+  span links show as dashed curves. Install the optional `otel` extra (`wigglystuff[otel]`)
+  for live capture.
+- `TraceView` works with W&B Weave: call a `@weave.op` function inside
+  `with view.capture_weave():` to watch its calls live, or load stored calls
+  with `TraceView.from_weave(client.get_calls(...))`. Install the optional
+  `weave` extra (`wigglystuff[weave]`). See `demos/traceview_weave.py`.
+
 ## [0.5.34] - 2026-10-07
 
 ### Fixed

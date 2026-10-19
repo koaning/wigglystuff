@@ -120,6 +120,9 @@ uv pip install wigglystuff
 <td align="center"><b>TangleFunction</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_function.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/tanglefunction.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_function.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/tangle-function/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/tangle-function.md">MD</a></td>
 <td align="center"><b>TangleDistribution</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_distribution.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/tangledistribution.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/tangle_distribution.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/tangle-distribution/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/tangle-distribution.md">MD</a></td>
 </tr>
+<tr>
+<td align="center"><b>TraceView</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/traceview.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/traceview.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/traceview.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/trace-view/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/trace-view.md">MD</a></td>
+</tr>
 </table>
 
 ## 3rd party widgets
