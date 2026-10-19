@@ -10,18 +10,6 @@ All notable changes to this project will be documented in this file.
 
 - New `StateViewer` widget that animates what happens inside one run of a
   Python function, made for search problems like N-Queens backtracking.
-  `StateViewer(search_func, view_func, args=...)` records every line
-  `search_func` executes (recursive calls included) and calls `view_func` at
-  each step with the locals that match its parameter names. It then plays
-  the run back with your drawing of the state on the left, the source with the
-  current line and a fixed variables table on the right, and a call-depth
-  timeline you can scrub. `view_func` can return anything marimo can display;
-  `max_steps` (default 20,000) stops a runaway search. For searches without
-  recursion, `timeline_func` (e.g. `lambda frontier: len(frontier)`) sets what
-  the timeline plots instead of call depth. `view_func` is optional:
-  `viewer.state` holds the real local values at the current step, and `step`
-  syncs while playing, so another widget can draw the state instead.
-
 ### Changed
 
 - `TraceView` jumps back to following live when a new trace starts, even after
