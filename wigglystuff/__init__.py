@@ -55,6 +55,7 @@ from .scatter_log import ScatterLog
 from drawdata import ScatterWidget
 from .slider2d import Slider2D
 from .spline_draw import SplineDraw
+from .state_viewer import StateViewer
 from .sortable_list import SortableList
 from .talk import WebkitSpeechToTextWidget
 from .tangle import TangleChoice, TangleDistribution, TangleSelect, TangleSlider
@@ -123,6 +124,7 @@ __all__ = [
     "ScatterWidget",
     "Slider2D",
     "SplineDraw",
+    "StateViewer",
     "SortableList",
     "TangleChoice",
     "TangleDistribution",

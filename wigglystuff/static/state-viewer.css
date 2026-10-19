@@ -1,0 +1,316 @@
+.state-viewer-root {
+  --sv-bg: #ffffff;
+  --sv-panel: #fafafb;
+  --sv-border: #e2e2e6;
+  --sv-text: #2b2b31;
+  --sv-muted: #8a8a94;
+  --sv-accent: #0969da;
+  --sv-current: rgba(245, 197, 24, 0.32);
+  --sv-current-edge: #d4a017;
+  --sv-return: rgba(26, 127, 90, 0.18);
+  --sv-return-edge: #1a7f5a;
+  --sv-raise: rgba(207, 34, 46, 0.14);
+  --sv-raise-edge: #cf222e;
+  --sv-changed: rgba(245, 197, 24, 0.38);
+  --sv-past: #0969da;
+  --sv-future: rgba(9, 105, 218, 0.16);
+  --sv-kw: #8250df;
+  --sv-fn: #0969da;
+  --sv-num: #0969da;
+  --sv-str: #a1470b;
+  --sv-comment: #6a737d;
+  --sv-error: #cf222e;
+  color-scheme: light dark;
+  color: var(--sv-text);
+  background: var(--sv-bg);
+  border: 1px solid var(--sv-border);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  width: max-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.state-viewer-root:focus-visible {
+  box-shadow: 0 0 0 2px var(--sv-accent);
+}
+
+.dark .state-viewer-root,
+.dark-theme .state-viewer-root,
+[data-theme="dark"] .state-viewer-root {
+  --sv-bg: #1c1c20;
+  --sv-panel: #242428;
+  --sv-border: #3f3f46;
+  --sv-text: #f4f4f5;
+  --sv-muted: #a1a1aa;
+  --sv-accent: #7dd3fc;
+  --sv-current: rgba(245, 197, 24, 0.22);
+  --sv-current-edge: #f5c518;
+  --sv-return: rgba(74, 222, 128, 0.16);
+  --sv-return-edge: #4ade80;
+  --sv-raise: rgba(248, 81, 73, 0.18);
+  --sv-raise-edge: #ff7b72;
+  --sv-changed: rgba(245, 197, 24, 0.26);
+  --sv-past: #7dd3fc;
+  --sv-future: rgba(125, 211, 252, 0.16);
+  --sv-kw: #c4b5fd;
+  --sv-fn: #7dd3fc;
+  --sv-num: #7dd3fc;
+  --sv-str: #fdba74;
+  --sv-comment: #a1a1aa;
+  --sv-error: #ff7b72;
+}
+
+.sv-main {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.sv-main.sv-capped > * {
+  max-height: inherit;
+  overflow: auto;
+}
+
+.sv-view-panel {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sv-panel);
+  border: 1px solid var(--sv-border);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.sv-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sv-side {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sv-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  background: var(--sv-panel);
+  border: 1px solid var(--sv-border);
+  border-radius: 6px;
+  padding: 6px 0;
+  overflow: auto;
+}
+
+.sv-line {
+  display: flex;
+  align-items: center;
+  white-space: pre;
+  padding-right: 10px;
+  border-left: 3px solid transparent;
+}
+
+.sv-lineno {
+  flex: 0 0 auto;
+  width: 2.5em;
+  padding-right: 0.8em;
+  text-align: right;
+  color: var(--sv-muted);
+  user-select: none;
+}
+
+.sv-line.sv-current {
+  background: var(--sv-current);
+  border-left-color: var(--sv-current-edge);
+}
+
+.sv-line.sv-return {
+  background: var(--sv-return);
+  border-left-color: var(--sv-return-edge);
+}
+
+.sv-line.sv-raise {
+  background: var(--sv-raise);
+  border-left-color: var(--sv-raise-edge);
+}
+
+.sv-pill {
+  padding-left: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11px;
+  color: var(--sv-muted);
+}
+
+.sv-kw { color: var(--sv-kw); }
+.sv-fn { color: var(--sv-fn); }
+.sv-num { color: var(--sv-num); }
+.sv-str { color: var(--sv-str); }
+.sv-comment { color: var(--sv-comment); font-style: italic; }
+
+.sv-locals {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  border: 1px solid var(--sv-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.sv-local {
+  display: contents;
+}
+
+.sv-local > span {
+  padding: 3px 10px;
+  border-top: 1px solid var(--sv-border);
+  transition: background-color 0.25s;
+}
+
+.sv-local:first-child > span {
+  border-top: none;
+}
+
+.sv-local-name {
+  color: var(--sv-muted);
+}
+
+.sv-local-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sv-local.sv-changed > span {
+  background: var(--sv-changed);
+  transition: none;
+}
+
+.sv-local.sv-unset .sv-local-value {
+  color: var(--sv-muted);
+  font-style: italic;
+}
+
+.sv-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.sv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--sv-border);
+  border-radius: 6px;
+  background: var(--sv-panel);
+  color: var(--sv-text);
+  cursor: pointer;
+}
+
+.sv-btn:hover {
+  border-color: var(--sv-accent);
+}
+
+.sv-btn svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+.sv-counter {
+  min-width: 6.5em;
+  margin-left: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sv-depth {
+  min-width: 5em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--sv-current);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.sv-speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--sv-muted);
+  font-size: 12px;
+}
+
+.sv-speed-range {
+  width: 90px;
+  accent-color: var(--sv-accent);
+}
+
+.sv-speed-label {
+  min-width: 6.5em;
+  font-variant-numeric: tabular-nums;
+}
+
+.sv-status {
+  margin-left: auto;
+  color: var(--sv-muted);
+  font-size: 12px;
+}
+
+.sv-timeline-caption {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  color: var(--sv-muted);
+  font-size: 11px;
+}
+
+.sv-timeline {
+  display: block;
+  width: 100%;
+  height: 40px;
+  margin-top: 4px;
+  border: 1px solid var(--sv-border);
+  border-radius: 6px;
+  background: var(--sv-panel);
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.sv-area-future {
+  fill: var(--sv-future);
+}
+
+.sv-area-past {
+  fill: var(--sv-past);
+  opacity: 0.75;
+}
+
+.sv-playhead {
+  stroke: var(--sv-current-edge);
+  stroke-width: 2;
+}
+
+.sv-error {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--sv-error);
+  border: 1px solid var(--sv-error);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}

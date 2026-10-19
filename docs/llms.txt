@@ -31,6 +31,7 @@ Install via `pip install wigglystuff` or `uv pip install wigglystuff`.
 - [GraphWidget](https://koaning.github.io/wigglystuff/reference/graph-widget.md): Programmatic force-directed graph visualization with named/sized/colored nodes and edges
 - [KeystrokeWidget](https://koaning.github.io/wigglystuff/reference/keystroke.md): Keyboard input capture
 - [LiveEdit](https://koaning.github.io/wigglystuff/reference/live-edit.md): Inspect one run of a Python function with source-linked loop traces
+- [StateViewer](https://koaning.github.io/wigglystuff/reference/state-viewer.md): Animate one run of a Python function (e.g. a backtracking search) step by step, line by line: a picture of the state drawn by your `view_func` (its parameter names pick the locals), the source with the current line, a fixed variables table, and a scrubbable call-depth timeline ([molab demo](https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer.py/wasm?utm_source=wigglystuff))
 - [ManimWeb](https://koaning.github.io/wigglystuff/reference/manim-web.md): Run a manim-web (browser Manim) scene from a JS string, local file, or URL
 - [ObservablePlot](https://koaning.github.io/wigglystuff/reference/observable-plot.md): Run Observable Plot JS from a string, local file, or URL, injecting Python variables by name
 - [EsmWidget](https://koaning.github.io/wigglystuff/reference/esm-widget.md): Render an inline ES module (any CDN library, e.g. motion.dev or Observable Plot) with a two-way `data` bridge to Python
