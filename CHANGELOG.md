@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.36] - 2026-10-19
+
 ### Added
 
 - New `StateViewer` widget that animates what happens inside one run of a
