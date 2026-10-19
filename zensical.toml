@@ -71,6 +71,7 @@ nav = [
         { Treemap = "reference/treemap.md" },
         { NestedTable = "reference/nested-table.md" },
         { LiveEdit = "reference/live-edit.md" },
+        { StateViewer = "reference/state-viewer.md" },
         { AsyncFlow = "reference/async-flow.md" },
         { TraceView = "reference/trace-view.md" },
         { WidgetDAG = "reference/widget-dag.md" },
