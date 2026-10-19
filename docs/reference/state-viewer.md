@@ -1,9 +1,20 @@
 ---
 title: "StateViewer: animate the state inside a Python function"
 description: StateViewer runs a Python function once, records every line it executes (recursion included), and plays it back in marimo next to a picture of the state that you draw yourself, such as an N-Queens board during backtracking search.
+image: stateviewer
+image_alt: StateViewer source panel for an N-Queens solver with the line about to run highlighted
 ---
 
 # StateViewer API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="state_viewer" data-demo-title="StateViewer live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/stateviewer.webp" alt="StateViewer source panel for an N-Queens solver with the line about to run highlighted" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
 
 `StateViewer(search_func, view_func)` runs `search_func` once and records every
 line it executes, including recursive calls. Calls into other functions are not

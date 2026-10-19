@@ -122,6 +122,7 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>TraceView</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/traceview.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/traceview.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/traceview.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/trace-view/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/trace-view.md">MD</a></td>
+<td align="center"><b>StateViewer</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/stateviewer.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/state-viewer/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/state-viewer.md">MD</a></td>
 </tr>
 </table>
 
