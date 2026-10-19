@@ -88,10 +88,8 @@ function render({ model, el: host }) {
   controls.append(prevBtn, playBtn, nextBtn, counter, depthBadge, speedWrap, status);
 
   const timelineCaption = el("div", "sv-timeline-caption");
-  timelineCaption.append(
-    el("span", "", "call depth over the whole run (taller = deeper recursion)"),
-    el("span", "", "click or drag to scrub"),
-  );
+  const timelineLabel = el("span");
+  timelineCaption.append(timelineLabel, el("span", "", "click or drag to scrub"));
   const timeline = svgEl("svg", { class: "sv-timeline", preserveAspectRatio: "none" });
   const errorBox = el("div", "sv-error");
 
@@ -109,6 +107,14 @@ function render({ model, el: host }) {
   let minViewHeight = 0;
 
   const steps = () => model.get("steps") || [];
+  // The number the timeline plots for a step: timeline_func's value if given.
+  const metric = (s) => (s.value ?? s.depth);
+  function badgeText(step) {
+    const label = model.get("timeline_label");
+    if (label === "call depth") return `depth ${step.depth}`;
+    const v = metric(step);
+    return `${label} ${Number.isInteger(v) ? v : v.toFixed(2)}`;
+  }
   const maxIndex = () => Math.max(0, steps().length - 1);
   const clamp = (i) => Math.max(0, Math.min(i, maxIndex()));
 
@@ -123,20 +129,29 @@ function render({ model, el: host }) {
 
   function buildTimeline() {
     timeline.replaceChildren();
+    const label = model.get("timeline_label");
+    timelineLabel.textContent =
+      label === "call depth"
+        ? "call depth over the whole run (taller = deeper recursion)"
+        : `${label} over the whole run`;
     const all = steps();
     if (!all.length) return;
-    const maxDepth = Math.max(1, ...all.map((s) => s.depth));
-    timeline.setAttribute("viewBox", `0 0 ${all.length} ${maxDepth}`);
-    // Step-plot of recursion depth over every step, rising from the bottom.
-    let d = `M0,${maxDepth}`;
-    all.forEach((s, i) => {
-      d += ` V${maxDepth - s.depth} H${i + 1}`;
+    // Step-plot of each step's value (timeline_func, or the call depth),
+    // rising from a baseline at 0 (or the minimum, if values go negative).
+    const values = all.map(metric);
+    const low = Math.min(0, ...values);
+    const top = Math.max(low + 1, ...values);
+    const span = top - low;
+    timeline.setAttribute("viewBox", `0 0 ${all.length} ${span}`);
+    let d = `M0,${span}`;
+    values.forEach((v, i) => {
+      d += ` V${top - v} H${i + 1}`;
     });
-    d += ` V${maxDepth} Z`;
+    d += ` V${span} Z`;
     const clipId = `sv-clip-${uid}`;
     const defs = svgEl("defs");
     const clip = svgEl("clipPath", { id: clipId });
-    clipRect = svgEl("rect", { x: 0, y: 0, width: 0, height: maxDepth });
+    clipRect = svgEl("rect", { x: 0, y: 0, width: 0, height: span });
     clip.append(clipRect);
     defs.append(clip);
     timeline.append(
@@ -146,7 +161,7 @@ function render({ model, el: host }) {
     );
     playhead = svgEl("line", {
       class: "sv-playhead",
-      x1: 0, x2: 0, y1: 0, y2: maxDepth,
+      x1: 0, x2: 0, y1: 0, y2: span,
       "vector-effect": "non-scaling-stroke",
     });
     timeline.append(playhead);
@@ -171,6 +186,8 @@ function render({ model, el: host }) {
 
   function renderView(step) {
     const views = model.get("views") || [];
+    // No view_func: the code and variables are the whole widget.
+    viewPanel.style.display = views.length ? "" : "none";
     const html = step && step.view >= 0 ? views[step.view] : "";
     if (view.dataset.index !== String(step?.view)) {
       view.innerHTML = html || "";
@@ -218,7 +235,7 @@ function render({ model, el: host }) {
     renderLocals(step, previous);
 
     counter.textContent = all.length ? `${cur + 1} / ${all.length}` : "0 / 0";
-    depthBadge.textContent = step ? `depth ${step.depth}` : "";
+    depthBadge.textContent = step ? badgeText(step) : "";
     if (clipRect) clipRect.setAttribute("width", String(cur + 1));
     if (playhead) {
       playhead.setAttribute("x1", String(cur + 0.5));
@@ -255,17 +272,41 @@ function render({ model, el: host }) {
     main.classList.toggle("sv-capped", h > 0);
   }
 
-  function commitStep() {
+  // `step` reaches Python while playing and scrubbing too, so other widgets
+  // can follow along. model.set() is local; only save_changes() is throttled.
+  let syncTimer = null;
+  let syncPending = false;
+
+  function flushSync() {
+    if (syncTimer !== null) clearTimeout(syncTimer);
+    syncTimer = null;
+    syncPending = false;
+    model.save_changes();
+  }
+
+  function commitStep({ now = false } = {}) {
     if (model.get("step") !== cur) {
       model.set("step", cur);
-      model.save_changes();
+      syncPending = true;
+    }
+    const ms = model.get("sync_throttle_ms");
+    if (now || ms <= 0) {
+      if (syncPending) flushSync();
+      return;
+    }
+    // A trailing flush makes sure the last step of a burst isn't dropped.
+    if (syncPending && syncTimer === null) {
+      syncTimer = setTimeout(() => {
+        syncTimer = null;
+        if (syncPending) flushSync();
+      }, ms);
     }
   }
 
   function goTo(index) {
     cur = clamp(index);
     renderStep();
-    if (rafId === null) commitStep();
+    commitStep({ now: rafId === null });
   }
 
   function frame(time) {
@@ -288,6 +329,7 @@ function render({ model, el: host }) {
       }
       cur = next;
       renderStep();
+      commitStep();
     }
     rafId = requestAnimationFrame(frame);
   }
@@ -311,7 +353,7 @@ function render({ model, el: host }) {
     playBtn.innerHTML = PLAY_ICON;
     model.set("playing", false);
     model.set("step", cur);
-    model.save_changes();
+    flushSync();
   }
 
   const togglePlay = () => (rafId === null ? startPlaying() : stopPlaying());
@@ -330,6 +372,7 @@ function render({ model, el: host }) {
     const fraction = (event.clientX - rect.left) / Math.max(1, rect.width);
     cur = clamp(Math.floor(fraction * steps().length));
     renderStep();
+    if (rafId === null) commitStep();
   }
   timeline.addEventListener("pointerdown", (event) => {
     timeline.setPointerCapture(event.pointerId);
@@ -339,7 +382,7 @@ function render({ model, el: host }) {
     if (timeline.hasPointerCapture(event.pointerId)) scrubTo(event);
   });
   timeline.addEventListener("pointerup", () => {
-    if (rafId === null) commitStep();
+    if (rafId === null) commitStep({ now: true });
   });
 
   root.addEventListener("keydown", (event) => {
@@ -368,6 +411,10 @@ function render({ model, el: host }) {
     renderStep();
   });
   model.on("change:variables", renderStep);
+  model.on("change:timeline_label", () => {
+    buildTimeline();
+    renderStep();
+  });
   model.on("change:steps", () => {
     minViewWidth = 0;
     minViewHeight = 0;
@@ -387,6 +434,7 @@ function render({ model, el: host }) {
 
   return () => {
     if (rafId !== null) cancelAnimationFrame(rafId);
+    if (syncTimer !== null) clearTimeout(syncTimer);
   };
 }
 

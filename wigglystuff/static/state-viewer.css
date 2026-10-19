@@ -238,7 +238,9 @@
 }
 
 .sv-depth {
-  min-width: 5em;
+  /* Room for labels like "queue size 12" so the controls don't shift. */
+  min-width: 8em;
+  white-space: nowrap;
   padding: 2px 8px;
   border-radius: 999px;
   background: var(--sv-current);
@@ -281,7 +283,10 @@
 
 .sv-timeline {
   display: block;
-  width: 100%;
+  /* width: 0 keeps the long viewBox from setting the widget's max-content
+     width; min-width then stretches it to the full row. */
+  width: 0;
+  min-width: 100%;
   height: 40px;
   margin-top: 4px;
   border: 1px solid var(--sv-border);
