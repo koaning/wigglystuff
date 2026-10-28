@@ -491,4 +491,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_mst.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/state_viewer_mst.py">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_hull.py/wasm?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/state-viewer-hull.webp" alt="Convex Hull"></a>
+<div class="example-content">
+<div class="example-title">Convex Hull</div>
+<div class="example-desc">Draw points with ScatterWidget and watch monotone chain, gift wrapping, and Quickhull wrap them, line by line, with StateViewer, then benchmark all three against scipy on squares and circles.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_hull.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/state_viewer_hull.py">Source</a></div>
+</div>
 </div>
