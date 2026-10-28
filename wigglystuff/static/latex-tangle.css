@@ -4,7 +4,8 @@
   --lt-ink: #25221d;
   --lt-muted: #706a60;
   --lt-line: #ddd7cc;
-  display: inline-flex;
+  display: flex;
+  margin-inline: auto;
   width: min(100%, 680px);
   min-width: 260px;
   flex-direction: column;

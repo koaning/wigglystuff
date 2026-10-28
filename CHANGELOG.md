@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- `TangleLatex` and `FormulaAnimation` now center in the cell output at any
+  notebook width. Before, the card stuck to the left once the output area was
+  wider than 680px (e.g. `App(width="medium")`).
+
 ## [0.5.36] - 2026-10-19
 
 ### Added
