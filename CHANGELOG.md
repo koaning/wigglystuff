@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- `TraceView` throttling no longer depends on machine uptime: the first span
+  update now always syncs immediately. Previously `_last_sync` started at `0.0`,
+  so on a freshly booted machine (e.g. a CI runner with `time.monotonic()` below
+  `sync_throttle_ms`) the first span was silently throttled and the test
+  `test_throttle_still_sends_the_final_update` failed.
+
 ## [0.5.37] - 2026-11-09
 
 ### Added
