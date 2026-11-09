@@ -65,6 +65,16 @@ function render({model, el}) {
         updateTimeout = setTimeout(updateModel, 50); // Debounce for 100ms
     }
 
+    // Ends a drag or a typed edit: committed_amount catches up with amount.
+    // Until then it holds the value from before the drag.
+    function commit() {
+        clearTimeout(updateTimeout);
+        model.set("amount", amount);
+        model.set("committed_amount", amount);
+        model.set("dragging", false);
+        model.save_changes();
+    }
+
     // Modifier scaling for linear sliders: Shift = 10x coarser, Alt/Option =
     // 10x finer (Alt wins if both are held). Discrete steps mode ignores this.
     function modMultiplier(ev) {
@@ -109,6 +119,11 @@ function render({model, el}) {
         }
 
         function onMouseMove(e) {
+            if (!model.get("dragging")) {
+                // Tell Python first, so it keeps committed_amount where it was.
+                model.set("dragging", true);
+                model.save_changes();
+            }
             lastTypedText = null; // dragging supersedes any typed literal
             lastX = e.clientX;
             const mult = steps.length > 0 ? 1 : modMultiplier(e);
@@ -131,7 +146,7 @@ function render({model, el}) {
                 amount = startValue;
                 enterEditMode();
             } else {
-                updateModel();
+                commit();
             }
         }
 
@@ -188,7 +203,7 @@ function render({model, el}) {
                 lastTypedText = previousTypedText;
             }
             renderValue();
-            updateModel();
+            commit();
         }
 
         input.addEventListener('keydown', (e) => {

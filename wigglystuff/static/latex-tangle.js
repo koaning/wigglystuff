@@ -180,11 +180,19 @@ async function render({ model, el }) {
     model.save_changes();
   }
 
+  // Ends a drag or an edit: committed_values catches up with values.
+  // Until then it holds the values from before the drag.
+  function commit() {
+    model.set("committed_values", { ...(model.get("values") || {}) });
+    model.set("dragging", false);
+    flushSave();
+  }
+
   function updateValue(name, value, { flush = false } = {}) {
     localValuesUpdate = true;
     model.set("values", { ...(model.get("values") || {}), [name]: value });
     renderFormula();
-    if (flush) flushSave();
+    if (flush) commit();
     else scheduleSave();
   }
 
@@ -220,7 +228,12 @@ async function render({ model, el }) {
   function moveDrag(event) {
     if (!drag || event.pointerId !== drag.pointerId) return;
     const deltaX = event.clientX - drag.startX;
-    if (Math.abs(deltaX) >= 3) drag.moved = true;
+    if (!drag.moved && Math.abs(deltaX) >= 3) {
+      drag.moved = true;
+      // Tell Python first, so it keeps committed_values where they were.
+      model.set("dragging", true);
+      flushSave();
+    }
     if (!drag.moved) return;
     event.preventDefault();
     const stepCount = Math.trunc(deltaX / drag.spec.pixels_per_step);
@@ -244,7 +257,7 @@ async function render({ model, el }) {
     root.classList.remove("is-dragging");
     if (finished.moved) {
       renderFormula();
-      flushSave();
+      commit();
       return;
     }
     openEditor(finished.name, finished.occurrence);
@@ -252,9 +265,11 @@ async function render({ model, el }) {
 
   function cancelDrag(event) {
     if (!drag || event.pointerId !== drag.pointerId) return;
+    const finished = drag;
     drag = null;
     root.classList.remove("is-dragging");
     renderFormula();
+    if (finished.moved) commit();
   }
 
   function openEditor(name, occurrence = 0) {
@@ -367,7 +382,7 @@ async function render({ model, el }) {
     localValuesUpdate = true;
     model.set("values", { ...initialValues });
     renderFormula();
-    flushSave();
+    commit();
   }
 
   function handleValuesChange() {

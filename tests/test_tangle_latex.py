@@ -179,3 +179,16 @@ def test_invalid_theme_is_rejected():
 def test_formula_requires_at_least_one_parameter_marker():
     with pytest.raises(ValueError, match=r"at least one \\tangle"):
         TangleLatex(latex=r"y = x + 1", parameters={})
+
+
+def test_committed_values_hold_old_values_during_drag():
+    widget = TangleLatex(latex=r"y = \tangle{a}x", parameters={"a": parameter(2)})
+    assert widget.committed_values == {"a": 2.0}
+    assert widget.dragging is False
+
+    widget.values = {"a": 3.0}
+    assert widget.committed_values == {"a": 3.0}
+
+    widget.dragging = True
+    widget.values = {"a": 4.0}
+    assert widget.committed_values == {"a": 3.0}

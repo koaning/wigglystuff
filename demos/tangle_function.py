@@ -52,7 +52,8 @@ def _(mo, tf):
     args = ", ".join(f"{k}={v!r}" for k, v in tf.value["values"].items())
     mo.md(f"""
     Drag the **numbers**, click the **choices** (`optimizer`, `shuffle`), and
-    click the **string** to edit it. The current call is:
+    click the **string** to edit it. While you drag, `values` follows along and
+    `committed_values` keeps the arguments from before the drag. The current call is:
 
     ```python
     train({args})
@@ -143,6 +144,55 @@ def _(TangleFunction, mo):
 def _(gen, mo):
     mo.md(f"""
     `values = {gen.value['values']}`
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ### Old and new values
+
+    Next to `values`, a `TangleFunction` also stores `committed_values`. While
+    you drag a number, `values` follows the pointer and `committed_values` keeps
+    the arguments from before the drag. When you let go, the two match again.
+    Drag a number below to compare the old result with the new one.
+    """)
+    return
+
+
+@app.cell
+def _(TangleFunction, mo):
+    def compound(principal: float = 1000.0, rate: float = 0.05, years: int = 10):
+        return principal * (1 + rate) ** years
+
+
+    growth = mo.ui.anywidget(
+        TangleFunction(
+            compound,
+            theme="light",
+            params={
+                "principal": {"min_value": 0, "step": 50},
+                "rate": {"min_value": 0, "max_value": 0.2, "step": 0.005},
+                "years": {"min_value": 1, "max_value": 50},
+            },
+        )
+    )
+    growth
+    return compound, growth
+
+
+@app.cell(hide_code=True)
+def _(compound, growth, mo):
+    def call(args):
+        return "compound(" + ", ".join(f"{k}={v:g}" for k, v in args.items()) + ")"
+
+    new, old = growth.value["values"], growth.value["committed_values"]
+    mo.md(f"""
+    | | call | result |
+    | --- | --- | --- |
+    | `values` | `{call(new)}` | {compound(**new):,.2f} |
+    | `committed_values` | `{call(old)}` | {compound(**old):,.2f} |
     """)
     return
 

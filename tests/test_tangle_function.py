@@ -172,3 +172,16 @@ def test_invalid_inputs_raise():
 
     with pytest.raises(ValueError, match="above max_value"):
         TangleFunction(g, params={"x": {"value": 99}})
+
+
+def test_committed_values_hold_old_values_during_drag():
+    tf = TangleFunction(_sample)
+    assert tf.committed_values == tf.values
+    assert tf.dragging is False
+
+    tf.values = {**tf.values, "lr": 0.5}
+    assert tf.committed_values["lr"] == 0.5
+
+    tf.dragging = True
+    tf.values = {**tf.values, "lr": 0.9}
+    assert tf.committed_values["lr"] == 0.5

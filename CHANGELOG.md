@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `TangleSlider`, `TangleLatex` and `TangleFunction` now also keep the value
+  from before a drag. `amount`/`values` still follow the drag live, as before,
+  while the new `committed_amount`/`committed_values` hold the old value until
+  the drag is released (or an edit is made), and `dragging` is True in between.
+  Notebooks can draw old and new side by side while you scrub. The demos show
+  the old value as a dashed line and end with an "Old and new values" section.
+
+### Fixed
+
+- `TangleLatex` no longer clips tall delimiters and their superscripts (e.g.
+  the `²` in `\left( ... \right)^2`) at the edge of the formula box.
+
 ## [0.5.36] - 2026-10-19
 
 ### Added

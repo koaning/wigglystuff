@@ -67,10 +67,18 @@ function render({ model, el }) {
     model.save_changes();
   }
 
+  // Ends a drag or an edit: committed_values catches up with values.
+  // Until then it holds the values from before the drag.
+  function commit() {
+    model.set("committed_values", { ...(model.get("values") || {}) });
+    model.set("dragging", false);
+    flushSave();
+  }
+
   function setValue(name, value, { flush = false } = {}) {
     localUpdate = true;
     model.set("values", { ...(model.get("values") || {}), [name]: value });
-    if (flush) flushSave();
+    if (flush) commit();
     else scheduleSave();
   }
 
@@ -259,7 +267,12 @@ function render({ model, el }) {
   function moveDrag(event) {
     if (!drag || event.pointerId !== drag.pointerId) return;
     const deltaX = event.clientX - drag.startX;
-    if (Math.abs(deltaX) >= 3) drag.moved = true;
+    if (!drag.moved && Math.abs(deltaX) >= 3) {
+      drag.moved = true;
+      // Tell Python first, so it keeps committed_values where they were.
+      model.set("dragging", true);
+      flushSave();
+    }
     if (!drag.moved) return;
     event.preventDefault();
     const spec = drag.node.spec;
@@ -278,7 +291,7 @@ function render({ model, el }) {
     root.classList.remove("is-dragging");
     finished.node.el.classList.remove("is-active");
     if (finished.moved) {
-      flushSave();
+      commit();
       return;
     }
     openEditor(finished.node);
@@ -286,9 +299,11 @@ function render({ model, el }) {
 
   function cancelDrag(event) {
     if (!drag || event.pointerId !== drag.pointerId) return;
-    drag.node.el.classList.remove("is-active");
+    const finished = drag;
+    finished.node.el.classList.remove("is-active");
     drag = null;
     root.classList.remove("is-dragging");
+    if (finished.moved) commit();
   }
 
   function onClick(event) {
