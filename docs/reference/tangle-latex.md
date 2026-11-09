@@ -22,6 +22,23 @@ parameter can show its formatted number or stay symbolic until it is dragged or
 edited, and repeated markers share one value. The live numbers land in `values`
 while you drag, so downstream cells recompute as the equation changes.
 
+To explain what the symbols mean, wrap any part of the formula in
+`\note{name}{...}` and describe it in `notes`. The note is drawn above or below
+the formula with an arrow to exactly that part, and hovering a note (or
+dragging the parameter it explains) fades the others:
+
+```python
+TangleLatex(
+    latex=r"p(x) = \frac{1}{\tangle{sigma}\sqrt{2\pi}}"
+    r"\exp\left(-\frac{(x-\note{center}{\tangle{mu}})^2}{2\note{width}{\tangle{sigma}}^2}\right)",
+    parameters={"mu": {"value": 0}, "sigma": {"value": 1, "min_value": 0.1}},
+    notes={
+        "center": "**mean**: where the bell is centered",
+        "width": "**standard deviation**: how wide the bell is",
+    },
+)
+```
+
 See also: [Tangle widgets](tangle.md) for the same drag gesture in plain prose,
 [Matrix](matrix.md) for editing numbers as a grid, and
 [Slider2D](slider2d.md) for two coupled parameters on one canvas.
@@ -38,5 +55,7 @@ See also: [Tangle widgets](tangle.md) for the same drag gesture in plain prose,
 | `display_mode` | `bool` | Render the formula in display mode. |
 | `editor` | `str` | Exact-value editor style: `"popover"` or `"inline"`. |
 | `reveal_all_on_drag` | `bool` | Reveal every tangle value while dragging any one of them. |
+| `notes` | `dict` | Normalized notes for `\note{name}{...}` parts (text, side, color). |
+| `hovered` | `str` | Name of the note under the pointer, or `""`. |
 | `theme` | `str` | `"auto"`, `"light"`, or `"dark"`. |
 | `error` | `str` | Validation/render error surfaced from the widget. |

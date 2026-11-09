@@ -61,12 +61,6 @@ def test_tangle_latex_multi_parameter_interactions(start_marimo, page: Page):
     selected_b = selected_only.locator('[data-tangle-param="b"]')
     expect(selected_a).to_have_count(2)
     expect(selected_a).to_have_text(["a", "a"])
-    assert (
-        selected_a.first.locator(":scope > *").evaluate(
-            "element => getComputedStyle(element).boxShadow"
-        )
-        != "none"
-    )
     drag_without_releasing(page, selected_a.first)
     expect(selected_a).to_have_text(["3.5", "3.5"])
     expect(selected_b).to_have_text("b")

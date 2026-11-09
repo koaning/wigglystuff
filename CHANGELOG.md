@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- `TangleLatex` can explain its formula. Wrap any part in `\note{name}{...}`
+  and describe it in the new `notes` argument; the note is drawn above or below
+  the formula with an arrow to that exact part. Hovering a note, or dragging the
+  parameter it wraps, fades the others. The new `hovered` traitlet reports the
+  note under the pointer.
 - `TangleSlider`, `TangleLatex` and `TangleFunction` now also keep the value
   from before a drag. `amount`/`values` still follow the drag live, as before,
   while the new `committed_amount`/`committed_values` hold the old value until
@@ -15,6 +20,10 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- `TangleLatex` now loads KaTeX 0.18.7 to match the stylesheet marimo applies
+  inside widgets, so nested scripts like `e^{z_i}` and `\sum` limits no longer
+  collapse. A revealed number right after a digit gets a small gap, so `2σ²`
+  with σ = 1.7 no longer reads as "21.7²".
 - `TangleLatex` no longer clips tall delimiters and their superscripts (e.g.
   the `²` in `\left( ... \right)^2`) at the edge of the formula box.
 
