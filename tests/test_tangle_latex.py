@@ -179,3 +179,58 @@ def test_invalid_theme_is_rejected():
 def test_formula_requires_at_least_one_parameter_marker():
     with pytest.raises(ValueError, match=r"at least one \\tangle"):
         TangleLatex(latex=r"y = x + 1", parameters={})
+
+
+def test_notes_are_normalized_and_wrapped_parameters_lend_their_color():
+    widget = TangleLatex(
+        latex=(
+            r"\note{norm}{\frac{1}{\tangle{s}}} + "
+            r"\note{width}{\tangle{s}} + \note{shift}{\tangle{m}}"
+        ),
+        parameters={"s": parameter(), "m": parameter(color="tomato")},
+        notes={
+            "norm": "keeps the area at $1$",
+            "width": {"text": "how wide", "side": "bottom"},
+            "shift": {"text": "where", "color": "black"},
+        },
+    )
+
+    assert widget.hovered == ""
+    assert widget.notes == {
+        # Not wrapping a lone parameter: the palette continues after the
+        # two parameters.
+        "norm": {
+            "text": "keeps the area at $1$",
+            "side": "auto",
+            "color": {"light": "#147a68", "dark": "#5ed5bd"},
+            "param": None,
+        },
+        # Wrapping exactly one parameter: takes that parameter's color.
+        "width": {
+            "text": "how wide",
+            "side": "bottom",
+            "color": {"light": "#246bce", "dark": "#75a7ff"},
+            "param": "s",
+        },
+        # An explicit color still wins.
+        "shift": {
+            "text": "where",
+            "side": "auto",
+            "color": {"light": "black", "dark": "black"},
+            "param": "m",
+        },
+    }
+
+
+@pytest.mark.parametrize(
+    ("latex", "notes", "message"),
+    [
+        (r"\note{n}{x} + \tangle{a}", {}, "missing note.*n"),
+        (r"\tangle{a}", {"n": "unused"}, "not referenced.*n"),
+        (r"\note{n}{x} + \tangle{a}", {"n": ""}, "text must be a non-empty string"),
+        (r"\note{n}{x} + \tangle{a}", {"n": {"text": "t", "side": "left"}}, "side must be"),
+    ],
+)
+def test_invalid_notes_are_rejected(latex, notes, message):
+    with pytest.raises(ValueError, match=message):
+        TangleLatex(latex=latex, parameters={"a": parameter()}, notes=notes)

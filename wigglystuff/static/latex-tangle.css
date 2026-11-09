@@ -65,6 +65,8 @@
 }
 
 .latex-tangle__formula {
+  position: relative;
+  z-index: 1;
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
@@ -95,7 +97,8 @@
   pointer-events: none;
 }
 
-.latex-tangle__formula .katex-html [data-tangle-param] {
+.latex-tangle__formula .katex-html [data-tangle-param],
+.latex-tangle__formula .katex-html [data-note] {
   pointer-events: auto;
 }
 
@@ -130,10 +133,135 @@
   --lt-param-color: var(--lt-param-dark);
 }
 
+.latex-tangle__formula .latex-tangle__param--gap {
+  margin-left: 0.22em;
+}
+
 .latex-tangle.is-dragging,
 .latex-tangle.is-dragging * {
   cursor: ew-resize !important;
   user-select: none !important;
+}
+
+/* Notes. Every note-colored node (label, arrow, tint, fixed term) carries
+   --lt-note-light/--lt-note-dark; these rules pick the active theme's one. */
+.latex-tangle [data-annotation],
+.latex-tangle__formula [data-note] {
+  --lt-note-color: var(--lt-note-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  .latex-tangle [data-annotation],
+  .latex-tangle__formula [data-note] {
+    --lt-note-color: var(--lt-note-dark);
+  }
+}
+
+.dark .latex-tangle [data-annotation],
+.dark .latex-tangle__formula [data-note],
+.dark-theme .latex-tangle [data-annotation],
+.dark-theme .latex-tangle__formula [data-note],
+[data-theme="dark"] .latex-tangle [data-annotation],
+[data-theme="dark"] .latex-tangle__formula [data-note] {
+  --lt-note-color: var(--lt-note-dark);
+}
+
+.latex-tangle--theme-light [data-annotation],
+.latex-tangle--theme-light .latex-tangle__formula [data-note] {
+  --lt-note-color: var(--lt-note-light);
+}
+
+.latex-tangle--theme-dark [data-annotation],
+.latex-tangle--theme-dark .latex-tangle__formula [data-note] {
+  --lt-note-color: var(--lt-note-dark);
+}
+
+.latex-tangle__note-term {
+  color: var(--lt-note-color);
+  outline: none;
+}
+
+.latex-tangle__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: min(210px, 42%);
+  border-radius: 6px;
+  padding: 3px 6px;
+  color: var(--lt-note-color);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  transition: background-color 120ms ease, opacity 160ms ease;
+}
+
+.latex-tangle__label strong {
+  font-weight: 750;
+}
+
+.latex-tangle__label .katex {
+  font-size: 1.05em;
+}
+
+.latex-tangle__tints,
+.latex-tangle__arrows {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.latex-tangle__tint {
+  fill: color-mix(in srgb, var(--lt-note-color), transparent 88%);
+  transition: fill 120ms ease, opacity 160ms ease;
+}
+
+.latex-tangle__arrow {
+  fill: none;
+  stroke: var(--lt-note-color);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 160ms ease, stroke-width 120ms ease;
+}
+
+/* Hover or drag: lift the active note, fade the rest. */
+.latex-tangle.has-hover .latex-tangle__label,
+.latex-tangle.has-hover .latex-tangle__arrow,
+.latex-tangle.has-hover .latex-tangle__tint {
+  opacity: 0.28;
+}
+
+.latex-tangle.has-hover .latex-tangle__label.is-hovered,
+.latex-tangle.has-hover .latex-tangle__arrow.is-hovered,
+.latex-tangle.has-hover .latex-tangle__tint.is-hovered {
+  opacity: 1;
+}
+
+.latex-tangle__label.is-hovered {
+  background: color-mix(in srgb, var(--lt-note-color), transparent 86%);
+}
+
+/* While dragging, the dragged note steps back a little too, so the eye stays
+   on the number. */
+.latex-tangle.is-dragging.has-hover .latex-tangle__label.is-hovered,
+.latex-tangle.is-dragging.has-hover .latex-tangle__arrow.is-hovered {
+  opacity: 0.6;
+}
+
+.latex-tangle.is-dragging .latex-tangle__label.is-hovered {
+  background: none;
+}
+
+.latex-tangle__arrow.is-hovered {
+  stroke-width: 2;
+}
+
+.latex-tangle__tint.is-hovered {
+  fill: color-mix(in srgb, var(--lt-note-color), transparent 70%);
 }
 
 .latex-tangle__footer {
