@@ -234,3 +234,16 @@ def test_notes_are_normalized_and_wrapped_parameters_lend_their_color():
 def test_invalid_notes_are_rejected(latex, notes, message):
     with pytest.raises(ValueError, match=message):
         TangleLatex(latex=latex, parameters={"a": parameter()}, notes=notes)
+
+
+def test_committed_values_hold_old_values_during_drag():
+    widget = TangleLatex(latex=r"y = \tangle{a}x", parameters={"a": parameter(2)})
+    assert widget.committed_values == {"a": 2.0}
+    assert widget.dragging is False
+
+    widget.values = {"a": 3.0}
+    assert widget.committed_values == {"a": 3.0}
+
+    widget.dragging = True
+    widget.values = {"a": 4.0}
+    assert widget.committed_values == {"a": 3.0}

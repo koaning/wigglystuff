@@ -52,6 +52,8 @@ See also: [Tangle widgets](tangle.md) for the same drag gesture in plain prose,
 | `latex` | `str` | LaTeX source containing `\tangle{name}` markers. |
 | `parameters` | `dict` | Per-parameter config (value, bounds, step, digits, color, symbol, ...). |
 | `values` | `dict` | Live current value for each parameter; updates while dragging. |
+| `committed_values` | `dict` | Values from before the current drag; catch up on release. |
+| `dragging` | `bool` | `True` while a drag is in progress. |
 | `display_mode` | `bool` | Render the formula in display mode. |
 | `editor` | `str` | Exact-value editor style: `"popover"` or `"inline"`. |
 | `reveal_all_on_drag` | `bool` | Reveal every tangle value while dragging any one of them. |

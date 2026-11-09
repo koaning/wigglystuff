@@ -43,6 +43,8 @@ choices in plain prose.
 | `parameters` | `dict` | Per-parameter render spec (kind, options/bounds/step/digits). |
 | `param_order` | `list` | Parameter names in signature order. |
 | `values` | `dict` | Live current value for each parameter; splat into the function. |
+| `committed_values` | `dict` | Values from before the current drag; catch up on release. |
+| `dragging` | `bool` | `True` while a drag is in progress. |
 | `theme` | `str` | `"auto"`, `"light"`, or `"dark"`. |
 | `width` | `int` | Max width in pixels before the expression wraps one arg per line. |
 | `error` | `str` | Validation/render error surfaced from the widget. |

@@ -240,6 +240,11 @@ class TangleFunction(anywidget.AnyWidget):
     options, and strings are click-to-edit. The live arguments are synced to the
     ``values`` dict, ready to splat into the function.
 
+    ``values`` follows a drag live. ``committed_values`` keeps the values from
+    before the drag until it is released, so the notebook can compare the old
+    call with the new one while you scrub; ``dragging`` is True in between.
+    Outside a drag the two are equal.
+
     Examples:
         ```python
         import marimo as mo
@@ -283,6 +288,8 @@ class TangleFunction(anywidget.AnyWidget):
     parameters = traitlets.Dict(default_value={}).tag(sync=True)
     param_order = traitlets.List(default_value=[]).tag(sync=True)
     values = traitlets.Dict(default_value={}).tag(sync=True)
+    committed_values = traitlets.Dict(default_value={}).tag(sync=True)
+    dragging = traitlets.Bool(False).tag(sync=True)
     theme = traitlets.Enum(["auto", "light", "dark"], default_value="auto").tag(sync=True)
     width = traitlets.Int(560).tag(sync=True)
     error = traitlets.Unicode("").tag(sync=True)
@@ -355,8 +362,15 @@ class TangleFunction(anywidget.AnyWidget):
             parameters=parameters,
             param_order=param_order,
             values=values,
+            committed_values=dict(values),
             theme=theme,
             width=width,
             **kwargs,
         )
         self._fn = fn
+
+    @traitlets.observe("values")
+    def _follow_values(self, change: dict) -> None:
+        # Outside a drag (e.g. a Python-side change) the committed values follow.
+        if not self.dragging:
+            self.committed_values = dict(self.values)

@@ -13,6 +13,11 @@ from ._distributions import FAMILIES, cdf, density, moments, ppf
 class TangleSlider(anywidget.AnyWidget):
     """Inline slider inspired by Bret Victor's Tangle UI.
 
+    ``amount`` follows the drag live. ``committed_amount`` keeps the value from
+    before the drag until it is released, so the notebook can compare old and
+    new while you scrub; ``dragging`` is True in between. Outside a drag the two
+    are equal.
+
     Examples:
         ```python
         import marimo as mo
@@ -25,6 +30,8 @@ class TangleSlider(anywidget.AnyWidget):
 
     _esm = Path(__file__).parent / "static" / "tangle-slider.js"
     amount = traitlets.Float(0.0).tag(sync=True)
+    committed_amount = traitlets.Float(0.0).tag(sync=True)
+    dragging = traitlets.Bool(False).tag(sync=True)
     min_value = traitlets.Float(-100.0).tag(sync=True)
     max_value = traitlets.Float(100.0).tag(sync=True)
     step = traitlets.Float(1.0).tag(sync=True)
@@ -87,6 +94,7 @@ class TangleSlider(anywidget.AnyWidget):
                 amount = (max_value + min_value) / 2
         super().__init__(
             amount=amount,
+            committed_amount=amount,
             min_value=min_value,
             max_value=max_value,
             step=step,
@@ -97,6 +105,12 @@ class TangleSlider(anywidget.AnyWidget):
             digits=digits,
             **kwargs,
         )
+
+    @traitlets.observe("amount")
+    def _follow_amount(self, change: dict) -> None:
+        # Outside a drag (e.g. a Python-side change) the committed value follows.
+        if not self.dragging:
+            self.committed_amount = self.amount
 
 
 def _default_step(value: float) -> float:

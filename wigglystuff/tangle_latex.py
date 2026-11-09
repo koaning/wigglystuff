@@ -189,6 +189,11 @@ class TangleLatex(anywidget.AnyWidget):
     remain symbolic until it is dragged or edited. Repeated markers share one
     value and update together.
 
+    ``values`` follows a drag live. ``committed_values`` keeps the values from
+    before the drag until it is released, so the notebook can compare the old
+    formula with the new one while you scrub; ``dragging`` is True in between.
+    Outside a drag the two are equal.
+
     Examples:
         ```python
         import marimo as mo
@@ -226,6 +231,8 @@ class TangleLatex(anywidget.AnyWidget):
     latex = traitlets.Unicode().tag(sync=True)
     parameters = traitlets.Dict(default_value={}).tag(sync=True)
     values = traitlets.Dict(default_value={}).tag(sync=True)
+    committed_values = traitlets.Dict(default_value={}).tag(sync=True)
+    dragging = traitlets.Bool(False).tag(sync=True)
     display_mode = traitlets.Bool(True).tag(sync=True)
     editor = traitlets.Enum(["popover", "inline"], default_value="popover").tag(
         sync=True
@@ -315,9 +322,16 @@ class TangleLatex(anywidget.AnyWidget):
             parameters=normalized,
             notes=normalized_notes,
             values=values,
+            committed_values=dict(values),
             display_mode=display_mode,
             editor=editor,
             reveal_all_on_drag=reveal_all_on_drag,
             theme=theme,
             **kwargs,
         )
+
+    @traitlets.observe("values")
+    def _follow_values(self, change: dict) -> None:
+        # Outside a drag (e.g. a Python-side change) the committed values follow.
+        if not self.dragging:
+            self.committed_values = dict(self.values)

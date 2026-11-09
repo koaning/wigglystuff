@@ -5,7 +5,7 @@
 #     "marimo>=0.19.4",
 #     "numpy==2.4.1",
 #     "pandas==2.3.3",
-#     "wigglystuff==0.5.26",
+#     "wigglystuff==0.5.37",
 # ]
 # ///
 
@@ -66,24 +66,50 @@ def _(TangleSlider, mo):
 @app.cell
 def _(alt, np, pd, prob1, prob2):
     cores = np.arange(1, 64 + 1)
-    p1, p2 = prob1.amount/100, prob2.amount/100
-    eff1 = 1/(p1 + (1-p1)/cores)
-    eff2 = 1/(p2 + (1-p2)/cores)
 
+    def speedup(percent):
+        p = percent / 100
+        return 1 / (p + (1 - p) / cores)
+
+    label1 = f'{prob1.amount:.2f}% sync rate'
+    label2 = f'{prob2.amount:.2f}% sync rate'
     df_amdahl = pd.DataFrame({
         'cores': cores,
-        f'{prob1.amount:.2f}% sync rate': eff1,
-        f'{prob2.amount:.2f}% sync rate': eff2
+        label1: speedup(prob1.amount),
+        label2: speedup(prob2.amount),
     }).melt("cores")
 
-    c = (
+    # committed_amount holds the value from before the drag, so while you drag
+    # these dashed lines show where the curves were.
+    df_before = pd.DataFrame({
+        'cores': cores,
+        'before 1': speedup(prob1.committed_amount),
+        'before 2': speedup(prob2.committed_amount),
+    }).melt("cores")
+
+    # Each slider keeps its own color, for its live line and its dashed one.
+    colors = ["#4c78a8", "#f58518"]
+    before = (
+        alt.Chart(df_before)
+            .mark_line(strokeDash=[4, 4])
+            .encode(
+                x='cores',
+                y='value',
+                color=alt.Color('variable', scale=alt.Scale(domain=['before 1', 'before 2'], range=colors), legend=None),
+            )
+    )
+    lines = (
         alt.Chart(df_amdahl)
             .mark_line()
             .encode(
                 x='cores',
                 y=alt.Y('value').title("effective cores"),
-                color="variable"
+                color=alt.Color('variable', scale=alt.Scale(domain=[label1, label2], range=colors)),
             )
+    )
+    c = (
+        (before + lines)
+            .resolve_scale(color='independent')
             .properties(width=500, title="Comparison between cores and actual speedup.")
     )
     return (c,)
@@ -97,6 +123,8 @@ def _(c, mo, prob1, prob2):
 
     - You might have a parallel program that needs to sync up {prob1}.
     - Another parallel program needs to sync up {prob2}.
+
+    While you drag, `amount` follows along and `committed_amount` keeps the value from before the drag, drawn as the dashed line.
         """),
         c
     ])

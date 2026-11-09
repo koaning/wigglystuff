@@ -4,7 +4,7 @@
 #     "altair",
 #     "marimo",
 #     "scipy",
-#     "wigglystuff==0.5.36",
+#     "wigglystuff==0.5.37",
 # ]
 # ///
 

@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.37] - 2026-11-09
+
 ### Added
 
 - `TangleLatex` can explain its formula. Wrap any part in `\note{name}{...}`
@@ -11,6 +13,14 @@ All notable changes to this project will be documented in this file.
   the formula with an arrow to that exact part. Hovering a note, or dragging the
   parameter it wraps, fades the others. The new `hovered` traitlet reports the
   note under the pointer.
+- `TangleSlider`, `TangleLatex` and `TangleFunction` now also keep the value
+  from before a drag. `amount`/`values` still follow the drag live, as before,
+  while the new `committed_amount`/`committed_values` hold the old value until
+  the drag is released (or an edit is made), and `dragging` is True in between.
+  Notebooks can draw old and new side by side while you scrub. The demos show
+  the old value as a dashed line and end with an "Old and new values" section.
+- New `StateViewer` demos: minimum spanning trees (Prim vs Kruskal) and
+  convex hulls (monotone chain, gift wrapping and more) on points you draw.
 
 ### Fixed
 
@@ -18,6 +28,8 @@ All notable changes to this project will be documented in this file.
   inside widgets, so nested scripts like `e^{z_i}` and `\sum` limits no longer
   collapse. A revealed number right after a digit gets a small gap, so `2σ²`
   with σ = 1.7 no longer reads as "21.7²".
+- `TangleLatex` no longer clips tall delimiters and their superscripts (e.g.
+  the `²` in `\left( ... \right)^2`) at the edge of the formula box.
 
 ## [0.5.36] - 2026-10-19
 

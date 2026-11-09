@@ -2,7 +2,7 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "marimo>=0.23.3",
-#     "wigglystuff==0.5.20",
+#     "wigglystuff==0.5.37",
 # ]
 # ///
 
@@ -84,9 +84,8 @@ def _(TangleLatex, mo, theme):
 @app.cell(hide_code=True)
 def _(ObservablePlot, mo, numbers):
     a, b, c = numbers.values["a"], numbers.values["b"], numbers.values["c"]
-    a0 = numbers.parameters["a"]["value"]
-    b0 = numbers.parameters["b"]["value"]
-    c0 = numbers.parameters["c"]["value"]
+    # committed_values holds the values from before the current drag.
+    a0, b0, c0 = (numbers.committed_values[k] for k in "abc")
     _xs = [-5 + i * 10 / 200 for i in range(201)]
     curve = [{"x": x, "y": a * x**2 + b * x + c} for x in _xs]
     _reference = [{"x": x, "y": a0 * x**2 + b0 * x + c0} for x in _xs]
@@ -97,7 +96,7 @@ def _(ObservablePlot, mo, numbers):
             marks: [
                 Plot.ruleY([0]),
                 Plot.ruleX([0]),
-                Plot.line(reference, { x: "x", y: "y", stroke: "#9ca3af", strokeDasharray: "4,4" }),
+                Plot.line(reference, { x: "x", y: "y", stroke: "#246bce", strokeDasharray: "4,4" }),
                 Plot.line(curve, { x: "x", y: "y", stroke: "#246bce", strokeWidth: 2 }),
             ],
         })
@@ -114,7 +113,7 @@ def _(ObservablePlot, mo, numbers):
                     mo.md("### Numbers in the formula"),
                     numbers,
                     mo.md(f"Current values: `{numbers.values}`"),
-                    mo.md("The dashed grey line is the original curve."),
+                    mo.md("While you drag, `values` follows along and `committed_values` keeps the numbers from before the drag, drawn as the dashed line."),
                 ],
                 gap=0.5,
             ),
@@ -179,8 +178,7 @@ def _(ObservablePlot, math, mo, symbols):
         )
 
     mu, sigma = symbols.values["mu"], symbols.values["sigma"]
-    mu0 = symbols.parameters["mu"]["value"]
-    sigma0 = symbols.parameters["sigma"]["value"]
+    mu0, sigma0 = symbols.committed_values["mu"], symbols.committed_values["sigma"]
     _xs = [-6 + i * 12 / 200 for i in range(201)]
     pdf = [{"x": x, "y": _normal(x, mu, sigma)} for x in _xs]
     _reference = [{"x": x, "y": _normal(x, mu0, sigma0)} for x in _xs]
@@ -190,7 +188,7 @@ def _(ObservablePlot, math, mo, symbols):
             y: { grid: true },
             marks: [
                 Plot.ruleY([0]),
-                Plot.line(reference, { x: "x", y: "y", stroke: "#9ca3af", strokeDasharray: "4,4" }),
+                Plot.line(reference, { x: "x", y: "y", stroke: "#a23b78", strokeDasharray: "4,4" }),
                 Plot.areaY(pdf, { x: "x", y: "y", fill: "#a23b78", fillOpacity: 0.15 }),
                 Plot.line(pdf, { x: "x", y: "y", stroke: "#a23b78", strokeWidth: 2 }),
             ],
@@ -208,13 +206,58 @@ def _(ObservablePlot, math, mo, symbols):
                     mo.md("### Symbols that reveal together while dragging"),
                     symbols,
                     mo.md(f"Current values: `{symbols.values}`"),
-                    mo.md("The dashed grey line is the original distribution."),
+                    mo.md("While you drag, `values` follows along and `committed_values` keeps the numbers from before the drag, drawn as the dashed line."),
                 ],
                 gap=0.5,
             ),
         ],
         align="center",
         gap=2,
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Old and new values
+
+    Next to `values`, a `TangleLatex` also stores `committed_values`. While you
+    drag, `values` follows the pointer and `committed_values` keeps the numbers
+    from before the drag. When you let go, the two match again. Drag a number
+    below and watch the rows split.
+    """)
+    return
+
+
+@app.cell
+def _(TangleLatex, mo, theme):
+    line = mo.ui.anywidget(
+        TangleLatex(
+            latex=r"y = \tangle{m}x + \tangle{c}",
+            parameters={
+                "m": {"value": 2, "min_value": -10, "max_value": 10, "step": 0.5},
+                "c": {"value": 1, "min_value": -10, "max_value": 10, "step": 0.5},
+            },
+            theme=theme.value,
+        )
+    )
+    return (line,)
+
+
+@app.cell(hide_code=True)
+def _(line, mo):
+    mo.vstack(
+        [
+            line,
+            mo.md(f"""
+    | | `m` | `c` |
+    | --- | --- | --- |
+    | `values` | {line.values["m"]:g} | {line.values["c"]:g} |
+    | `committed_values` | {line.committed_values["m"]:g} | {line.committed_values["c"]:g} |
+    """),
+        ],
+        gap=1,
     )
     return
 

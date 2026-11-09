@@ -70,6 +70,9 @@
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  /* overflow-x: auto clips vertically too, and KaTeX draws tall delimiters and
+     their superscripts past its own box. Padding keeps them inside the clip. */
+  padding: 0.4em 0.2em;
   color: var(--lt-ink);
   font-size: clamp(1.06rem, 2.4vw, 1.42rem);
   scrollbar-width: thin;
