@@ -36,7 +36,9 @@ of options instead of picking one.
 
 | Traitlet | Type | Notes |
 | --- | --- | --- |
-| `amount` | `float` | Current value. |
+| `amount` | `float` | Current value; updates while dragging. |
+| `committed_amount` | `float` | Value from before the current drag; catches up on release. |
+| `dragging` | `bool` | `True` while a drag is in progress. |
 | `min_value` | `float` | Lower bound. |
 | `max_value` | `float` | Upper bound. |
 | `step` | `float` | Step size. |

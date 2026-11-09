@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.37] - 2026-11-09
+
 ### Added
 
 - `TangleLatex` can explain its formula. Wrap any part in `\note{name}{...}`
@@ -17,6 +19,8 @@ All notable changes to this project will be documented in this file.
   the drag is released (or an edit is made), and `dragging` is True in between.
   Notebooks can draw old and new side by side while you scrub. The demos show
   the old value as a dashed line and end with an "Old and new values" section.
+- New `StateViewer` demos: minimum spanning trees (Prim vs Kruskal) and
+  convex hulls (monotone chain, gift wrapping and more) on points you draw.
 
 ### Fixed
 
