@@ -331,7 +331,10 @@ class TraceView(anywidget.AnyWidget):
         # SDK spans that haven't ended yet; re-read on every sync so attribute
         # changes (like progress) made while they run show up.
         self._running: dict[str, Any] = {}
-        self._last_sync = 0.0
+        # -inf so the first record always syncs; 0.0 would throttle it on a
+        # machine whose monotonic clock is still smaller than sync_throttle_ms
+        # (e.g. a freshly booted CI runner).
+        self._last_sync = float("-inf")
 
     @classmethod
     def from_otlp(
