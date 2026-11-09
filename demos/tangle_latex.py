@@ -8,7 +8,7 @@
 
 import marimo
 
-__generated_with = "0.23.3"
+__generated_with = "0.25.2"
 app = marimo.App(width="medium")
 
 
@@ -47,7 +47,7 @@ def _(mo):
 def _(TangleLatex, mo, theme):
     numbers = mo.ui.anywidget(
         TangleLatex(
-            latex=r"y = \tangle{a}x^2 + \tangle{b}x + \tangle{c}",
+            latex=r"y = \note{bend}{\tangle{a}}x^2 + \tangle{b}x + \tangle{c}",
             parameters={
                 "a": {
                     "value": 1.5,
@@ -74,6 +74,7 @@ def _(TangleLatex, mo, theme):
                     "color": {"light": "#147a68", "dark": "#5ed5bd"},
                 },
             },
+            notes={"bend": "how sharply it bends; below $0$ flips it"},
             theme=theme.value,
         )
     )
@@ -129,9 +130,9 @@ def _(TangleLatex, mo, theme):
     symbols = mo.ui.anywidget(
         TangleLatex(
             latex=(
-                r"p(x) = \frac{1}{\tangle{sigma}\sqrt{2\pi}}"
-                r"\exp\!\left(-\frac{(x-\tangle{mu})^2}"
-                r"{2\tangle{sigma}^2}\right)"
+                r"p(x) = \note{norm}{\frac{1}{\tangle{sigma}\sqrt{2\pi}}}"
+                r"\exp\!\left(-\frac{(x-\note{center}{\tangle{mu}})^2}"
+                r"{2\note{width}{\tangle{sigma}}^2}\right)"
             ),
             parameters={
                 "mu": {
@@ -156,6 +157,11 @@ def _(TangleLatex, mo, theme):
                     "label": "standard deviation",
                     "color": {"light": "#6f5cbd", "dark": "#b9a8ff"},
                 },
+            },
+            notes={
+                "norm": "keeps the area under the curve at $1$",
+                "center": "**mean**: where the bell is centered",
+                "width": "**standard deviation**: how wide the bell is",
             },
             reveal_all_on_drag=False,
             editor="inline",

@@ -1,6 +1,19 @@
-const KATEX_VERSION = "0.17.0";
+// Keep in step with the KaTeX CSS marimo adopts into widget shadow roots
+// (0.18 renamed .sizing to .katex-sizing; a mismatch collapses nested scripts).
+const KATEX_VERSION = "0.18.7";
 const KATEX_MODULE_URL = `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}/dist/katex.mjs`;
 const KATEX_CSS_URL = `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}/dist/katex.min.css`;
+const SVGNS = "http://www.w3.org/2000/svg";
+
+// Note layout, in px.
+const NOTE_PAD_X = 16; // air left and right of the labels
+const NOTE_PAD_Y = 16; // stage border to a label row
+const NOTE_ARROW_SPACE = 30; // formula to a label row
+const NOTE_GAP = 16; // between two labels in a row
+const NOTE_CLEARANCE = 3; // between an arrow end and what it touches
+const HEAD_LENGTH = 7;
+const HEAD_HALF_WIDTH = 4;
+
 let katexPromise = null;
 
 function loadKatex() {
@@ -8,13 +21,92 @@ function loadKatex() {
   return katexPromise;
 }
 
-function ensureKatexCss() {
-  if (document.querySelector('link[data-latex-tangle-katex="true"]')) return;
+function katexCssLink() {
   const link = document.createElement("link");
   link.rel = "stylesheet";
   link.href = KATEX_CSS_URL;
   link.dataset.latexTangleKatex = "true";
-  document.head.appendChild(link);
+  return link;
+}
+
+// The document copy provides the @font-face rules (fonts don't load from
+// inside a shadow root); a second copy next to the widget styles the markup
+// when the widget lives in a shadow root that document styles can't reach.
+function ensureKatexCss() {
+  if (document.querySelector('link[data-latex-tangle-katex="true"]')) return;
+  document.head.appendChild(katexCssLink());
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+// Note text is plain text with inline $math$ and **bold**. Odd-indexed parts
+// of the split are the math pieces.
+function noteHtml(katex, text) {
+  return text
+    .split(/\$([^$]+)\$/)
+    .map((part, i) => {
+      if (i % 2 === 1) return katex.renderToString(part, { throwOnError: false });
+      return escapeHtml(part).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    })
+    .join("");
+}
+
+// Spread labels along one row: each wants to sit centered on its term, but
+// may not overlap its neighbours or leave [minX, maxX].
+function packRow(items, minX, maxX) {
+  for (const item of items) item.x = item.cx - item.w / 2;
+  for (let i = 0; i < items.length; i++) {
+    const floor = i === 0 ? minX : items[i - 1].x + items[i - 1].w + NOTE_GAP;
+    items[i].x = Math.max(items[i].x, floor);
+  }
+  for (let i = items.length - 1; i >= 0; i--) {
+    const ceiling = i === items.length - 1 ? maxX : items[i + 1].x - NOTE_GAP;
+    items[i].x = Math.max(minX, Math.min(items[i].x, ceiling - items[i].w));
+  }
+}
+
+// A gentle S-curve that leaves the label and lands on the term vertically:
+// straight when the label sits right above or below its term.
+function arrowPaths(from, to) {
+  const midY = (from.y + to.y) / 2;
+  const arc =
+    `M ${from.x} ${from.y} C ${from.x} ${midY} ${to.x} ${midY} ${to.x} ${to.y}`;
+  const dir = Math.sign(to.y - from.y) || 1;
+  const backY = to.y - dir * HEAD_LENGTH;
+  const head =
+    `M ${to.x - HEAD_HALF_WIDTH} ${backY} L ${to.x} ${to.y} ` +
+    `L ${to.x + HEAD_HALF_WIDTH} ${backY}`;
+  return [arc, head];
+}
+
+// The screen box of a term, built from what is actually drawn: glyphs,
+// fraction bars and SVG pieces. The wrapper span's own rect is no good:
+// KaTeX lays out fractions and scripts with offset children that overflow it.
+function termRect(term) {
+  const rects = [];
+  const range = document.createRange();
+  const walker = document.createTreeWalker(term, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if (!node.textContent.trim()) continue;
+    range.selectNodeContents(node);
+    rects.push(range.getBoundingClientRect());
+  }
+  for (const node of term.querySelectorAll("svg, .frac-line, .rule, .hline")) {
+    rects.push(node.getBoundingClientRect());
+  }
+  const drawn = rects.filter((r) => r.width > 0 && r.height > 0);
+  if (!drawn.length) return term.getBoundingClientRect();
+  const left = Math.min(...drawn.map((r) => r.left));
+  const top = Math.min(...drawn.map((r) => r.top));
+  const right = Math.max(...drawn.map((r) => r.right));
+  const bottom = Math.max(...drawn.map((r) => r.bottom));
+  return { left, top, right, bottom, width: right - left, height: bottom - top };
 }
 
 function formatValue(value, digits) {
@@ -57,6 +149,10 @@ async function render({ model, el }) {
   stage.className = "latex-tangle__stage";
   const formulaHost = document.createElement("div");
   formulaHost.className = "latex-tangle__formula";
+  const tints = document.createElementNS(SVGNS, "svg");
+  tints.setAttribute("class", "latex-tangle__tints");
+  const arrows = document.createElementNS(SVGNS, "svg");
+  arrows.setAttribute("class", "latex-tangle__arrows");
   const footer = document.createElement("div");
   footer.className = "latex-tangle__footer";
   const reset = document.createElement("button");
@@ -67,12 +163,15 @@ async function render({ model, el }) {
   errorBox.className = "latex-tangle__error";
   errorBox.hidden = true;
 
+  stage.appendChild(tints);
   stage.appendChild(formulaHost);
+  stage.appendChild(arrows);
   footer.appendChild(reset);
   root.appendChild(stage);
   root.appendChild(footer);
   root.appendChild(errorBox);
-  el.replaceChildren(root);
+  const cssLink = katexCssLink();
+  el.replaceChildren(cssLink, root);
 
   let drag = null;
   let activeEditor = null;
@@ -81,6 +180,7 @@ async function render({ model, el }) {
   let localValuesUpdate = false;
   let saveTimer = null;
   let initialValues = getInitialValues();
+  let labels = {}; // annotation name -> label div
 
   function getParameters() {
     return model.get("parameters") || {};
@@ -136,12 +236,15 @@ async function render({ model, el }) {
       katex.render(source, formulaHost, {
         displayMode: model.get("display_mode"),
         throwOnError: true,
+        macros: { "\\note": "\\htmlData{note=#1}{#2}" },
         trust: (context) => context.command === "\\htmlData",
         strict: (errorCode) => (errorCode === "htmlExtension" ? "ignore" : "warn"),
       });
       setError("");
     } catch (error) {
       formulaHost.replaceChildren();
+      tints.replaceChildren();
+      arrows.replaceChildren();
       setError(error instanceof Error ? error.message : String(error));
       return;
     }
@@ -164,6 +267,234 @@ async function render({ model, el }) {
         if (drag && drag.name === name) target.classList.add("is-active");
       }
     }
+    spaceNumbersAfterDigits();
+    for (const [name, note] of Object.entries(getNotes())) {
+      for (const term of termsFor(name)) {
+        term.classList.add("latex-tangle__note-term");
+        term.tabIndex = 0;
+        term.setAttribute("aria-label", note.text);
+        colorize(term, note.color);
+      }
+    }
+    layoutNotes();
+  }
+
+  function getNotes() {
+    return model.get("notes") || {};
+  }
+
+  // A revealed number right after a digit reads as one number: 2σ² with
+  // σ = 1.7 shows as "21.7²". Walk the drawn text in order and give such a
+  // number a small gap on its left.
+  function spaceNumbersAfterDigits() {
+    const html = formulaHost.querySelector(".katex-html");
+    if (!html) return;
+    const walker = document.createTreeWalker(html, NodeFilter.SHOW_TEXT);
+    const seen = new Set();
+    let previous = "";
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = node.textContent.trim();
+      if (!text) continue;
+      const param = node.parentElement.closest("[data-tangle-param]");
+      if (param && !seen.has(param)) {
+        seen.add(param);
+        const gap = /[0-9.]$/.test(previous) && /^[0-9.]/.test(text);
+        param.classList.toggle("latex-tangle__param--gap", gap);
+      }
+      previous = text;
+    }
+  }
+
+  // Every part marked with \note{name}{...}, as a list.
+  function annotations() {
+    return Object.entries(getNotes()).map(([name, note]) => ({ name, ...note }));
+  }
+
+  function termsFor(name) {
+    return formulaHost.querySelectorAll(`.katex-html [data-note="${name}"]`);
+  }
+
+  // The note that explains a parameter: the one wrapping exactly that
+  // parameter (\note{width}{\tangle{sigma}}), wherever it sits.
+  function noteForParam(param) {
+    const match = annotations().find((note) => note.param === param);
+    return match ? match.name : "";
+  }
+
+  function colorize(node, color) {
+    node.style.setProperty("--lt-note-light", color.light);
+    node.style.setProperty("--lt-note-dark", color.dark);
+  }
+
+  function buildLabels() {
+    for (const label of Object.values(labels)) label.remove();
+    labels = {};
+    for (const note of annotations()) {
+      const label = document.createElement("div");
+      label.className = "latex-tangle__label";
+      label.dataset.annotation = note.name;
+      label.innerHTML = noteHtml(katex, note.text);
+      colorize(label, note.color);
+      stage.appendChild(label);
+      labels[note.name] = label;
+    }
+  }
+
+  function layoutNotes() {
+    if (disposed) return;
+    tints.replaceChildren();
+    arrows.replaceChildren();
+    const notes = annotations();
+    if (!notes.length) {
+      stage.style.paddingTop = "";
+      stage.style.paddingBottom = "";
+      applyHover();
+      return;
+    }
+    const stageWidth = stage.clientWidth;
+    const relative = (rect) => {
+      const base = stage.getBoundingClientRect();
+      return {
+        left: rect.left - base.left,
+        right: rect.right - base.left,
+        top: rect.top - base.top,
+        bottom: rect.bottom - base.top,
+        cx: rect.left - base.left + rect.width / 2,
+        cy: rect.top - base.top + rect.height / 2,
+      };
+    };
+
+    // 1. Pick a side per note. "auto" sends parts above the formula's middle
+    // (numerators, superscripts) up and parts below it down, and balances
+    // the rest.
+    const formulaBox = relative(formulaHost.getBoundingClientRect());
+    const items = [];
+    const counts = { top: 0, bottom: 0 };
+    const undecided = [];
+    for (const note of notes) {
+      const term = termsFor(note.name)[0];
+      const label = labels[note.name];
+      if (!term || !label) continue;
+      const box = relative(termRect(term));
+      const item = { ...note, term, label, cx: box.cx };
+      item.w = label.offsetWidth;
+      item.h = label.offsetHeight;
+      items.push(item);
+      if (item.side === "auto") {
+        const offset = box.cy - formulaBox.cy;
+        if (offset < -4) item.side = "top";
+        else if (offset > 4) item.side = "bottom";
+        else undecided.push(item);
+      }
+      if (item.side !== "auto") counts[item.side] += 1;
+    }
+    for (const item of undecided) {
+      item.side = counts.top <= counts.bottom ? "top" : "bottom";
+      counts[item.side] += 1;
+    }
+
+    // 2. One row of labels per side, in the same left-to-right order as
+    // their terms, so arrows on one side never cross.
+    const heights = {};
+    for (const side of ["top", "bottom"]) {
+      const row = items
+        .filter((item) => item.side === side)
+        .sort((a, b) => a.cx - b.cx);
+      packRow(row, NOTE_PAD_X, stageWidth - NOTE_PAD_X);
+      heights[side] = row.length ? Math.max(...row.map((item) => item.h)) : 0;
+    }
+    const band = (side) => (heights[side] ? NOTE_ARROW_SPACE + heights[side] : 0);
+    stage.style.paddingTop = `${NOTE_PAD_Y + band("top")}px`;
+    stage.style.paddingBottom = `${NOTE_PAD_Y + band("bottom")}px`;
+
+    // 3. Padding moved the formula, so measure again and place the labels.
+    const formula = relative(formulaHost.getBoundingClientRect());
+    for (const item of items) {
+      const top =
+        item.side === "top"
+          ? formula.top - NOTE_ARROW_SPACE - item.h
+          : formula.bottom + NOTE_ARROW_SPACE;
+      item.label.style.left = `${item.x}px`;
+      item.label.style.top = `${top}px`;
+    }
+
+    // 4. A soft tint behind each fixed part (parameters have their own
+    // styling). Outer parts come first in document order, so nested tints
+    // stack on top.
+    for (const node of formulaHost.querySelectorAll(".katex-html [data-note]")) {
+      const note = getNotes()[node.dataset.note];
+      if (!note) continue;
+      const box = relative(termRect(node));
+      const rect = document.createElementNS(SVGNS, "rect");
+      rect.setAttribute("class", "latex-tangle__tint");
+      rect.dataset.annotation = node.dataset.note;
+      rect.setAttribute("x", box.left - 3);
+      rect.setAttribute("y", box.top - 2);
+      rect.setAttribute("width", box.right - box.left + 6);
+      rect.setAttribute("height", box.bottom - box.top + 4);
+      rect.setAttribute("rx", 4);
+      colorize(rect, note.color);
+      tints.appendChild(rect);
+    }
+
+    // 5. One arrow per note, from the label edge facing the formula to the
+    // first occurrence of its term.
+    for (const item of items) {
+      const term = relative(termRect(item.term));
+      const label = relative(item.label.getBoundingClientRect());
+      const fromX = Math.max(label.left + 8, Math.min(term.cx, label.right - 8));
+      const top = item.side === "top";
+      const from = { x: fromX, y: top ? label.bottom + NOTE_CLEARANCE : label.top - NOTE_CLEARANCE };
+      const to = { x: term.cx, y: top ? term.top - NOTE_CLEARANCE : term.bottom + NOTE_CLEARANCE };
+      const group = document.createElementNS(SVGNS, "g");
+      group.setAttribute("class", "latex-tangle__arrow");
+      group.dataset.annotation = item.name;
+      colorize(group, item.color);
+      for (const d of arrowPaths(from, to)) {
+        const path = document.createElementNS(SVGNS, "path");
+        path.setAttribute("d", d);
+        group.appendChild(path);
+      }
+      arrows.appendChild(group);
+    }
+    applyHover();
+  }
+
+  // The highlighted note: the dragged parameter's note wins over the one
+  // hovered. Everything else fades.
+  function applyHover() {
+    const name = drag ? noteForParam(drag.name) : model.get("hovered");
+    const annotated = Boolean(name) && name in labels;
+    root.classList.toggle("has-hover", annotated);
+    for (const node of stage.querySelectorAll("[data-annotation]")) {
+      node.classList.toggle("is-hovered", annotated && node.dataset.annotation === name);
+    }
+    for (const node of formulaHost.querySelectorAll(".katex-html [data-note]")) {
+      node.classList.toggle("is-hovered", annotated && node.dataset.note === name);
+    }
+  }
+
+  function setHovered(name) {
+    if (model.get("hovered") === name) return;
+    model.set("hovered", name);
+    model.save_changes();
+    applyHover();
+  }
+
+  // `hovered` is always a note name. A parameter resolves to the note that
+  // explains it, otherwise to the innermost note around it.
+  function handleHover(event) {
+    const label = event.target.closest("[data-annotation]");
+    if (label && stage.contains(label)) return setHovered(label.dataset.annotation);
+    const param = event.target.closest("[data-tangle-param]");
+    const paramNote = param ? noteForParam(param.dataset.tangleParam) : "";
+    if (paramNote) return setHovered(paramNote);
+    const term = event.target.closest("[data-note]");
+    setHovered(term && stage.contains(term) ? term.dataset.note : "");
+  }
+
+  function handleHoverEnd() {
+    setHovered("");
   }
 
   function scheduleSave() {
@@ -380,6 +711,12 @@ async function render({ model, el }) {
 
   function handleParametersChange() {
     initialValues = getInitialValues();
+    buildLabels();
+    renderFormula();
+  }
+
+  function handleNotesChange() {
+    buildLabels();
     renderFormula();
   }
 
@@ -396,6 +733,12 @@ async function render({ model, el }) {
     root.classList.add(`latex-tangle--theme-${model.get("theme")}`);
   }
 
+  const resizeObserver = new ResizeObserver(() => layoutNotes());
+  resizeObserver.observe(stage);
+  stage.addEventListener("pointerover", handleHover);
+  stage.addEventListener("pointerleave", handleHoverEnd);
+  stage.addEventListener("focusin", handleHover);
+  stage.addEventListener("focusout", handleHoverEnd);
   stage.addEventListener("pointerdown", startDrag);
   stage.addEventListener("keydown", handleFormulaKeydown);
   stage.addEventListener("dragstart", (event) => event.preventDefault());
@@ -405,17 +748,30 @@ async function render({ model, el }) {
   document.addEventListener("pointercancel", cancelDrag);
   model.on("change:values", handleValuesChange);
   model.on("change:parameters", handleParametersChange);
+  model.on("change:notes", handleNotesChange);
+  model.on("change:hovered", applyHover);
   model.on("change:latex", handleConfigChange);
   model.on("change:display_mode", handleConfigChange);
   model.on("change:editor", handleConfigChange);
   model.on("change:reveal_all_on_drag", handleConfigChange);
   model.on("change:theme", handleThemeChange);
 
+  buildLabels();
   renderFormula();
+  cssLink.addEventListener("load", () => layoutNotes());
+  // KaTeX fonts arrive after the first render and change every measurement.
+  if (document.fonts) document.fonts.ready.then(() => layoutNotes());
+  const layoutTimers = [setTimeout(layoutNotes, 120), setTimeout(layoutNotes, 600)];
 
   return () => {
     disposed = true;
     clearTimeout(saveTimer);
+    layoutTimers.forEach(clearTimeout);
+    resizeObserver.disconnect();
+    stage.removeEventListener("pointerover", handleHover);
+    stage.removeEventListener("pointerleave", handleHoverEnd);
+    stage.removeEventListener("focusin", handleHover);
+    stage.removeEventListener("focusout", handleHoverEnd);
     closeEditor(false);
     stage.removeEventListener("pointerdown", startDrag);
     stage.removeEventListener("keydown", handleFormulaKeydown);
@@ -425,6 +781,8 @@ async function render({ model, el }) {
     document.removeEventListener("pointercancel", cancelDrag);
     model.off("change:values", handleValuesChange);
     model.off("change:parameters", handleParametersChange);
+    model.off("change:notes", handleNotesChange);
+    model.off("change:hovered", applyHover);
     model.off("change:latex", handleConfigChange);
     model.off("change:display_mode", handleConfigChange);
     model.off("change:editor", handleConfigChange);

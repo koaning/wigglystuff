@@ -15,6 +15,9 @@ import traitlets
 _ESM_PATH = Path(__file__).parent / "static" / "latex-tangle.js"
 _CSS_PATH = Path(__file__).parent / "static" / "latex-tangle.css"
 _MARKER_RE = re.compile(r"\\tangle\{([A-Za-z][A-Za-z0-9_-]*)\}")
+_NOTE_MARKER_RE = re.compile(r"\\note\{([A-Za-z][A-Za-z0-9_-]*)\}")
+_NAME_RE = re.compile(r"[A-Za-z][A-Za-z0-9_-]*")
+_NOTE_SIDES = ("auto", "top", "bottom")
 _DEFAULT_COLORS = (
     {"light": "#246bce", "dark": "#75a7ff"},
     {"light": "#b45b1b", "dark": "#ffad66"},
@@ -64,6 +67,48 @@ def _normalize_color(value: Any, *, name: str, index: int) -> dict[str, str]:
     raise ValueError(
         f"parameter {name!r} color must be a CSS color string or a light/dark mapping."
     )
+
+
+def _normalize_notes(
+    notes: Mapping[str, Any], *, latex: str, parameters: Mapping[str, Mapping[str, Any]]
+) -> dict[str, dict[str, Any]]:
+    if not isinstance(notes, Mapping):
+        raise ValueError("notes must be a mapping of names to strings or dictionaries.")
+    normalized: dict[str, dict[str, Any]] = {}
+    for index, (name, raw) in enumerate(notes.items()):
+        if not isinstance(name, str) or not _NAME_RE.fullmatch(name):
+            raise ValueError(
+                "note names must start with a letter and contain only letters, "
+                "numbers, underscores, or hyphens."
+            )
+        if isinstance(raw, str):
+            raw = {"text": raw}
+        if not isinstance(raw, Mapping):
+            raise ValueError(f"note {name!r} must be a string or a mapping.")
+        text = raw.get("text")
+        if not isinstance(text, str) or not text.strip():
+            raise ValueError(f"note {name!r} text must be a non-empty string.")
+        side = raw.get("side", "auto")
+        if side not in _NOTE_SIDES:
+            raise ValueError(f"note {name!r} side must be 'auto', 'top', or 'bottom'.")
+
+        # A note that wraps exactly one parameter, as in
+        # \note{width}{\tangle{sigma}}, explains that parameter: it takes the
+        # parameter's color and lights up whenever the parameter is dragged.
+        wrapped = re.search(
+            r"\\note\{" + re.escape(name) + r"\}\{\s*\\tangle\{([A-Za-z][A-Za-z0-9_-]*)\}\s*\}",
+            latex,
+        )
+        param = wrapped.group(1) if wrapped and wrapped.group(1) in parameters else None
+        if raw.get("color") is None and param is not None:
+            color = dict(parameters[param]["color"])
+        else:
+            # Continue the palette after the parameters so colors don't repeat.
+            color = _normalize_color(
+                raw.get("color"), name=name, index=len(parameters) + index
+            )
+        normalized[name] = {"text": text, "side": side, "color": color, "param": param}
+    return normalized
 
 
 def _normalize_parameters(
@@ -189,12 +234,15 @@ class TangleLatex(anywidget.AnyWidget):
     theme = traitlets.Enum(["auto", "light", "dark"], default_value="auto").tag(
         sync=True
     )
+    notes = traitlets.Dict(default_value={}).tag(sync=True)
+    hovered = traitlets.Unicode("").tag(sync=True)
     error = traitlets.Unicode("").tag(sync=True)
 
     def __init__(
         self,
         latex: str,
         parameters: Mapping[str, Mapping[str, Any]],
+        notes: Mapping[str, Any] | None = None,
         *,
         display_mode: bool = True,
         editor: str = "popover",
@@ -211,6 +259,14 @@ class TangleLatex(anywidget.AnyWidget):
                 ``max_value``, ``step``, ``digits``, ``display`` (``"number"``
                 or ``"symbol"``), ``symbol``, ``label``, ``pixels_per_step``,
                 and ``color`` (a CSS string or ``{"light": ..., "dark": ...}``).
+            notes: Plain-language explanations drawn next to the formula with
+                an arrow to the part they explain. Wrap the part in
+                ``\\note{name}{tex}`` (any part, including one occurrence of a
+                ``\\tangle{...}``) and map ``name`` to its text, or to a dict
+                with ``text``, ``side`` (``"auto"``, ``"top"``, ``"bottom"``)
+                and ``color``. A note wrapping exactly one parameter takes
+                its color and lights up while that parameter is dragged. Note
+                text is plain text with inline ``$...$`` math and ``**bold**``.
             display_mode: Render using KaTeX display mode.
             editor: Numeric click editor style: ``"popover"`` or ``"inline"``.
             reveal_all_on_drag: Reveal every symbolic parameter as a number while
@@ -242,10 +298,22 @@ class TangleLatex(anywidget.AnyWidget):
                 "parameter configuration not referenced by latex: " + ", ".join(unused)
             )
 
+        normalized_notes = _normalize_notes(notes or {}, latex=latex, parameters=normalized)
+        note_markers = set(_NOTE_MARKER_RE.findall(latex))
+        missing_notes = sorted(note_markers - set(normalized_notes))
+        unused_notes = sorted(set(normalized_notes) - note_markers)
+        if missing_notes:
+            raise ValueError("missing note for marker(s): " + ", ".join(missing_notes))
+        if unused_notes:
+            raise ValueError(
+                "note(s) not referenced by latex: " + ", ".join(unused_notes)
+            )
+
         values = {name: spec["value"] for name, spec in normalized.items()}
         super().__init__(
             latex=latex,
             parameters=normalized,
+            notes=normalized_notes,
             values=values,
             display_mode=display_mode,
             editor=editor,
