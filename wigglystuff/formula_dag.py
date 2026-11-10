@@ -17,7 +17,7 @@ from .tangle_latex import (
     _normalize_notes,
     _normalize_parameters,
 )
-from .widget_dag import _order_and_route, layered_layout
+from .widget_dag import _order_and_route
 
 _ESM_PATH = Path(__file__).parent / "static" / "formula-dag.js"
 _CSS_PATH = Path(__file__).parent / "static" / "formula-dag.css"
@@ -142,10 +142,44 @@ def _normalize_formulas(formulas: Mapping[str, Any]) -> list[dict[str, Any]]:
         digits = raw.get("digits", 3)
         if isinstance(digits, bool) or not isinstance(digits, int) or digits < 0:
             raise ValueError(f"formula {name!r} digits must be a non-negative integer.")
+        row = raw.get("row", 0)
+        if isinstance(row, bool) or not isinstance(row, int) or row < 0:
+            raise ValueError(f"formula {name!r} row must be a non-negative integer.")
         out.append(
-            {"name": name, "tex": tex, "symbol": symbol, "label": label, "fn": fn, "digits": digits}
+            {
+                "name": name,
+                "tex": tex,
+                "symbol": symbol,
+                "label": label,
+                "fn": fn,
+                "digits": digits,
+                "row": row,
+            }
         )
     return out
+
+
+def _formula_rows(names, edges, min_rows):
+    """Give each formula a row (0 = top): one below the deepest formula it uses.
+
+    Formulas that use nothing share the top row. ``min_rows`` pushes a formula
+    down to at least that row, and everything that uses it follows, so a
+    minimum can never put a formula above one it uses.
+    """
+    parents = {n: [] for n in names}
+    for src, dst in edges:
+        parents[dst].append(src)
+    rows = {}
+
+    def row_of(n):
+        if n not in rows:
+            below = 1 + max((row_of(p) for p in parents[n]), default=-1)
+            rows[n] = max(min_rows.get(n, 0), below)
+        return rows[n]
+
+    for n in names:
+        row_of(n)
+    return rows
 
 
 def _fn_arguments(specs, parameter_names):
@@ -357,7 +391,11 @@ class FormulaDAG(anywidget.AnyWidget):
                 in place of the formula's symbol and its uses (rounded to
                 ``digits``, default 3). It lands in ``outputs``;
                 ``committed_outputs`` holds the pre-drag values, like
-                ``committed_values``.
+                ``committed_values``. By default each formula sits one row
+                below the deepest formula it uses, so formulas that use
+                nothing share the top row. Add ``row`` (0 is the top) to push
+                a formula down to at least that row; the formulas that use it
+                move down with it.
             parameters: Draggable numbers, shared by every formula. Mark one
                 with ``\tangle{name}`` and configure it exactly as in
                 ``TangleLatex``: ``value`` is required; optional keys are
@@ -430,11 +468,11 @@ class FormulaDAG(anywidget.AnyWidget):
                 }
             )
 
-        rows = layered_layout(dict.fromkeys(names), edges)
+        rows = _formula_rows(names, edges, {s["name"]: s["row"] for s in specs})
         layers, routes, _ = _order_and_route(names, rows, edges)
         super().__init__(
             formulas=normalized,
-            layers=[layers[r] for r in sorted(layers)],
+            layers=[layers[r] for r in sorted(layers) if layers[r]],
             routes=routes,
             parameters=params,
             notes=normalized_notes,

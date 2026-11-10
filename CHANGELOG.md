@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.39] - 2026-11-10
+
+### Changed
+
+- `FormulaDAG` puts every formula that uses no other formula on the top row,
+  and each other formula one row below the deepest formula it uses. Previously
+  such formulas were pulled down to sit just above their first use.
+
+### Added
+
+- `FormulaDAG` formulas accept a `row` key that pushes a formula down to at
+  least that row; the formulas that use it move down with it.
+
 ## [0.5.38] - 2026-11-10
 
 ### Added
