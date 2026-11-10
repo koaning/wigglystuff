@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import inspect
+import math
 import re
 from collections.abc import Mapping
 from pathlib import Path
@@ -134,8 +136,92 @@ def _normalize_formulas(formulas: Mapping[str, Any]) -> list[dict[str, Any]]:
         for field, value in (("symbol", symbol), ("label", label)):
             if not isinstance(value, str) or not value.strip():
                 raise ValueError(f"formula {name!r} {field} must be a non-empty string.")
-        out.append({"name": name, "tex": tex, "symbol": symbol, "label": label})
+        fn = raw.get("fn")
+        if fn is not None and not callable(fn):
+            raise ValueError(f"formula {name!r} fn must be callable.")
+        digits = raw.get("digits", 3)
+        if isinstance(digits, bool) or not isinstance(digits, int) or digits < 0:
+            raise ValueError(f"formula {name!r} digits must be a non-negative integer.")
+        out.append(
+            {"name": name, "tex": tex, "symbol": symbol, "label": label, "fn": fn, "digits": digits}
+        )
     return out
+
+
+def _fn_arguments(specs, parameter_names):
+    """Map each formula with an ``fn`` to the names its arguments read.
+
+    An argument reads the parameter or formula of the same name (a default
+    makes it optional). Formula arguments must not form a cycle.
+    """
+    formula_names = {s["name"] for s in specs}
+    args = {}
+    for spec in specs:
+        fn = spec["fn"]
+        if fn is None:
+            continue
+        name = spec["name"]
+        try:
+            signature = inspect.signature(fn)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"formula {name!r} fn must have inspectable arguments.") from exc
+        names = []
+        for arg in signature.parameters.values():
+            if arg.kind in (arg.VAR_POSITIONAL, arg.VAR_KEYWORD):
+                raise ValueError(f"formula {name!r} fn cannot take *args or **kwargs.")
+            known = (arg.name in parameter_names) + (arg.name in formula_names)
+            if known == 2:
+                raise ValueError(
+                    f"formula {name!r} fn argument {arg.name!r} is both a parameter "
+                    "and a formula name; rename one."
+                )
+            if known == 0:
+                if arg.default is not arg.empty:
+                    continue
+                raise ValueError(
+                    f"formula {name!r} fn argument {arg.name!r} is not a parameter "
+                    "or formula name."
+                )
+            names.append(arg.name)
+        args[name] = names
+    deps = [[a, n] for n, names in args.items() for a in names if a in formula_names]
+    cycle = _find_cycle(sorted(formula_names), deps)
+    if cycle:
+        raise ValueError("formula fns must not form a cycle: " + " -> ".join(cycle))
+    return args
+
+
+def _fn_inputs(fn_args, param_names):
+    """Map each formula with an ``fn`` to the parameters its value depends on.
+
+    Follows formula arguments transitively: if ``d2`` reads ``d1`` and ``d1``
+    reads ``T``, then ``d2`` depends on ``T``.
+    """
+    inputs = {}
+
+    def collect(name):
+        if name not in inputs:
+            found = set()
+            for arg in fn_args[name]:
+                if arg in param_names:
+                    found.add(arg)
+                elif arg in fn_args:
+                    found |= collect(arg)
+            inputs[name] = found
+        return inputs[name]
+
+    for name in fn_args:
+        collect(name)
+    return {name: sorted(found) for name, found in inputs.items()}
+
+
+def _whole_note(tex: str) -> str | None:
+    """Return ``name`` when ``tex`` is exactly one ``\\note{name}{...}``, else ``None``."""
+    tex = tex.strip()
+    m = _NOTE_RE.match(tex)
+    if not m or tex[m.end() : m.end() + 1] != "{":
+        return None
+    return m.group(1) if _strip_notes(tex) == tex[m.end() + 1 : -1] else None
 
 
 def _tangle_and_notes(specs, parameters, notes):
@@ -236,6 +322,9 @@ class FormulaDAG(anywidget.AnyWidget):
     dragging = traitlets.Bool(False).tag(sync=True)
     hovered = traitlets.Unicode("").tag(sync=True)
     legend = traitlets.Bool(True).tag(sync=True)
+    outputs = traitlets.Dict(default_value={}).tag(sync=True)
+    committed_outputs = traitlets.Dict(default_value={}).tag(sync=True)
+    output_errors = traitlets.Dict(default_value={}).tag(sync=True)
     selected = traitlets.Unicode("").tag(sync=True)
     theme = traitlets.Enum(["auto", "light", "dark"], default_value="auto").tag(
         sync=True
@@ -260,7 +349,15 @@ class FormulaDAG(anywidget.AnyWidget):
                 renders as; defaults to the left-hand side of the first
                 top-level ``=``, else the name) and ``label`` (the caption
                 under the formula; defaults to the name). Reference another
-                formula's output with ``\use{other_name}``.
+                formula's output with ``\use{other_name}``. Add ``fn`` to
+                compute the formula's value live: a callable whose argument
+                names pick parameters or other formulas, e.g.
+                ``"fn": lambda d1, vol: d1 - vol``. The value shows in the
+                legend and, while you drag or type a number it depends on,
+                in place of the formula's symbol and its uses (rounded to
+                ``digits``, default 3). It lands in ``outputs``;
+                ``committed_outputs`` holds the pre-drag values, like
+                ``committed_values``.
             parameters: Draggable numbers, shared by every formula. Mark one
                 with ``\tangle{name}`` and configure it exactly as in
                 ``TangleLatex``: ``value`` is required; optional keys are
@@ -300,13 +397,16 @@ class FormulaDAG(anywidget.AnyWidget):
         if cycle:
             raise ValueError("formulas must not form a cycle: " + " -> ".join(cycle))
 
-        def expand_uses(tex):
-            return _USE_RE.sub(
-                lambda m: rf"\htmlData{{fdag-use={m.group(1)}}}{{{symbols[m.group(1)]}}}",
-                tex,
-            )
+        params, normalized_notes = _tangle_and_notes(specs, parameters, notes)
+        values = {name: spec["value"] for name, spec in params.items()}
+        self._fns = {s["name"]: s["fn"] for s in specs if s["fn"] is not None}
+        self._fn_args = _fn_arguments(specs, set(params))
+        inputs = _fn_inputs(self._fn_args, set(params))
+        outputs, output_errors = self._compute(values)
 
         # Producers take palette colors in order; formulas nobody uses stay ink.
+        # The browser expands \use{...} and the output symbol itself, so it can
+        # swap in live values while a number they depend on changes.
         producers = [n for n in names if any(src == n for src, _ in edges)]
         colors = {
             n: dict(_PRODUCER_COLORS[i % len(_PRODUCER_COLORS)]) for i, n in enumerate(producers)
@@ -314,22 +414,21 @@ class FormulaDAG(anywidget.AnyWidget):
         normalized = []
         for spec in specs:
             split = _split_lhs(spec["tex"])
-            if split:
-                lhs, rest = split
-                tex = rf"\htmlData{{fdag-out={spec['name']}}}{{{expand_uses(lhs)}}} ={expand_uses(rest)}"
-            else:
-                tex = expand_uses(spec["tex"])
+            lhs, body = (split[0], split[1]) if split else ("", spec["tex"])
             normalized.append(
                 {
                     "name": spec["name"],
-                    "tex": tex,
+                    "lhs": lhs,
+                    "tex": body,
+                    "out_note": _whole_note(lhs) if lhs else None,
+                    "inputs": inputs.get(spec["name"], []),
                     "label": spec["label"],
+                    "symbol": spec["symbol"],
+                    "digits": spec["digits"],
+                    "has_fn": spec["fn"] is not None,
                     "color": colors.get(spec["name"], dict(_PARAM_COLOR)),
                 }
             )
-
-        params, normalized_notes = _tangle_and_notes(specs, parameters, notes)
-        values = {name: spec["value"] for name, spec in params.items()}
 
         rows = layered_layout(dict.fromkeys(names), edges)
         layers, routes, _ = _order_and_route(names, rows, edges)
@@ -341,6 +440,9 @@ class FormulaDAG(anywidget.AnyWidget):
             notes=normalized_notes,
             values=values,
             committed_values=dict(values),
+            outputs=outputs,
+            committed_outputs=dict(outputs),
+            output_errors=output_errors,
             legend=legend,
             theme=theme,
             **kwargs,
@@ -352,6 +454,45 @@ class FormulaDAG(anywidget.AnyWidget):
         # Outside a drag (e.g. a Python-side change) the committed values follow.
         if not self.dragging:
             self.committed_values = dict(self.values)
+        if self._fns:
+            self.outputs, self.output_errors = self._compute(self.values)
+
+    @traitlets.observe("committed_values")
+    def _follow_committed(self, change: dict) -> None:
+        if self._fns:
+            self.committed_outputs, _ = self._compute(self.committed_values)
+
+    def _compute(self, values: Mapping[str, float]) -> tuple[dict, dict]:
+        """Evaluate every ``fn`` in dependency order.
+
+        Returns ``(outputs, errors)``. A formula whose ``fn`` raises, returns
+        something that isn't a finite number, or reads a formula without a
+        value gets ``None``; the exception message goes in ``errors``.
+        """
+        outputs: dict[str, float | None] = {}
+        errors: dict[str, str] = {}
+
+        def value_of(name):
+            if name not in outputs:
+                kwargs = {}
+                for arg in self._fn_args[name]:
+                    kwargs[arg] = values[arg] if arg in values else (
+                        value_of(arg) if arg in self._fns else None
+                    )
+                if any(v is None for v in kwargs.values()):
+                    outputs[name] = None
+                    return None
+                try:
+                    result = float(self._fns[name](**kwargs))
+                    outputs[name] = result if math.isfinite(result) else None
+                except Exception as exc:  # report it, keep the rest of the DAG live
+                    errors[name] = f"{type(exc).__name__}: {exc}"
+                    outputs[name] = None
+            return outputs[name]
+
+        for name in self._fns:
+            value_of(name)
+        return outputs, errors
 
     @property
     def edges(self) -> list[tuple[str, str]]:

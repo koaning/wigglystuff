@@ -46,6 +46,7 @@ nav = [
         { TangleFunction = "reference/tangle-function.md" },
         { TangleDistribution = "reference/tangle-distribution.md" },
         { FormulaAnimation = "reference/formula-animation.md" },
+        { FormulaDAG = "reference/formula-dag.md" },
         { GamepadWidget = "reference/gamepad.md" },
         { AnnotationWidget = "reference/annotation.md" },
         { WebcamCapture = "reference/webcam-capture.md" },

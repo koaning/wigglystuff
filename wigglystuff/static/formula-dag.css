@@ -83,6 +83,12 @@
   margin: 0;
 }
 
+/* Left-aligned, so a formula's position never depends on how wide its card
+   is (captions and notes can widen it); arrows and notes measure from it. */
+.formula-dag__tex .katex-display > .katex {
+  text-align: left;
+}
+
 .formula-dag__tex .katex {
   font-size: 1.1em;
 }
@@ -100,6 +106,9 @@
 
 .formula-dag__label {
   align-self: flex-end;
+  /* Clear a dotted number underline on the formula's lowest line. */
+  margin-top: 4px;
+  white-space: nowrap;
   font: 10.5px ui-monospace, SFMono-Regular, Menlo, monospace;
   color: var(--fd-muted);
 }
@@ -143,6 +152,9 @@
 .formula-dag__tex {
   position: relative;
   z-index: 1;
+  /* A number's dotted underline hangs ~3px below KaTeX's box (e.g. under
+     a denominator); keep it inside, clear of the caption. */
+  padding-bottom: 3px;
 }
 
 .formula-dag__tints,
@@ -303,6 +315,12 @@
 .formula-dag__legend {
   display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formula-dag__legend-row {
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px 8px;
@@ -375,4 +393,43 @@
 .formula-dag [data-tangle-param].fd-colored {
   border-bottom: 1.5px dotted color-mix(in srgb, var(--fd-c), transparent 45%);
   border-radius: 0.16em 0.16em 0 0;
+}
+
+/* ---- computed outputs --------------------------------------------------- */
+
+.formula-dag__chip--output {
+  cursor: default;
+  border-style: dashed;
+}
+
+.formula-dag__chip--output .formula-dag__chip-symbol.fd-colored {
+  color: var(--fd-c);
+}
+
+.formula-dag__chip-output {
+  color: var(--fd-ink);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* The live value at the end of a computed formula: present, but quieter
+   than the formula itself. */
+.formula-dag .katex-html [data-fdag-value] {
+  color: color-mix(in srgb, var(--fd-ink), transparent 35%);
+}
+
+.formula-dag__chip--output.is-error .formula-dag__chip-output {
+  color: #c9382b;
+}
+
+.formula-dag__chip--output.is-linked {
+  border-color: color-mix(in srgb, var(--fd-ink), transparent 55%);
+}
+
+/* An output chip under the pointer lights up that output wherever it shows. */
+.formula-dag .katex-html .is-linked[data-fdag-out],
+.formula-dag .katex-html .is-linked[data-fdag-use] {
+  border-radius: 0.16em;
+  background: color-mix(in srgb, var(--fd-c, var(--fd-ink)), transparent 82%);
+  box-shadow: 0 0 0 0.14em color-mix(in srgb, var(--fd-c, var(--fd-ink)), transparent 82%);
 }

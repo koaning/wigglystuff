@@ -15,6 +15,7 @@ const LAND_GAP = 3; // gap between an arrow tip and the ink it points at
 const SIDE_GAP = 12; // how far beside a formula a side-landing arrow drops
 const SIDE_PAD = 4; // vertical clearance a side-landing run keeps from glyphs
 const CORNER = 7; // radius of a side-landing arrow's turn
+const NEAR_X = 6; // two vertical runs closer than this read as one line
 
 // Note layout inside a card, in px (see static/latex-tangle.js).
 const NOTE_PAD_Y = 4; // card edge to a label row
@@ -222,10 +223,12 @@ function* permutations(items) {
   }
 }
 
-// Crossings inside one gap when the producers' tracks run top to bottom in
-// `order`. A segment drops at `from`, runs along its track, drops at `to`.
+// Cost of stacking the producers' tracks top to bottom in `order` inside one
+// gap. A segment drops at `from`, runs along its track, drops at `to`.
 // Track i above track j crosses when i's lower drop lands inside j's run, or
-// j's upper drop starts inside i's run.
+// j's upper drop starts inside i's run. If i's lower drop and j's upper drop
+// share (almost) the same x, both run side by side between the two tracks
+// and look like one line; that costs more than a crossing.
 function trackCrossings(order, segsBySrc) {
   let count = 0;
   const inside = (x, s) => x > Math.min(s.from, s.to) + 1 && x < Math.max(s.from, s.to) - 1;
@@ -235,6 +238,7 @@ function trackCrossings(order, segsBySrc) {
         for (const u of segsBySrc[order[j]]) {
           if (inside(s.to, u)) count++;
           if (inside(u.from, s)) count++;
+          if (Math.abs(s.to - u.from) < NEAR_X) count += 2;
         }
       }
     }
@@ -268,6 +272,9 @@ async function render({ model, el }) {
   let svg = null;
   let resetButton = null;
   let legend = {}; // number name -> {chip, value}
+  let outputChips = {}; // formula name -> {chip, value}
+  let lastSource = {}; // card -> the LaTeX it last rendered
+  let linkedOutput = ""; // formula whose output is lit up everywhere
   let linked = ""; // number whose occurrences are lit up
   let edgeEls = []; // [{src, dst, els: [path, head]}]
   let blocks = {}; // card -> {top: [x], bottom: [x]}, x relative to the tex's left
@@ -302,6 +309,7 @@ async function render({ model, el }) {
     const byName = formulasByName();
     cards = {};
     parts = {};
+    lastSource = {};
     lanes = {};
     rowEls = [];
     rowOf = {};
@@ -335,20 +343,27 @@ async function render({ model, el }) {
     const children = [board];
     resetButton = null;
     legend = {};
-    if (Object.keys(getParameters()).length) {
+    outputChips = {};
+    const hasParams = Object.keys(getParameters()).length > 0;
+    const hasOutputs = (model.get("formulas") || []).some((f) => f.has_fn);
+    if (hasParams || (hasOutputs && model.get("legend"))) {
       const footer = document.createElement("div");
       footer.className = "formula-dag__footer";
       if (model.get("legend")) footer.appendChild(buildLegend());
+      children.push(footer);
+    }
+    if (hasParams) {
+      const footer = children[children.length - 1];
       resetButton = document.createElement("button");
       resetButton.type = "button";
       resetButton.className = "formula-dag__reset";
       resetButton.textContent = "Reset";
       resetButton.addEventListener("click", handleReset);
       footer.appendChild(resetButton);
-      children.push(footer);
     }
     root.replaceChildren(...children);
     Object.keys(cards).forEach(renderCard);
+    renderOutputs();
     showSelected();
     relayout();
   }
@@ -359,6 +374,8 @@ async function render({ model, el }) {
   function buildLegend() {
     const strip = document.createElement("div");
     strip.className = "formula-dag__legend";
+    const inputs = document.createElement("div");
+    inputs.className = "formula-dag__legend-row";
     const ordered = Object.entries(getParameters()).sort((a, b) => a[1].order - b[1].order);
     for (const [name, p] of ordered) {
       const chip = document.createElement("div");
@@ -381,8 +398,37 @@ async function render({ model, el }) {
       value.className = "formula-dag__chip-value";
       setColorVars(value, p.color);
       chip.appendChild(value);
-      strip.appendChild(chip);
+      inputs.appendChild(chip);
       legend[name] = { chip, value };
+    }
+    if (inputs.children.length) strip.appendChild(inputs);
+    // Then, after an arrow, one read-only chip per computed formula.
+    const computed = (model.get("formulas") || []).filter((f) => f.has_fn);
+    if (computed.length) {
+      const results = document.createElement("div");
+      results.className = "formula-dag__legend-row";
+      strip.appendChild(results);
+      for (const f of computed) {
+        const chip = document.createElement("div");
+        chip.className = "formula-dag__chip formula-dag__chip--output";
+        chip.dataset.fdagLink = f.name;
+        const symbol = document.createElement("span");
+        symbol.className = "formula-dag__chip-symbol";
+        symbol.innerHTML = katex.renderToString(f.symbol, { throwOnError: false });
+        setColorVars(symbol, f.color);
+        chip.appendChild(symbol);
+        if (f.label !== f.name) {
+          const meaning = document.createElement("span");
+          meaning.className = "formula-dag__chip-label";
+          meaning.textContent = f.label;
+          chip.appendChild(meaning);
+        }
+        const value = document.createElement("span");
+        value.className = "formula-dag__chip-output";
+        chip.appendChild(value);
+        results.appendChild(chip);
+        outputChips[f.name] = { chip, value };
+      }
     }
     renderLegend();
     return strip;
@@ -400,6 +446,24 @@ async function render({ model, el }) {
       );
       chip.classList.toggle("is-active", Boolean(drag && drag.name === name));
     }
+  }
+
+  // A computed formula's value as text ("—" while it has none).
+  function outputText(name) {
+    const v = (model.get("outputs") || {})[name];
+    return v === null || v === undefined ? "—" : formatValue(v, formulasByName()[name].digits);
+  }
+
+  // Computed values: always in the output chips; in the formulas only while
+  // a number they depend on is being changed.
+  function renderOutputs() {
+    const errs = model.get("output_errors") || {};
+    for (const [name, { chip, value }] of Object.entries(outputChips)) {
+      value.textContent = outputText(name);
+      chip.title = errs[name] || "";
+      chip.classList.toggle("is-error", Boolean(errs[name]));
+    }
+    renderAll();
   }
 
   function buildCard(spec) {
@@ -439,7 +503,7 @@ async function render({ model, el }) {
       model.save_changes();
     });
     cards[id] = card;
-    parts[id] = { stage, tex, tints, noteArrows, labels };
+    parts[id] = { stage, tex, tints, noteArrows, labels, caption };
     return card;
   }
 
@@ -449,35 +513,95 @@ async function render({ model, el }) {
     return spec.display === "number" || editingName === name || (drag && drag.name === name);
   }
 
+  // The number being dragged or typed into ("" when none).
+  function activeParam() {
+    return (drag && drag.name) || editingName || "";
+  }
+
+  // A computed formula shows its live value in place of its symbol (and of
+  // every use) while a number it depends on is being changed.
+  function revealed(spec) {
+    const active = activeParam();
+    return Boolean(spec && spec.has_fn && active && spec.inputs.includes(active));
+  }
+
+  function valueTex(name) {
+    const shown = outputText(name);
+    return shown === "—" ? String.raw`\text{—}` : shown;
+  }
+
+  // The LaTeX a card shows right now: \use{...} expanded to the producer's
+  // symbol or live value, the output symbol likewise, then the numbers.
+  function cardSource(spec) {
+    const byName = formulasByName();
+    const params = getParameters();
+    const values = getValues();
+    // An exponent right after a subscripted symbol (\use{vy}^2 with v_y)
+    // moves inside it, so KaTeX stacks v_y^2 instead of raising the 2 over
+    // the whole v_y.
+    let source = spec.tex.replace(/\\use\{([^}]*)\}(\^(?:\{[^{}]*\}|[^{}\s\\]))?/g, (_, name, sup = "") => {
+      const producer = byName[name];
+      const absorb = sup && producer.symbol.includes("_") && !producer.symbol.includes("^");
+      const content = revealed(producer) ? valueTex(name) : producer.symbol;
+      if (absorb) return String.raw`\htmlData{fdag-use=${name}}{${content}${sup}}`;
+      return String.raw`\htmlData{fdag-use=${name}}{${content}}` + sup;
+    });
+    const live = revealed(spec);
+    if (spec.lhs) {
+      // Keep a note that wraps the whole output on the value, so it still
+      // points at something: \note{d1}{d_1} becomes \note{d1}{0.350}.
+      let out = spec.lhs;
+      if (live) out = spec.out_note ? String.raw`\note{${spec.out_note}}{${valueTex(spec.name)}}` : valueTex(spec.name);
+      source = String.raw`\htmlData{fdag-out=${spec.name}}{${out}} =` + source;
+    } else if (live) {
+      // No output symbol to replace: close the formula with the value.
+      source += String.raw` = \htmlData{fdag-value=${spec.name}}{${valueTex(spec.name)}}`;
+    }
+    return source.replace(/\\tangle\{([A-Za-z][A-Za-z0-9_-]*)\}/g, (_, name) => {
+      const p = params[name];
+      const content = showValue(name, p) ? formatValue(values[name], p.digits) : p.symbol;
+      return String.raw`\htmlData{tangle-param=${name}}{${content}}`;
+    });
+  }
+
+  // Re-render every card whose LaTeX changed; lay out again if any did.
+  function renderAll() {
+    let changed = false;
+    for (const id of Object.keys(cards)) changed = renderCard(id) || changed;
+    if (changed) relayoutSoon();
+  }
+
+  // Returns whether KaTeX re-rendered (unchanged LaTeX keeps its DOM).
   function renderCard(id) {
     const spec = formulasByName()[id];
     const { tex } = parts[id];
     const params = getParameters();
     const values = getValues();
     const producers = new Set((model.get("routes") || []).map((r) => r[0]));
-    try {
-      const source = spec.tex.replace(/\\tangle\{([A-Za-z][A-Za-z0-9_-]*)\}/g, (_, name) => {
-        const p = params[name];
-        const content = showValue(name, p) ? formatValue(values[name], p.digits) : p.symbol;
-        return String.raw`\htmlData{tangle-param=${name}}{${content}}`;
-      });
-      katex.render(source, tex, {
-        displayMode: true,
-        throwOnError: true,
-        macros: { "\\note": "\\htmlData{note=#1}{#2}" },
-        trust: (context) => context.command === "\\htmlData",
-        strict: (code) => (code === "htmlExtension" ? "ignore" : "warn"),
-      });
-      delete errors[id];
-    } catch (error) {
-      tex.textContent = spec.tex;
-      tex.classList.add("formula-dag__tex--error");
-      errors[id] = `${id}: ${error instanceof Error ? error.message : error}`;
-    }
-    const message = Object.values(errors).join("\n");
-    if (model.get("error") !== message) {
-      model.set("error", message);
-      model.save_changes();
+    const source = cardSource(spec);
+    const changed = source !== lastSource[id];
+    if (changed) {
+      lastSource[id] = source;
+      try {
+        katex.render(source, tex, {
+          displayMode: true,
+          throwOnError: true,
+          macros: { "\\note": "\\htmlData{note=#1}{#2}" },
+          trust: (context) => context.command === "\\htmlData",
+          strict: (code) => (code === "htmlExtension" ? "ignore" : "warn"),
+        });
+        tex.classList.remove("formula-dag__tex--error");
+        delete errors[id];
+      } catch (error) {
+        tex.textContent = spec.lhs ? `${spec.lhs} =${spec.tex}` : spec.tex;
+        tex.classList.add("formula-dag__tex--error");
+        errors[id] = `${id}: ${error instanceof Error ? error.message : error}`;
+      }
+      const message = Object.values(errors).join("\n");
+      if (model.get("error") !== message) {
+        model.set("error", message);
+        model.save_changes();
+      }
     }
 
     // Color this formula's output symbol (if anyone uses it), every use of
@@ -510,11 +634,14 @@ async function render({ model, el }) {
       term.setAttribute("aria-label", note.text);
       setColorVars(term, note.color);
     });
+    const valueNode = tex.querySelector(".katex-html [data-fdag-value]");
+    if (valueNode) valueNode.title = (model.get("output_errors") || {})[id] || "";
     spaceNumbersAfterDigits(tex);
   }
 
   // A revealed number right after a digit reads as one number (2σ with
-  // σ = 1.7 shows as "21.7"); give such a number a small gap on its left.
+  // σ = 1.7 shows as "21.7", K·D as "1000.951"); give such a number (a
+  // dragged one, or a live value standing in for a symbol) a small gap.
   function spaceNumbersAfterDigits(tex) {
     const html = tex.querySelector(".katex-html");
     if (!html) return;
@@ -524,7 +651,7 @@ async function render({ model, el }) {
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       const text = node.textContent.trim();
       if (!text) continue;
-      const param = node.parentElement.closest("[data-tangle-param]");
+      const param = node.parentElement.closest("[data-tangle-param], [data-fdag-use], [data-fdag-out]");
       if (param && !seen.has(param)) {
         seen.add(param);
         param.classList.toggle("formula-dag__param--gap", /[0-9.]$/.test(previous) && /^[0-9.]/.test(text));
@@ -563,6 +690,12 @@ async function render({ model, el }) {
     // 1. Pick a side per note, as TangleLatex does: parts above the
     //    formula's middle go up, parts below go down, the rest balance.
     const texBox = rel(tex.getBoundingClientRect());
+    // The formula's own width. The tex box stretches to the card, which a
+    // wide caption can widen; measuring that would under-reserve room for
+    // labels once left padding shifts the formula over.
+    const html = tex.querySelector(".katex-html");
+    const ink = html && union(glyphLeaves(html).map(inkRect));
+    const formulaW = ink ? rel(ink).right - texBox.left : texBox.right - texBox.left;
     const items = [];
     //    A note on the output symbol (\note{why}{d_1} = ...) goes to the
     //    left instead: above it arrows come in, below it the stem leaves.
@@ -571,6 +704,8 @@ async function render({ model, el }) {
     const out = tex.querySelector(".katex-html [data-fdag-out]");
     for (const name of names) {
       const term = termOf(name);
+      // A live value can stand in for a noted part; hide its note meanwhile.
+      labels[name].style.display = term ? "" : "none";
       if (!term) continue;
       const box = termBox(term);
       const item = {
@@ -612,7 +747,7 @@ async function render({ model, el }) {
     //    through it (x relative to the formula's left edge).
     const heights = {};
     let minX = 0;
-    let maxX = texBox.right - texBox.left;
+    let maxX = formulaW;
     for (const side of ["top", "bottom"]) {
       const row = items.filter((item) => item.side === side).sort((a, b) => a.cx - b.cx);
       const sideBlocks = ((blocks[id] || {})[side] || []).map((x) => ({
@@ -650,7 +785,7 @@ async function render({ model, el }) {
     stage.style.paddingTop = `${Math.max(band("top"), needTop)}px`;
     stage.style.paddingBottom = `${Math.max(band("bottom"), needBottom)}px`;
     stage.style.paddingLeft = `${-minX}px`;
-    stage.style.paddingRight = `${maxX - (texBox.right - texBox.left)}px`;
+    stage.style.paddingRight = `${maxX - formulaW}px`;
 
     // 3. Padding moved the formula: measure again and place the labels.
     const formula = rel(tex.getBoundingClientRect());
@@ -795,6 +930,15 @@ async function render({ model, el }) {
       const out = texHtml(id)?.querySelector("[data-fdag-out]");
       const sym = out ? inkOf(id, out) : formulaInk[id];
       stems[id] = { x: (sym.left + sym.right) / 2, top: sym.bottom + LAND_GAP, width: sym.right - sym.left };
+    }
+    // A caption sits right of its formula's stem, never across it.
+    for (const id of producers) {
+      if (!stems[id]) continue;
+      const card = box(cards[id]);
+      const pad = parseFloat(getComputedStyle(cards[id]).paddingLeft) || 0;
+      const margin = Math.max(0, Math.round(stems[id].x - card.left - pad + 8));
+      const caption = parts[id].caption;
+      if (caption.style.marginLeft !== `${margin}px`) caption.style.marginLeft = `${margin}px`;
     }
     const newBlocks = {};
     const block = (id, side, x) => {
@@ -1018,13 +1162,25 @@ async function render({ model, el }) {
     for (const node of root.querySelectorAll("[data-tangle-param]")) {
       node.classList.toggle("is-linked", Boolean(name) && node.dataset.tangleParam === name);
     }
+    // An output chip lights up its formula's output and every use of it.
+    const out = linkedOutput;
+    for (const node of root.querySelectorAll(".katex-html [data-fdag-out], .katex-html [data-fdag-use]")) {
+      const which = node.dataset.fdagOut || node.dataset.fdagUse;
+      node.classList.toggle("is-linked", Boolean(out) && which === out);
+    }
+    for (const [name, { chip }] of Object.entries(outputChips)) {
+      chip.classList.toggle("is-linked", name === out);
+    }
   }
 
   function handleHover(event) {
     const over = event.target.closest("[data-tangle-param]");
     const next = over ? over.dataset.tangleParam : "";
-    if (next !== linked) {
+    const outChip = event.target.closest("[data-fdag-link]");
+    const nextOutput = outChip ? outChip.dataset.fdagLink : "";
+    if (next !== linked || nextOutput !== linkedOutput) {
       linked = next;
+      linkedOutput = nextOutput;
       applyLinked();
     }
     const label = event.target.closest(".formula-dag__note");
@@ -1038,16 +1194,10 @@ async function render({ model, el }) {
 
   // ---- dragging & editing numbers -------------------------------------------
 
-  function cardsUsing(name) {
-    const marker = `\\tangle{${name}}`;
-    return (model.get("formulas") || []).filter((f) => f.tex.includes(marker)).map((f) => f.name);
-  }
-
-  function rerender(name) {
-    cardsUsing(name).forEach(renderCard);
+  function rerender() {
+    renderAll();
     renderLegend();
     applyLinked();
-    relayoutSoon();
   }
 
   // Where a number was grabbed: a formula card and which occurrence in it,
@@ -1091,7 +1241,7 @@ async function render({ model, el }) {
   function updateValue(name, value, { flush = false } = {}) {
     localValuesUpdate = true;
     model.set("values", { ...getValues(), [name]: value });
-    rerender(name);
+    rerender();
     if (flush) commit();
     else scheduleSave();
   }
@@ -1112,7 +1262,7 @@ async function render({ model, el }) {
       moved: false,
     };
     root.classList.add("is-dragging");
-    rerender(name);
+    rerender();
   }
 
   function moveDrag(event) {
@@ -1143,7 +1293,7 @@ async function render({ model, el }) {
     suppressClick = true;
     setTimeout(() => (suppressClick = false), 0);
     if (finished.moved) {
-      rerender(finished.name);
+      rerender();
       commit();
       return;
     }
@@ -1155,7 +1305,7 @@ async function render({ model, el }) {
     const finished = drag;
     drag = null;
     root.classList.remove("is-dragging");
-    rerender(finished.name);
+    rerender();
     if (finished.moved) commit();
   }
 
@@ -1163,7 +1313,7 @@ async function render({ model, el }) {
     closeEditor(false);
     const spec = getParameters()[name];
     editingName = name;
-    cardsUsing(name).forEach(renderCard);
+    renderAll();
     relayout();
     const target = findTarget(name, where);
     if (!target) return;
@@ -1210,7 +1360,7 @@ async function render({ model, el }) {
     editingName = null;
     current.input.remove();
     if (save) updateValue(current.name, snap(Number(current.input.value), current.spec), { flush: true });
-    else rerender(current.name);
+    else rerender();
   }
 
   function handleKeydown(event) {
@@ -1227,9 +1377,8 @@ async function render({ model, el }) {
     localValuesUpdate = true;
     const initial = Object.fromEntries(Object.entries(getParameters()).map(([n, p]) => [n, p.value]));
     model.set("values", initial);
-    Object.keys(cards).forEach(renderCard);
+    renderAll();
     renderLegend();
-    relayoutSoon();
     commit();
   }
 
@@ -1238,9 +1387,8 @@ async function render({ model, el }) {
       localValuesUpdate = false;
       return;
     }
-    Object.keys(cards).forEach(renderCard);
+    renderAll();
     renderLegend();
-    relayoutSoon();
   }
 
   // ---- wiring -----------------------------------------------------------------
@@ -1262,6 +1410,7 @@ async function render({ model, el }) {
 
   const onHoverEnd = () => {
     linked = "";
+    linkedOutput = "";
     applyLinked();
     setHovered("");
   };
@@ -1278,6 +1427,8 @@ async function render({ model, el }) {
   const rebuildOn = ["formulas", "layers", "routes", "parameters", "notes", "legend"];
   rebuildOn.forEach((name) => model.on(`change:${name}`, build));
   model.on("change:values", handleValuesChange);
+  model.on("change:outputs", renderOutputs);
+  model.on("change:output_errors", renderOutputs);
   model.on("change:hovered", applyHover);
   model.on("change:theme", setTheme);
   model.on("change:selected", showSelected);
@@ -1296,6 +1447,8 @@ async function render({ model, el }) {
     document.removeEventListener("pointercancel", cancelDrag);
     rebuildOn.forEach((name) => model.off(`change:${name}`, build));
     model.off("change:values", handleValuesChange);
+    model.off("change:outputs", renderOutputs);
+    model.off("change:output_errors", renderOutputs);
     model.off("change:hovered", applyHover);
     model.off("change:theme", setTheme);
     model.off("change:selected", showSelected);
