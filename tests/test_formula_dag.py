@@ -27,6 +27,27 @@ def test_edges_layers_and_reachability_follow_use_markers():
         widget.upstream("nope")
 
 
+def test_givens_share_the_top_row_and_row_pushes_a_formula_down():
+    def rows(widget):  # real formulas only; "!"-ids are lanes for long edges
+        return [[n for n in layer if not n.startswith("!")] for layer in widget.layers]
+
+    formulas = {
+        "a": r"a = 1",
+        "b": r"b = 2",
+        "c": r"c = \use{a}",
+        "d": r"d = \use{b} + \use{c}",
+    }
+    assert rows(FormulaDAG(formulas)) == [["a", "b"], ["c"], ["d"]]
+    pushed = FormulaDAG({**formulas, "b": {"tex": r"b = 2", "row": 1}})
+    assert sorted(rows(pushed)[1]) == ["b", "c"]
+    # A minimum row drags everything that uses the formula down with it.
+    deep = FormulaDAG({**formulas, "a": {"tex": r"a = 1", "row": 2}})
+    assert rows(deep) == [["b"], [], ["a"], ["c"], ["d"]]
+    for bad in (-1, True, "2"):
+        with pytest.raises(ValueError, match="row must be"):
+            FormulaDAG({"a": {"tex": "a = 1", "row": bad}})
+
+
 def test_synced_formulas_split_the_output_and_list_their_inputs():
     by_name = {f["name"]: f for f in _chain().formulas}
     # The left-hand side is sent separately so the browser can swap in values.
