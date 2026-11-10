@@ -103,8 +103,8 @@ def _(FormulaDAG, mo):
             {
                 "vol": r"\sigma_T = \tangle{sigma}\sqrt{\tangle{T}}",
                 "disc": r"D = \note{discount}{e^{-\tangle{r}\tangle{T}}}",
-                "d1": r"d_1 = \frac{\note{moneyness}{\ln(\tangle{S}/\tangle{K})} + (\tangle{r} + \tfrac{1}{2}\tangle{sigma}^2)\tangle{T}}{\use{vol}}",
-                "d2": r"d_2 = \use{d1} - \use{vol}",
+                "d1": r"\note{d1}{d_1} = \frac{\note{moneyness}{\ln(\tangle{S}/\tangle{K})} + (\tangle{r} + \tfrac{1}{2}\tangle{sigma}^2)\tangle{T}}{\use{vol}}",
+                "d2": r"\note{d2}{d_2} = \use{d1} - \use{vol}",
                 "call": {
                     "tex": r"C = \tangle{S}\,N(\use{d1}) - \tangle{K}\,\use{disc}\,\note{exercise}{N(\use{d2})}",
                     "label": "call price",
@@ -126,6 +126,8 @@ def _(FormulaDAG, mo):
                 "T": _number(1, 0.1, 5, 0.1, "T", "years to expiry", digits=1),
             },
             notes={
+                "d1": "distance to the strike in units of $\\sigma_T$; $N(d_1)$ is the hedge ratio",
+                "d2": "one $\\sigma_T$ less than $d_1$; $N(d_2)$ is the chance of exercise",
                 "discount": "today's value of 1 paid at $T$",
                 "moneyness": "how far the stock is above the strike",
                 "exercise": "risk-neutral chance the call ends in the money",

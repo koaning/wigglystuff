@@ -215,6 +215,11 @@
   transition: background-color 120ms ease, opacity 160ms ease;
 }
 
+.formula-dag__note--left {
+  max-width: 160px;
+  text-align: right;
+}
+
 .formula-dag__note strong {
   font-weight: 750;
 }

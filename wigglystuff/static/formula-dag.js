@@ -24,6 +24,7 @@ const NOTE_CLEARANCE = 3; // between a note arrow end and what it touches
 const NOTE_HEAD_LEN = 6;
 const NOTE_HEAD_HALF = 3.5;
 const LANE_CLEARANCE = 8; // labels keep this far from a DAG arrow passing by
+const NOTE_SIDE_SPACE = 20; // a left-hand note's label to the output symbol
 
 let katexPromise = null;
 function loadKatex() {
@@ -358,7 +359,8 @@ async function render({ model, el }) {
   function buildLegend() {
     const strip = document.createElement("div");
     strip.className = "formula-dag__legend";
-    for (const [name, p] of Object.entries(getParameters())) {
+    const ordered = Object.entries(getParameters()).sort((a, b) => a[1].order - b[1].order);
+    for (const [name, p] of ordered) {
       const chip = document.createElement("div");
       chip.className = "formula-dag__chip";
       chip.dataset.tangleParam = name;
@@ -562,13 +564,25 @@ async function render({ model, el }) {
     //    formula's middle go up, parts below go down, the rest balance.
     const texBox = rel(tex.getBoundingClientRect());
     const items = [];
+    //    A note on the output symbol (\note{why}{d_1} = ...) goes to the
+    //    left instead: above it arrows come in, below it the stem leaves.
     const counts = { top: 0, bottom: 0 };
     const undecided = [];
+    const out = tex.querySelector(".katex-html [data-fdag-out]");
     for (const name of names) {
       const term = termOf(name);
       if (!term) continue;
       const box = termBox(term);
-      const item = { name, ...notes[name], label: labels[name], cx: box.cx - texBox.left };
+      const item = {
+        name,
+        ...notes[name],
+        label: labels[name],
+        cx: box.cx - texBox.left,
+        leftRel: box.left - texBox.left,
+        cyRel: box.cy - texBox.top,
+      };
+      if (item.side === "auto" && out && out.contains(term)) item.side = "left";
+      item.label.classList.toggle("formula-dag__note--left", item.side === "left");
       item.w = item.label.offsetWidth;
       item.h = item.label.offsetHeight;
       items.push(item);
@@ -612,10 +626,29 @@ async function render({ model, el }) {
         maxX = Math.max(maxX, item.x + item.w);
       }
     }
+    // Left-hand labels stack, centered on their terms' height.
+    const lefts = items.filter((item) => item.side === "left");
+    let needTop = 0;
+    let needBottom = 0;
+    if (lefts.length) {
+      const stack = lefts.reduce((sum, item) => sum + item.h, 0) + NOTE_GAP / 2 * (lefts.length - 1);
+      const cy = lefts.reduce((sum, item) => sum + item.cyRel, 0) / lefts.length;
+      const edge = Math.min(...lefts.map((item) => item.leftRel)) - NOTE_SIDE_SPACE;
+      let y = cy - stack / 2;
+      for (const item of lefts) {
+        item.x = edge - item.w;
+        item.yRel = y;
+        y += item.h + NOTE_GAP / 2;
+        minX = Math.min(minX, item.x);
+      }
+      const texH = texBox.bottom - texBox.top;
+      needTop = Math.max(0, -(cy - stack / 2)) + (cy - stack / 2 < 0 ? NOTE_PAD_Y : 0);
+      needBottom = Math.max(0, cy + stack / 2 - texH) + (cy + stack / 2 > texH ? NOTE_PAD_Y : 0);
+    }
     const band = (side) => (heights[side] ? NOTE_ARROW_SPACE + heights[side] + NOTE_PAD_Y : 0);
     // Labels wider than the formula widen the card instead of spilling out.
-    stage.style.paddingTop = `${band("top")}px`;
-    stage.style.paddingBottom = `${band("bottom")}px`;
+    stage.style.paddingTop = `${Math.max(band("top"), needTop)}px`;
+    stage.style.paddingBottom = `${Math.max(band("bottom"), needBottom)}px`;
     stage.style.paddingLeft = `${-minX}px`;
     stage.style.paddingRight = `${maxX - (texBox.right - texBox.left)}px`;
 
@@ -623,7 +656,11 @@ async function render({ model, el }) {
     const formula = rel(tex.getBoundingClientRect());
     for (const item of items) {
       const top =
-        item.side === "top" ? formula.top - NOTE_ARROW_SPACE - item.h : formula.bottom + NOTE_ARROW_SPACE;
+        item.side === "left"
+          ? formula.top + item.yRel
+          : item.side === "top"
+            ? formula.top - NOTE_ARROW_SPACE - item.h
+            : formula.bottom + NOTE_ARROW_SPACE;
       item.label.style.left = `${formula.left + item.x}px`;
       item.label.style.top = `${top}px`;
     }
@@ -650,6 +687,10 @@ async function render({ model, el }) {
     for (const item of items) {
       const term = termBox(termOf(item.name));
       const label = rel(item.label.getBoundingClientRect());
+      if (item.side === "left") {
+        noteArrows.appendChild(sideNoteArrow(item, label, term));
+        continue;
+      }
       const top = item.side === "top";
       const fromX = Math.max(label.left + 8, Math.min(term.cx, label.right - 8));
       const from = { x: fromX, y: top ? label.bottom + NOTE_CLEARANCE : label.top - NOTE_CLEARANCE };
@@ -671,6 +712,27 @@ async function render({ model, el }) {
       }
       noteArrows.appendChild(group);
     }
+  }
+
+  // A left-hand note points straight right into the output symbol.
+  function sideNoteArrow(item, label, term) {
+    const from = { x: label.right + NOTE_CLEARANCE, y: (label.top + label.bottom) / 2 };
+    const to = { x: term.left - NOTE_CLEARANCE - 2, y: term.cy };
+    const midX = (from.x + to.x) / 2;
+    const backX = to.x - NOTE_HEAD_LEN;
+    const group = document.createElementNS(SVGNS, "g");
+    group.setAttribute("class", "formula-dag__note-arrow");
+    group.dataset.annotation = item.name;
+    setColorVars(group, item.color);
+    for (const d of [
+      `M ${from.x} ${from.y} C ${midX} ${from.y} ${midX} ${to.y} ${to.x} ${to.y}`,
+      `M ${backX} ${to.y - NOTE_HEAD_HALF} L ${to.x} ${to.y} L ${backX} ${to.y + NOTE_HEAD_HALF}`,
+    ]) {
+      const path = document.createElementNS(SVGNS, "path");
+      path.setAttribute("d", d);
+      group.appendChild(path);
+    }
+    return group;
   }
 
   // Notes move formulas and arrows move notes: lay notes out around the last

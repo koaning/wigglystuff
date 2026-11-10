@@ -56,6 +56,28 @@ def _split_lhs(tex: str) -> tuple[str, str] | None:
     return None
 
 
+def _strip_notes(tex: str) -> str:
+    """Unwrap every ``\\note{name}{body}`` in ``tex`` to just ``body``.
+
+    The default ``\\use`` symbol is a copy of the left-hand side; a note on the
+    output (``\\note{why}{d_1} = ...``) explains the formula it sits in and
+    must not be copied into every formula that uses it.
+    """
+    while True:
+        m = _NOTE_RE.search(tex)
+        if not m or tex[m.end() : m.end() + 1] != "{":
+            return tex
+        depth, i = 0, m.end()
+        for i in range(m.end(), len(tex)):
+            if tex[i] == "{" and tex[i - 1] != "\\":
+                depth += 1
+            elif tex[i] == "}" and tex[i - 1] != "\\":
+                depth -= 1
+                if depth == 0:
+                    break
+        tex = tex[: m.start()] + tex[m.end() + 1 : i] + tex[i + 1 :]
+
+
 def _find_cycle(names: list[str], edges: list[list[str]]) -> list[str] | None:
     """Return one cycle as a list of names (first == last), or ``None``."""
     children = {n: [] for n in names}
@@ -107,7 +129,7 @@ def _normalize_formulas(formulas: Mapping[str, Any]) -> list[dict[str, Any]]:
         split = _split_lhs(tex)
         symbol = raw.get("symbol")
         if symbol is None:
-            symbol = split[0] if split else rf"\mathrm{{{name}}}"
+            symbol = _strip_notes(split[0]) if split else rf"\mathrm{{{name}}}"
         label = raw.get("label", name)
         for field, value in (("symbol", symbol), ("label", label)):
             if not isinstance(value, str) or not value.strip():
@@ -125,9 +147,11 @@ def _tangle_and_notes(specs, parameters, notes):
     """
     all_tex = "\n".join(s["tex"] for s in specs)
     params = _normalize_parameters(parameters or {})
-    for name in params:
+    for order, name in enumerate(params):
         if (parameters or {})[name].get("color") is None:
             params[name]["color"] = dict(_PARAM_COLOR)
+        # Keep the caller's order for the legend (synced dicts may be re-sorted).
+        params[name]["order"] = order
 
     markers = set(_TANGLE_RE.findall(all_tex))
     missing = sorted(markers - set(params))
