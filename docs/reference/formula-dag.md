@@ -1,9 +1,20 @@
 ---
 title: "FormulaDAG: LaTeX formulas wired into a DAG"
 description: FormulaDAG lays out LaTeX formulas as a DAG wired by where each output is used, with draggable shared numbers, notes, and live computed values.
+image: formuladag
+image_alt: Black–Scholes call and put formulas with colored arrows landing on each use of the discount factor and d1, d2
 ---
 
 # FormulaDAG API
+
+<!-- no-md -->
+<div class="wiggly-demo-wrap">
+<button class="wiggly-demo" type="button" data-demo="formula_dag" data-demo-title="FormulaDAG live demo">
+<img class="wiggly-demo__poster" src="../assets/gallery/formuladag.webp" alt="Black–Scholes call and put formulas with colored arrows landing on each use of the discount factor and d1, d2" decoding="async">
+<span class="wiggly-demo__cta">Run this demo live in your browser <span class="wiggly-demo__play">▶</span></span>
+</button>
+</div>
+<!-- /no-md -->
 
 `FormulaDAG` lays out a set of LaTeX formulas as a DAG. Name each formula and
 write `\use{name}` inside another one: the widget renders that formula's output
