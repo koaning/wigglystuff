@@ -84,7 +84,9 @@ def test_failing_fn_reports_an_error_and_downstream_gets_none():
         parameters={"k": {"value": 0}},
     )
     assert widget.outputs == {"a": None, "b": None}
-    assert widget.output_errors == {"a": "ZeroDivisionError: division by zero"}
+    # The message wording differs across Python versions; the type does not.
+    assert list(widget.output_errors) == ["a"]
+    assert widget.output_errors["a"].startswith("ZeroDivisionError:")
 
 
 def test_invalid_graphs_and_configuration_raise():
