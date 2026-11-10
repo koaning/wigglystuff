@@ -1,0 +1,313 @@
+/* The theme is resolved in JS (formula-dag.js, resolveDark) and set as
+   .formula-dag--light / .formula-dag--dark: the widget lives in a shadow root,
+   so ancestor selectors like `.dark .formula-dag` can never match marimo's
+   theme class, and prefers-color-scheme alone disagrees with the notebook
+   whenever the OS and marimo themes differ. */
+.formula-dag {
+  --fd-ink: #25221d;
+  --fd-muted: #8a8378;
+  --fd-accent: #246bce;
+  --fd-surface: #fffdf9;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  color: var(--fd-ink);
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.formula-dag.formula-dag--dark {
+  --fd-ink: #f2eee8;
+  --fd-muted: #a39b8f;
+  --fd-accent: #75a7ff;
+  --fd-surface: #22201d;
+  color-scheme: dark;
+}
+
+/* Each colored element carries its producer's light and dark color; --fd-c
+   picks the one for the active theme. */
+.formula-dag .fd-colored {
+  --fd-c: var(--fd-c-light);
+}
+
+.formula-dag.formula-dag--dark .fd-colored {
+  --fd-c: var(--fd-c-dark);
+}
+
+.formula-dag__board {
+  position: relative;
+  display: inline-flex;
+  min-width: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: 72px;
+  padding: 12px 24px;
+}
+
+.formula-dag__row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.formula-dag__lane {
+  flex: 0 0 14px;
+  align-self: stretch;
+}
+
+.formula-dag__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 6px 12px 4px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 120ms ease, border-color 120ms ease, background-color 120ms ease;
+}
+
+.formula-dag__card:hover {
+  background: color-mix(in srgb, var(--fd-ink) 4%, transparent);
+}
+
+.formula-dag__card.is-selected {
+  border-color: color-mix(in srgb, var(--fd-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--fd-accent) 6%, transparent);
+}
+
+.formula-dag__tex .katex-display {
+  margin: 0;
+}
+
+.formula-dag__tex .katex {
+  font-size: 1.1em;
+}
+
+.formula-dag__tex--error {
+  font: 12px ui-monospace, monospace;
+  color: #c0392b;
+  white-space: pre-wrap;
+}
+
+.formula-dag [data-fdag-out].fd-colored,
+.formula-dag [data-fdag-use].fd-colored {
+  color: var(--fd-c);
+}
+
+.formula-dag__label {
+  align-self: flex-end;
+  font: 10.5px ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--fd-muted);
+}
+
+.formula-dag__edges {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.formula-dag__edge {
+  fill: none;
+  stroke: var(--fd-c);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 120ms ease;
+}
+
+.formula-dag__head {
+  fill: var(--fd-c);
+  stroke: var(--fd-c);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+  transition: opacity 120ms ease;
+}
+
+.formula-dag .is-dim {
+  opacity: 0.18;
+}
+
+/* ---- notes and draggable numbers (ported from latex-tangle.css) ---------- */
+
+.formula-dag__stage {
+  position: relative;
+}
+
+.formula-dag__tex {
+  position: relative;
+  z-index: 1;
+}
+
+.formula-dag__tints,
+.formula-dag__note-arrows {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.formula-dag__tex .katex-html * {
+  pointer-events: none;
+}
+
+.formula-dag__tex .katex-html [data-tangle-param],
+.formula-dag__tex .katex-html [data-note] {
+  pointer-events: auto;
+}
+
+.formula-dag [data-tangle-param].fd-colored {
+  --fd-soft: color-mix(in srgb, var(--fd-c), transparent 84%);
+  border-radius: 0.16em;
+  color: var(--fd-c);
+  cursor: ew-resize;
+  outline: none;
+  position: relative;
+  touch-action: none;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+  z-index: 1;
+}
+
+.formula-dag [data-tangle-param]:hover,
+.formula-dag [data-tangle-param]:focus-visible,
+.formula-dag [data-tangle-param].is-active {
+  background: var(--fd-soft);
+  box-shadow: 0 0 0 0.14em var(--fd-soft);
+}
+
+.formula-dag .formula-dag__param--gap {
+  margin-left: 0.22em;
+}
+
+.formula-dag.is-dragging,
+.formula-dag.is-dragging * {
+  cursor: ew-resize !important;
+  user-select: none !important;
+}
+
+.formula-dag .formula-dag__note-term.fd-colored {
+  color: var(--fd-c);
+  outline: none;
+}
+
+.formula-dag__note {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: max-content;
+  max-width: 190px;
+  border-radius: 6px;
+  padding: 2px 6px;
+  color: var(--fd-c);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  transition: background-color 120ms ease, opacity 160ms ease;
+}
+
+.formula-dag__note strong {
+  font-weight: 750;
+}
+
+.formula-dag__note .katex {
+  font-size: 1.05em;
+}
+
+.formula-dag__tint {
+  fill: color-mix(in srgb, var(--fd-c), transparent 88%);
+  transition: fill 120ms ease, opacity 160ms ease;
+}
+
+.formula-dag__note-arrow {
+  fill: none;
+  stroke: var(--fd-c);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 160ms ease, stroke-width 120ms ease;
+}
+
+/* Hovering a note (or dragging the number it explains) lifts it and fades
+   the other notes. */
+.formula-dag.has-note-hover .formula-dag__note,
+.formula-dag.has-note-hover .formula-dag__note-arrow,
+.formula-dag.has-note-hover .formula-dag__tint {
+  opacity: 0.28;
+}
+
+.formula-dag.has-note-hover .formula-dag__note.is-hovered,
+.formula-dag.has-note-hover .formula-dag__note-arrow.is-hovered,
+.formula-dag.has-note-hover .formula-dag__tint.is-hovered {
+  opacity: 1;
+}
+
+.formula-dag__note.is-hovered {
+  background: color-mix(in srgb, var(--fd-c), transparent 86%);
+}
+
+.formula-dag__note-arrow.is-hovered {
+  stroke-width: 1.8;
+}
+
+.formula-dag__tint.is-hovered {
+  fill: color-mix(in srgb, var(--fd-c), transparent 70%);
+}
+
+.formula-dag__editor {
+  position: absolute;
+  z-index: 5;
+  width: 82px;
+  transform: translateX(-50%);
+  border: 1px solid color-mix(in srgb, var(--fd-c), #000 12%);
+  border-radius: 7px;
+  background: var(--fd-surface);
+  color: var(--fd-c);
+  padding: 7px 9px;
+  font: 650 0.86rem/1 ui-sans-serif, system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-c), transparent 82%), 0 8px 22px rgb(0 0 0 / 0.16);
+}
+
+.formula-dag__editor.is-invalid {
+  border-color: #c9382b;
+  box-shadow: 0 0 0 3px rgb(201 56 43 / 0.15);
+}
+
+.formula-dag__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 8px 4px;
+}
+
+.formula-dag__reset {
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fd-muted);
+  padding: 4px 6px;
+  font: 700 0.74rem/1 ui-sans-serif, system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.formula-dag__reset:hover {
+  color: var(--fd-ink);
+  text-decoration: underline;
+}
+
+/* Draggable numbers read as ink with a dotted underline (they only take a
+   color when one is configured). */
+.formula-dag [data-tangle-param].fd-colored {
+  border-bottom: 1.5px dotted color-mix(in srgb, var(--fd-c), transparent 45%);
+  border-radius: 0.16em 0.16em 0 0;
+}

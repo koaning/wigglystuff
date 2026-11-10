@@ -26,6 +26,7 @@ from .excalidraw import Excalidraw
 from .fader import Fader
 from .floating_panel import FloatingPanel
 from .formula_animation import FormulaAnimation
+from .formula_dag import FormulaDAG
 from .frame_player import FramePlayer
 from .gamepad import GamepadWidget
 from .graph_widget import GraphWidget
@@ -98,6 +99,7 @@ __all__ = [
     "Fader",
     "FloatingPanel",
     "FormulaAnimation",
+    "FormulaDAG",
     "FramePlayer",
     "GamepadWidget",
     "GraphWidget",
