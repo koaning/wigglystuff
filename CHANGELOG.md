@@ -6,19 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- New `FormulaDAG` widget: lay out LaTeX formulas as a DAG, wired by where
-  each output is used. Write `\use{name}` inside a formula and the widget
-  renders that formula's output symbol there, infers the edge, and draws an
-  arrow from the producer straight onto the spot where it's used. Formulas
-  flow top to bottom by dependency depth, and each producer gets a color
-  shared by its symbol, its arrows and every place it's used. `\tangle{...}`
-  numbers and `\note{...}{...}` notes work as in `TangleLatex`, shared across
-  the whole DAG, with a legend strip of draggable chips. Give a formula an
-  `fn` and its value is computed live in `outputs` (with `committed_outputs`
-  from before a drag). While you drag a number, every formula that depends
-  on it swaps its symbol for the live value, both where it's defined and
-  wherever it's used. The demo covers summary statistics, Black–Scholes, and
-  a projectile thrown in the wind with a three.js view built on `EsmWidget`.
+- New `FormulaDAG` widget: LaTeX formulas laid out as a DAG, wired by
+  `\use{name}` markers, with draggable numbers and live computed values.
 
 ### Fixed
 
