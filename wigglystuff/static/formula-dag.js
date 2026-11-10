@@ -266,6 +266,8 @@ async function render({ model, el }) {
   let board = null;
   let svg = null;
   let resetButton = null;
+  let legend = {}; // number name -> {chip, value}
+  let linked = ""; // number whose occurrences are lit up
   let edgeEls = []; // [{src, dst, els: [path, head]}]
   let blocks = {}; // card -> {top: [x], bottom: [x]}, x relative to the tex's left
   let errors = {}; // card -> KaTeX error message
@@ -331,9 +333,11 @@ async function render({ model, el }) {
     board.appendChild(svg);
     const children = [board];
     resetButton = null;
+    legend = {};
     if (Object.keys(getParameters()).length) {
       const footer = document.createElement("div");
       footer.className = "formula-dag__footer";
+      if (model.get("legend")) footer.appendChild(buildLegend());
       resetButton = document.createElement("button");
       resetButton.type = "button";
       resetButton.className = "formula-dag__reset";
@@ -346,6 +350,54 @@ async function render({ model, el }) {
     Object.keys(cards).forEach(renderCard);
     showSelected();
     relayout();
+  }
+
+  // The legend strip: one chip per number, with its symbol, what it means
+  // (its `label`), and its live value. A chip scrubs and edits like the
+  // number in a formula, and hovering it lights up every occurrence.
+  function buildLegend() {
+    const strip = document.createElement("div");
+    strip.className = "formula-dag__legend";
+    for (const [name, p] of Object.entries(getParameters())) {
+      const chip = document.createElement("div");
+      chip.className = "formula-dag__chip";
+      chip.dataset.tangleParam = name;
+      chip.tabIndex = 0;
+      chip.setAttribute("role", "button");
+      const symbol = document.createElement("span");
+      symbol.className = "formula-dag__chip-symbol";
+      symbol.innerHTML = katex.renderToString(p.symbol, { throwOnError: false });
+      chip.appendChild(symbol);
+      // TangleLatex's default label is "parameter <name>": not worth showing.
+      if (p.label !== `parameter ${name}`) {
+        const meaning = document.createElement("span");
+        meaning.className = "formula-dag__chip-label";
+        meaning.textContent = p.label;
+        chip.appendChild(meaning);
+      }
+      const value = document.createElement("span");
+      value.className = "formula-dag__chip-value";
+      setColorVars(value, p.color);
+      chip.appendChild(value);
+      strip.appendChild(chip);
+      legend[name] = { chip, value };
+    }
+    renderLegend();
+    return strip;
+  }
+
+  function renderLegend() {
+    const params = getParameters();
+    const values = getValues();
+    for (const [name, { chip, value }] of Object.entries(legend)) {
+      const p = params[name];
+      value.textContent = formatValue(values[name], p.digits);
+      chip.setAttribute(
+        "aria-label",
+        `${p.label}: ${value.textContent}. Drag horizontally or press Enter to type.`,
+      );
+      chip.classList.toggle("is-active", Boolean(drag && drag.name === name));
+    }
   }
 
   function buildCard(spec) {
@@ -898,7 +950,21 @@ async function render({ model, el }) {
     applyHover();
   }
 
+  // Light up every occurrence of one number (in formulas and the legend).
+  function applyLinked() {
+    const name = drag ? drag.name : linked;
+    for (const node of root.querySelectorAll("[data-tangle-param]")) {
+      node.classList.toggle("is-linked", Boolean(name) && node.dataset.tangleParam === name);
+    }
+  }
+
   function handleHover(event) {
+    const over = event.target.closest("[data-tangle-param]");
+    const next = over ? over.dataset.tangleParam : "";
+    if (next !== linked) {
+      linked = next;
+      applyLinked();
+    }
     const label = event.target.closest(".formula-dag__note");
     if (label) return setHovered(label.dataset.annotation);
     const param = event.target.closest("[data-tangle-param]");
@@ -917,7 +983,26 @@ async function render({ model, el }) {
 
   function rerender(name) {
     cardsUsing(name).forEach(renderCard);
+    renderLegend();
+    applyLinked();
     relayoutSoon();
+  }
+
+  // Where a number was grabbed: a formula card and which occurrence in it,
+  // or the legend (card null). Rendering replaces the elements, so find the
+  // grabbed one again from this.
+  function whereOf(target) {
+    const name = target.dataset.tangleParam;
+    const card = target.closest(".formula-dag__card")?.dataset.node ?? null;
+    if (!card) return { card: null, occurrence: 0 };
+    const all = [...parts[card].tex.querySelectorAll(`[data-tangle-param="${name}"]`)];
+    return { card, occurrence: all.indexOf(target) };
+  }
+
+  function findTarget(name, where) {
+    if (!where.card) return legend[name]?.value;
+    const all = parts[where.card].tex.querySelectorAll(`.katex-html [data-tangle-param="${name}"]`);
+    return all[Math.max(0, where.occurrence)] || all[0];
   }
 
   function scheduleSave() {
@@ -954,13 +1039,10 @@ async function render({ model, el }) {
     if (!target || (event.pointerType === "mouse" && event.button !== 0)) return;
     event.preventDefault();
     const name = target.dataset.tangleParam;
-    const card = target.closest(".formula-dag__card").dataset.node;
-    const occurrence = [...parts[card].tex.querySelectorAll(`[data-tangle-param="${name}"]`)].indexOf(target);
     closeEditor(false);
     drag = {
       name,
-      card,
-      occurrence,
+      where: whereOf(target),
       pointerId: event.pointerId,
       startX: event.clientX,
       startValue: getValues()[name],
@@ -1003,7 +1085,7 @@ async function render({ model, el }) {
       commit();
       return;
     }
-    openEditor(finished.name, finished.card, finished.occurrence);
+    openEditor(finished.name, finished.where);
   }
 
   function cancelDrag(event) {
@@ -1015,14 +1097,13 @@ async function render({ model, el }) {
     if (finished.moved) commit();
   }
 
-  function openEditor(name, card, occurrence = 0) {
+  function openEditor(name, where) {
     closeEditor(false);
     const spec = getParameters()[name];
     editingName = name;
     cardsUsing(name).forEach(renderCard);
     relayout();
-    const targets = parts[card].tex.querySelectorAll(`.katex-html [data-tangle-param="${name}"]`);
-    const target = targets[Math.max(0, occurrence)] || targets[0];
+    const target = findTarget(name, where);
     if (!target) return;
     const input = document.createElement("input");
     input.type = "text";
@@ -1032,10 +1113,10 @@ async function render({ model, el }) {
     input.setAttribute("aria-label", `Set ${spec.label}`);
     setColorVars(input, spec.color);
     const t = target.getBoundingClientRect();
-    const b = board.getBoundingClientRect();
+    const b = root.getBoundingClientRect();
     input.style.left = `${t.left + t.width / 2 - b.left}px`;
     input.style.top = `${t.bottom - b.top + 8}px`;
-    board.appendChild(input);
+    root.appendChild(input);
     editor = { input, name, spec };
     input.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -1074,10 +1155,7 @@ async function render({ model, el }) {
     const target = event.target.closest("[data-tangle-param]");
     if (!target || (event.key !== "Enter" && event.key !== " ")) return;
     event.preventDefault();
-    const name = target.dataset.tangleParam;
-    const card = target.closest(".formula-dag__card").dataset.node;
-    const occurrence = [...parts[card].tex.querySelectorAll(`[data-tangle-param="${name}"]`)].indexOf(target);
-    openEditor(name, card, occurrence);
+    openEditor(target.dataset.tangleParam, whereOf(target));
   }
 
   function handleReset() {
@@ -1088,6 +1166,7 @@ async function render({ model, el }) {
     const initial = Object.fromEntries(Object.entries(getParameters()).map(([n, p]) => [n, p.value]));
     model.set("values", initial);
     Object.keys(cards).forEach(renderCard);
+    renderLegend();
     relayoutSoon();
     commit();
   }
@@ -1098,6 +1177,7 @@ async function render({ model, el }) {
       return;
     }
     Object.keys(cards).forEach(renderCard);
+    renderLegend();
     relayoutSoon();
   }
 
@@ -1118,7 +1198,11 @@ async function render({ model, el }) {
   const colorScheme = window.matchMedia?.("(prefers-color-scheme: dark)");
   colorScheme?.addEventListener("change", setTheme);
 
-  const onHoverEnd = () => setHovered("");
+  const onHoverEnd = () => {
+    linked = "";
+    applyLinked();
+    setHovered("");
+  };
   root.addEventListener("pointerover", handleHover);
   root.addEventListener("pointerleave", onHoverEnd);
   root.addEventListener("focusin", handleHover);
@@ -1129,7 +1213,7 @@ async function render({ model, el }) {
   document.addEventListener("pointerup", endDrag);
   document.addEventListener("pointercancel", cancelDrag);
 
-  const rebuildOn = ["formulas", "layers", "routes", "parameters", "notes"];
+  const rebuildOn = ["formulas", "layers", "routes", "parameters", "notes", "legend"];
   rebuildOn.forEach((name) => model.on(`change:${name}`, build));
   model.on("change:values", handleValuesChange);
   model.on("change:hovered", applyHover);

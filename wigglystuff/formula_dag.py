@@ -211,6 +211,7 @@ class FormulaDAG(anywidget.AnyWidget):
     committed_values = traitlets.Dict(default_value={}).tag(sync=True)
     dragging = traitlets.Bool(False).tag(sync=True)
     hovered = traitlets.Unicode("").tag(sync=True)
+    legend = traitlets.Bool(True).tag(sync=True)
     selected = traitlets.Unicode("").tag(sync=True)
     theme = traitlets.Enum(["auto", "light", "dark"], default_value="auto").tag(
         sync=True
@@ -223,6 +224,7 @@ class FormulaDAG(anywidget.AnyWidget):
         parameters: Mapping[str, Mapping[str, Any]] | None = None,
         notes: Mapping[str, Any] | None = None,
         *,
+        legend: bool = True,
         theme: str = "auto",
         **kwargs: Any,
     ) -> None:
@@ -245,6 +247,11 @@ class FormulaDAG(anywidget.AnyWidget):
                 a formula in ``\note{name}{tex}`` and map ``name`` to its text,
                 or to a dict with ``text``, ``side`` (``"auto"``, ``"top"``,
                 ``"bottom"``) and ``color``. Each note lives in one formula.
+            legend: Show a strip under the DAG with one chip per number: its
+                symbol, its ``label`` (say what it means there, e.g.
+                ``"spot price"``), and its live value. Chips drag and edit
+                like the numbers in the formulas, and hovering one lights up
+                every place that number appears.
             theme: Color theme: ``"auto"``, ``"light"``, or ``"dark"``.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
         """
@@ -310,6 +317,7 @@ class FormulaDAG(anywidget.AnyWidget):
             notes=normalized_notes,
             values=values,
             committed_values=dict(values),
+            legend=legend,
             theme=theme,
             **kwargs,
         )

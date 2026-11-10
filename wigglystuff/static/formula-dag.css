@@ -8,6 +8,7 @@
   --fd-muted: #8a8378;
   --fd-accent: #246bce;
   --fd-surface: #fffdf9;
+  position: relative;
   display: block;
   max-width: 100%;
   overflow-x: auto;
@@ -286,8 +287,67 @@
 
 .formula-dag__footer {
   display: flex;
+  align-items: flex-start;
   justify-content: flex-end;
-  padding: 0 8px 4px;
+  gap: 12px;
+  padding: 4px 8px 4px;
+}
+
+/* ---- legend strip ---------------------------------------------------------- */
+
+.formula-dag__legend {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 8px;
+}
+
+.formula-dag__chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--fd-ink), transparent 88%);
+  border-radius: 999px;
+  padding: 3px 10px 4px;
+  color: var(--fd-ink);
+  font-size: 0.8rem;
+  line-height: 1.2;
+  cursor: ew-resize;
+  outline: none;
+  touch-action: none;
+  user-select: none;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.formula-dag__chip:focus-visible {
+  border-color: var(--fd-accent);
+}
+
+.formula-dag__chip-symbol .katex {
+  font-size: 1.12em;
+}
+
+.formula-dag__chip-label {
+  color: var(--fd-muted);
+}
+
+.formula-dag__chip-value.fd-colored {
+  color: var(--fd-c);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  border-bottom: 1.5px dotted color-mix(in srgb, var(--fd-c), transparent 45%);
+}
+
+/* Hovering (or dragging) a number lights up every occurrence of it. */
+.formula-dag [data-tangle-param].is-linked {
+  background: color-mix(in srgb, var(--fd-accent), transparent 84%);
+  box-shadow: 0 0 0 0.14em color-mix(in srgb, var(--fd-accent), transparent 84%);
+}
+
+.formula-dag__chip.is-linked,
+.formula-dag__chip.is-active {
+  border-color: color-mix(in srgb, var(--fd-accent), transparent 40%);
 }
 
 .formula-dag__reset {
