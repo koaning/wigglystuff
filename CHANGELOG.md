@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.38] - 2026-11-10
+
+### Added
+
+- New `FormulaDAG` widget: LaTeX formulas laid out as a DAG, wired by
+  `\use{name}` markers, with draggable numbers and live computed values.
+
 ### Fixed
 
 - `TraceView` throttling no longer depends on machine uptime: the first span
