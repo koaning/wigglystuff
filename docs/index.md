@@ -504,4 +504,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_hull.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/state_viewer_hull.py">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_dicekit.py/wasm?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/state-viewer-dicekit.webp" alt="Ordering Dice"></a>
+<div class="example-content">
+<div class="example-title">Ordering Dice</div>
+<div class="example-desc">Pick a few dice and watch brute force sort every roll, then see how dicekit gets the highest, 2nd highest, … die by counting dice above a threshold instead, merging rolls as it goes, with StateViewer. Ends with a benchmark.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_dicekit.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/state_viewer_dicekit.py">Source</a></div>
+</div>
 </div>
