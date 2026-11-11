@@ -52,7 +52,12 @@ function render({ model, el }) {
   let userCleanup = null;
 
   function applySize() {
-    container.style.width = model.get("width") + "px";
+    // width 0 sets no width of our own: the container stretches to the
+    // widget root (which takes whatever width the parent layout gives it),
+    // and a width set through the `css` traitlet still applies.
+    const width = model.get("width");
+    container.style.width = width > 0 ? width + "px" : "";
+    container.style.alignSelf = width > 0 ? "" : "stretch";
     container.style.height = model.get("height") + "px";
   }
 

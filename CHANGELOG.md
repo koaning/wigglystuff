@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `StateViewer(show_code=False)` hides the source panel, leaving the view,
+  controls and timeline at full width. A `</>` button in the controls toggles
+  the code, and `show_code` is a synced traitlet, so Python can toggle it too.
+- `EsmWidget(width=0)` sets no fixed width: the widget takes the width its parent
+  layout gives it (the full cell in a normal output), and a width set through
+  `css` still applies.
+
+### Changed
+
+- `StateViewer` hides the variables table by default. Pass
+  `variables=["name", ...]` to show a table of those locals; `state` still holds
+  every local either way.
+
 ### Security
 
 - `Neo4jWidget` runs queries from its query box in a read-access session by

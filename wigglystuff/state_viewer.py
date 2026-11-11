@@ -111,13 +111,11 @@ class _Recorder:
     """sys.settrace hook that records one step per executed line of ``fn``."""
 
     def __init__(
-        self, fn, view_func, max_steps, skipped_lines=0, shown=None, timeline_func=None
+        self, fn, view_func, max_steps, skipped_lines=0, timeline_func=None
     ):
         self.code = fn.__code__
         self.first_line = fn.__code__.co_firstlineno + skipped_lines
         self.names = set(self.code.co_varnames) | set(self.code.co_cellvars)
-        # Locals whose repr goes into the step record (the variables table).
-        self.shown = set(shown) if shown is not None else self.names
         self.view_func = view_func
         self.view_params = (
             list(inspect.signature(view_func).parameters.values()) if view_func else []
@@ -177,11 +175,9 @@ class _Recorder:
             "depth": self.depth,
             "event": event,
             "view": self.render_view(local_values) if self.view_func else -1,
-            "locals": {
-                name: _short_repr(value)
-                for name, value in local_values.items()
-                if name in self.shown
-            },
+            # Every local, so `variables` can pick any of them for the table,
+            # also after the widget is built.
+            "locals": {name: _short_repr(value) for name, value in local_values.items()},
         }
         if self.timeline_func:
             step["value"] = self.timeline_value(local_values)
@@ -291,9 +287,8 @@ class StateViewer(anywidget.AnyWidget):
     lines = traitlets.List(traitlets.Dict()).tag(sync=True)
     steps = traitlets.List(traitlets.Dict()).tag(sync=True)
     views = traitlets.List(traitlets.Unicode()).tag(sync=True)
-    # The variables table rows: every local the run ever assigned in definition
-    # order (or the names passed as `variables=`), so the table keeps a fixed
-    # set of rows instead of growing as names appear.
+    # The variables table rows: the names passed as `variables=`, in that order.
+    # Empty by default, which hides the table.
     variables = traitlets.List(traitlets.Unicode()).tag(sync=True)
     step = traitlets.Int(0).tag(sync=True)
     playing = traitlets.Bool(False).tag(sync=True)
@@ -304,6 +299,8 @@ class StateViewer(anywidget.AnyWidget):
     truncated = traitlets.Bool(False).tag(sync=True)
     # 0 = grow to fit content; a positive value caps the height and scrolls.
     height = traitlets.Int(0).tag(sync=True)
+    # False hides the source panel, leaving the view, controls and timeline.
+    show_code = traitlets.Bool(True).tag(sync=True)
     # What the timeline plots: call depth, or the name of `timeline_func`.
     timeline_label = traitlets.Unicode("call depth").tag(sync=True)
     # Cap on how often `step` reaches Python while playing or scrubbing.
@@ -321,6 +318,7 @@ class StateViewer(anywidget.AnyWidget):
         interval_ms: int = 80,
         loop: bool = False,
         height: int = 0,
+        show_code: bool = True,
         variables: list[str] | None = None,
         sync_throttle_ms: int = 100,
         timeline_func: Callable[..., Any] | None = None,
@@ -332,17 +330,22 @@ class StateViewer(anywidget.AnyWidget):
         Args:
             search_func: The function to trace. Needs inspectable Python source.
             view_func: Draws the state; its parameter names pick the locals it gets.
-                Optional: leave it out to only show code, variables and timeline.
+                Optional: leave it out to only show code and timeline (plus the
+                ``variables`` table, if you pass names for it).
             args: Positional arguments for ``search_func``.
             kwargs: Keyword arguments for ``search_func``.
             max_steps: Stop tracing after this many steps (sets ``truncated``).
-            only_changes: Drop steps whose view (or, without a view, whose shown
+            only_changes: Drop steps whose view (or, without a view, whose local
                 values) is identical to the previous step's.
             interval_ms: Milliseconds per step while playing.
             loop: Restart from the first step when playback reaches the end.
             height: Height cap in pixels (0 = fit content).
+            show_code: Show the source panel. Set it to False to keep only the
+                view, controls and timeline, spanning the full width. The ``</>``
+                button in the controls toggles it.
             variables: Local names to show in the variables table, in this order.
-                Defaults to every local. ``state`` always holds all of them.
+                Defaults to none, which hides the table. ``state`` always holds
+                every local.
             sync_throttle_ms: Cap on how often ``step`` syncs to Python while
                 playing or scrubbing, in milliseconds (0 = every step).
             timeline_func: Returns the number the timeline plots at each step;
@@ -373,15 +376,13 @@ class StateViewer(anywidget.AnyWidget):
         # dict.fromkeys dedupes: a local captured by a closure or generator
         # expression is listed in both co_varnames and co_cellvars.
         all_names = list(dict.fromkeys((*fn_code.co_varnames, *fn_code.co_cellvars)))
-        if variables is not None:
-            unknown = [name for name in variables if name not in all_names]
-            if unknown:
-                raise ValueError(
-                    f"Unknown variables {unknown}; {search_func.__name__} has {all_names}."
-                )
-        recorder = _Recorder(
-            search_func, view_func, max_steps, skipped, variables, timeline_func
-        )
+        variables = list(variables or [])
+        unknown = [name for name in variables if name not in all_names]
+        if unknown:
+            raise ValueError(
+                f"Unknown variables {unknown}; {search_func.__name__} has {all_names}."
+            )
+        recorder = _Recorder(search_func, view_func, max_steps, skipped, timeline_func)
         returned = None
         error = None
         previous_trace = sys.gettrace()
@@ -407,9 +408,6 @@ class StateViewer(anywidget.AnyWidget):
             steps = [steps[i] for i in keep]
             states = [states[i] for i in keep]
         self._states = states
-        if variables is None:
-            seen = {name for s in steps for name in s["locals"]}
-            variables = [name for name in all_names if name in seen]
         super().__init__(
             code=code,
             lines=lines,
@@ -422,6 +420,7 @@ class StateViewer(anywidget.AnyWidget):
             error=error,
             truncated=recorder.truncated,
             height=height,
+            show_code=show_code,
             sync_throttle_ms=sync_throttle_ms,
             timeline_label=timeline_label,
             **widget_kwargs,

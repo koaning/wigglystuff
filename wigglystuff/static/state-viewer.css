@@ -34,6 +34,15 @@
   outline: none;
 }
 
+/* Without the code panel the widget spans the cell and the view takes the room. */
+.state-viewer-root.sv-no-code {
+  width: 100%;
+}
+
+.sv-no-code .sv-view-panel {
+  flex: 1 1 auto;
+}
+
 .state-viewer-root:focus-visible {
   box-shadow: 0 0 0 2px var(--sv-accent);
 }
@@ -156,6 +165,11 @@
 .sv-str { color: var(--sv-str); }
 .sv-comment { color: var(--sv-comment); font-style: italic; }
 
+/* `variables=[]` hides the table entirely. */
+.sv-locals:empty {
+  display: none;
+}
+
 .sv-locals {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
@@ -219,6 +233,18 @@
   background: var(--sv-panel);
   color: var(--sv-text);
   cursor: pointer;
+}
+
+.sv-btn.sv-code-toggle {
+  width: auto;
+  padding: 0 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+}
+
+.sv-btn.sv-code-toggle[aria-pressed="true"] {
+  border-color: var(--sv-accent);
+  color: var(--sv-accent);
 }
 
 .sv-btn:hover {

@@ -21,9 +21,12 @@ line it executes, including recursive calls. At each step it calls `view_func`
 with the function's local variables, then plays the whole run back:
 
 - **left**: whatever `view_func` drew for that step;
-- **right**: the source with the line *about to run* highlighted, and a table of
-  the function's variables. Rows stay fixed, values that just changed flash, and
-  variables that aren't set yet show *not assigned*;
+- **right**: the source with the line *about to run* highlighted and, if you pass
+  `variables=["board", "row"]`, a table of those variables. Rows stay fixed,
+  values that just changed flash, and variables that aren't set yet show
+  *not assigned*. The table is hidden by default, and `show_code=False` hides
+  the source too, giving the view the full width (the `</>` button in the
+  controls brings it back);
 - **bottom**: play/pause/step buttons, a speed slider, a badge with the current
   timeline value, and a timeline of the whole run. Click or drag the timeline to
   scrub, or focus the widget and use ← / → (Shift jumps 10), Home / End and Space.
@@ -124,15 +127,16 @@ stack piles up.
 
 ## Driving other widgets
 
-`view_func` is optional. Without it the widget shows just the code, variables and
-timeline, and you draw the state with any other widget instead:
+`view_func` is optional. Without it the widget shows just the code and timeline
+(plus the variables table, if you pass `variables=`), and you draw the state with
+any other widget instead:
 
 - `step` is synced back to Python while you play and scrub, at most once every
   `sync_throttle_ms` (default 100; `0` syncs every step).
 - `viewer.state` holds the real local values at that step, not reprs. They're
   copied when the step is recorded, so later in-place changes don't affect them.
-- `variables=["board", "row"]` limits the table to those names in that order.
-  `state` still holds every local.
+- `variables=["board", "row"]` shows a table of those names in that order.
+  `state` holds every local either way.
 
 ```python
 viewer = StateViewer(solve, args=([], 0, 8), variables=["board", "row", "col"])
@@ -150,7 +154,7 @@ rotatable three.js board.
     - `line`: the line about to run (1 = the `def` line; decorators are left out of `code`);
     - `depth`: call depth;
     - `event`: `"line"`, `"return"` or `"raise"`;
-    - `locals`: reprs of the shown variables;
+    - `locals`: reprs of every local (`variables` only picks which ones the table shows);
     - `view`: an index into `views` (`-1` = nothing drawn yet);
     - `value`: the `timeline_func` value, if you passed one;
     - `returned`: on return steps, the returned value's repr.
@@ -174,7 +178,7 @@ rotatable three.js board.
   only creates the generator or coroutine and doesn't run the body.
 - `max_steps` (default 20,000) stops recording a runaway search and sets
   `truncated`. `only_changes=True` keeps only steps whose view (or, without a
-  view, whose shown values) differs from the previous step.
+  view, whose local values) differs from the previous step.
 - Threads started by `search_func` aren't recorded; only the thread that
   creates the widget is.
 - Every step copies the locals (for `state`) and repr's them (for the table), so
@@ -193,7 +197,7 @@ run, and [AsyncFlow](async-flow.md) for async tasks.
 | `lines` | `list[dict]` | Syntax tokens per source line, for highlighting. |
 | `steps` | `list[dict]` | One record per step; see [Reading the trace from Python](#reading-the-trace-from-python). |
 | `views` | `list[str]` | Distinct rendered views as HTML; `steps[i]["view"]` indexes into it. |
-| `variables` | `list[str]` | Rows of the variables table: every local the run assigns, or the names passed as `variables=`. |
+| `variables` | `list[str]` | Rows of the variables table: the names passed as `variables=` (empty by default, which hides the table). |
 | `step` | `int` | Current step. Synced while playing and scrubbing, and settable from Python. |
 | `playing` | `bool` | Whether playback is running. |
 | `interval_ms` | `int` | Milliseconds per step while playing. |
@@ -204,3 +208,4 @@ run, and [AsyncFlow](async-flow.md) for async tasks.
 | `error` | `dict \| None` | `{type, message, source, lineno}` when `search_func`, `view_func` or `timeline_func` raised. |
 | `truncated` | `bool` | Whether `max_steps` was reached. |
 | `height` | `int` | Height cap in pixels (`0` = fit content). |
+| `show_code` | `bool` | Show the source panel (default `True`); `False` keeps just the view, controls and timeline, at full width. |

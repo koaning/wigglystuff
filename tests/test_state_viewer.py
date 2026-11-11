@@ -31,7 +31,16 @@ def boom(x):
 
 
 def test_traces_recursion_with_depth_lines_and_return():
-    viewer = StateViewer(solve, show_board, args=([], 0, 4))
+    # No table by default; `state` still holds every local.
+    default = StateViewer(solve, show_board, args=([], 0, 4))
+    assert default.variables == []
+    assert default.show_code is True
+    assert StateViewer(solve, show_board, args=([], 0, 4), show_code=False).show_code is False
+    assert default.state == {"board": [], "row": 0, "n": 4}
+
+    viewer = StateViewer(
+        solve, show_board, args=([], 0, 4), variables=["board", "row", "n", "col"]
+    )
 
     assert viewer.error is None
     assert viewer.truncated is False
