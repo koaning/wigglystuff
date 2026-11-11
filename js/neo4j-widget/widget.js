@@ -368,15 +368,23 @@ function render({ model, el }) {
 
     // --- Tooltip ---
     function formatProps(header, props) {
-        let html = `<strong>${header}</strong>`;
+        const fragment = document.createDocumentFragment();
+        const strong = document.createElement("strong");
+        strong.textContent = String(header ?? "");
+        fragment.appendChild(strong);
         for (const [k, v] of Object.entries(props || {})) {
-            html += `<br><span class="neo4j-tooltip-key">${k}:</span> ${v}`;
+            fragment.appendChild(document.createElement("br"));
+            const key = document.createElement("span");
+            key.classList.add("neo4j-tooltip-key");
+            key.textContent = `${k}:`;
+            fragment.appendChild(key);
+            fragment.appendChild(document.createTextNode(` ${v}`));
         }
-        return html;
+        return fragment;
     }
 
-    function showTooltip(event, html) {
-        tooltip.innerHTML = html;
+    function showTooltip(event, content) {
+        tooltip.replaceChildren(content);
         tooltip.style.display = "block";
         const rect = container.getBoundingClientRect();
         tooltip.style.left = (event.clientX - rect.left + 12) + "px";
