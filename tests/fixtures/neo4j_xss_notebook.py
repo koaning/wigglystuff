@@ -54,7 +54,7 @@ def _():
             return FakeResult()
 
     class FakeDriver:
-        def session(self, database=None):
+        def session(self, **kwargs):
             return FakeSession()
 
     widget = mo.ui.anywidget(Neo4jWidget(FakeDriver(), initial_query="MATCH (n) RETURN n"))
