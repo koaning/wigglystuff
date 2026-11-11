@@ -10,6 +10,20 @@ All notable changes to this project will be documented in this file.
   default, so viewers can no longer write to or delete from the database.
   Pass `read_only=False` to allow writes again.
 
+### Fixed
+
+- `FormulaDAG` arrows now follow the formulas while you drag a number.
+  Previously they kept their pre-drag positions, so an arrow could land on top
+  of a live value that was wider than the symbol it replaced.
+- A `FormulaDAG` arrow onto a symbol covered from above (say a fraction's
+  denominator) now comes in from the side when there is a clear horizontal
+  path at the symbol's height, instead of cutting through the numerator.
+
+### Added
+
+- Matrix examples in the `TangleLatex` and `FormulaDAG` demos: a `pmatrix`
+  with one `\tangle` per entry, its live determinant, and its inverse.
+
 ## [0.5.39] - 2026-11-10
 
 ### Changed

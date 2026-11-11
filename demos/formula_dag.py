@@ -203,6 +203,70 @@ def _(bs, mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    ## Matrices
+
+    A matrix is just LaTeX layout: put a `\tangle{...}` in each cell of a
+    `pmatrix` and every entry becomes its own draggable number. The values a
+    formula computes are scalars, so here the determinant is live, while the
+    inverse reuses the entries in its own `pmatrix`. Drag `d` toward `0.5` and
+    watch the determinant pass through zero, where the inverse stops existing.
+    """)
+    return
+
+
+@app.cell
+def _(FormulaDAG, mo):
+    def _entry(name, value, label):
+        # Show the letter; it turns into its number while you drag it.
+        return {
+            "value": value,
+            "label": label,
+            "min_value": -3,
+            "max_value": 3,
+            "step": 0.1,
+            "display": "symbol",
+            "symbol": name,
+        }
+
+    matrix = mo.ui.anywidget(
+        FormulaDAG(
+            {
+                "A": {
+                    "tex": r"A = \begin{pmatrix} \tangle{a} & \tangle{b} \\ \tangle{c} & \tangle{d} \end{pmatrix}",
+                    "label": "the matrix",
+                },
+                "det": {
+                    "tex": r"\Delta = \det \use{A} = \tangle{a}\tangle{d} - \tangle{b}\tangle{c}",
+                    "label": "determinant",
+                    "digits": 2,
+                    "fn": lambda a, b, c, d: a * d - b * c,
+                },
+                "area": {
+                    "tex": r"\text{area} = |\use{det}|",
+                    "label": "how much A scales area",
+                    "digits": 2,
+                    "fn": lambda det: abs(det),
+                },
+                "inv": {
+                    "tex": r"A^{-1} = \frac{1}{\use{det}} \begin{pmatrix} \tangle{d} & -\tangle{b} \\ -\tangle{c} & \tangle{a} \end{pmatrix}",
+                    "label": "inverse",
+                },
+            },
+            parameters={
+                "a": _entry("a", 2, "top left"),
+                "b": _entry("b", 1, "top right"),
+                "c": _entry("c", 1, "bottom left"),
+                "d": _entry("d", 1, "bottom right"),
+            },
+        )
+    )
+    matrix
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ## Projectile motion, with wind
 
     A ball launched at speed `v` and angle `θ`, while the wind pushes it with a
