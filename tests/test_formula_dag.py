@@ -104,3 +104,28 @@ def test_invalid_graphs_and_configuration_raise():
             FormulaDAG(formulas)
     with pytest.raises(ValueError, match="more than one formula"):
         FormulaDAG({"a": r"a = \note{n}{x}", "b": r"b = \note{n}{y}"}, notes={"n": "twice"})
+
+
+def test_to_html_embeds_state_and_static_bootstrap():
+    widget = _chain()
+    page = widget.to_html(title="My <DAG>")
+    assert page.startswith("<!doctype html>")
+    assert "<title>My &lt;DAG&gt;</title>" in page
+    # The serialized widget state, with interactivity forced off.
+    assert '"interactive": false' in page
+    assert '"name": "vol"' in page or '"name":"vol"' in page
+    assert '"fn"' not in page  # fns are not serialized; outputs are
+    assert '"outputs"' in page
+    # The real frontend and a shim model drive the render.
+    assert "export default { render }" in page
+    assert "makeModel" in page and 'getElementById("fd-root")' in page
+    assert "formula-dag--static" in page  # the inlined CSS
+    # No raw state JSON can break out of the script tag.
+    assert "</script>" not in page.split("<script", 1)[1].split("STATE =", 1)[1].split(";")[0]
+
+
+def test_save_writes_to_html(tmp_path):
+    widget = FormulaDAG({"a": r"a = \tangle{k}", "b": r"b = \use{a}"}, parameters={"k": {"value": 2}})
+    path = widget.save(tmp_path / "dag.html")
+    assert path == tmp_path / "dag.html"
+    assert path.read_text(encoding="utf-8") == widget.to_html()
