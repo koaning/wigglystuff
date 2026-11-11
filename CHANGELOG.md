@@ -9,7 +9,9 @@ All notable changes to this project will be documented in this file.
 - `StateViewer(show_code=False)` hides the source panel, leaving the view,
   controls and timeline at full width. A `</>` button in the controls toggles
   the code, and `show_code` is a synced traitlet, so Python can toggle it too.
-- `EsmWidget(width=0)` fills the available width instead of a fixed pixel width.
+- `EsmWidget(width=0)` sets no fixed width: the widget takes the width its parent
+  layout gives it (the full cell in a normal output), and a width set through
+  `css` still applies.
 
 ### Changed
 
