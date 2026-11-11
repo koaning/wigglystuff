@@ -1,0 +1,9 @@
+version: 1
+
+scripts:
+  setup: make install
+  run: uv run marimo edit --watch --no-token --headless --port $TERMIC_PORT demos
+  preview_url: http://localhost:$TERMIC_PORT
+  run_scripts:
+    - label: Docs
+      command: make docs-serve
