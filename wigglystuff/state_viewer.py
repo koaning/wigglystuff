@@ -111,13 +111,11 @@ class _Recorder:
     """sys.settrace hook that records one step per executed line of ``fn``."""
 
     def __init__(
-        self, fn, view_func, max_steps, skipped_lines=0, shown=(), timeline_func=None
+        self, fn, view_func, max_steps, skipped_lines=0, timeline_func=None
     ):
         self.code = fn.__code__
         self.first_line = fn.__code__.co_firstlineno + skipped_lines
         self.names = set(self.code.co_varnames) | set(self.code.co_cellvars)
-        # Locals whose repr goes into the step record (the variables table).
-        self.shown = set(shown)
         self.view_func = view_func
         self.view_params = (
             list(inspect.signature(view_func).parameters.values()) if view_func else []
@@ -177,11 +175,9 @@ class _Recorder:
             "depth": self.depth,
             "event": event,
             "view": self.render_view(local_values) if self.view_func else -1,
-            "locals": {
-                name: _short_repr(value)
-                for name, value in local_values.items()
-                if name in self.shown
-            },
+            # Every local, so `variables` can pick any of them for the table,
+            # also after the widget is built.
+            "locals": {name: _short_repr(value) for name, value in local_values.items()},
         }
         if self.timeline_func:
             step["value"] = self.timeline_value(local_values)
@@ -339,9 +335,8 @@ class StateViewer(anywidget.AnyWidget):
             args: Positional arguments for ``search_func``.
             kwargs: Keyword arguments for ``search_func``.
             max_steps: Stop tracing after this many steps (sets ``truncated``).
-            only_changes: Drop steps whose view (or, without a view, whose shown
-                values) is identical to the previous step's. Without a view or
-                shown variables there is nothing to compare, so it does nothing.
+            only_changes: Drop steps whose view (or, without a view, whose local
+                values) is identical to the previous step's.
             interval_ms: Milliseconds per step while playing.
             loop: Restart from the first step when playback reaches the end.
             height: Height cap in pixels (0 = fit content).
@@ -387,9 +382,7 @@ class StateViewer(anywidget.AnyWidget):
             raise ValueError(
                 f"Unknown variables {unknown}; {search_func.__name__} has {all_names}."
             )
-        recorder = _Recorder(
-            search_func, view_func, max_steps, skipped, variables, timeline_func
-        )
+        recorder = _Recorder(search_func, view_func, max_steps, skipped, timeline_func)
         returned = None
         error = None
         previous_trace = sys.gettrace()
@@ -409,7 +402,7 @@ class StateViewer(anywidget.AnyWidget):
 
         steps = recorder.steps
         states = recorder.states
-        if only_changes and (view_func is not None or variables):
+        if only_changes:
             key = "view" if view_func is not None else "locals"
             keep = [i for i in range(len(steps)) if i == 0 or steps[i][key] != steps[i - 1][key]]
             steps = [steps[i] for i in keep]

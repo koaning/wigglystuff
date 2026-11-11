@@ -59,10 +59,8 @@ def _(
     TABLE_JS,
     answer_html,
     brute_force,
-    counts_through,
     grid_svg,
     mo,
-    rolls_handled,
 ):
     brute_viewer = StateViewer(
         brute_force,
@@ -70,7 +68,7 @@ def _(
         max_steps=100_000,
         interval_ms=20,
         sync_throttle_ms=50,
-        timeline_func=rolls_handled,
+        timeline_func=lambda work: work,
         timeline_label="rolls handled",
         show_code=False,
     )
@@ -81,11 +79,11 @@ def _(
 
     # A plain widget updated through `observe`, so no cell reruns while playing.
     def redraw_brute(_=None):
-        roll = (brute_viewer.state or {}).get("roll")
-        ranked = sorted(roll, reverse=True) if roll is not None else []
-        cells = {(j, face) for j, face in enumerate(ranked)}
+        state = brute_viewer.state or {}
+        cells = {(j, face) for j, face in enumerate(state.get("ranked") or [])}
         brute_picture.data = {
-            "html": grid_svg(roll) + answer_html(counts_through(roll), cells=cells)
+            "html": grid_svg(state.get("roll"), state.get("work", 0))
+            + answer_html(state.get("result"), cells=cells)
         }
 
     brute_viewer.observe(redraw_brute, names="step")
@@ -144,23 +142,7 @@ def _(product):
 
 
 @app.cell
-def _(DICE, HOT, NAMES, product):
-    all_rolls = list(product(*DICE))
-
-    def counts_through(roll):
-        """The answer table after counting every roll up to and including `roll`."""
-        result = [{} for _ in DICE]
-        if roll is None:
-            return result
-        for earlier in all_rolls[: all_rolls.index(roll) + 1]:
-            for j, face in enumerate(sorted(earlier, reverse=True)):
-                result[j][face] = result[j].get(face, 0) + 1
-        return result
-
-    def rolls_handled(roll):
-        """How many rolls are counted once `roll` is: the timeline value."""
-        return all_rolls.index(roll) + 1
-
+def _(DICE, HOT, NAMES):
     # Up to four dice: the last die runs along the columns of a panel, the one before
     # it down the rows; a third die picks the panel column, a fourth the panel row.
     PANEL_ROWS, PANEL_COLS, ROWS, COLS = [1] * (4 - len(DICE)) + [len(die) for die in DICE]
@@ -175,9 +157,9 @@ def _(DICE, HOT, NAMES, product):
     def panel_xy(pr, pc):
         return LEFT + pc * (PANEL_W + GAP), TOP + pr * (PANEL_H + GAP)
 
-    def grid_svg(roll=None):
-        """One cell per possible roll: handled ones grey, the current one orange."""
-        work = all_rolls.index(roll) if roll is not None else 0
+    def grid_svg(roll, work):
+        """One cell per possible roll: the `work` handled ones grey, `roll` orange."""
+        total = PANEL_ROWS * PANEL_COLS * ROWS * COLS
         width = max(GRID_W, 620)
 
         def labelled(i, n):
@@ -188,7 +170,7 @@ def _(DICE, HOT, NAMES, product):
             f'<svg width="{width}" height="{GRID_H}" viewBox="0 0 {width} {GRID_H}" '
             f'style="color: inherit; font-family: sans-serif">',
             f'<text x="0" y="16" font-size="14" fill="currentColor">rolls handled: '
-            f'<tspan font-weight="bold">{work + (roll is not None)}</tspan> of {len(all_rolls)}</text>',
+            f'<tspan font-weight="bold">{work}</tspan> of {total}</text>',
             '<g font-size="10" text-anchor="middle" fill="currentColor">',
         ]
         # Face labels: the panel-column die on top, the panel-row die on the left.
@@ -255,12 +237,12 @@ def _(DICE, HOT, NAMES, product):
             ranked = sorted(roll, reverse=True)
             parts.append(
                 f'<text x="0" y="{GRID_H - 10}" font-size="13" fill="currentColor">'
-                f"roll {tuple(roll)} → sorted {tuple(ranked)} → +1 per row below</text>"
+                f"roll {tuple(roll)} → sorted, then +1 per row below</text>"
             )
         parts.append("</svg>")
         return "".join(parts)
 
-    return GRID_H, counts_through, grid_svg, rolls_handled
+    return GRID_H, grid_svg
 
 
 @app.cell(hide_code=True)
@@ -324,28 +306,11 @@ def _(DICE):
             rows.append(new)
         return rows
 
-    def partial_rows(t, m):
-        """Every in-between value of `new` while die m is added, as (c, phase, new)."""
-        die = DICE[m]
-        yes = sum(1 for face in die if face >= t)
-        no = len(die) - yes
-        new = [0] * (len(DICE) + 1)
-        states = []
-        for c, count in enumerate(counting_rows(t)[m]):
-            if count == 0:
-                continue
-            states.append((c, "start", list(new)))
-            new[c] += count * no
-            states.append((c, "no", list(new)))
-            new[c + 1] += count * yes
-            states.append((c, "yes", list(new)))
-        return states
-
-    return counting_rows, partial_rows
+    return (counting_rows,)
 
 
 @app.cell
-def _(DICE, NAMES, POSITIONS, counting_rows, partial_rows):
+def _(DICE, NAMES, POSITIONS, counting_rows):
     _final = ordered_ways(DICE)
     _biggest = max(max(row.values()) for row in _final)
     _rolls = sum(_final[0].values())
@@ -392,29 +357,36 @@ def _(DICE, NAMES, POSITIONS, counting_rows, partial_rows):
         out.append("</table></div>")
         return "".join(out)
 
-    def table_html(state):
-        """Draw the yes-count table and the answers from one step's locals."""
+    def table_html(state, line=None, prev=None):
+        """Draw the yes-count table and the answers for one step.
+
+        `line` is the line of `ordered_ways` about to run and `prev` the one that
+        just ran. Loop variables keep old values until reassigned, so the line
+        says which locals belong to the current step.
+        """
         state = state or {}
         t = state.get("t")
         thresholds = sorted({face for die in DICE for face in die}, reverse=True)
         n = len(DICE)
-        # Locals linger between loop iterations, so check every value against the
-        # table it should belong to before drawing it.
         rows = counting_rows(t) if t is not None else None
-        passing = state.get("passing")
-        done = rows.index(passing) if rows and passing in rows else None
-        building, source, target, phase, merged = None, None, None, None, False
-        if done is not None and done < n and state.get("i") == done and state.get("new") is not None:
-            matches = [s for s in partial_rows(t, done) if s[2] == state["new"]]
-            same_c = [s for s in matches if s[0] == state.get("c")]
-            if matches:
-                building = matches[-1][2]
-            if same_c:
-                c, phase, _ = same_c[-1]
-                source = c
-                target = c if phase == "no" else c + 1 if phase == "yes" else None
-                before = [s for s in partial_rows(t, done) if s[0] == c and s[1] == "start"][0][2]
-                merged = phase == "no" and before[c] > 0
+        done, building = None, None  # dice counted so far, and the row being built
+        if t is not None:
+            if line == 5:
+                done = 0  # new threshold: `passing` still holds the previous one
+            elif line == 6:
+                done = rows.index(state["passing"])
+            elif 7 <= line <= 15:
+                done = state["i"]
+                building = state["new"] if line >= 10 else None
+            else:
+                done = n
+        # Line 13 adds the "no" count and line 14 the "yes" count for cell c.
+        phase = "start" if line == 13 else "no" if prev == 13 else "yes" if prev == 14 else None
+        source, target, merged = None, None, False
+        if phase is not None:
+            source = state["c"]
+            target = {"start": None, "no": source, "yes": source + 1}[phase]
+            merged = phase == "no" and building[source] > state["count"] * state["no"]
 
         out = ['<div class="dk">']
         if t is None:
@@ -461,10 +433,7 @@ def _(DICE, NAMES, POSITIONS, counting_rows, partial_rows):
         # What just happened, in words.
         caption = ""
         if source is not None:
-            die = DICE[done]
-            yes = sum(1 for f in die if f >= t)
-            no = len(die) - yes
-            count = rows[done][source]
+            yes, no, count = state["yes"], state["no"], state["count"]
             if done == 0:
                 caption = f"the first die, a {NAMES[0]}: no in {no} ways, yes in {yes}"
             elif phase == "start":
@@ -551,7 +520,10 @@ def _(DICE, EsmWidget, StateViewer, TABLE_CSS, TABLE_JS, mo, table_html):
 
     # A plain widget updated through `observe`, so no cell reruns while playing.
     def redraw_ordered(_=None):
-        ordered_table.data = {"html": table_html(ordered_viewer.state)}
+        step, steps = ordered_viewer.step, ordered_viewer.steps
+        line = steps[step]["line"] if steps else None
+        prev = steps[step - 1]["line"] if step > 0 else None
+        ordered_table.data = {"html": table_html(ordered_viewer.state, line, prev)}
 
     ordered_viewer.observe(redraw_ordered, names="step")
     redraw_ordered()
@@ -606,20 +578,20 @@ def _(mo):
 
 
 @app.cell
-def _(DICE, Dice, mo, ordered):
+def _(DICE, Dice, NAMES, mo, ordered):
     from_dicekit = ordered(*[Dice.from_sides(len(die)) for die in DICE])
     ours = ordered_ways(DICE)
     rolls = 1
     for _die in DICE:
         rolls *= len(_die)
     matches = all(
-        abs(from_dicekit[j].probs.get(face, 0) - count / rolls) < 1e-12
+        abs(from_dicekit[j].probs.get(face, 0) - ours[j].get(face, 0) / rolls) < 1e-12
         for j in range(len(DICE))
-        for face, count in ours[j].items()
+        for face in set(from_dicekit[j].probs) | set(ours[j])
     )
     mo.vstack(
         [
-            mo.md(f"`ordered(d4, d6, d8)` matches `ordered_ways` divided by {rolls}: **{matches}**"),
+            mo.md(f"`ordered({', '.join(NAMES)})` matches `ordered_ways` divided by {rolls}: **{matches}**"),
             mo.hstack(from_dicekit, justify="start"),
         ]
     )

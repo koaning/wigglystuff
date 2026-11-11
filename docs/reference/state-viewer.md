@@ -154,7 +154,7 @@ rotatable three.js board.
     - `line`: the line about to run (1 = the `def` line; decorators are left out of `code`);
     - `depth`: call depth;
     - `event`: `"line"`, `"return"` or `"raise"`;
-    - `locals`: reprs of the shown variables;
+    - `locals`: reprs of every local (`variables` only picks which ones the table shows);
     - `view`: an index into `views` (`-1` = nothing drawn yet);
     - `value`: the `timeline_func` value, if you passed one;
     - `returned`: on return steps, the returned value's repr.
@@ -178,8 +178,7 @@ rotatable three.js board.
   only creates the generator or coroutine and doesn't run the body.
 - `max_steps` (default 20,000) stops recording a runaway search and sets
   `truncated`. `only_changes=True` keeps only steps whose view (or, without a
-  view, whose shown values) differs from the previous step. With neither a view
-  nor `variables=` there is nothing to compare, so every step is kept.
+  view, whose local values) differs from the previous step.
 - Threads started by `search_func` aren't recorded; only the thread that
   creates the widget is.
 - Every step copies the locals (for `state`) and repr's them (for the table), so
