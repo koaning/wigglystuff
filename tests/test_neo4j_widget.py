@@ -65,16 +65,8 @@ def test_read_only_false_allows_write_sessions():
     assert browser_queries(driver) == [("CREATE (n:Test)", None)]
 
 
-def test_hidden_query_input_ignores_browser_queries():
-    driver = FakeDriver()
-    widget = Neo4jWidget(driver, show_query_input=False)
-    assert widget.show_query_input is False
-    widget._query_request = {"query": "MATCH (n) RETURN n", "request_id": 1}
-    assert browser_queries(driver) == []
-
-
 def test_python_run_query_is_not_restricted():
     driver = FakeDriver()
-    widget = Neo4jWidget(driver, show_query_input=False)
+    widget = Neo4jWidget(driver)
     widget.run_query("CREATE (n:Test)")
     assert browser_queries(driver) == [("CREATE (n:Test)", None)]

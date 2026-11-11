@@ -11,9 +11,8 @@ class Neo4jWidget(anywidget.AnyWidget):
     Anyone who can see the widget can run Cypher through its query box with
     the driver's credentials. By default (`read_only=True`) those queries run
     in a read-access session, so writes such as `CREATE` or `DELETE` are
-    refused by the server. Set `show_query_input=False` to hide the query box
-    and only show results of queries you run from Python. For published
-    notebooks, also connect with a database account that only has read rights.
+    refused by the server. For published notebooks, also connect with a
+    database account that only has read rights.
 
     Examples:
         ```python
@@ -37,7 +36,6 @@ class Neo4jWidget(anywidget.AnyWidget):
     relationships = traitlets.List([]).tag(sync=True)
     error = traitlets.Unicode("").tag(sync=True)
     query_running = traitlets.Bool(False).tag(sync=True)
-    show_query_input = traitlets.Bool(True).tag(sync=True)
     selected_nodes = traitlets.List([]).tag(sync=True)
     selected_relationships = traitlets.List([]).tag(sync=True)
     _query_request = traitlets.Dict({}).tag(sync=True)
@@ -55,7 +53,6 @@ class Neo4jWidget(anywidget.AnyWidget):
         max_nodes: int = 300,
         initial_query: Optional[str] = None,
         read_only: bool = True,
-        show_query_input: bool = True,
         **kwargs: Any,
     ) -> None:
         """Create a Neo4jWidget.
@@ -71,8 +68,6 @@ class Neo4jWidget(anywidget.AnyWidget):
             initial_query: Cypher query to run from Python on creation.
             read_only: Run queries from the query box in a read-access session
                 so the database refuses writes.
-            show_query_input: Show the query box. When False, the widget
-                ignores queries sent from the browser.
         """
         if driver is not None:
             self._driver = driver
@@ -86,13 +81,7 @@ class Neo4jWidget(anywidget.AnyWidget):
         self._max_nodes = max_nodes
         self._read_only = read_only
         schema = self._extract_schema()
-        super().__init__(
-            width=width,
-            height=height,
-            schema=schema,
-            show_query_input=show_query_input,
-            **kwargs,
-        )
+        super().__init__(width=width, height=height, schema=schema, **kwargs)
         if initial_query:
             self._execute_query(initial_query)
 
@@ -116,8 +105,6 @@ class Neo4jWidget(anywidget.AnyWidget):
     def _on_query_request(self, change: dict) -> None:
         data = change["new"]
         if not data or "query" not in data:
-            return
-        if not self.show_query_input:
             return
         self._execute_query(data["query"], read_only=self._read_only)
 

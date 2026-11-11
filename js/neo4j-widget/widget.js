@@ -47,12 +47,6 @@ function render({ model, el }) {
     runBtn.textContent = "Run";
     queryBar.appendChild(runBtn);
 
-    function updateQueryBarVisibility() {
-        queryBar.style.display = model.get("show_query_input") ? "" : "none";
-    }
-    updateQueryBarVisibility();
-    model.on("change:show_query_input", updateQueryBarVisibility);
-
     // Error bar
     const errorBar = document.createElement("div");
     errorBar.classList.add("neo4j-error-bar");
