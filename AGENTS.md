@@ -1,7 +1,8 @@
 # Setup
 
-This repo uses a `conductor.json` setup script (`make install`) that runs
-automatically when a Conductor workspace is created. It installs all
+This repo ships setup scripts for both Conductor (`.conductor/settings.toml`)
+and Termic (`.termic.yaml`). Both run `make install` automatically when a
+workspace/task is created. That installs all
 dependencies so the environment is ready to use immediately.
 
 # Agents

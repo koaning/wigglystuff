@@ -28,6 +28,15 @@ against your own server instead. See also: [GraphWidget](graph-widget.md) for gr
 build in Python, [EdgeDraw](edge-draw.md) for sketching one by hand, and
 [Treemap](treemap.md) for hierarchies rather than graphs.
 
+## Who can run queries
+
+Anyone who can see the widget can type Cypher into the query box, and it runs with the
+credentials of the driver you passed in. By default (`read_only=True`) queries from the
+query box run in a read-access session, so the database refuses writes such as `CREATE`
+or `DETACH DELETE`; pass `read_only=False` to allow writes. `initial_query` and
+`run_query()`, which you call from Python, are not restricted. When you publish a
+notebook, also connect with a database account that only has read rights.
+
 ::: wigglystuff.neo4j_widget.Neo4jWidget
 
 ## Synced traitlets

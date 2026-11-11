@@ -19,6 +19,12 @@ All notable changes to this project will be documented in this file.
   `variables=["name", ...]` to show a table of those locals; `state` still holds
   every local either way.
 
+### Security
+
+- `Neo4jWidget` runs queries from its query box in a read-access session by
+  default, so viewers can no longer write to or delete from the database.
+  Pass `read_only=False` to allow writes again.
+
 ## [0.5.39] - 2026-11-10
 
 ### Changed
