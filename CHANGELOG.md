@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Security
+
+- `Neo4jWidget` runs queries from its query box in a read-access session by
+  default, so viewers can no longer write to or delete from the database.
+  Pass `read_only=False` to allow writes again.
+
+### Added
+
+- `Neo4jWidget` takes `show_query_input=False` to hide the query box and
+  ignore queries sent from the browser.
+
 ## [0.5.39] - 2026-11-10
 
 ### Changed

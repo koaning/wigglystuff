@@ -28,6 +28,16 @@ against your own server instead. See also: [GraphWidget](graph-widget.md) for gr
 build in Python, [EdgeDraw](edge-draw.md) for sketching one by hand, and
 [Treemap](treemap.md) for hierarchies rather than graphs.
 
+## Who can run queries
+
+Anyone who can see the widget can type Cypher into the query box, and it runs with the
+credentials of the driver you passed in. By default (`read_only=True`) queries from the
+query box run in a read-access session, so the database refuses writes such as `CREATE`
+or `DETACH DELETE`. Pass `show_query_input=False` to hide the query box entirely; the
+widget then ignores queries sent from the browser and only shows the results of
+`initial_query` and `run_query()`, which you call from Python. When you publish a
+notebook, also connect with a database account that only has read rights.
+
 ::: wigglystuff.neo4j_widget.Neo4jWidget
 
 ## Synced traitlets
@@ -41,5 +51,6 @@ build in Python, [EdgeDraw](edge-draw.md) for sketching one by hand, and
 | `relationships` | `list` | List of relationship dicts currently displayed. |
 | `error` | `str` | Last error message (empty when no error). |
 | `query_running` | `bool` | Whether a query is currently executing. |
+| `show_query_input` | `bool` | Whether the Cypher query box is shown and browser queries are accepted (default: True). |
 | `selected_nodes` | `list` | Element IDs of currently selected nodes. |
 | `selected_relationships` | `list` | Element IDs of currently selected relationships. |

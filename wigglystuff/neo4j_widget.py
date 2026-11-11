@@ -8,6 +8,13 @@ import traitlets
 class Neo4jWidget(anywidget.AnyWidget):
     """Interactive Neo4j graph explorer with Cypher query input.
 
+    Anyone who can see the widget can run Cypher through its query box with
+    the driver's credentials. By default (`read_only=True`) those queries run
+    in a read-access session, so writes such as `CREATE` or `DELETE` are
+    refused by the server. Set `show_query_input=False` to hide the query box
+    and only show results of queries you run from Python. For published
+    notebooks, also connect with a database account that only has read rights.
+
     Examples:
         ```python
         import marimo as mo
@@ -30,6 +37,7 @@ class Neo4jWidget(anywidget.AnyWidget):
     relationships = traitlets.List([]).tag(sync=True)
     error = traitlets.Unicode("").tag(sync=True)
     query_running = traitlets.Bool(False).tag(sync=True)
+    show_query_input = traitlets.Bool(True).tag(sync=True)
     selected_nodes = traitlets.List([]).tag(sync=True)
     selected_relationships = traitlets.List([]).tag(sync=True)
     _query_request = traitlets.Dict({}).tag(sync=True)
@@ -46,8 +54,26 @@ class Neo4jWidget(anywidget.AnyWidget):
         height: int = 500,
         max_nodes: int = 300,
         initial_query: Optional[str] = None,
+        read_only: bool = True,
+        show_query_input: bool = True,
         **kwargs: Any,
     ) -> None:
+        """Create a Neo4jWidget.
+
+        Args:
+            driver: A `neo4j` Driver. Provide this or `uri`.
+            uri: Bolt URI used to create a driver when `driver` is not given.
+            auth: Auth tuple passed to `GraphDatabase.driver` with `uri`.
+            database: Database name to query (defaults to the server default).
+            width: Widget width in pixels.
+            height: Widget height in pixels.
+            max_nodes: Maximum number of nodes kept when expanding.
+            initial_query: Cypher query to run from Python on creation.
+            read_only: Run queries from the query box in a read-access session
+                so the database refuses writes.
+            show_query_input: Show the query box. When False, the widget
+                ignores queries sent from the browser.
+        """
         if driver is not None:
             self._driver = driver
         elif uri is not None:
@@ -58,8 +84,15 @@ class Neo4jWidget(anywidget.AnyWidget):
             raise ValueError("Provide either a neo4j Driver or uri (+ auth).")
         self._database = database
         self._max_nodes = max_nodes
+        self._read_only = read_only
         schema = self._extract_schema()
-        super().__init__(width=width, height=height, schema=schema, **kwargs)
+        super().__init__(
+            width=width,
+            height=height,
+            schema=schema,
+            show_query_input=show_query_input,
+            **kwargs,
+        )
         if initial_query:
             self._execute_query(initial_query)
 
@@ -84,7 +117,9 @@ class Neo4jWidget(anywidget.AnyWidget):
         data = change["new"]
         if not data or "query" not in data:
             return
-        self._execute_query(data["query"])
+        if not self.show_query_input:
+            return
+        self._execute_query(data["query"], read_only=self._read_only)
 
     @traitlets.observe("_expand_request")
     def _on_expand_request(self, change: dict) -> None:
@@ -93,11 +128,22 @@ class Neo4jWidget(anywidget.AnyWidget):
             return
         self._expand_node(data["element_id"])
 
-    def _execute_query(self, query: str, merge: bool = False) -> None:
+    def _session(self, read_only: bool = False):
+        if read_only:
+            import neo4j
+
+            return self._driver.session(
+                database=self._database, default_access_mode=neo4j.READ_ACCESS
+            )
+        return self._driver.session(database=self._database)
+
+    def _execute_query(
+        self, query: str, merge: bool = False, read_only: bool = False
+    ) -> None:
         self.query_running = True
         self.error = ""
         try:
-            with self._driver.session(database=self._database) as session:
+            with self._session(read_only=read_only) as session:
                 result = session.run(query)
                 graph = result.graph()
                 new_nodes = self._convert_nodes(graph.nodes)
@@ -119,7 +165,7 @@ class Neo4jWidget(anywidget.AnyWidget):
         self.query_running = True
         self.error = ""
         try:
-            with self._driver.session(database=self._database) as session:
+            with self._session(read_only=True) as session:
                 result = session.run(query, eid=element_id)
                 graph = result.graph()
                 new_nodes = self._convert_nodes(graph.nodes)
