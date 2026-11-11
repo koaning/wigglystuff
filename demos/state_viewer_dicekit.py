@@ -5,7 +5,7 @@
 #     "dicekit==0.3.0",
 #     "marimo",
 #     "pandas",
-#     "wigglystuff==0.5.39",
+#     "wigglystuff==0.5.40",
 # ]
 # ///
 
