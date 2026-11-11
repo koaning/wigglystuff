@@ -2,16 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.40] - 2026-11-11
 
 ### Added
 
+- `FormulaDAG.to_html()` renders the DAG as a self-contained, static HTML page
+  (widget JS and CSS inlined, current state and `fn` outputs embedded), and
+  `FormulaDAG.save(path)` writes it to a file. KaTeX still loads from the CDN.
 - `StateViewer(show_code=False)` hides the source panel, leaving the view,
   controls and timeline at full width. A `</>` button in the controls toggles
   the code, and `show_code` is a synced traitlet, so Python can toggle it too.
 - `EsmWidget(width=0)` sets no fixed width: the widget takes the width its parent
   layout gives it (the full cell in a normal output), and a width set through
   `css` still applies.
+- Matrix examples in the `TangleLatex` and `FormulaDAG` demos: a `pmatrix`
+  with one `\tangle` per entry, its live determinant, and its inverse.
+- A new `state_viewer_dicekit.py` demo that uses `StateViewer` to show how
+  dicekit's `ordered()` gets order statistics of dice rolls without listing
+  every roll.
 
 ### Changed
 
@@ -24,6 +32,9 @@ All notable changes to this project will be documented in this file.
 - `Neo4jWidget` runs queries from its query box in a read-access session by
   default, so viewers can no longer write to or delete from the database.
   Pass `read_only=False` to allow writes again.
+- `Neo4jWidget` renders node and relationship tooltip content as text rather
+  than HTML, so property values stored in the database can no longer run script
+  in the notebook (stored XSS).
 
 ### Fixed
 
@@ -33,11 +44,6 @@ All notable changes to this project will be documented in this file.
 - A `FormulaDAG` arrow onto a symbol covered from above (say a fraction's
   denominator) now comes in from the side when there is a clear horizontal
   path at the symbol's height, instead of cutting through the numerator.
-
-### Added
-
-- Matrix examples in the `TangleLatex` and `FormulaDAG` demos: a `pmatrix`
-  with one `\tangle` per entry, its live determinant, and its inverse.
 
 ## [0.5.39] - 2026-11-10
 

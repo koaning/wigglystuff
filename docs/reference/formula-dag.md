@@ -31,6 +31,10 @@ computed live into `outputs`. While you drag a number, every formula that
 depends on it shows its live value in place of its symbol, both where it's
 defined and wherever it's used.
 
+Call `to_html()` for a self-contained, static HTML page of the current state
+(for docs, blog posts, or attachments), or `save("dag.html")` to write it to
+a file. KaTeX still loads from a CDN, so the page needs internet access.
+
 See also: [TangleLatex](tangle-latex.md) for a single formula, and
 [WidgetDAG](widget-dag.md) for arranging live widgets as a DAG.
 
