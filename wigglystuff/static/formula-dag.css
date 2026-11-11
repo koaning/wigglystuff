@@ -433,3 +433,31 @@
   background: color-mix(in srgb, var(--fd-c, var(--fd-ink)), transparent 82%);
   box-shadow: 0 0 0 0.14em color-mix(in srgb, var(--fd-c, var(--fd-ink)), transparent 82%);
 }
+
+/* ---- static (interactive = false) ---------------------------------------
+   Read-only diagram: no hover affordances, edit cursors, or the Reset
+   button. The dotted parameter underline goes too — nothing is draggable. */
+.formula-dag--static .formula-dag__card,
+.formula-dag--static .formula-dag__chip,
+.formula-dag--static [data-tangle-param] {
+  cursor: default;
+}
+
+.formula-dag--static .formula-dag__card:hover {
+  background: transparent;
+}
+
+.formula-dag--static [data-tangle-param]:hover,
+.formula-dag--static [data-tangle-param]:focus-visible,
+.formula-dag--static [data-tangle-param].is-active {
+  background: transparent;
+  box-shadow: none;
+}
+
+.formula-dag--static [data-tangle-param].fd-colored {
+  border-bottom: none;
+}
+
+.formula-dag--static .formula-dag__reset {
+  display: none;
+}

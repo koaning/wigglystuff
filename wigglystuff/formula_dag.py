@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import html
 import inspect
+import json
 import math
 import re
 from collections.abc import Mapping
@@ -304,6 +306,67 @@ def _tangle_and_notes(specs, parameters, notes):
     return params, normalized_notes
 
 
+# The synced traits the frontend reads; to_html() serializes exactly these.
+_STATE_TRAITS = (
+    "formulas",
+    "layers",
+    "routes",
+    "parameters",
+    "notes",
+    "values",
+    "outputs",
+    "output_errors",
+    "legend",
+    "theme",
+    "selected",
+    "hovered",
+    "error",
+)
+
+_STATIC_BOOTSTRAP = """
+// ---- static page bootstrap ----------------------------------------------
+// A minimal stand-in for the AnyWidget backbone model: trait values live in
+// `state`, and set() notifies `change:<key>` listeners synchronously.
+const STATE = __STATE__;
+function makeModel(state) {
+  const listeners = {};
+  const fire = (key) => (listeners[`change:${key}`] || []).slice().forEach((cb) => cb());
+  return {
+    get: (key) => state[key],
+    set: (key, value) => {
+      state[key] = value;
+      fire(key);
+    },
+    save_changes: () => {},
+    on: (event, cb) => {
+      (listeners[event] ||= []).push(cb);
+    },
+    off: (event, cb) => {
+      listeners[event] = (listeners[event] || []).filter((f) => f !== cb);
+    },
+  };
+}
+render({ model: makeModel(STATE), el: document.getElementById("fd-root") });
+"""
+
+
+def _static_page(state: dict, title: str) -> str:
+    """Assemble the self-contained HTML document for :meth:`FormulaDAG.to_html`."""
+    js = _ESM_PATH.read_text(encoding="utf-8")
+    css = _CSS_PATH.read_text(encoding="utf-8")
+    payload = json.dumps(state).replace("<", "\\u003c")
+    script = js + _STATIC_BOOTSTRAP.replace("__STATE__", payload)
+    return (
+        "<!doctype html>\n"
+        '<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        f"<title>{html.escape(title)}</title>\n<style>\n{css}\n</style>\n"
+        "</head>\n<body>\n<div id=\"fd-root\"></div>\n"
+        f'<script type="module">\n{script}\n</script>\n'
+        "</body>\n</html>\n"
+    )
+
+
 class FormulaDAG(anywidget.AnyWidget):
     r"""Lay out LaTeX formulas as a DAG, wired by where each output is used.
 
@@ -486,6 +549,25 @@ class FormulaDAG(anywidget.AnyWidget):
             **kwargs,
         )
         self._edges = [tuple(e) for e in edges]
+
+    def to_html(self, title: str | None = None) -> str:
+        """Render the DAG as a self-contained HTML page.
+
+        The page inlines this widget's JavaScript and CSS, embeds the current
+        state (including live ``fn`` outputs), and renders with
+        ``interactive: false`` — a static artifact needing no widget comm.
+        KaTeX still loads from the same CDN the widget uses, so the file
+        needs internet access to display math. Use ``save()`` to write it.
+        """
+        state = {name: getattr(self, name) for name in _STATE_TRAITS}
+        state["interactive"] = False
+        return _static_page(state, title or "Formula DAG")
+
+    def save(self, path: str | Path) -> Path:
+        """Write :meth:`to_html` to ``path`` and return it as a ``Path``."""
+        path = Path(path)
+        path.write_text(self.to_html(), encoding="utf-8")
+        return path
 
     @traitlets.observe("values")
     def _follow_values(self, change: dict) -> None:

@@ -610,5 +610,29 @@ def _(projectile, throw):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Static artifacts
+
+    When the DAG belongs in a doc, blog post or attachment rather than a
+    notebook, `to_html()` returns it as a self-contained page — the widget's
+    own JS and CSS inlined, KaTeX from the same CDN — and `save()` writes it
+    to disk. The page renders the DAG statically: no dragging, editing,
+    hovering or selecting.
+    """)
+    return
+
+
+@app.cell
+def _(bs, mo):
+    # to_html() snapshots the current state — drag the Black–Scholes numbers
+    # above first and the exported page shows those values and outputs.
+    page = bs.widget.to_html(title="Black–Scholes")
+    mo.download(page.encode("utf-8"), "black_scholes_dag.html")
+    mo.md(f"Exported {len(page):,} bytes of self-contained HTML.")
+    return
+
+
 if __name__ == "__main__":
     app.run()

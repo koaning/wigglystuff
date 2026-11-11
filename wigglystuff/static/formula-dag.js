@@ -292,6 +292,8 @@ async function render({ model, el }) {
   const getParameters = () => model.get("parameters") || {};
   const getNotes = () => model.get("notes") || {};
   const getValues = () => model.get("values") || {};
+  // interactive is absent on older states; only an explicit false is static.
+  const isInteractive = () => model.get("interactive") !== false;
 
   function setTheme() {
     const theme = model.get("theme");
@@ -301,10 +303,15 @@ async function render({ model, el }) {
     root.classList.toggle("formula-dag--light", !dark);
   }
 
+  function applyInteractive() {
+    root.classList.toggle("formula-dag--static", !isInteractive());
+  }
+
   // ---- building -----------------------------------------------------------
 
   function build() {
     setTheme();
+    applyInteractive();
     closeEditor(false);
     const byName = formulasByName();
     cards = {};
@@ -442,7 +449,9 @@ async function render({ model, el }) {
       value.textContent = formatValue(values[name], p.digits);
       chip.setAttribute(
         "aria-label",
-        `${p.label}: ${value.textContent}. Drag horizontally or press Enter to type.`,
+        isInteractive()
+          ? `${p.label}: ${value.textContent}. Drag horizontally or press Enter to type.`
+          : `${p.label}: ${value.textContent}`,
       );
       chip.classList.toggle("is-active", Boolean(drag && drag.name === name));
     }
@@ -495,10 +504,10 @@ async function render({ model, el }) {
     caption.className = "formula-dag__label";
     caption.textContent = spec.label;
     card.append(stage, caption);
-    card.addEventListener("mouseenter", () => focus(id));
-    card.addEventListener("mouseleave", () => focus(null));
+    card.addEventListener("mouseenter", () => isInteractive() && focus(id));
+    card.addEventListener("mouseleave", () => isInteractive() && focus(null));
     card.addEventListener("click", (event) => {
-      if (suppressClick || event.target.closest("[data-tangle-param], .formula-dag__note")) return;
+      if (!isInteractive() || suppressClick || event.target.closest("[data-tangle-param], .formula-dag__note")) return;
       model.set("selected", model.get("selected") === id ? "" : id);
       model.save_changes();
     });
@@ -1149,6 +1158,7 @@ async function render({ model, el }) {
   }
 
   function setHovered(name) {
+    if (!isInteractive()) return;
     if (model.get("hovered") !== name) {
       model.set("hovered", name);
       model.save_changes();
@@ -1174,6 +1184,7 @@ async function render({ model, el }) {
   }
 
   function handleHover(event) {
+    if (!isInteractive()) return;
     const over = event.target.closest("[data-tangle-param]");
     const next = over ? over.dataset.tangleParam : "";
     const outChip = event.target.closest("[data-fdag-link]");
@@ -1247,6 +1258,7 @@ async function render({ model, el }) {
   }
 
   function startDrag(event) {
+    if (!isInteractive()) return;
     const target = event.target.closest("[data-tangle-param]");
     if (!target || (event.pointerType === "mouse" && event.button !== 0)) return;
     event.preventDefault();
@@ -1364,6 +1376,7 @@ async function render({ model, el }) {
   }
 
   function handleKeydown(event) {
+    if (!isInteractive()) return;
     const target = event.target.closest("[data-tangle-param]");
     if (!target || (event.key !== "Enter" && event.key !== " ")) return;
     event.preventDefault();
@@ -1371,6 +1384,7 @@ async function render({ model, el }) {
   }
 
   function handleReset() {
+    if (!isInteractive()) return;
     closeEditor(false);
     drag = null;
     root.classList.remove("is-dragging");
@@ -1431,6 +1445,7 @@ async function render({ model, el }) {
   model.on("change:output_errors", renderOutputs);
   model.on("change:hovered", applyHover);
   model.on("change:theme", setTheme);
+  model.on("change:interactive", applyInteractive);
   model.on("change:selected", showSelected);
   build();
 
@@ -1451,6 +1466,7 @@ async function render({ model, el }) {
     model.off("change:output_errors", renderOutputs);
     model.off("change:hovered", applyHover);
     model.off("change:theme", setTheme);
+    model.off("change:interactive", applyInteractive);
     model.off("change:selected", showSelected);
   };
 }
