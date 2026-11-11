@@ -262,5 +262,92 @@ def _(line, mo):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Matrices
+
+    There is no special matrix input: a matrix is LaTeX layout, so put a
+    `\tangle{...}` in each cell of a `pmatrix` and every entry becomes its own
+    draggable number. Drag the entries to warp the unit square; it turns red
+    when the determinant goes negative and the square flips over.
+    """)
+    return
+
+
+@app.cell
+def _(TangleLatex, mo, theme):
+    # Show the letters; the whole matrix turns into numbers while you drag.
+    _entry = {"min_value": -3, "max_value": 3, "step": 0.1, "display": "symbol"}
+    transform = mo.ui.anywidget(
+        TangleLatex(
+            latex=r"A = \begin{pmatrix} \tangle{a} & \tangle{b} \\ \tangle{c} & \tangle{d} \end{pmatrix}",
+            parameters={
+                "a": {"value": 1, "symbol": "a", **_entry},
+                "b": {"value": 0.5, "symbol": "b", **_entry},
+                "c": {"value": 0, "symbol": "c", **_entry},
+                "d": {"value": 1, "symbol": "d", **_entry},
+            },
+            reveal_all_on_drag=True,
+            theme=theme.value,
+        )
+    )
+    return (transform,)
+
+
+@app.cell(hide_code=True)
+def _(ObservablePlot, mo, transform):
+    def _square(values):
+        a, b, c, d = (values[k] for k in "abcd")
+        # The unit square's corners, each multiplied by A.
+        corners = [(0, 0), (1, 0), (1, 1), (0, 1), (0, 0)]
+        return [{"x": a * x + b * y, "y": c * x + d * y} for x, y in corners]
+
+    _v = transform.values
+    det = _v["a"] * _v["d"] - _v["b"] * _v["c"]
+    warped = ObservablePlot(
+        """
+        Plot.plot({
+            x: { domain: [-3, 3], grid: true },
+            y: { domain: [-3, 3], grid: true },
+            marks: [
+                Plot.ruleY([0]),
+                Plot.ruleX([0]),
+                Plot.line(before, { x: "x", y: "y", stroke: "#888", strokeDasharray: "4,4" }),
+                Plot.line(square, { x: "x", y: "y", stroke: color, strokeWidth: 2, fill: color, fillOpacity: 0.25 }),
+                Plot.arrow(basis, { x1: 0, y1: 0, x2: "x", y2: "y", stroke: "label", strokeWidth: 2 }),
+            ],
+        })
+        """,
+        variables={
+            "square": _square(_v),
+            "before": _square(transform.committed_values),
+            "basis": [
+                {"x": _v["a"], "y": _v["c"], "label": "first column"},
+                {"x": _v["b"], "y": _v["d"], "label": "second column"},
+            ],
+            "color": "#d1495b" if det < 0 else "#246bce",
+        },
+        width=340,
+        height=340,
+    )
+    mo.hstack(
+        [
+            warped,
+            mo.vstack(
+                [
+                    transform,
+                    mo.md(rf"$\det A = {det:.2f}$, so the square's area is scaled by ${abs(det):.2f}$."),
+                    mo.md("The arrows are the columns of `A`: where the two unit vectors land. The dashed outline is the square from before the drag."),
+                ],
+                gap=0.5,
+            ),
+        ],
+        align="center",
+        gap=2,
+    )
+    return
+
+
 if __name__ == "__main__":
     app.run()

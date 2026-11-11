@@ -122,8 +122,29 @@ function union(boxes) {
   };
 }
 
-// Land on top of the symbol when nothing is above it; otherwise from the
-// clear side (preferring the one facing the incoming arrow).
+// The height at which a horizontal run can reach the symbol from one side
+// without touching a glyph on the way, or null if there is none. Try the
+// middle of the symbol first, then step outwards over its height: a
+// denominator sits below its neighbours' baseline, so a run at its height
+// passes under them even though their boxes overlap the symbol's.
+function sideRunY(sym, glyphs, side) {
+  const inTheWay = glyphs.filter((g) =>
+    side === "right" ? g.left >= sym.right - 1 : g.right <= sym.left + 1,
+  );
+  const clear = (y) =>
+    !inTheWay.some((g) => g.top < y + HEAD_HALF + SIDE_PAD && g.bottom > y - HEAD_HALF - SIDE_PAD);
+  const mid = (sym.top + sym.bottom) / 2;
+  const reach = (sym.bottom - sym.top) / 2;
+  for (let dy = 0; dy <= reach; dy += 1) {
+    if (clear(mid + dy)) return mid + dy;
+    if (clear(mid - dy)) return mid - dy;
+  }
+  return null;
+}
+
+// Land on top of the symbol when nothing is above it; otherwise from a side
+// with a clear run in (preferring the one facing the incoming arrow).
+// Returns {side, y}, where y is the height of a side run.
 function landingSide(sym, glyphs, fromX) {
   // Anything starting higher up over the symbol's x-range covers it: a
   // fraction bar or numerator, a limit, or a radical (whose SVG also reaches
@@ -131,14 +152,13 @@ function landingSide(sym, glyphs, fromX) {
   const above = glyphs.some(
     (g) => g.right > sym.left + 1 && g.left < sym.right - 1 && g.top < sym.top - 2,
   );
-  if (!above) return "top";
-  const rowMates = glyphs.filter((g) => g.bottom > sym.top - SIDE_PAD && g.top < sym.bottom + SIDE_PAD);
-  const rightClear = !rowMates.some((g) => g.left >= sym.right - 1);
-  const leftClear = !rowMates.some((g) => g.right <= sym.left + 1);
+  if (!above) return { side: "top" };
+  const rightY = sideRunY(sym, glyphs, "right");
+  const leftY = sideRunY(sym, glyphs, "left");
   const preferRight = fromX >= (sym.left + sym.right) / 2;
-  if (rightClear && (preferRight || !leftClear)) return "right";
-  if (leftClear) return "left";
-  return "top";
+  if (rightY !== null && (preferRight || leftY === null)) return { side: "right", y: rightY };
+  if (leftY !== null) return { side: "left", y: leftY };
+  return { side: "top" };
 }
 
 // Is the notebook around `el` dark? Walk up the ancestors, crossing shadow
@@ -637,6 +657,7 @@ async function render({ model, el }) {
     const valueNode = tex.querySelector(".katex-html [data-fdag-value]");
     if (valueNode) valueNode.title = (model.get("output_errors") || {})[id] || "";
     spaceNumbersAfterDigits(tex);
+    return changed;
   }
 
   // A revealed number right after a digit reads as one number (2σ with
@@ -963,7 +984,6 @@ async function render({ model, el }) {
         } else {
           const sym = inkOf(dst, use);
           const cx = (sym.left + sym.right) / 2;
-          const cy = (sym.top + sym.bottom) / 2;
           // Avoid the target's other glyphs and, if it feeds anything itself,
           // the stem dropping out of its own output symbol.
           const others = glyphs[dst].filter((g) => !use.contains(g.el));
@@ -971,13 +991,13 @@ async function render({ model, el }) {
             const st = stems[dst];
             others.push({ left: st.x - st.width / 2, right: st.x + st.width / 2, top: st.top, bottom: box(cards[dst]).bottom });
           }
-          const side = landingSide(sym, others, stems[src].x);
+          const { side, y } = landingSide(sym, others, stems[src].x);
           if (side === "top") {
             landing = { side, x: cx, tip: { x: cx, y: sym.top - LAND_GAP } };
           } else if (side === "right") {
-            landing = { side, x: ink.right + SIDE_GAP, tip: { x: sym.right + LAND_GAP, y: cy } };
+            landing = { side, x: ink.right + SIDE_GAP, tip: { x: sym.right + LAND_GAP, y } };
           } else {
-            landing = { side, x: ink.left - SIDE_GAP, tip: { x: sym.left - LAND_GAP, y: cy } };
+            landing = { side, x: ink.left - SIDE_GAP, tip: { x: sym.left - LAND_GAP, y } };
           }
         }
         block(dst, "top", landing.x);
