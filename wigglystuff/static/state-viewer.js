@@ -85,7 +85,10 @@ function render({ model, el: host }) {
   const speedLabel = el("span", "sv-speed-label");
   speedWrap.append(speed, speedLabel);
   const status = el("span", "sv-status");
-  controls.append(prevBtn, playBtn, nextBtn, counter, depthBadge, speedWrap, status);
+  // Toggles `show_code`, so hidden code is always one click away.
+  const codeBtn = button("&lt;/&gt;", "Show code");
+  codeBtn.classList.add("sv-code-toggle");
+  controls.append(prevBtn, playBtn, nextBtn, counter, depthBadge, speedWrap, status, codeBtn);
 
   const timelineCaption = el("div", "sv-timeline-caption");
   const timelineLabel = el("span");
@@ -266,6 +269,17 @@ function render({ model, el: host }) {
     speedLabel.textContent = perSecond >= 10 ? `${Math.round(perSecond)} steps/s` : `${perSecond.toFixed(1)} steps/s`;
   }
 
+  // `show_code=False` hides the source; the side column goes too when the
+  // variables table is empty as well, so the view gets the whole width.
+  function applySide() {
+    const showCode = model.get("show_code");
+    codePanel.style.display = showCode ? "" : "none";
+    root.classList.toggle("sv-no-code", !showCode);
+    codeBtn.title = showCode ? "Hide code" : "Show code";
+    codeBtn.setAttribute("aria-pressed", String(showCode));
+    side.style.display = showCode || (model.get("variables") || []).length ? "" : "none";
+  }
+
   function applyHeight() {
     const h = model.get("height");
     main.style.maxHeight = h > 0 ? `${h}px` : "";
@@ -385,6 +399,11 @@ function render({ model, el: host }) {
     if (rafId === null) commitStep({ now: true });
   });
 
+  codeBtn.addEventListener("click", () => {
+    model.set("show_code", !model.get("show_code"));
+    model.save_changes();
+  });
+
   root.addEventListener("keydown", (event) => {
     const jump = event.shiftKey ? 10 : 1;
     if (event.key === "ArrowRight") goTo(cur + jump);
@@ -410,7 +429,11 @@ function render({ model, el: host }) {
     buildCode();
     renderStep();
   });
-  model.on("change:variables", renderStep);
+  model.on("change:variables", () => {
+    applySide();
+    renderStep();
+  });
+  model.on("change:show_code", applySide);
   model.on("change:timeline_label", () => {
     buildTimeline();
     renderStep();
@@ -425,6 +448,7 @@ function render({ model, el: host }) {
 
   buildCode();
   buildTimeline();
+  applySide();
   applyHeight();
   renderSpeed();
   renderError();

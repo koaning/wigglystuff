@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `StateViewer(show_code=False)` hides the source panel, leaving the view,
+  controls and timeline at full width. A `</>` button in the controls toggles
+  the code, and `show_code` is a synced traitlet, so Python can toggle it too.
+- `EsmWidget(width=0)` fills the available width instead of a fixed pixel width.
+
+### Changed
+
+- `StateViewer` hides the variables table by default. Pass
+  `variables=["name", ...]` to show a table of those locals; `state` still holds
+  every local either way.
+
 ## [0.5.39] - 2026-11-10
 
 ### Changed

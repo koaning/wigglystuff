@@ -109,7 +109,15 @@ def _(mo):
 
 @app.cell
 def _(StateViewer, mo, n):
-    viewer = mo.ui.anywidget(StateViewer(solve, view, args=([], 0, n.value), max_steps=20_000))
+    viewer = mo.ui.anywidget(
+        StateViewer(
+            solve,
+            view,
+            args=([], 0, n.value),
+            max_steps=20_000,
+            variables=["board", "row", "n", "col"],
+        )
+    )
     viewer
     return (viewer,)
 

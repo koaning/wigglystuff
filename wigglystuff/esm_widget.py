@@ -134,7 +134,7 @@ class EsmWidget(anywidget.AnyWidget):
             data: Any JSON-able value, synced two-way with the browser. Defaults
                 to ``{}``.
             css: Optional inline CSS injected into the widget root.
-            width: Container width in pixels.
+            width: Container width in pixels (0 = fill the available width).
             height: Container height in pixels.
             **kwargs: Forwarded to ``anywidget.AnyWidget``.
 

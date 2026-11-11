@@ -52,7 +52,9 @@ function render({ model, el }) {
   let userCleanup = null;
 
   function applySize() {
-    container.style.width = model.get("width") + "px";
+    // width 0 fills the available width.
+    const width = model.get("width");
+    container.style.width = width > 0 ? width + "px" : "100%";
     container.style.height = model.get("height") + "px";
   }
 

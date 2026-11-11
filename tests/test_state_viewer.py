@@ -31,7 +31,17 @@ def boom(x):
 
 
 def test_traces_recursion_with_depth_lines_and_return():
-    viewer = StateViewer(solve, show_board, args=([], 0, 4))
+    # No table by default; `state` still holds every local.
+    default = StateViewer(solve, show_board, args=([], 0, 4))
+    assert default.variables == []
+    assert default.show_code is True
+    assert StateViewer(solve, show_board, args=([], 0, 4), show_code=False).show_code is False
+    assert default.steps[0]["locals"] == {}
+    assert default.state == {"board": [], "row": 0, "n": 4}
+
+    viewer = StateViewer(
+        solve, show_board, args=([], 0, 4), variables=["board", "row", "n", "col"]
+    )
 
     assert viewer.error is None
     assert viewer.truncated is False
@@ -90,6 +100,12 @@ def test_max_steps_only_changes_and_validation():
     viewer = StateViewer(solve, show_board, args=([], 0, 4), only_changes=True)
     views = [step["view"] for step in viewer.steps]
     assert all(a != b for a, b in zip(views, views[1:]))
+
+    # Without a view or shown variables there is nothing to compare, so keep every step.
+    assert (
+        StateViewer(countdown, args=(3,), only_changes=True).n_steps
+        == StateViewer(countdown, args=(3,)).n_steps
+    )
 
     with pytest.raises(ValueError):
         StateViewer(solve, show_board, max_steps=0)
