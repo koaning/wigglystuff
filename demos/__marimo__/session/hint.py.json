@@ -1,0 +1,165 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.25.2",
+    "script_metadata_hash": "ef58f9fa05cb292bfe9e894fca6c4410"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1780759c552838da356568db2ffbc176",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "d782dd527efd4bb66d15bf8827e92c4f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"hint-annotate-a-widget-in-the-notebook-itself\">Hint -- annotate a widget in the notebook itself</h1>\n<span class=\"paragraph\"><code>Hint</code> wraps a live widget and curves an arrow from a short note to the\nwidget's edge, so a reader knows what to interact with and why.</span>\n<span class=\"paragraph\">It is a marimo-only display helper, not an <code>AnyWidget</code>. Display it as the\nlast expression of a cell and keep reading <code>.value</code> off the widget you\npassed in -- <code>Hint</code> never gets in the way of your data.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "c2d93040c625e243d0a76eedd9bcbeb4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "20f6df0e44dbfe06031de7731465d609",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div data-hint-root style=\"position:relative;display:inline-block\"><div style='display: flex;flex: 1;flex-direction: row;justify-content: flex-start;align-items: center;flex-wrap: nowrap;gap: 3rem'><div data-hint-box=\"target\" style=\"display:inline-block\"><marimo-ui-element object-id='vblA-0' random-id='af1b3359-bb4d-6560-2f04-588b625ba044'><marimo-slider data-initial-value='4' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003eN&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='1' data-stop='10' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div><div data-hint-box=\"note\" style=\"display:inline-block\"><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">drag to change <strong>N</strong></span></span></div></div><marimo-ui-element object-id='bkHC-0' random-id='bf561ede-64e8-593d-aed4-6a111317e3de'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;22ebb484504644449ac0093203265747&quot;}' data-label='null' data-model-id='&quot;22ebb484504644449ac0093203265747&quot;'></marimo-anywidget></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "a7f359ecc7d1b4bed762ea026f14f143",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><code>n.value</code> is <strong>4</strong></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "a7aa705c00be5299dec6f332570a3aaf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"placement\">Placement</h2>\n<span class=\"paragraph\"><code>side=</code> puts the note on any of the four sides. Left/right lay the note\nbeside the widget, top/bottom above or below it.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "2555a7e9f0eb95b21ec87ef6490a9fb6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 4rem'><div data-hint-root style=\"position:relative;display:inline-block\"><div style='display: flex;flex: 1;flex-direction: row;justify-content: flex-start;align-items: center;flex-wrap: nowrap;gap: 3rem'><div data-hint-box=\"target\" style=\"display:inline-block\"><marimo-ui-element object-id='Xref-0' random-id='edeb3e12-75f1-7295-985a-d62649e12787'><marimo-slider data-initial-value='3' data-label='null' data-start='1' data-stop='10' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div><div data-hint-box=\"note\" style=\"display:inline-block\"><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">side='right'</span></span></div></div><marimo-ui-element object-id='Xref-2' random-id='70311bfc-864e-421f-9deb-1cbb774997ad'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;da9a9b02a5c14cf3a3aaaac7a66f5278&quot;}' data-label='null' data-model-id='&quot;da9a9b02a5c14cf3a3aaaac7a66f5278&quot;'></marimo-anywidget></marimo-ui-element></div><div data-hint-root style=\"position:relative;display:inline-block\"><div style='display: flex;flex: 1;flex-direction: row;justify-content: flex-start;align-items: center;flex-wrap: nowrap;gap: 3rem'><div data-hint-box=\"note\" style=\"display:inline-block\"><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">side='left'</span></span></div><div data-hint-box=\"target\" style=\"display:inline-block\"><marimo-ui-element object-id='Xref-1' random-id='5597f96c-219e-f855-5a95-824bab5aea50'><marimo-slider data-initial-value='3' data-label='null' data-start='1' data-stop='10' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div></div><marimo-ui-element object-id='Xref-3' random-id='815fb0df-6d61-656d-8c46-cd43307601df'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;0c1eca9c87794feb99ed5a10340de919&quot;}' data-label='null' data-model-id='&quot;0c1eca9c87794feb99ed5a10340de919&quot;'></marimo-anywidget></marimo-ui-element></div></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "526dfe69a4076aa71c8b1a900ce612d9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: row;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 4rem'><div data-hint-root style=\"position:relative;display:inline-block\"><div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: center;flex-wrap: nowrap;gap: 3rem'><div data-hint-box=\"note\" style=\"display:inline-block\"><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">side='top'</span></span></div><div data-hint-box=\"target\" style=\"display:inline-block\"><marimo-ui-element object-id='SFPL-0' random-id='b3df1850-874c-e41c-d489-d367c79bbaba'><marimo-slider data-initial-value='3' data-label='null' data-start='1' data-stop='10' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div></div><marimo-ui-element object-id='SFPL-2' random-id='cac369e5-ed0a-7d90-113c-3e313fd93e82'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;dca4ef58dc9e44dd97c92e1f9371e4f4&quot;}' data-label='null' data-model-id='&quot;dca4ef58dc9e44dd97c92e1f9371e4f4&quot;'></marimo-anywidget></marimo-ui-element></div><div data-hint-root style=\"position:relative;display:inline-block\"><div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: center;flex-wrap: nowrap;gap: 3rem'><div data-hint-box=\"target\" style=\"display:inline-block\"><marimo-ui-element object-id='SFPL-1' random-id='edec5a86-ceed-edf3-0146-53abad3b362a'><marimo-slider data-initial-value='3' data-label='null' data-start='1' data-stop='10' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div><div data-hint-box=\"note\" style=\"display:inline-block\"><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">side='bottom'</span></span></div></div><marimo-ui-element object-id='SFPL-3' random-id='6428a978-7c28-5c6d-5429-fe5b7ab89e48'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;919899d1ec4e40d8a04f82f2ff8e1f99&quot;}' data-label='null' data-model-id='&quot;919899d1ec4e40d8a04f82f2ff8e1f99&quot;'></marimo-anywidget></marimo-ui-element></div></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "acd4467f91e74e4d50ce796d98e6ec52",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"with-other-layouts\">With other layouts</h2>\n<span class=\"paragraph\">The hint mechanism is amazing when it isn't clear that you can interact with something.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "fbdcdf917726df68ea1db7504ffcd5ad",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div data-hint-root style=\"position:relative;display:inline-block\"><div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: center;flex-wrap: nowrap;gap: 3rem'><div data-hint-box=\"note\" style=\"display:inline-block\"><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">you can change these sliders!</span></span></div><div data-hint-box=\"target\" style=\"display:inline-block\"><div data-wf-root class=\"wf\" data-direction=\"down\"><style>/* Styles for the light-DOM container WidgetFlow lays out (embedded as a\n   <style> next to it, since an anywidget's own CSS stays in its shadow root).\n   One ink for every arrow and note, like FormulaDAG's neutral default. */\n.wf {\n  --wf-ink: #25221d;\n  --wf-edge: #8a8378;\n  --wf-note: #6b6459;\n  --wf-rule: color-mix(in srgb, var(--wf-ink) 12%, transparent);\n  --wf-bg: var(--background, #fff);\n  --wf-layer-gap: 64px;\n  --wf-node-gap: 40px;\n  position: relative;\n  display: inline-block;\n  max-width: 100%;\n  overflow-x: auto;\n  color: var(--wf-ink);\n  font-family: Inter, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", sans-serif;\n  color-scheme: light;\n}\n.wf.wf--dark {\n  --wf-ink: #f2eee8;\n  --wf-edge: #a39b8f;\n  --wf-note: #b8b0a4;\n  --wf-bg: var(--background, #181c1a);\n  color-scheme: dark;\n}\n\n.wf-board {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: var(--wf-layer-gap);\n  padding: 12px 24px;\n}\n.wf-layer {\n  position: relative;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: var(--wf-node-gap);\n}\n.wf-lane { flex: 0 0 14px; align-self: stretch; }\n\n.wf-item { display: flex; align-items: center; gap: 30px; }\n.wf-node {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n  padding: 4px;\n}\n.wf-body { display: flex; justify-content: center; }\n.wf-caption {\n  color: var(--wf-note);\n  font: 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;\n}\n\n/* direction=\"right\": layers become columns, a layer stacks its widgets\n   vertically, and a note sits under its widget */\n.wf[data-direction=\"right\"] .wf-board { flex-direction: row; align-items: center; padding: 24px 12px; }\n.wf[data-direction=\"right\"] .wf-layer { flex-direction: column; }\n.wf[data-direction=\"right\"] .wf-item { flex-direction: column; gap: 22px; }\n\n.wf-note {\n  max-width: 190px;\n  color: var(--wf-note);\n  font-size: 0.78rem;\n  font-weight: 500;\n  line-height: 1.3;\n}\n/* mo.md wraps the note in marimo's prose styles (its body font, size and\n   loose line height); take FormulaDAG's note typography instead */\n.wf .wf-note .markdown,\n.wf .wf-note .prose,\n.wf .wf-note .paragraph,\n.wf .wf-note p {\n  margin: 0;\n  font: inherit;\n  line-height: inherit;\n  letter-spacing: inherit;\n  color: inherit;\n}\n.wf .wf-note .katex { font-size: 1.05em; }\n\n.wf-svg, .wf-labels {\n  position: absolute;\n  inset: 0;\n  z-index: 2;\n  width: 100%;\n  height: 100%;\n  overflow: visible;\n  pointer-events: none;\n}\n.wf-edge {\n  fill: none;\n  stroke: var(--wf-edge);\n  stroke-width: 1.3;\n  stroke-linecap: round;\n  stroke-linejoin: round;\n}\n/* the gap a crossing arrow leaves in the ones drawn before it */\n.wf-halo {\n  fill: none;\n  stroke: var(--wf-bg);\n  stroke-width: 6;\n  stroke-linecap: butt;\n  stroke-linejoin: round;\n  /* skip the first few px so the halo doesn't cut the border it leaves from */\n  stroke-dasharray: 0 4 1000000;\n}\n.wf-head { fill: var(--wf-edge); stroke: var(--wf-edge); stroke-width: 0.8; stroke-linejoin: round; }\n.wf-note-arrow {\n  fill: none;\n  stroke: var(--wf-note);\n  stroke-width: 1.2;\n  stroke-linecap: round;\n  stroke-linejoin: round;\n}\n.wf-edge-label {\n  position: absolute;\n  white-space: nowrap;\n  color: var(--wf-note);\n  font: 10.5px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;\n}\n\n/* highlight: while a widget is hovered, everything outside its lineage fades */\n.wf-node, .wf-note, .wf-edge, .wf-head, .wf-note-arrow, .wf-edge-label { transition: opacity 0.15s; }\n.wf--focus .wf-node:not(.is-lit),\n.wf--focus .wf-note:not(.is-lit) { opacity: 0.3; }\n.wf--focus .wf-edge:not(.is-lit),\n.wf--focus .wf-head:not(.is-lit),\n.wf--focus .wf-note-arrow:not(.is-lit),\n.wf--focus .wf-edge-label:not(.is-lit) { opacity: 0.15; }\n</style><div class=\"wf-board\"><div class=\"wf-layer\"><div class=\"wf-item\"><div class=\"wf-node\" data-wf-node=\"n0\"><div class=\"wf-body\"><marimo-ui-element object-id='Kclp-0' random-id='f4e0358b-1297-ebbc-bf0a-f0b2e3029058'><marimo-slider data-initial-value='0.7' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003etemperature&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='0' data-stop='2' data-step='0.1' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div></div></div><div class=\"wf-item\"><div class=\"wf-node\" data-wf-node=\"n1\"><div class=\"wf-body\"><marimo-ui-element object-id='emfo-0' random-id='b3b0155b-40a6-b1f7-e04b-d2bc8815b683'><marimo-slider data-initial-value='1200' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003emax tokens&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='100' data-stop='4000' data-step='100' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='false' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div></div></div></div><div class=\"wf-layer\"><div class=\"wf-item\"><div class=\"wf-node\" data-wf-node=\"n2\"><div class=\"wf-body\"><span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">~$0.17</span></span></div><div class=\"wf-caption\">cost</div></div></div></div></div><marimo-ui-element object-id='RGSE-0' random-id='c1114485-a272-e3b8-b340-fc99115936d2'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;8cb99002eff545ffa5a5412cc736f4d4&quot;}' data-label='null' data-model-id='&quot;8cb99002eff545ffa5a5412cc736f4d4&quot;'></marimo-anywidget></marimo-ui-element></div></div></div><marimo-ui-element object-id='RGSE-1' random-id='ec72baca-b851-2314-afcc-aeb41b5f53ee'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;b153093bbb184465a15acef1dd6db45f&quot;}' data-label='null' data-model-id='&quot;b153093bbb184465a15acef1dd6db45f&quot;'></marimo-anywidget></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "c17e3cc8e1a2ab827325bd309aafd998",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "5d73081727adda153bde14e045a844e9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

@@ -40,9 +40,10 @@ def _(mo):
     mo.md("""
     # WidgetFlow
 
-    Live widgets laid out as a top-to-bottom DAG, in the style of `FormulaDAG`.
-    Hover a caption to trace a node's ancestry, click it to pin, fold a card to
-    its caption, or flip the direction from the toolbar.
+    Live widgets laid out as a DAG, in the style of `FormulaDAG`. The quickest
+    way in is `WidgetFlow.from_widgets([...])`: pass the widgets, and the
+    arrows come from marimo's own dataflow graph while every widget is
+    captioned with its variable name.
     """)
     return
 
@@ -52,8 +53,13 @@ def _(mo):
     n_points = mo.ui.slider(10, 200, value=60, step=10, label="points", show_value=True)
     noise = mo.ui.slider(0.0, 1.0, value=0.25, step=0.05, label="noise", show_value=True)
     seed = mo.ui.number(0, 100, value=7, label="seed")
+    return n_points, noise, seed
+
+
+@app.cell
+def _(mo):
     degree = mo.ui.slider(1, 12, value=3, label="degree", show_value=True)
-    return degree, n_points, noise, seed
+    return (degree,)
 
 
 @app.cell
@@ -65,7 +71,7 @@ def _(alt, n_points, noise, np, pd, seed):
         alt.Chart(df)
         .mark_circle(size=28, color="#5b4fbf", opacity=0.75)
         .encode(x=alt.X("x", title=None), y=alt.Y("y", title=None))
-        .properties(width=230, height=140)
+        .properties(width=230, height=140, usermeta={"embedOptions": {"actions": False}})
         .configure(background="transparent")
         .configure_view(strokeWidth=0)
     )
@@ -81,7 +87,7 @@ def _(alt, degree, df, np, pd):
     fit_chart = (
         alt.Chart(df).mark_circle(size=18, color="#999", opacity=0.5).encode(x=alt.X("x", title=None), y=alt.Y("y", title=None))
         + alt.Chart(fit_df).mark_line(color="#b3262e", strokeWidth=2).encode(x="x", y="y")
-    ).properties(width=230, height=140).configure(background="transparent").configure_view(strokeWidth=0)
+    ).properties(width=230, height=140, usermeta={"embedOptions": {"actions": False}}).configure(background="transparent").configure_view(strokeWidth=0)
     return fit_chart, residuals
 
 
@@ -96,87 +102,107 @@ def _(mo, np, residuals):
     return (score,)
 
 
-@app.cell
-def _(
-    WidgetFlow,
-    data_chart,
-    degree,
-    fit_chart,
-    mo,
-    n_points,
-    noise,
-    score,
-    seed,
-):
-    default_edges = [
-        ("n_points", "data"),
-        ("noise", "data"),
-        ("seed", "data"),
-        ("data", "fit", "x, y"),
-        ("degree", "fit"),
-        ("fit", "score", "residuals"),
-    ]
-
-    def build(edges=default_edges, **kwargs):
-        return WidgetFlow(
-            nodes={
-                "n_points": n_points,
-                "noise": noise,
-                "seed": seed,
-                "data": data_chart,
-                "degree": degree,
-                "fit": fit_chart,
-                "score": score,
-            },
-            edges=edges,
-            labels={"data": "sample", "fit": "polyfit"},
-            notes={
-                "noise": "std of the gaussian noise on $\\sin(x)$",
-                "degree": "too high and the curve starts chasing noise",
-            },
-            groups={"inputs": ["n_points", "noise", "seed"]},
-            **kwargs,
-        )
-
-    build()
-    return (build,)
-
-
-@app.cell
-def _(build):
-    build(direction="right", collapsed=["seed"])
-    return
-
-
-@app.cell
-def _(WidgetFlow, degree, fit_chart, noise):
-    # beside= puts an input on the same row as the node it feeds, so its arrow
-    # comes straight in from the left or right instead of from above.
-    WidgetFlow(
-        nodes={"noise": noise, "degree": degree, "fit": fit_chart},
-        edges=[("noise", "fit", "σ"), ("degree", "fit", "k")],
-        beside={"noise": ("fit", "left"), "degree": ("fit", "right")},
-        labels={"fit": "polyfit"},
-        color_by="none",
+@app.cell(expand_output=True)
+def _(WidgetFlow, data_chart, degree, fit_chart, n_points, noise, score, seed):
+    WidgetFlow.from_widgets(
+        [n_points, noise, seed, data_chart, degree, fit_chart, score],
+        notes=[
+            (noise, "std of the gaussian noise on $\\sin(x)$"),
+            (degree, "too high and the curve starts chasing noise"),
+        ],
     )
     return
 
 
-@app.cell
-def _(build):
-    # color_by="none" draws every arrow in one ink; colors= or an edge's
-    # "color" picks out the ones you care about.
-    build(
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    `direction="right"` lays the layers out left to right instead.
+    """)
+    return
+
+
+@app.cell(expand_output=True)
+def _(WidgetFlow, data_chart, degree, fit_chart, n_points, noise, score, seed):
+    WidgetFlow.from_widgets(
+        [n_points, noise, seed, data_chart, degree, fit_chart, score],
+        direction="right",
+        notes=[(degree, "too high and the curve starts chasing noise")],
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    Pass `edges` to `WidgetFlow` yourself to pick the arrows. An edge's third
+    item is a label, or a dict with `label`, `color`, `dashed`, and
+    `exit`/`enter` sides. `layers` pushes a widget further down: here `degree`
+    sits next to the data it is fitted to instead of at the top.
+    """)
+    return
+
+
+@app.cell(expand_output=True)
+def _(WidgetFlow, data_chart, degree, fit_chart, n_points, noise, score, seed):
+    WidgetFlow(
+        [n_points, noise, seed, data_chart, degree, fit_chart, score],
         edges=[
-            ("n_points", "data"),
-            ("noise", "data"),
-            ("seed", "data", {"enter": "right"}),
-            ("data", "fit", "x, y"),
-            ("degree", "fit", {"color": "#c2410c"}),
-            ("fit", "score", "residuals"),
+            (n_points, data_chart, "n"),
+            (noise, data_chart, "σ"),
+            (seed, data_chart, {"dashed": True}),
+            (data_chart, fit_chart, {"label": "x, y", "color": "#c2410c"}),
+            (degree, fit_chart, {"label": "k", "enter": "right"}),
+            (fit_chart, score, "residuals"),
         ],
-        beside={"degree": ("fit", "right")},
-        color_by="none",
+        labels=[(data_chart, "sample"), (fit_chart, "polyfit")],
+        layers=[(degree, 1)],
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    `ports` applies the same options to arrows you didn't spell out, such as
+    the ones `from_widgets` inferred: here it labels one and pins where
+    another lands.
+    """)
+    return
+
+
+@app.cell(expand_output=True)
+def _(WidgetFlow, data_chart, degree, fit_chart, n_points, noise, score, seed):
+    WidgetFlow.from_widgets(
+        [n_points, noise, seed, data_chart, degree, fit_chart, score],
+        ports=[
+            (data_chart, fit_chart, {"label": "x, y"}),
+            (degree, fit_chart, {"enter": "top"}),
+        ],
+        labels=False,
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    `align="left"` puts every layer on one grid packed to the left, so the
+    first widget of each layer shares a column and the charts line up with
+    straight arrows between them. `beside` puts a widget in the same layer as
+    another, right after it: here `noise` and `degree` sit next to the chart
+    they shape, their arrows running sideways.
+    """)
+    return
+
+
+@app.cell(expand_output=True)
+def _(WidgetFlow, data_chart, degree, fit_chart, n_points, noise, score):
+    WidgetFlow.from_widgets(
+        [n_points, noise, data_chart, degree, fit_chart, score],
+        align="left",
+        beside=[(noise, data_chart), (degree, fit_chart)],
+        labels=False,
     )
     return
 

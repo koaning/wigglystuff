@@ -1,14 +1,16 @@
 /* Styles for the light-DOM container WidgetFlow lays out (embedded as a
-   <style> next to it, since an anywidget's own CSS stays in its shadow root). */
+   <style> next to it, since an anywidget's own CSS stays in its shadow root).
+   One ink for every arrow and note, like FormulaDAG's neutral default. */
 .wf {
   --wf-ink: #25221d;
-  --wf-muted: #8a8378;
-  --wf-accent: #246bce;
-  --wf-card: #fffdf9;
-  --wf-rule: color-mix(in srgb, var(--wf-ink) 13%, transparent);
+  --wf-edge: #8a8378;
+  --wf-note: #6b6459;
+  --wf-rule: color-mix(in srgb, var(--wf-ink) 12%, transparent);
+  --wf-bg: var(--background, #fff);
+  --wf-layer-gap: 64px;
+  --wf-node-gap: 40px;
   position: relative;
-  display: inline-flex;
-  flex-direction: column;
+  display: inline-block;
   max-width: 100%;
   overflow-x: auto;
   color: var(--wf-ink);
@@ -17,138 +19,130 @@
 }
 .wf.wf--dark {
   --wf-ink: #f2eee8;
-  --wf-muted: #a39b8f;
-  --wf-accent: #75a7ff;
-  --wf-card: #22201d;
+  --wf-edge: #a39b8f;
+  --wf-note: #b8b0a4;
+  --wf-bg: var(--background, #181c1a);
   color-scheme: dark;
-}
-.wf [style*="--wf-c-light"] { --wf-c: var(--wf-c-light); }
-.wf.wf--dark [style*="--wf-c-light"] { --wf-c: var(--wf-c-dark); }
-
-.wf-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 6px;
-  padding: 0 4px 4px;
-  font-size: 11px;
-}
-.wf-seg {
-  display: inline-flex;
-  border: 1px solid var(--wf-rule);
-  border-radius: 7px;
-  overflow: hidden;
-}
-.wf-btn {
-  border: 0;
-  background: transparent;
-  color: var(--wf-muted);
-  padding: 3px 8px;
-  font: 600 11px/1.3 ui-sans-serif, system-ui, sans-serif;
-  cursor: pointer;
-}
-.wf-btn + .wf-btn { border-left: 1px solid var(--wf-rule); }
-.wf-btn:hover { color: var(--wf-ink); }
-.wf-btn.is-on {
-  color: var(--wf-accent);
-  background: color-mix(in srgb, var(--wf-accent) 9%, transparent);
 }
 
 .wf-board {
-  display: flex;
-  flex-direction: column;
-  gap: 68px;
-  padding: 34px 28px 18px;
-}
-.wf[data-direction="right"] .wf-board { flex-direction: row; gap: 84px; }
-.wf-layer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 40px;
-}
-.wf[data-direction="right"] .wf-layer { flex-direction: column; justify-content: center; }
-.wf-cluster { display: flex; align-items: center; gap: 56px; }
-.wf[data-direction="right"] .wf-cluster { flex-direction: column; gap: 40px; }
-.wf-lane { flex: 0 0 14px; align-self: stretch; }
-
-.wf-item { display: flex; align-items: flex-start; gap: 34px; transition: opacity 140ms ease; }
-.wf-item[data-note-side="left"] { flex-direction: row-reverse; }
-.wf-item[data-note-side="bottom"] { flex-direction: column; gap: 22px; }
-.wf-item[data-note-side="top"] { flex-direction: column-reverse; gap: 22px; }
-
-.wf-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--wf-rule);
-  border-radius: 10px;
-  background: var(--wf-card);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
-  transition: opacity 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+  gap: var(--wf-layer-gap);
+  padding: 12px 24px;
 }
-.wf-card.is-selected {
-  border-color: color-mix(in srgb, var(--wf-accent) 60%, transparent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wf-accent) 12%, transparent);
+.wf-layer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--wf-node-gap);
 }
-.wf-head {
+.wf-lane { flex: 0 0 14px; align-self: stretch; }
+
+.wf-item { display: flex; align-items: center; gap: 30px; }
+.wf-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+}
+.wf-body { display: flex; justify-content: center; }
+.wf-caption {
+  color: var(--wf-note);
+  font: 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* direction="right": layers become columns, a layer stacks its widgets
+   vertically, and a note sits under its widget */
+.wf[data-direction="right"] > .wf-board { flex-direction: row; align-items: center; padding: 24px 12px; }
+.wf[data-direction="right"] > .wf-board > .wf-layer { flex-direction: column; }
+.wf[data-direction="right"] > .wf-board > .wf-layer > .wf-item,
+.wf[data-direction="right"] > .wf-board > .wf-layer > .wf-group > .wf-item,
+.wf[data-direction="right"] > .wf-board > .wf-layer > .wf-group > .wf-beside > .wf-item { flex-direction: column; gap: 22px; }
+
+/* align off-centre: every layer sits on one shared grid (each layer a
+   subgrid spanning it), so the k-th widget of each layer lands in the same
+   column, centred in it, and arrows down a column drop straight */
+.wf:is([data-align="left"], [data-align="right"]) > .wf-board {
+  display: grid;
+  grid-template-columns: repeat(var(--wf-cols), auto);
+  column-gap: var(--wf-node-gap);
+  row-gap: var(--wf-layer-gap);
+}
+.wf:is([data-align="left"], [data-align="right"]) > .wf-board > .wf-layer {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  justify-items: center;
+}
+.wf[data-direction="right"]:is([data-align="top"], [data-align="bottom"]) > .wf-board {
+  display: grid;
+  grid-template-rows: repeat(var(--wf-cols), auto);
+  row-gap: var(--wf-node-gap);
+  column-gap: var(--wf-layer-gap);
+}
+.wf[data-direction="right"]:is([data-align="top"], [data-align="bottom"]) > .wf-board > .wf-layer {
+  display: grid;
+  grid-row: 1 / -1;
+  grid-template-rows: subgrid;
+  justify-items: center;
+  align-items: center;
+}
+
+/* on the shared grid a beside widget shares its anchor's cell: equal tracks
+   either side keep the anchor on the column's centre line, and the beside
+   widgets hug it in the trailing track */
+.wf-group {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+.wf-beside {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 5px 6px 4px 10px;
-  cursor: pointer;
-  user-select: none;
+  gap: var(--wf-node-gap);
+  padding-left: var(--wf-node-gap);
 }
-.wf-dot {
-  width: 8px;
-  height: 8px;
-  flex: 0 0 8px;
-  border-radius: 50%;
-  background: var(--wf-c);
+.wf[data-direction="right"] > .wf-board > .wf-layer > .wf-group {
+  grid-template-columns: none;
+  grid-template-rows: 1fr auto 1fr;
+  justify-items: center;
 }
-.wf-label {
-  flex: 1;
-  white-space: nowrap;
-  font: 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: var(--wf-muted);
+.wf[data-direction="right"] > .wf-board > .wf-layer > .wf-group > .wf-beside {
+  flex-direction: column;
+  padding-left: 0;
+  padding-top: var(--wf-node-gap);
 }
-.wf-head:hover .wf-label { color: var(--wf-ink); }
-.wf-fold {
-  display: inline-grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  margin-left: 6px;
-  border: 0;
-  border-radius: 5px;
-  background: transparent;
-  color: var(--wf-muted);
-  cursor: pointer;
-  padding: 0;
-}
-.wf-fold:hover { background: color-mix(in srgb, var(--wf-ink) 7%, transparent); color: var(--wf-ink); }
-.wf-fold svg { transition: transform 140ms ease; }
-.wf-card.is-collapsed .wf-fold svg { transform: rotate(-90deg); }
-.wf-body { padding: 4px 12px 10px; display: flex; justify-content: center; }
-.wf-card.is-collapsed .wf-body { display: none; }
-.wf-card.is-collapsed { border-style: dashed; }
-.wf-item.is-collapsed .wf-note { display: none; }
 
 .wf-note {
-  max-width: 180px;
-  padding-top: 4px;
-  color: var(--wf-note-c, var(--wf-muted));
-  font-size: 0.8rem;
+  max-width: 190px;
+  color: var(--wf-note);
+  font-size: 0.78rem;
   font-weight: 500;
   line-height: 1.3;
 }
-.wf-note p { margin: 0; }
-.wf-note .katex { font-size: 1.02em; }
+/* mo.md wraps the note in marimo's prose styles (its body font, size and
+   loose line height); take FormulaDAG's note typography instead */
+.wf .wf-note .markdown,
+.wf .wf-note .prose,
+.wf .wf-note .paragraph,
+.wf .wf-note p {
+  margin: 0;
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+.wf .wf-note .katex { font-size: 1.05em; }
 
 .wf-svg, .wf-labels {
   position: absolute;
   inset: 0;
+  z-index: 2;
   width: 100%;
   height: 100%;
   overflow: visible;
@@ -156,16 +150,25 @@
 }
 .wf-edge {
   fill: none;
-  stroke: var(--wf-c);
-  stroke-width: 1.4;
+  stroke: var(--wf-edge);
+  stroke-width: 1.3;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: opacity 140ms ease;
 }
-.wf-head-tip { fill: var(--wf-c); stroke: var(--wf-c); stroke-width: 0.8; stroke-linejoin: round; transition: opacity 140ms ease; }
+/* the gap a crossing arrow leaves in the ones drawn before it */
+.wf-halo {
+  fill: none;
+  stroke: var(--wf-bg);
+  stroke-width: 6;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+  /* skip the first few px so the halo doesn't cut the border it leaves from */
+  stroke-dasharray: 0 4 1000000;
+}
+.wf-head { fill: var(--wf-edge); stroke: var(--wf-edge); stroke-width: 0.8; stroke-linejoin: round; }
 .wf-note-arrow {
   fill: none;
-  stroke: var(--wf-note-c, var(--wf-muted));
+  stroke: var(--wf-note);
   stroke-width: 1.2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -173,68 +176,6 @@
 .wf-edge-label {
   position: absolute;
   white-space: nowrap;
-  color: var(--wf-c);
-  font: 600 10.5px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
-  transition: opacity 140ms ease;
-}
-.wf-group {
-  fill: color-mix(in srgb, var(--wf-g, var(--wf-muted)) 5%, transparent);
-  stroke: color-mix(in srgb, var(--wf-g, var(--wf-muted)) 55%, transparent);
-  stroke-width: 1.1;
-  stroke-dasharray: 4 4;
-}
-.wf-group-label {
-  position: absolute;
-  white-space: nowrap;
-  color: var(--wf-g, var(--wf-muted));
-  font: 600 10.5px/1 ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.wf .is-dim { opacity: 0.2; }
-.wf-board { position: relative; }
-.wf-layer { position: relative; z-index: 1; }
-.wf-svg--groups { z-index: 0; }
-.wf-svg--edges, .wf-labels { z-index: 2; }
-
-.wf-port {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  margin: -8px 0 0 -8px;
-  border-radius: 50%;
-  background: transparent;
-  pointer-events: auto;
-  cursor: grab;
-}
-.wf--dragging, .wf--dragging * { cursor: grabbing !important; user-select: none; }
-.wf-card.is-port-target {
-  outline: 1.5px dashed var(--wf-accent);
-  outline-offset: 4px;
-}
-.wf-ports-code {
-  position: relative;
-  margin: 0 28px 12px;
-  font-size: 11px;
-  color: var(--wf-muted);
-}
-.wf-ports-code:empty { display: none; }
-.wf-ports-hint { margin-bottom: 6px; }
-.wf-ports-code pre {
-  margin: 0;
-  padding: 10px 12px;
-  border: 1px solid var(--wf-rule);
-  border-radius: 8px;
-  background: var(--wf-card);
-  color: var(--wf-ink);
-  font: 11.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
-  white-space: pre;
-  overflow-x: auto;
-}
-.wf-copy {
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
-  border: 1px solid var(--wf-rule);
-  border-radius: 6px;
+  color: var(--wf-note);
+  font: 10.5px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
 }

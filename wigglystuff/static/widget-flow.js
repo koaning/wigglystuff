@@ -1,16 +1,25 @@
 // WidgetFlow's overlay. It owns no content: it climbs out of its shadow root
 // to the [data-wf-root] container that WidgetFlow laid out and draws the
-// arrows, notes, groups and toolbar there, so everything shares one
-// coordinate space with the live widget cards.
+// arrows, edge labels and note arrows there, so everything shares one
+// coordinate space with the live widgets.
+//
+// All routing happens in a "frame" where layers stack top to bottom. For
+// direction="right" every box is transposed into that frame (x <-> y) before
+// routing, the SVG is drawn under a transposing group, and labels are mapped
+// back -- so one router serves both directions.
 const SVGNS = "http://www.w3.org/2000/svg";
 const CORNER = 8;
 const HEAD_LEN = 7;
 const HEAD_HALF = 3.6;
-const GAP = 2;
+const GAP = 3;
 const STUB = 16;
+const CLEAR = 10;
+const SLOT_GAP = 16; // closest an arrow tip may land to another arrow's straight drop
+const SLOT_INSET = 6; // closest an arrow tip may land to a widget's corner
 const NORMAL = { top: [0, -1], bottom: [0, 1], left: [-1, 0], right: [1, 0] };
-const CHEVRON =
-  '<svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// a real side's name in the transposed frame (and back: the map is its own inverse)
+const FLIP = { top: "left", left: "top", bottom: "right", right: "bottom" };
+const SHIFT = { after: "0", before: "-100%", center: "-50%" };
 
 function resolveDark(el) {
   for (let n = el; n; n = n.parentNode || n.host) {
@@ -33,24 +42,72 @@ const dist = (p, q) => Math.hypot(q.x - p.x, q.y - p.y);
 const dirOf = (p, q) => [Math.sign(Math.round(q.x - p.x)), Math.sign(Math.round(q.y - p.y))];
 const same = (u, v) => u[0] === v[0] && u[1] === v[1];
 
+// Does the axis-aligned segment p→q pass through box `o`?
+function hits(p, q, o) {
+  if (Math.abs(p.y - q.y) < 0.5) {
+    return p.y > o.top && p.y < o.bottom && Math.max(p.x, q.x) > o.left && Math.min(p.x, q.x) < o.right;
+  }
+  return p.x > o.left && p.x < o.right && Math.max(p.y, q.y) > o.top && Math.min(p.y, q.y) < o.bottom;
+}
+
+const flat = (p, q) => Math.abs(p.y - q.y) < 0.5;
+const overlap = (a0, a1, b0, b1) => Math.min(Math.max(a0, a1), Math.max(b0, b1)) - Math.max(Math.min(a0, a1), Math.min(b0, b1));
+
+// How the leg p→q meets the already-drawn polylines `lines`: legs it runs on
+// top of (parallel, within a few px, overlapping) and legs it crosses.
+function meets(p, q, lines) {
+  let along = 0;
+  let cross = 0;
+  for (const line of lines) {
+    for (let i = 1; i < line.length; i++) {
+      const [u, v] = [line[i - 1], line[i]];
+      if (flat(p, q) === flat(u, v)) {
+        const near = flat(p, q) ? Math.abs(p.y - u.y) < 6 && overlap(p.x, q.x, u.x, v.x) > 2
+                                : Math.abs(p.x - u.x) < 6 && overlap(p.y, q.y, u.y, v.y) > 2;
+        if (near) along++;
+      } else {
+        const [h0, h1, w] = flat(p, q) ? [p, q, u] : [u, v, p];
+        const [w0, w1] = flat(p, q) ? [u, v] : [p, q];
+        if (w.x > Math.min(h0.x, h1.x) && w.x < Math.max(h0.x, h1.x)
+            && h0.y > Math.min(w0.y, w1.y) && h0.y < Math.max(w0.y, w1.y)) cross++;
+      }
+    }
+  }
+  return { along, cross };
+}
+
 // Axis-aligned polyline from exit point `a` to arrow tip `b`. Each port
 // carries its outward normal; try a few elbow shapes and keep the one with the
-// fewest bends that leaves `a` along its normal and enters `b` against its own.
-function orthoRoute(a, b) {
+// fewest bends that leaves `a` along its normal and enters `b` against its own,
+// preferring shapes that stay clear of the `obstacles` (other cards' boxes).
+// The middle leg of the three-bend shapes may also run along any obstacle's
+// edge, which is what lets a route detour around a card in its way. It also
+// steers clear of the arrows already drawn (`lines`): never on top of one,
+// and crossing as few as it can.
+function orthoRoute(a, b, obstacles = [], lines = []) {
   const d0 = [a.nx, a.ny];
   const d1 = [-b.nx, -b.ny];
   const p1 = { x: a.x + a.nx * STUB, y: a.y + a.ny * STUB };
   const p2 = { x: b.x + b.nx * STUB, y: b.y + b.ny * STUB };
-  const xm = (p1.x + p2.x) / 2;
-  const ym = (p1.y + p2.y) / 2;
+  const legs = lines.flatMap((l) => l.slice(1).map((q, i) => [l[i], q]));
+  const yms = [
+    (p1.y + p2.y) / 2,
+    ...obstacles.flatMap((o) => [o.top - CLEAR, o.bottom + CLEAR]),
+    ...legs.filter(([u, v]) => flat(u, v)).flatMap(([u]) => [u.y - CLEAR, u.y + CLEAR]),
+  ];
+  const xms = [
+    (p1.x + p2.x) / 2,
+    ...obstacles.flatMap((o) => [o.left - CLEAR, o.right + CLEAR]),
+    ...legs.filter(([u, v]) => !flat(u, v)).flatMap(([u]) => [u.x - CLEAR, u.x + CLEAR]),
+  ];
   const shapes = [
     [],
     [{ x: a.x, y: b.y }],
     [{ x: b.x, y: a.y }],
     [p1, { x: p1.x, y: p2.y }, p2],
     [p1, { x: p2.x, y: p1.y }, p2],
-    [p1, { x: p1.x, y: ym }, { x: p2.x, y: ym }, p2],
-    [p1, { x: xm, y: p1.y }, { x: xm, y: p2.y }, p2],
+    ...yms.map((ym) => [p1, { x: p1.x, y: ym }, { x: p2.x, y: ym }, p2]),
+    ...xms.map((xm) => [p1, { x: xm, y: p1.y }, { x: xm, y: p2.y }, p2]),
   ];
   let best = null;
   for (const mid of shapes) {
@@ -61,8 +118,17 @@ function orthoRoute(a, b) {
     if (dirs.some((d, i) => i && d[0] === -dirs[i - 1][0] && d[1] === -dirs[i - 1][1])) continue;
     if (dist(pts[pts.length - 2], b) < HEAD_LEN + 3) continue;
     let len = 0;
-    for (let i = 1; i < pts.length; i++) len += dist(pts[i - 1], pts[i]);
-    const score = (pts.length - 2) * 1000 + len;
+    let blocked = 0;
+    let along = 0;
+    let cross = 0;
+    for (let i = 1; i < pts.length; i++) {
+      len += dist(pts[i - 1], pts[i]);
+      for (const o of obstacles) if (hits(pts[i - 1], pts[i], o)) blocked++;
+      const m = meets(pts[i - 1], pts[i], lines);
+      along += m.along;
+      cross += m.cross;
+    }
+    const score = blocked * 1e6 + along * 1e5 + (pts.length - 2) * 1000 + cross * 300 + len;
     if (!best || score < best.score) best = { pts, score };
   }
   return best ? best.pts : [a, p1, { x: p1.x, y: p2.y }, p2, b];
@@ -99,27 +165,40 @@ function portPoint(box, side, at, out) {
   return { x: x + nx * out, y: y + ny * out, nx, ny };
 }
 
-// The side of `box` closest to (x, y), and where along it (snapped to 5%).
-function nearestPort(box, x, y) {
-  const w = box.right - box.left;
-  const h = box.bottom - box.top;
-  const clamp = (v) => Math.min(1, Math.max(0, v));
-  const tx = clamp((x - box.left) / w);
-  const ty = clamp((y - box.top) / h);
-  const px = box.left + tx * w;
-  const py = box.top + ty * h;
-  const [side, t] = [
-    ["top", tx, Math.hypot(x - px, y - box.top)],
-    ["bottom", tx, Math.hypot(x - px, y - box.bottom)],
-    ["left", ty, Math.hypot(x - box.left, y - py)],
-    ["right", ty, Math.hypot(x - box.right, y - py)],
-  ].sort((p, q) => p[2] - q[2])[0];
-  return { side, at: Math.round(Math.min(0.9, Math.max(0.1, t)) * 20) / 20 };
+
+const box = (b, pad) => ({ left: b.left - pad, right: b.right + pad, top: b.top - pad, bottom: b.bottom + pad });
+const overlaps = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+
+// Fallback label spots: either side of each long leg of an arrow, longest
+// leg first, for when the preferred spot near the arrow tip is crowded. A spot
+// is a frame point plus which way the label extends from it along each axis
+// ("after" = towards +x/+y, "before" = towards -x/-y, or "center").
+function along(line) {
+  const legs = line.slice(1).map((q, i) => [line[i], q]).filter(([p, q]) => dist(p, q) > 28);
+  legs.sort((u, v) => dist(v[0], v[1]) - dist(u[0], u[1]));
+  return legs.flatMap(([p, q]) => {
+    const [mx, my] = [(p.x + q.x) / 2, (p.y + q.y) / 2];
+    return Math.abs(p.y - q.y) < 1
+      ? [{ x: mx, y: my - 4, h: "center", v: "before" }, { x: mx, y: my + 4, h: "center", v: "after" }]
+      : [{ x: mx + 6, y: my, h: "after", v: "center" }, { x: mx - 6, y: my, h: "before", v: "center" }];
+  });
 }
 
-function colorVars(node, color) {
-  node.style.setProperty("--wf-c-light", color.light);
-  node.style.setProperty("--wf-c-dark", color.dark);
+// A filled arrowhead with its tip at `b`, pointing along the unit vector d.
+function headPath(b, d) {
+  const bx = b.x - d[0] * HEAD_LEN;
+  const by = b.y - d[1] * HEAD_LEN;
+  const [qx, qy] = [-d[1] * HEAD_HALF, d[0] * HEAD_HALF];
+  return `M ${b.x} ${b.y} L ${bx + qx} ${by + qy} L ${bx - qx} ${by - qy} Z`;
+}
+
+// Every ordering of `items` (fine for the handful of tracks in one gap).
+function* permutations(items) {
+  if (items.length <= 1) { yield items.slice(); return; }
+  for (let i = 0; i < items.length; i++) {
+    const rest = [...items.slice(0, i), ...items.slice(i + 1)];
+    for (const p of permutations(rest)) yield [items[i], ...p];
+  }
 }
 
 function render({ model, el }) {
@@ -128,46 +207,44 @@ function render({ model, el }) {
   const root = host.closest("[data-wf-root]");
   if (!root) return;
   const board = root.querySelector(":scope > .wf-board");
-  root.querySelectorAll(":scope > .wf-toolbar").forEach((n) => n.remove());
   board.querySelectorAll(":scope > .wf-svg, :scope > .wf-labels").forEach((n) => n.remove());
 
   const routes = model.get("routes");
-  const edges = model.get("edges");
-  const edgeLabels = model.get("edge_labels");
-  const ports = JSON.parse(JSON.stringify(model.get("ports") || {}));
-  let editing = false;
-  let dragging = null;
-  const colors = model.get("colors");
-  const edgeColors = model.get("edge_colors") || {};
-  const beside = model.get("beside") || {};
-  const groups = model.get("groups");
-  let direction = model.get("direction");
-  const collapsed = new Set(model.get("collapsed"));
-  let selected = model.get("selected") || null;
-  let hovered = null;
+  const edgeLabels = model.get("edge_labels") || {};
+  const edgeStyles = model.get("edge_styles") || {};
+  const T = model.get("direction") === "right";
+  const fside = (side) => (T ? FLIP[side] : side);
+  const ports = {};
+  for (const [key, p] of Object.entries(model.get("ports") || {})) {
+    ports[key] = {};
+    for (const k of ["exit", "enter"]) if (p[k]) ports[key][k] = { side: fside(p[k].side), at: p[k].at };
+  }
+  const ac = new AbortController();
+  const on = (n, type, fn) => n.addEventListener(type, fn, { signal: ac.signal });
 
-  const groupSvg = svgEl("svg", { class: "wf-svg wf-svg--groups" });
-  const svg = svgEl("svg", { class: "wf-svg wf-svg--edges" });
+  const svg = svgEl("svg", { class: "wf-svg" });
+  const canvas = svgEl("g", T ? { transform: "matrix(0 1 1 0 0 0)" } : {});
+  svg.append(canvas);
   const labels = document.createElement("div");
   labels.className = "wf-labels";
-  board.append(groupSvg, svg, labels);
+  board.append(svg, labels);
 
-  const cards = {};
-  const items = {};
-  root.querySelectorAll(".wf-card[data-wf-node]").forEach((c) => {
-    if (c.closest("[data-wf-root]") !== root) return;
-    cards[c.dataset.wfNode] = c;
-    items[c.dataset.wfNode] = c.parentElement;
+  // node boxes (real widgets and the invisible lanes long edges run through)
+  const nodes = {};
+  const notes = {};
+  board.querySelectorAll("[data-wf-node]").forEach((n) => {
+    if (n.closest("[data-wf-root]") === root) nodes[n.dataset.wfNode] = n;
   });
-  const lanes = {};
-  board.querySelectorAll(":scope > .wf-layer > .wf-lane").forEach((l) => { lanes[l.dataset.wfNode] = l; });
+  board.querySelectorAll("[data-wf-note]").forEach((n) => {
+    if (n.closest("[data-wf-root]") === root) notes[n.dataset.wfNote] = n;
+  });
   const layerEls = [...board.children].filter((n) => n.classList.contains("wf-layer"));
   const rowOf = {};
   layerEls.forEach((layer, i) => {
-    for (const child of layer.querySelectorAll(":scope > *, :scope > .wf-cluster > *")) {
-      const id = child.dataset.wfItem || child.dataset.wfNode;
-      if (id) rowOf[id] = i;
-    }
+    // (a flow nested inside a node has its own n0, n1, ...: leave those be)
+    layer.querySelectorAll("[data-wf-node]").forEach((n) => {
+      if (n.closest("[data-wf-root]") === root) rowOf[n.dataset.wfNode] = i;
+    });
   });
 
   // ---- theme ---------------------------------------------------------------
@@ -181,506 +258,274 @@ function render({ model, el }) {
   [document.documentElement, document.body].forEach((n) =>
     themeObserver.observe(n, { attributes: true, attributeFilter: ["class", "data-theme"] }));
 
-  // ---- toolbar -------------------------------------------------------------
-  const dirButtons = {};
-  let foldAll;
-  let portBtn;
-  if (model.get("toolbar")) {
-    const bar = document.createElement("div");
-    bar.className = "wf-toolbar";
-    const seg = document.createElement("div");
-    seg.className = "wf-seg";
-    for (const [d, text] of [["down", "↓ top-down"], ["right", "→ left-right"]]) {
-      const b = document.createElement("button");
-      b.className = "wf-btn";
-      b.textContent = text;
-      b.addEventListener("click", () => setDirection(d));
-      dirButtons[d] = b;
-      seg.append(b);
-    }
-    const seg2 = document.createElement("div");
-    seg2.className = "wf-seg";
-    foldAll = document.createElement("button");
-    foldAll.className = "wf-btn";
-    foldAll.addEventListener("click", () => {
-      const ids = Object.keys(cards);
-      const fold = ids.some((id) => !collapsed.has(id));
-      ids.forEach((id) => (fold ? collapsed.add(id) : collapsed.delete(id)));
-      applyCollapsed();
-    });
-    seg2.append(foldAll);
-    const seg3 = document.createElement("div");
-    seg3.className = "wf-seg";
-    portBtn = document.createElement("button");
-    portBtn.className = "wf-btn";
-    portBtn.textContent = "✥ ports";
-    portBtn.title = "drag arrow ends onto any side of a card";
-    portBtn.addEventListener("click", () => {
-      editing = !editing;
-      portBtn.classList.toggle("is-on", editing);
-      root.classList.toggle("wf--edit", editing);
-      showCode();
-      draw();
-    });
-    seg3.append(portBtn);
-    bar.append(seg, seg2, seg3);
-    root.prepend(bar);
-  }
-  root.querySelectorAll(":scope > .wf-ports-code").forEach((n) => n.remove());
-  const code = document.createElement("div");
-  code.className = "wf-ports-code";
-  root.append(code);
-
-  const pyStr = (v) => JSON.stringify(v);
-  function pyPort(p) {
-    return p.at == null ? pyStr(p.side) : `(${pyStr(p.side)}, ${p.at})`;
-  }
-  function showCode() {
-    const lines = [];
-    for (const [s, d] of edges) {
-      const key = `${s}->${d}`;
-      const p = ports[key];
-      if (!p || !(p.exit || p.enter)) continue;
-      const opts = [];
-      if (edgeLabels[key]) opts.push(`"label": ${pyStr(edgeLabels[key])}`);
-      if (p.exit) opts.push(`"exit": ${pyPort(p.exit)}`);
-      if (p.enter) opts.push(`"enter": ${pyPort(p.enter)}`);
-      lines.push(`(${pyStr(s)}, ${pyStr(d)}, {${opts.join(", ")}}),`);
-    }
-    code.replaceChildren();
-    if (!editing) return;
-    const hint = document.createElement("div");
-    hint.className = "wf-ports-hint";
-    hint.textContent = lines.length
-      ? "drag the dots onto any side of a card · double-click a dot to reset · paste these edges back into Python:"
-      : "drag the dots onto any side of a card · double-click a dot to reset";
-    code.append(hint);
-    if (!lines.length) return;
-    const pre = document.createElement("pre");
-    pre.textContent = lines.join("\n");
-    const copy = document.createElement("button");
-    copy.className = "wf-btn wf-copy";
-    copy.textContent = "copy";
-    copy.addEventListener("click", () => {
-      navigator.clipboard?.writeText(lines.join("\n"));
-      copy.textContent = "copied";
-      setTimeout(() => (copy.textContent = "copy"), 1200);
-    });
-    code.append(pre, copy);
-  }
-
-  function resolveNoteSides() {
-    for (const [id, item] of Object.entries(items)) {
-      const note = item.querySelector(":scope > .wf-note");
-      if (!note) continue;
-      const side = note.dataset.side;
-      item.dataset.noteSide = side === "auto" ? (direction === "down" ? "right" : "bottom") : side;
-    }
-  }
-
-  function setDirection(d) {
-    direction = d;
-    root.dataset.direction = d;
-    Object.entries(dirButtons).forEach(([k, b]) => b.classList.toggle("is-on", k === d));
-    resolveNoteSides();
-    model.set("direction", d);
-    model.save_changes();
-    draw();
-  }
-
-  function applyCollapsed() {
-    for (const [id, card] of Object.entries(cards)) {
-      card.classList.toggle("is-collapsed", collapsed.has(id));
-      items[id].classList.toggle("is-collapsed", collapsed.has(id));
-    }
-    if (foldAll) {
-      const all = Object.keys(cards).every((id) => collapsed.has(id));
-      foldAll.textContent = all ? "expand all" : "collapse all";
-    }
-    model.set("collapsed", [...collapsed]);
-    model.save_changes();
-    draw();
-  }
-
-  // ---- per-card controls -----------------------------------------------------
-  for (const [id, card] of Object.entries(cards)) {
-    const head = card.querySelector(":scope > .wf-head");
-    const fold = head.querySelector(".wf-fold");
-    fold.innerHTML = CHEVRON;
-    fold.addEventListener("click", (e) => {
-      e.stopPropagation();
-      collapsed.has(id) ? collapsed.delete(id) : collapsed.add(id);
-      applyCollapsed();
-    });
-    head.addEventListener("mouseenter", () => { hovered = id; applyFocus(); });
-    head.addEventListener("mouseleave", () => { hovered = null; applyFocus(); });
-    head.addEventListener("click", () => {
-      selected = selected === id ? null : id;
-      model.set("selected", selected || "");
-      model.save_changes();
-      applyFocus();
-    });
-  }
-
-  // ---- geometry --------------------------------------------------------------
-  // Route in (cross, main) coordinates: main runs along the flow (y when
-  // flowing down, x when flowing right), cross runs across it.
-  const down = () => direction === "down";
-  const P = (c, m) => (down() ? `${c} ${m}` : `${m} ${c}`);
-  const A = (r) => (down()
-    ? { c0: r.left, c1: r.right, m0: r.top, m1: r.bottom }
-    : { c0: r.top, c1: r.bottom, m0: r.left, m1: r.right });
-
-  let edgeEls = [];
-
   function draw() {
     if (!root.isConnected) return;
-    svg.replaceChildren();
-    groupSvg.replaceChildren();
+    canvas.replaceChildren();
     labels.replaceChildren();
-    edgeEls = [];
     const base = board.getBoundingClientRect();
+    // an element's box relative to the board, in frame coordinates
     const rel = (n) => {
       const r = n.getBoundingClientRect();
-      return { left: r.left - base.left, right: r.right - base.left, top: r.top - base.top, bottom: r.bottom - base.top };
+      const b = { left: r.left - base.left, right: r.right - base.left, top: r.top - base.top, bottom: r.bottom - base.top };
+      return T ? { left: b.top, right: b.bottom, top: b.left, bottom: b.right } : b;
     };
-    const cardBox = {};
-    for (const id in cards) cardBox[id] = rel(cards[id]);
-    const boxOf = (id) => A(cardBox[id] || rel(lanes[id]));
-    const layerBox = layerEls.map((l) => A(rel(l)));
-    const mid = (b) => (b.c0 + b.c1) / 2;
-
-    // groups: a dashed region around the member cards, label inside its corner
-    for (const g of groups) {
-      const boxes = g.nodes.filter((n) => cardBox[n]).map((n) => {
-        const b = cardBox[n];
-        const note = items[n].querySelector(":scope > .wf-note");
-        if (!note || collapsed.has(n)) return b;
-        const nb = rel(note);
-        return { left: Math.min(b.left, nb.left), right: Math.max(b.right, nb.right), top: Math.min(b.top, nb.top), bottom: Math.max(b.bottom, nb.bottom) };
-      });
-      if (!boxes.length) continue;
-      const pad = 12;
-      const r = {
-        left: Math.min(...boxes.map((b) => b.left)) - pad,
-        right: Math.max(...boxes.map((b) => b.right)) + pad,
-        top: Math.min(...boxes.map((b) => b.top)) - pad - 16,
-        bottom: Math.max(...boxes.map((b) => b.bottom)) + pad,
-      };
-      const rect = svgEl("rect", { class: "wf-group", x: r.left, y: r.top, width: r.right - r.left, height: r.bottom - r.top, rx: 14 });
-      if (g.color) rect.style.setProperty("--wf-g", g.color);
-      groupSvg.append(rect);
-      const lab = document.createElement("div");
-      lab.className = "wf-group-label";
-      lab.textContent = g.label || g.name;
-      if (g.color) lab.style.setProperty("--wf-g", g.color);
-      Object.assign(lab.style, { left: `${r.left + 12}px`, top: `${r.top + 8}px` });
-      labels.append(lab);
-    }
-
-    // 1. each arrow's cross positions: the stem, any lanes, the landing slot
+    // put a label at a frame spot, translated back to the board's real axes
+    const placeLabel = (lab, o) => {
+      const [x, y, h, v] = T ? [o.y, o.x, o.v, o.h] : [o.x, o.y, o.h, o.v];
+      Object.assign(lab.style, { left: `${x}px`, top: `${y}px`, transform: `translate(${SHIFT[h]}, ${SHIFT[v]})` });
+    };
+    const boxOf = {};
+    for (const id in nodes) boxOf[id] = rel(nodes[id]);
+    const noteBox = {};
+    for (const id in notes) noteBox[id] = rel(notes[id]);
+    const layerBox = layerEls.map(rel);
+    const mid = (b) => (b.left + b.right) / 2;
+    const segs = [];
+    const pending = [];
     const keyOf = (r) => `${r[0]}->${r[r.length - 1]}`;
-    const custom = (r) => {
-      const p = ports[keyOf(r)];
-      return (p && (p.exit || p.enter)) || r[0] in beside || r[r.length - 1] in beside;
+    // Arrows are drawn one source at a time, each line over a halo in the
+    // notebook's background color, so where a later arrow crosses an earlier
+    // one there's a clear gap under it. Arrows from one source share a group,
+    // so the stem they share doesn't get notched where they branch apart.
+    const groups = {};
+    const drawEdge = (src, dst, d, head) => {
+      if (!groups[src]) {
+        const g = svgEl("g", {});
+        groups[src] = { halos: svgEl("g", {}), lines: svgEl("g", {}) };
+        g.append(groups[src].halos, groups[src].lines);
+        canvas.append(g);
+      }
+      const line = svgEl("path", { class: "wf-edge", d });
+      const tip = svgEl("path", { class: "wf-head", d: head });
+      const style = edgeStyles[`${src}->${dst}`];
+      if (style?.color) {
+        line.style.stroke = style.color;
+        Object.assign(tip.style, { fill: style.color, stroke: style.color });
+      }
+      if (style?.dashed) line.style.strokeDasharray = "5 4";
+      groups[src].halos.append(svgEl("path", { class: "wf-halo", d }));
+      groups[src].lines.append(line, tip);
     };
-    const all = routes.filter((r) => r.every((id) => cards[id] || lanes[id]) && r.every((id) => id in rowOf));
-    const live = all.filter((r) => !custom(r));
-    const handles = [];
-    const incoming = {};
-    live.forEach((r, i) => (incoming[r[r.length - 1]] ||= []).push(i));
-    const arrows = live.map((route) => {
-      const src = route[0];
-      return { src, dst: route[route.length - 1], route, xs: [mid(boxOf(src)), ...route.slice(1, -1).map((w) => mid(boxOf(w)))] };
+
+    // 1. default arrows: each one's x positions -- the stem, any lanes, and a
+    //    landing slot spread across the target's top edge
+    const all = routes.filter((r) => r.every((id) => id in boxOf && id in rowOf));
+    const live = all.filter((r) => !ports[keyOf(r)]);
+    const arrows = live.map((route) => ({
+      src: route[0],
+      dst: route[route.length - 1],
+      route,
+      xs: [mid(boxOf[route[0]]), ...route.slice(1, -1).map((w) => mid(boxOf[w]))],
+    }));
+    const placed = all.filter((r) => ports[keyOf(r)]).map((r) => {
+      const p = ports[keyOf(r)];
+      const end = (k, fallback) => ({ side: p[k]?.side || fallback, at: p[k]?.at ?? null });
+      return { key: keyOf(r), src: r[0], dst: r.at(-1), exit: end("exit", "bottom"), enter: end("enter", "top") };
     });
+    // every arrow that lands on a target's top edge -- default ones and ported
+    // ones without a position -- gets its own slot, ordered by where it comes from
+    const incoming = {};
+    arrows.forEach((a) => (incoming[a.dst] ||= []).push({ a, from: a.xs.at(-1) }));
+    for (const e of placed) {
+      if (e.enter.side !== "top" || e.enter.at != null) continue;
+      const s = boxOf[e.src];
+      const from = e.exit.side === "left" ? s.left : e.exit.side === "right" ? s.right : s.left + (e.exit.at ?? 0.5) * (s.right - s.left);
+      (incoming[e.dst] ||= []).push({ e, from });
+    }
     for (const [dst, list] of Object.entries(incoming)) {
-      const b = boxOf(dst);
-      const w = b.c1 - b.c0;
+      const b = boxOf[dst];
+      const w = b.right - b.left;
       const span = Math.min(w * 0.6, 40 * list.length);
-      list.sort((p, q) => arrows[p].xs[arrows[p].xs.length - 1] - arrows[q].xs[arrows[q].xs.length - 1]);
-      list.forEach((ai, k) => {
-        arrows[ai].xs.push(mid(b) - span / 2 + (span * (k + 0.5)) / list.length);
-        arrows[ai].labelLeft = list.length > 1 && k < (list.length - 1) / 2;
+      list.sort((p, q) => p.from - q.from);
+      // spread evenly across the middle of the edge...
+      const xs = list.map((_, k) => mid(b) - span / 2 + (span * (k + 0.5)) / list.length);
+      // ...but an arrow whose source sits right above the edge drops straight
+      // down, and the others make room for it rather than run alongside it
+      // (only when the arrows sorted to either side of it still fit there)
+      const [left, right] = [b.left + SLOT_INSET, b.right - SLOT_INSET];
+      const straight = [];
+      list.forEach((item, k) => {
+        const ok = item.from - left >= SLOT_GAP * (k + 1) && right - item.from >= SLOT_GAP * (list.length - k);
+        if (ok && straight.every((j) => item.from - list[j].from >= 2 * SLOT_GAP)) straight.push(k);
+      });
+      straight.forEach((k) => { xs[k] = list[k].from; });
+      for (let k = 0; k < list.length; k++) {
+        if (straight.includes(k)) continue;
+        let e = k;
+        while (e + 1 < list.length && !straight.includes(e + 1)) e++;
+        const lo = k > 0 ? xs[k - 1] : left;
+        const hi = e + 1 < list.length ? xs[e + 1] : right;
+        const fits = xs.slice(k, e + 1).every((x) => x > lo + (k > 0 ? SLOT_GAP : 0) && x < hi - (e + 1 < list.length ? SLOT_GAP : 0));
+        if (!fits) for (let j = k; j <= e; j++) xs[j] = lo + ((hi - lo) * (j - k + 1)) / (e - k + 2);
+        k = e;
+      }
+      list.forEach((item, k) => {
+        const x = xs[k];
+        if (item.e) {
+          item.e.enter.at = (x - b.left) / (b.right - b.left);
+          return;
+        }
+        item.a.xs.push(x);
+        item.a.labelLeft = list.length > 1 && k < (list.length - 1) / 2;
       });
     }
 
-    // 2. one track per producer in each gap it jogs through, so arrows from
-    //    the same node share a bus, ordered by where they start
+    // 2. one horizontal track per source in each gap it jogs through, so the
+    //    arrows from one node share a bus. The tracks are stacked in whichever
+    //    order makes the fewest crossings: a track above another crosses the
+    //    lower one's stem, a track below crosses the upper one's drop.
     const jogs = {};
     for (const a of arrows) {
       a.xs.forEach((x, k) => {
         if (k === a.xs.length - 1 || Math.abs(a.xs[k + 1] - x) < 1) return;
         const g = rowOf[a.route[k]];
-        (jogs[g] ||= new Set()).add(a.src);
+        ((jogs[g] ||= {})[a.src] ||= []).push({ from: x, to: a.xs[k + 1] });
       });
     }
+    const inside = (x, s) => x > Math.min(s.from, s.to) + 0.5 && x < Math.max(s.from, s.to) - 0.5;
+    const costAbove = (P, Q) => {
+      let n = 0;
+      for (const p of P) for (const q of Q) n += inside(q.from, p) + inside(p.to, q);
+      return n;
+    };
     const tracks = {};
-    for (const [g, set] of Object.entries(jogs)) tracks[g] = [...set].sort((p, q) => mid(boxOf(p)) - mid(boxOf(q)));
-    const trackM = (g, src) => {
-      const top = layerBox[g].m1;
-      const h = layerBox[+g + 1].m0 - top;
+    for (const [g, bySrc] of Object.entries(jogs)) {
+      const srcs = Object.keys(bySrc).sort((p, q) => mid(boxOf[p]) - mid(boxOf[q]));
+      let best = srcs;
+      if (srcs.length <= 7) {
+        const cost = (order) => {
+          let n = 0;
+          for (let i = 0; i < order.length; i++)
+            for (let j = i + 1; j < order.length; j++) n += costAbove(bySrc[order[i]], bySrc[order[j]]);
+          return n;
+        };
+        let bestCost = cost(srcs);
+        for (const order of permutations(srcs)) {
+          const c = cost(order);
+          if (c < bestCost) [best, bestCost] = [order, c];
+        }
+      }
+      tracks[g] = best;
+    }
+    const trackY = (g, src) => {
+      const top = layerBox[g].bottom;
+      const h = layerBox[+g + 1].top - top;
       return top + (h * (tracks[g].indexOf(src) + 1)) / (tracks[g].length + 1);
     };
 
-    // 3. draw: out of the source, jog along the track, into the target
+    // 3. draw: down out of the source, along the track, down into the target
     for (const a of arrows) {
-      const srcB = boxOf(a.src);
-      const dstB = boxOf(a.dst);
-      let d = `M ${P(a.xs[0], srcB.m1)}`;
-      let lastM = layerBox[rowOf[a.dst] - 1].m1;
+      const y0 = boxOf[a.src].bottom;
+      let d = `M ${a.xs[0]} ${y0}`;
+      const line = [{ x: a.xs[0], y: y0 }];
+      let lastY = layerBox[rowOf[a.dst] - 1].bottom;
       a.xs.forEach((x, k) => {
         if (k === a.xs.length - 1) return;
         const next = a.xs[k + 1];
         if (Math.abs(next - x) < 1) return;
-        const ty = trackM(rowOf[a.route[k]], a.src);
+        const ty = trackY(rowOf[a.route[k]], a.src);
         const s = Math.sign(next - x);
         const r = Math.min(CORNER, Math.abs(next - x) / 2);
-        d += ` L ${P(x, ty - r)} Q ${P(x, ty)} ${P(x + s * r, ty)}`;
-        d += ` L ${P(next - s * r, ty)} Q ${P(next, ty)} ${P(next, ty + r)}`;
-        lastM = Math.max(lastM, ty);
+        d += ` L ${x} ${ty - r} Q ${x} ${ty} ${x + s * r} ${ty}`;
+        d += ` L ${next - s * r} ${ty} Q ${next} ${ty} ${next} ${ty + r}`;
+        line.push({ x, y: ty }, { x: next, y: ty });
+        lastY = Math.max(lastY, ty);
       });
-      const end = a.xs[a.xs.length - 1];
-      const tip = dstB.m0 - GAP;
-      d += ` L ${P(end, tip - HEAD_LEN * 0.8)}`;
-      const color = edgeColors[`${a.src}->${a.dst}`] || colors[a.src];
-      const path = svgEl("path", { class: "wf-edge", d });
-      colorVars(path, color);
-      const head = svgEl("path", {
-        class: "wf-head-tip",
-        d: `M ${P(end, tip)} L ${P(end - HEAD_HALF, tip - HEAD_LEN)} L ${P(end + HEAD_HALF, tip - HEAD_LEN)} Z`,
-      });
-      colorVars(head, color);
-      svg.append(path, head);
-      const els = [path, head];
+      const end = a.xs.at(-1);
+      const tip = { x: end, y: boxOf[a.dst].top - GAP };
+      d += ` L ${end} ${tip.y - HEAD_LEN * 0.8}`;
+      line.push(tip);
+      segs.push(line);
+      drawEdge(a.src, a.dst, d, headPath(tip, [0, 1]));
       const text = edgeLabels[`${a.src}->${a.dst}`];
       if (text) {
-        const lab = document.createElement("div");
-        lab.className = "wf-edge-label";
-        lab.textContent = text;
-        colorVars(lab, color);
-        const m = (lastM + tip) / 2;
-        if (down()) {
-          const shift = a.labelLeft ? "translate(calc(-100% - 12px), -50%)" : "translateY(-50%)";
-          Object.assign(lab.style, { left: `${end + 6}px`, top: `${m}px`, transform: shift });
-        } else {
-          Object.assign(lab.style, { left: `${m}px`, top: `${end - 4}px`, transform: "translate(-50%, -100%)" });
-        }
-        labels.append(lab);
-        els.push(lab);
+        const m = (lastY + tip.y) / 2;
+        const side = (left) => ({ x: left ? end - 6 : end + 6, y: m, h: left ? "before" : "after", v: "center" });
+        pending.push({ text, options: [side(a.labelLeft), side(!a.labelLeft), ...along(line)] });
       }
-      edgeEls.push({ src: a.src, dst: a.dst, els });
-      const xy = (c, m) => (down() ? { x: c, y: m } : { x: m, y: c });
-      handles.push({ key: keyOf(a.route), src: a.src, dst: a.dst, end: "exit", ...xy(a.xs[0], srcB.m1), color });
-      handles.push({ key: keyOf(a.route), src: a.src, dst: a.dst, end: "enter", ...xy(end, tip), color });
     }
 
-    // 4. arrows with explicit ports: an elbow route between any two sides
-    const defaultSide = (end) => (end === "exit" ? (down() ? "bottom" : "right") : (down() ? "top" : "left"));
-    // a node placed beside its neighbour faces it: exit and entry on the
-    // sides that look at each other ("left" reads as "above" when flowing right)
-    const facing = (src, dst) => {
-      const b = beside[src]?.anchor === dst ? beside[src] : beside[dst]?.anchor === src ? beside[dst] : null;
-      if (!b) return null;
-      const before = (b.anchor === dst) === (b.side === "left");
-      const [lo, hi] = down() ? ["left", "right"] : ["top", "bottom"];
-      return before ? { exit: hi, enter: lo } : { exit: lo, enter: hi };
-    };
-    const placed = all.filter(custom).map((r) => {
-      const p = ports[keyOf(r)] || {};
-      const src = r[0];
-      const dst = r[r.length - 1];
-      const face = facing(src, dst);
-      const end = (k, id) => ({ side: p[k]?.side || face?.[k] || defaultSide(k), at: p[k]?.at ?? null, id });
-      const e = { key: keyOf(r), src, dst, exit: end("exit", src), enter: end("enter", dst) };
-      const side = (end) => ["left", "right"].includes(end.side);
-      if (face && side(e.exit) && side(e.enter) && e.exit.at == null && e.enter.at == null) {
-        // run straight across, at the middle of the shorter card
-        const [s, d] = [cardBox[src], cardBox[dst]];
-        const y = (s.bottom - s.top < d.bottom - d.top ? s.top + s.bottom : d.top + d.bottom) / 2;
-        e.exit.at = (y - s.top) / (s.bottom - s.top);
-        e.enter.at = (y - d.top) / (d.bottom - d.top);
-      } else if (face && !side(e.exit) && !side(e.enter) && e.exit.at == null && e.enter.at == null) {
-        const [s, d] = [cardBox[src], cardBox[dst]];
-        const x = (s.right - s.left < d.right - d.left ? s.left + s.right : d.left + d.right) / 2;
-        e.exit.at = (x - s.left) / (s.right - s.left);
-        e.enter.at = (x - d.left) / (d.right - d.left);
-      }
-      return e;
-    });
-    const center = (id, horiz) => (horiz ? (cardBox[id].left + cardBox[id].right) / 2 : (cardBox[id].top + cardBox[id].bottom) / 2);
+    // 4. arrows with ports: an elbow route between the two named sides that
+    //    steers around every other widget, note and arrow
+    // ends that share a side of one node (arrows in or out) and have no
+    // position spread out evenly along it, ordered by the far end's position
     const shared = {};
     for (const e of placed) {
-      if (e.enter.at == null) (shared[`${e.dst}|${e.enter.side}`] ||= []).push(e);
-      if (e.exit.at == null) e.exit.at = 0.5;
+      for (const [k, id, far] of [["exit", e.src, e.dst], ["enter", e.dst, e.src]]) {
+        if (e[k].at == null) (shared[`${id}|${e[k].side}`] ||= []).push({ end: e[k], far });
+      }
     }
     for (const list of Object.values(shared)) {
-      const horiz = ["top", "bottom"].includes(list[0].enter.side);
-      list.sort((p, q) => center(p.src, horiz) - center(q.src, horiz));
-      list.forEach((e, k) => { e.enter.at = list.length === 1 ? 0.5 : 0.2 + (0.6 * (k + 0.5)) / list.length; });
+      const horiz = ["top", "bottom"].includes(list[0].end.side);
+      const c = (id) => (horiz ? mid(boxOf[id]) : (boxOf[id].top + boxOf[id].bottom) / 2);
+      list.sort((p, q) => c(p.far) - c(q.far));
+      list.forEach((x, k) => { x.end.at = list.length === 1 ? 0.5 : 0.2 + (0.6 * (k + 0.5)) / list.length; });
     }
     for (const e of placed) {
-      const a = portPoint(cardBox[e.src], e.exit.side, e.exit.at, 0);
-      const b = portPoint(cardBox[e.dst], e.enter.side, e.enter.at, GAP);
-      const pts = orthoRoute(a, b);
+      const a = portPoint(boxOf[e.src], e.exit.side, e.exit.at, 0);
+      const b = portPoint(boxOf[e.dst], e.enter.side, e.enter.at, GAP);
+      const obstacles = [
+        ...Object.keys(nodes).filter((id) => id !== e.src && id !== e.dst && !id.startsWith("!")).map((id) => box(boxOf[id], 4)),
+        ...Object.values(noteBox).map((n) => box(n, 4)),
+      ];
+      const pts = orthoRoute(a, b, obstacles, segs);
+      segs.push(pts);
       const d1 = [-b.nx, -b.ny];
       const stop = { x: b.x - d1[0] * HEAD_LEN * 0.8, y: b.y - d1[1] * HEAD_LEN * 0.8 };
-      const color = edgeColors[e.key] || colors[e.src];
-      const path = svgEl("path", { class: "wf-edge", d: roundedPath([...pts.slice(0, -1), stop]) });
-      colorVars(path, color);
-      const bx = b.x - d1[0] * HEAD_LEN;
-      const by = b.y - d1[1] * HEAD_LEN;
-      const [qx, qy] = [-d1[1] * HEAD_HALF, d1[0] * HEAD_HALF];
-      const head = svgEl("path", { class: "wf-head-tip", d: `M ${b.x} ${b.y} L ${bx + qx} ${by + qy} L ${bx - qx} ${by - qy} Z` });
-      colorVars(head, color);
-      svg.append(path, head);
-      const els = [path, head];
+      drawEdge(e.src, e.dst, roundedPath([...pts.slice(0, -1), stop]), headPath(b, d1));
       const text = edgeLabels[e.key];
-      if (text) {
-        let seg = 1;
-        for (let i = 1; i < pts.length; i++) if (dist(pts[i - 1], pts[i]) > dist(pts[seg - 1], pts[seg])) seg = i;
-        const [p, q] = [pts[seg - 1], pts[seg]];
-        const lab = document.createElement("div");
-        lab.className = "wf-edge-label";
-        lab.textContent = text;
-        colorVars(lab, color);
-        const flat = Math.abs(p.y - q.y) < 1;
-        Object.assign(lab.style, flat
-          ? { left: `${(p.x + q.x) / 2}px`, top: `${p.y - 4}px`, transform: "translate(-50%, -100%)" }
-          : { left: `${p.x + 6}px`, top: `${(p.y + q.y) / 2}px`, transform: p.x < center(e.dst, true) ? "translate(calc(-100% - 12px), -50%)" : "translateY(-50%)" });
-        labels.append(lab);
-        els.push(lab);
-      }
-      edgeEls.push({ src: e.src, dst: e.dst, els });
-      handles.push({ key: e.key, src: e.src, dst: e.dst, end: "exit", x: a.x, y: a.y, color });
-      handles.push({ key: e.key, src: e.src, dst: e.dst, end: "enter", x: b.x, y: b.y, color });
+      if (text) pending.push({ text, options: along(pts) });
     }
 
-    // 5. ports mode: a draggable dot on both ends of every arrow
-    if (editing) {
-      for (const h of handles) {
-        const dot = document.createElement("div");
-        dot.className = `wf-port wf-port--${h.end}`;
-        dot.title = `${h.key} ${h.end} · drag to a side, double-click to reset`;
-        colorVars(dot, h.color);
-        Object.assign(dot.style, { left: `${h.x}px`, top: `${h.y}px` });
-        if (dragging && dragging.key === h.key && dragging.end === h.end) dot.classList.add("is-grabbed");
-        dot.addEventListener("pointerdown", (ev) => startDrag(ev, h));
-        dot.addEventListener("dblclick", () => setPort(h.key, h.end, null, true));
-        labels.append(dot);
+    // 5. edge labels: the first spot that clears the arrows, the widgets, the
+    //    notes and the labels already placed; the preferred one otherwise
+    const blockers = [...Object.keys(boxOf).filter((id) => !id.startsWith("!")).map((id) => boxOf[id]), ...Object.values(noteBox)];
+    for (const { text, options } of pending) {
+      if (!options.length) continue;
+      const lab = document.createElement("div");
+      lab.className = "wf-edge-label";
+      lab.textContent = text;
+      labels.append(lab);
+      let pick = null;
+      for (const opt of options) {
+        placeLabel(lab, opt);
+        const r = box(rel(lab), 2);
+        const clash = blockers.some((o) => overlaps(r, o))
+          || segs.some((line) => line.some((q, i) => i && hits(line[i - 1], q, r)));
+        if (!clash) { pick = opt; break; }
       }
+      placeLabel(lab, pick || options[0]);
+      blockers.push(rel(lab));
     }
 
-    // notes: a soft curve from the note onto the side of its card
-    for (const [id, item] of Object.entries(items)) {
-      const note = item.querySelector(":scope > .wf-note");
-      if (!note || collapsed.has(id)) continue;
-      const n = rel(note);
-      const c = cardBox[id];
-      const side = item.dataset.noteSide;
-      let from, to, ctrl;
-      if (side === "right" || side === "left") {
-        const y = Math.min(n.top + 11, c.bottom - 12);
-        from = { x: side === "right" ? n.left - 6 : n.right + 6, y };
-        to = { x: side === "right" ? c.right + 5 : c.left - 5, y: Math.min(y + 6, c.bottom - 8) };
-        ctrl = { x: (from.x + to.x) / 2, y: Math.min(from.y, to.y) - 9 };
-      } else {
-        const x = Math.min(n.left + 16, c.right - 16);
-        from = { x, y: side === "bottom" ? n.top - 5 : n.bottom + 5 };
-        to = { x: x + 6, y: side === "bottom" ? c.bottom + 5 : c.top - 5 };
-        ctrl = { x: x - 8, y: (from.y + to.y) / 2 };
-      }
-      const dx = to.x - ctrl.x, dy = to.y - ctrl.y;
-      const len = Math.hypot(dx, dy) || 1;
-      const ux = dx / len, uy = dy / len;
-      const bx = to.x - ux * 7, by = to.y - uy * 7;
-      const arrow = svgEl("path", {
+    // 6. notes: a short straight arrow from the note onto its widget's edge
+    //    (the note sits after the widget across the flow: right of it going
+    //    down, below it going right -- both "right" in the frame)
+    for (const [id, n] of Object.entries(noteBox)) {
+      const c = boxOf[id];
+      const y = Math.max(c.top + 8, Math.min(c.bottom - 8, (n.top + n.bottom) / 2));
+      const from = { x: n.left - 6, y };
+      const to = { x: c.right + 5, y };
+      if (from.x - to.x < 8) continue;
+      canvas.append(svgEl("path", {
         class: "wf-note-arrow",
-        d: `M ${from.x} ${from.y} Q ${ctrl.x} ${ctrl.y}, ${to.x} ${to.y} M ${bx - uy * 4} ${by + ux * 4} L ${to.x} ${to.y} L ${bx + uy * 4} ${by - ux * 4}`,
-      });
-      if (note.style.getPropertyValue("--wf-note-c")) arrow.style.setProperty("--wf-note-c", note.style.getPropertyValue("--wf-note-c"));
-      svg.append(arrow);
-    }
-    applyFocus();
-  }
-
-  // ---- ports: drag an arrow end onto any side of its card --------------------
-  function setPort(key, end, value, commit) {
-    const p = { ...(ports[key] || {}) };
-    p[end] = value;
-    if (p.exit || p.enter) ports[key] = p;
-    else delete ports[key];
-    if (commit) {
-      model.set("ports", JSON.parse(JSON.stringify(ports)));
-      model.save_changes();
-      showCode();
-    }
-    draw();
-  }
-  function startDrag(ev, h) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    const id = h.end === "exit" ? h.src : h.dst;
-    dragging = { key: h.key, end: h.end };
-    root.classList.add("wf--dragging");
-    cards[id].classList.add("is-port-target");
-    const move = (e) => {
-      const base = board.getBoundingClientRect();
-      const r = cards[id].getBoundingClientRect();
-      const box = { left: r.left - base.left, right: r.right - base.left, top: r.top - base.top, bottom: r.bottom - base.top };
-      setPort(h.key, h.end, nearestPort(box, e.clientX - base.left, e.clientY - base.top), false);
-    };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      root.classList.remove("wf--dragging");
-      cards[id].classList.remove("is-port-target");
-      dragging = null;
-      setPort(h.key, h.end, (ports[h.key] || {})[h.end] || null, true);
-    };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
-  }
-
-  // ---- hover & selection: keep the focused node's ancestry, dim the rest -----
-  function reach(start, forward) {
-    const seen = new Set();
-    const todo = [start];
-    while (todo.length) {
-      const n = todo.pop();
-      for (const [s, d] of edges) {
-        const [a, b] = forward ? [s, d] : [d, s];
-        if (a === n && !seen.has(b)) { seen.add(b); todo.push(b); }
-      }
-    }
-    return seen;
-  }
-  function applyFocus() {
-    const f = hovered || selected;
-    for (const [id, card] of Object.entries(cards)) card.classList.toggle("is-selected", id === selected);
-    if (!f) {
-      Object.values(items).forEach((n) => n.classList.remove("is-dim"));
-      edgeEls.forEach((e) => e.els.forEach((x) => x.classList.remove("is-dim")));
-      return;
-    }
-    const up = reach(f, false);
-    const dn = reach(f, true);
-    up.add(f);
-    dn.add(f);
-    for (const [id, item] of Object.entries(items)) item.classList.toggle("is-dim", !up.has(id) && !dn.has(id));
-    for (const e of edgeEls) {
-      const keep = (up.has(e.src) && up.has(e.dst)) || (dn.has(e.src) && dn.has(e.dst));
-      e.els.forEach((x) => x.classList.toggle("is-dim", !keep));
+        d: `M ${from.x} ${y} L ${to.x} ${y} M ${to.x + 5} ${y - 3.5} L ${to.x} ${y} L ${to.x + 5} ${y + 3.5}`,
+      }));
     }
   }
 
-  setDirection(direction);
-  applyCollapsed();
   const ro = new ResizeObserver(() => requestAnimationFrame(draw));
   ro.observe(root);
-  Object.values(cards).forEach((c) => ro.observe(c));
-  root.querySelectorAll("img").forEach((im) => im.addEventListener("load", draw));
-  setTimeout(draw, 80);
-  setTimeout(draw, 400);
-  return () => { ro.disconnect(); themeObserver.disconnect(); };
+  Object.values(nodes).forEach((n) => ro.observe(n));
+  Object.values(notes).forEach((n) => ro.observe(n));
+  root.querySelectorAll("img").forEach((im) => on(im, "load", draw));
+  draw();
+  const timers = [setTimeout(draw, 80), setTimeout(draw, 400)];
+  return () => {
+    ro.disconnect();
+    themeObserver.disconnect();
+    ac.abort();
+    timers.forEach(clearTimeout);
+  };
 }
 export default { render };

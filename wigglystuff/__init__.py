@@ -69,6 +69,7 @@ from .treemap import Treemap
 from .three_widget import ThreeWidget
 from .trace_view import TraceView
 from .widget_dag import WidgetDAG
+from .widget_flow import WidgetFlow
 from .utils import forecast_chart
 from .webcam_capture import WebcamCapture
 
@@ -145,6 +146,7 @@ __all__ = [
     "ThreeWidget",
     "TraceView",
     "WidgetDAG",
+    "WidgetFlow",
     "WebcamCapture",
     "HoverSlider",
     "HoverZoom",

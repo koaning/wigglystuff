@@ -364,6 +364,20 @@ function render({ model, el }) {
   const excludeButton = root.querySelector("[data-action='exclude']");
   const clearButton = root.querySelector("[data-action='clear']");
   const resetButton = root.querySelector("[data-action='reset']");
+  const actionGroup = root.querySelector("[aria-label='Selection actions']");
+  const modeGroup = root.querySelector("[aria-label='Selection tool']");
+  const layoutGroup = root.querySelector("[aria-label='Layout']");
+
+  // Which toolbar buttons show is up to Python. Without the filter buttons,
+  // clicking empty space or double-clicking still clears the selection.
+  function renderToolbar() {
+    const filtering = model.get("show_filters");
+    actionGroup.hidden = !filtering;
+    resetButton.hidden = !filtering;
+    modeGroup.hidden = !model.get("show_mode_toggle");
+    layoutGroup.hidden = !model.get("show_layout_toggle");
+  }
+  renderToolbar();
 
   function showError(message) {
     errorBox.hidden = false;
@@ -1362,6 +1376,7 @@ function render({ model, el }) {
   model.on("msg:custom", handleData);
   model.on("change:layout", renderAll);
   model.on("change:mode", renderStatus);
+  model.on("change:show_filters change:show_mode_toggle change:show_layout_toggle", renderToolbar);
   model.on("change:cell_size", scheduleResize);
   model.on("change:point_size", renderAll);
   model.on("change:palette", handlePalette);
@@ -1403,6 +1418,7 @@ function render({ model, el }) {
     model.off("msg:custom", handleData);
     model.off("change:layout", renderAll);
     model.off("change:mode", renderStatus);
+    model.off("change:show_filters change:show_mode_toggle change:show_layout_toggle", renderToolbar);
     model.off("change:cell_size", scheduleResize);
     model.off("change:point_size", renderAll);
     model.off("change:palette", handlePalette);

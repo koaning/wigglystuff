@@ -19,7 +19,7 @@ from .tangle_latex import (
     _normalize_notes,
     _normalize_parameters,
 )
-from .widget_dag import _order_and_route
+from ._dag_layout import _order_and_route
 
 _ESM_PATH = Path(__file__).parent / "static" / "formula-dag.js"
 _CSS_PATH = Path(__file__).parent / "static" / "formula-dag.css"

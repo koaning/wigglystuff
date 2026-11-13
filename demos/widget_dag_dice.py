@@ -23,15 +23,15 @@ def _():
     import marimo as mo
 
     # Prefer the local checkout so this notebook uses the in-repo (fixed)
-    # WidgetDAG rather than the pinned published wigglystuff.
+    # WidgetFlow rather than the pinned published wigglystuff.
     repo_root = Path(__file__).resolve().parents[1]
     if (repo_root / "wigglystuff").exists():
         sys.path.insert(0, str(repo_root))
 
     from dicekit import Dice, ordered, p
-    from wigglystuff import WidgetDAG
+    from wigglystuff import WidgetFlow
 
-    return Dice, WidgetDAG, mo, ordered, p
+    return Dice, WidgetFlow, mo, ordered, p
 
 
 @app.cell(hide_code=True)
@@ -118,7 +118,7 @@ def _(p_win_first, p_win_second):
 
 @app.cell
 def _(
-    WidgetDAG,
+    WidgetFlow,
     e1,
     e2,
     grp1_energy_left,
@@ -128,7 +128,7 @@ def _(
     p_win_second,
     slider,
 ):
-    WidgetDAG.from_widgets(
+    WidgetFlow.from_widgets(
         [e1, e2, slider, grp1_energy_left, grp2_energy_left, p_win_first, p_win, p_win_second]
     )
     return

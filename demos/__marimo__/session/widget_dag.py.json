@@ -1,0 +1,139 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.25.2",
+    "script_metadata_hash": "f7d3797c85244b671265f7a7de566be7"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "b25b5656225c5f93355be6c91f6dc2be",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "1af016c3457b36f67632a643606f4ff6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"draw-a-digit-watch-it-convolve\">Draw a digit, watch it convolve</h1>\n<span class=\"paragraph\">Scribble a digit on the <code>paint</code> canvas below. It is a live <code>Paint</code> node inside\nthe DAG: your drawing is downsampled to a tiny array and pushed through two\nconvolution kernels. Edit either kernel (they are live <code>mo.ui.matrix</code> editors)\nand the whole DAG recomputes. The <code>angle</code> node is a plain <code>mo.ui.slider</code> -- any\nmarimo UI element works as a node -- and dragging it re-rotates the digit\nbefore it is convolved.</span>\n<span class=\"paragraph\">Each node lives in its own cell, so <code>WidgetFlow.from_widgets([...])</code> reads\nmarimo's dataflow graph to place the nodes by edge-depth and draw the arrows\nfor you -- no <code>edges=</code> list to spell out by hand.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "db3898f12951c4e1bc7b19f384372c3f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div data-wf-root class=\"wf\" data-direction=\"right\"><style>/* Styles for the light-DOM container WidgetFlow lays out (embedded as a\n   <style> next to it, since an anywidget's own CSS stays in its shadow root).\n   One ink for every arrow and note, like FormulaDAG's neutral default. */\n.wf {\n  --wf-ink: #25221d;\n  --wf-edge: #8a8378;\n  --wf-note: #6b6459;\n  --wf-rule: color-mix(in srgb, var(--wf-ink) 12%, transparent);\n  --wf-bg: var(--background, #fff);\n  --wf-layer-gap: 64px;\n  --wf-node-gap: 40px;\n  position: relative;\n  display: inline-block;\n  max-width: 100%;\n  overflow-x: auto;\n  color: var(--wf-ink);\n  font-family: Inter, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", sans-serif;\n  color-scheme: light;\n}\n.wf.wf--dark {\n  --wf-ink: #f2eee8;\n  --wf-edge: #a39b8f;\n  --wf-note: #b8b0a4;\n  --wf-bg: var(--background, #181c1a);\n  color-scheme: dark;\n}\n\n.wf-board {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: var(--wf-layer-gap);\n  padding: 12px 24px;\n}\n.wf-layer {\n  position: relative;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: var(--wf-node-gap);\n}\n.wf-lane { flex: 0 0 14px; align-self: stretch; }\n\n.wf-item { display: flex; align-items: center; gap: 30px; }\n.wf-node {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n  padding: 4px;\n}\n.wf-body { display: flex; justify-content: center; }\n.wf-caption {\n  color: var(--wf-note);\n  font: 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;\n}\n\n/* direction=\"right\": layers become columns, a layer stacks its widgets\n   vertically, and a note sits under its widget */\n.wf[data-direction=\"right\"] .wf-board { flex-direction: row; align-items: center; padding: 24px 12px; }\n.wf[data-direction=\"right\"] .wf-layer { flex-direction: column; }\n.wf[data-direction=\"right\"] .wf-item { flex-direction: column; gap: 22px; }\n\n.wf-note {\n  max-width: 190px;\n  color: var(--wf-note);\n  font-size: 0.78rem;\n  font-weight: 500;\n  line-height: 1.3;\n}\n/* mo.md wraps the note in marimo's prose styles (its body font, size and\n   loose line height); take FormulaDAG's note typography instead */\n.wf .wf-note .markdown,\n.wf .wf-note .prose,\n.wf .wf-note .paragraph,\n.wf .wf-note p {\n  margin: 0;\n  font: inherit;\n  line-height: inherit;\n  letter-spacing: inherit;\n  color: inherit;\n}\n.wf .wf-note .katex { font-size: 1.05em; }\n\n.wf-svg, .wf-labels {\n  position: absolute;\n  inset: 0;\n  z-index: 2;\n  width: 100%;\n  height: 100%;\n  overflow: visible;\n  pointer-events: none;\n}\n.wf-edge {\n  fill: none;\n  stroke: var(--wf-edge);\n  stroke-width: 1.3;\n  stroke-linecap: round;\n  stroke-linejoin: round;\n}\n/* the gap a crossing arrow leaves in the ones drawn before it */\n.wf-halo {\n  fill: none;\n  stroke: var(--wf-bg);\n  stroke-width: 6;\n  stroke-linecap: butt;\n  stroke-linejoin: round;\n  /* skip the first few px so the halo doesn't cut the border it leaves from */\n  stroke-dasharray: 0 4 1000000;\n}\n.wf-head { fill: var(--wf-edge); stroke: var(--wf-edge); stroke-width: 0.8; stroke-linejoin: round; }\n.wf-note-arrow {\n  fill: none;\n  stroke: var(--wf-note);\n  stroke-width: 1.2;\n  stroke-linecap: round;\n  stroke-linejoin: round;\n}\n.wf-edge-label {\n  position: absolute;\n  white-space: nowrap;\n  color: var(--wf-note);\n  font: 10.5px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;\n}\n\n/* highlight: while a widget is hovered, everything outside its lineage fades */\n.wf-node, .wf-note, .wf-edge, .wf-head, .wf-note-arrow, .wf-edge-label { transition: opacity 0.15s; }\n.wf--focus .wf-node:not(.is-lit),\n.wf--focus .wf-note:not(.is-lit) { opacity: 0.3; }\n.wf--focus .wf-edge:not(.is-lit),\n.wf--focus .wf-head:not(.is-lit),\n.wf--focus .wf-note-arrow:not(.is-lit),\n.wf--focus .wf-edge-label:not(.is-lit) { opacity: 0.15; }\n</style><div class=\"wf-board\"><div class=\"wf-layer\"><div class=\"wf-item\"><div class=\"wf-node\" data-wf-node=\"n0\"><div class=\"wf-body\"><marimo-ui-element object-id='bkHC-0' random-id='ba50a68d-28ed-5ac1-2f50-34f9e2f0ecfc'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;706b63849f874979b87a2ced69a75920&quot;}' data-label='null' data-model-id='&quot;706b63849f874979b87a2ced69a75920&quot;'></marimo-anywidget></marimo-ui-element></div><div class=\"wf-caption\">paint</div></div></div><div class=\"wf-item\"><div class=\"wf-node\" data-wf-node=\"n1\"><div class=\"wf-body\"><marimo-ui-element object-id='Xref-0' random-id='9a010616-5039-7210-f278-1f14c2ef15ed'><marimo-slider data-initial-value='0' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003erotate\u00b0&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='-180' data-stop='180' data-step='5' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='true' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element></div><div class=\"wf-caption\">angle</div></div></div><div class=\"wf-item\"><div class=\"wf-node\" data-wf-node=\"n2\"><div class=\"wf-body\"><marimo-ui-element object-id='lEQa-0' random-id='13a34dbc-9009-2fce-9b93-3fa813d7b404'><marimo-matrix data-initial-value='[[0,-1,0],[-1,5,-1],[0,-1,0]]' data-label='null' data-step='[[1.0,1.0,1.0],[1.0,1.0,1.0],[1.0,1.0,1.0]]' data-precision='0' data-symmetric='false' data-debounce='false' data-scientific='false' data-disabled='[[false,false,false],[false,false,false],[false,false,false]]'></marimo-matrix></marimo-ui-element></div><div class=\"wf-caption\">kernel</div></div></div></div><div class=\"wf-layer\"><div class=\"wf-item\"><div class=\"wf-node\" data-wf-node=\"n3\"><div class=\"wf-body\"><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAAAAACMIRMSAAAAD0lEQVR4nGNgGAWjYKgCAAK+AAF3+FzlAAAAAElFTkSuQmCC\" style=\"width:110px;image-rendering:pixelated;border:1px solid #ccc\"/></div><div class=\"wf-caption\">conv</div></div></div><div class=\"wf-item\"><div class=\"wf-node\" data-wf-node=\"n4\"><div class=\"wf-body\"><marimo-ui-element object-id='PKri-0' random-id='dc98c709-b63c-5017-c9d6-cc449299c6e8'><marimo-matrix data-initial-value='[[1,1,1],[1,1,1],[1,1,1]]' data-label='null' data-step='[[1.0,1.0,1.0],[1.0,1.0,1.0],[1.0,1.0,1.0]]' data-precision='0' data-symmetric='false' data-debounce='false' data-scientific='false' data-disabled='[[false,false,false],[false,false,false],[false,false,false]]'></marimo-matrix></marimo-ui-element></div><div class=\"wf-caption\">kernel2</div></div></div></div><div class=\"wf-layer\"><div class=\"wf-item\"><div class=\"wf-node\" data-wf-node=\"n5\"><div class=\"wf-body\"><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAAAAADFHGIkAAAAD0lEQVR4nGNgGAWjgPoAAAJYAAGgxYwDAAAAAElFTkSuQmCC\" style=\"width:110px;image-rendering:pixelated;border:1px solid #ccc\"/></div><div class=\"wf-caption\">conv2</div></div></div></div></div><marimo-ui-element object-id='vblA-0' random-id='d4159d40-a0d7-135f-adcb-4a1336a30333'><marimo-anywidget data-initial-value='{&quot;model_id&quot;:&quot;9ef5e548b9794b8e89ee41d5efb898ce&quot;}' data-label='null' data-model-id='&quot;9ef5e548b9794b8e89ee41d5efb898ce&quot;'></marimo-anywidget></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "4829de007a805897130bca03bd08c34b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "aac86e5dd98b3abf502b58fa67f1aaf2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "280c9e136440b679b1d367d489ad27f1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "6c93aa5cd4006832dbb05603d1d07f86",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "56467dbd4e436f3b8bf3cd1b2461b654",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "f35a24785fc0c68732908e26c582bc70",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "88d09dc5ef19dc7ab52a9b8464e3bf27",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}
