@@ -7,6 +7,7 @@ from pathlib import Path
 from .annotation import AnnotationWidget
 from .altair_widget import AltairWidget
 from .api_doc import ApiDoc
+from .array_display import array_display
 from .async_flow import AsyncFlow
 from .bezier_curve import BezierCurve
 from .cell_tour import CellTour
@@ -80,6 +81,7 @@ __all__ = [
     "AnnotationWidget",
     "AltairWidget",
     "ApiDoc",
+    "array_display",
     "AsyncFlow",
     "BezierCurve",
     "CellTour",

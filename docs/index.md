@@ -323,6 +323,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fit_progress.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/fit-progress/">API</a><a href="reference/fit-progress.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title"><a href="reference/array-display/">array_display</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/array_display.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/array-display.webp" alt="array_display showing shape-only matrix and tensor glyphs"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/array_display.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/array-display/">API</a><a href="reference/array-display.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title"><a href="reference/trace-view/">TraceView</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/traceview.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/traceview.webp" alt="TraceView widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/traceview.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/trace-view/">API</a><a href="reference/trace-view.md">MD</a></div>

@@ -18,6 +18,7 @@ syncs back to Python.
 | --- | --- | --- | --- |
 | AltairWidget | `wigglystuff.altair_widget.AltairWidget` | `spec`, `width`, `height` | Flicker-free Altair chart with smooth data updates |
 | ScatterLog | `wigglystuff.scatter_log.ScatterLog` | `spec`, `width`, `height` | Accumulate reactive values into a live, optionally multi-series scatter plot |
+| array_display | `wigglystuff.array_display.array_display` | `display_shape`, `name`, `.value` (not an AnyWidget — returns a `numpy.ndarray` subclass) | Shape-only display for 2D/3D NumPy arrays in marimo: empty matrix brackets (stacked sheets of paper for 3D) with a caption like `n × 2`; all NumPy operations keep working, labels follow results and permute across transpose/rot90; `name` adds a serif title (plain text or a small TeX subset rendered as Unicode); needs numpy only when used |
 | AnnotationWidget | `wigglystuff.annotation.AnnotationWidget` | `action`, `action_timestamp`, `note`, `listening`, `actions`, `keyboard_mapping`, `gamepad_mapping`, `debounce_ms`, `width` | Annotation input surface with buttons, keyboard, gamepad, and speech-to-text |
 | ApiDoc | `wigglystuff.api_doc.ApiDoc` | `doc`, `width`, `show_private` | Renders API docs for Python classes/functions |
 | Slider2D | `wigglystuff.slider2d.Slider2D` | `x`, `y`, `x_bounds`, `y_bounds`, `width`, `height` | 2D pointer for coupled parameters |
