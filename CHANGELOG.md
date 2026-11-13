@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- New demo `demos/state_viewer_emeans.py`: k-means vs e-means (FAIR, 2026).
+  Both update rules side by side, `StateViewer` steps through each algorithm
+  on points you draw, a Fashion-MNIST benchmark compares them at three batch
+  sizes, and an `EsmWidget` cluster viewer shows samples of matched k-means and
+  e-means clusters on hover. Ships with a slides layout.
+
 ## [0.5.40] - 2026-11-11
 
 ### Added
