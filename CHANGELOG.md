@@ -6,6 +6,24 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- `shape_display` helper: wrap a 2D/3D NumPy array in an `ndarray` subclass so
+  marimo shows only its shape — empty matrix brackets (stacked like sheets of
+  paper for 3D, no blending between planes) with a caption such as `n × 2` —
+  while indexing, methods, arithmetic, and NumPy functions keep working.
+  `labels` names axes symbolically (a string shows the symbol, `None`
+  shows the live size); an axis keeps its label through operations only while
+  it keeps its size, so captions stay truthful after `X @ W`, reshapes, and
+  slices, and `transpose`, `swapaxes`, `rot90`, and `moveaxis` permute the
+  labels. `name` puts a label above the glyph: plain strings render in serif
+  (a lone letter as an italic math variable, longer text upright), TeX names
+  (`$\mathbf{X}$`, `$W^{(1)}$`, `$\hat{\theta}$`) render with marimo's
+  built-in KaTeX. The name sticks to views (slices, reshapes), is inferred for
+  `@` (`X @ W` is named XW) and 2D transposes (`X.T` is Xᵀ), and is dropped
+  for other computed results; `.set_name(...)` returns a renamed view for naming a
+  result inline, and every glyph reserves the name row so named and unnamed
+  arrays line up. 0-d/1-d results fall back to the plain display. Arrays
+  pickle with their labels and name. `.value` unwraps to a plain `ndarray`.
+  Needs NumPy only when used.
 - `FitProgress` widget: live progress for scikit-learn 1.9+ fits, built on
   scikit-learn's callback API. `progress.fit(estimator, X, y)` fits through the
   widget and returns the fitted estimator. `GridSearchCV` and
