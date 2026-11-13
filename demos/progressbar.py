@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#     "marimo", "wigglystuff", "rich"
+#     "marimo", "wigglystuff==0.5.40", "rich"
 # ]
 # ///
 

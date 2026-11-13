@@ -55,6 +55,7 @@ from .pip import Pip
 from .play_slider import PlaySlider
 from .ridgeline_chart import RidgelineChart
 from .scatter_log import ScatterLog
+from .shape_display import shape_display
 from drawdata import ScatterWidget
 from .slider2d import Slider2D
 from .spline_draw import SplineDraw
@@ -128,6 +129,7 @@ __all__ = [
     "RidgelineChart",
     "ScatterLog",
     "ScatterWidget",
+    "shape_display",
     "Slider2D",
     "SplineDraw",
     "StateViewer",

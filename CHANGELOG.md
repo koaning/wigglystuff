@@ -19,6 +19,24 @@ All notable changes to this project will be documented in this file.
   and Reset brings everything back. In Python, `get_mask()`,
   `selected_data`, `active_data`, and `keep()`/`exclude()`/`reset()` mirror
   the buttons.
+- `shape_display` helper: wrap a 2D/3D NumPy array in an `ndarray` subclass so
+  marimo shows only its shape — empty matrix brackets (stacked like sheets of
+  paper for 3D, no blending between planes) with a caption such as `n × 2` —
+  while indexing, methods, arithmetic, and NumPy functions keep working.
+  `labels` names axes symbolically (a string shows the symbol, `None`
+  shows the live size); an axis keeps its label through operations only while
+  it keeps its size, so captions stay truthful after `X @ W`, reshapes, and
+  slices, and `transpose`, `swapaxes`, `rot90`, and `moveaxis` permute the
+  labels. `name` puts a label above the glyph: plain strings render in serif
+  (a lone letter as an italic math variable, longer text upright), TeX names
+  (`$\mathbf{X}$`, `$W^{(1)}$`, `$\hat{\theta}$`) render with marimo's
+  built-in KaTeX. The name sticks to views (slices, reshapes), is inferred for
+  `@` (`X @ W` is named XW) and 2D transposes (`X.T` is Xᵀ), and is dropped
+  for other computed results; `.set_name(...)` returns a renamed view for naming a
+  result inline, and every glyph reserves the name row so named and unnamed
+  arrays line up. 0-d/1-d results fall back to the plain display. Arrays
+  pickle with their labels and name. `.value` unwraps to a plain `ndarray`.
+  Needs NumPy only when used.
 - `FitProgress` widget: live progress for scikit-learn 1.9+ fits, built on
   scikit-learn's callback API. `progress.fit(estimator, X, y)` fits through the
   widget and returns the fitted estimator. `GridSearchCV` and
@@ -27,9 +45,10 @@ All notable changes to this project will be documented in this file.
   as soon as it is computed (also with `n_jobs`), and each row shows its mean.
   Fits that hit `max_iter` are flagged, the best row is highlighted, and the
   refit shows the chosen parameters. Pipelines show their steps, and
-  estimators without callback support still get a cell per fit. Hover a cell
-  for details. `color` sets the accent color. Outside a notebook, `fit` uses
-  scikit-learn's terminal `ProgressBar`. Install with
+  estimators without callback support (e.g. a random forest) still get a cell
+  per fit, without scikit-learn warning about the dropped callback at every
+  fit. Hover a cell for details. `color` sets the accent color. Outside a
+  notebook, `fit` uses scikit-learn's terminal `ProgressBar`. Install with
   `pip install wigglystuff[sklearn]`.
 - New demo `demos/state_viewer_emeans.py`: k-means vs e-means (FAIR, 2026).
   Both update rules side by side, `StateViewer` steps through each algorithm
@@ -37,6 +56,12 @@ All notable changes to this project will be documented in this file.
   sizes by passes and by training time, and two `EsmWidget` centroid grids show
   each algorithm's clusters with sample images on hover. Ships with a slides
   layout.
+
+### Fixed
+
+- `demos/envconfig.py` imported `wigglystuff` without depending on it, so
+  `uv run demos/envconfig.py` failed; it now pins `wigglystuff==0.5.40`, and
+  `demos/progressbar.py` pins its previously unpinned `wigglystuff` entry.
 
 ## [0.5.40] - 2026-11-11
 
