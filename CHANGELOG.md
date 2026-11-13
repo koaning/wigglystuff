@@ -18,6 +18,12 @@ All notable changes to this project will be documented in this file.
   for details. `color` sets the accent color. Outside a notebook, `fit` uses
   scikit-learn's terminal `ProgressBar`. Install with
   `pip install wigglystuff[sklearn]`.
+- New demo `demos/state_viewer_emeans.py`: k-means vs e-means (FAIR, 2026).
+  Both update rules side by side, `StateViewer` steps through each algorithm
+  on points you draw, a Fashion-MNIST benchmark compares them at three batch
+  sizes by passes and by training time, and two `EsmWidget` centroid grids show
+  each algorithm's clusters with sample images on hover. Ships with a slides
+  layout.
 
 ## [0.5.40] - 2026-11-11
 
