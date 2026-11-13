@@ -127,6 +127,7 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>FormulaDAG</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/formula_dag.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/formuladag.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/formula_dag.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/formula-dag/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/formula-dag.md">MD</a></td>
+<td align="center"><b>PairPlot</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pair_plot.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/pairplot.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pair_plot.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/pair-plot/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/pair-plot.md">MD</a></td>
 </tr>
 </table>
 

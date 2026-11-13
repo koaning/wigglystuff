@@ -49,6 +49,7 @@ from .neo4j_widget import Neo4jWidget
 from .nested_table import NestedTable
 from .observable_plot import ObservablePlot
 from .paint import Paint
+from .pair_plot import PairPlot
 from .parallel_coords import ParallelCoordinates
 from .pip import Pip
 from .play_slider import PlaySlider
@@ -120,6 +121,7 @@ __all__ = [
     "NestedTable",
     "ObservablePlot",
     "Paint",
+    "PairPlot",
     "ParallelCoordinates",
     "Pip",
     "PlaySlider",

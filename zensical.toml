@@ -25,6 +25,7 @@ nav = [
         { ChartSelect = "reference/chart-select.md" },
         { HeatmapSelect = "reference/heatmap-select.md" },
         { ParallelCoordinates = "reference/parallel-coords.md" },
+        { PairPlot = "reference/pair-plot.md" },
         { Matrix = "reference/matrix.md" },
         { SortableList = "reference/sortable-list.md" },
         { Paint = "reference/paint.md" },

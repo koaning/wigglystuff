@@ -6,6 +6,19 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- `PairPlot` widget: a scatterplot matrix built for large data. Pass a 2D
+  NumPy array or a pandas/polars DataFrame (tested up to a million rows); the
+  numbers go to the browser as binary float32, stay in a Web Worker, and are
+  drawn with WebGL from a bounded sample per cell, while the diagonal
+  histograms and every selection are exact. `color` paints categories (a
+  column name or one value per row), with a full/lower-triangle toggle and
+  light/dark themes. Draw a box or a lasso in any cell and drag it around:
+  all cells and histograms follow live, and Python gets the selection on
+  release. Like the parallel coordinates widget, Keep narrows the plot to the
+  selection and Exclude drops it, the axes animate to the rows that remain,
+  and Reset brings everything back. In Python, `get_mask()`,
+  `selected_data`, `active_data`, and `keep()`/`exclude()`/`reset()` mirror
+  the buttons.
 - `FitProgress` widget: live progress for scikit-learn 1.9+ fits, built on
   scikit-learn's callback API. `progress.fit(estimator, X, y)` fits through the
   widget and returns the fitted estimator. `GridSearchCV` and
