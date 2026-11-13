@@ -86,6 +86,41 @@ def test_failed_fit_keeps_estimator_clean(in_notebook):
     assert search.scoring is None
 
 
+@pytest.mark.parametrize("n_jobs", [None, 2])
+def test_forest_search_does_not_warn_about_callback_support(in_notebook, n_jobs):
+    progress = FitProgress()
+    search = GridSearchCV(
+        RandomForestClassifier(n_estimators=3, random_state=0),
+        {"max_depth": [2, 4]},
+        cv=2,
+        n_jobs=n_jobs,
+    )
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        progress.fit(search, X, y)
+
+    # A random forest can't receive the propagated callback; sklearn would
+    # otherwise warn about that once per fold fit and once for the refit.
+    assert not [w for w in caught if "does not support callbacks" in str(w.message)]
+    assert progress.status == "done"
+
+
+def test_script_mode_forest_search_does_not_warn_about_callback_support(monkeypatch):
+    pytest.importorskip("rich")
+    monkeypatch.setattr(fit_progress, "_in_notebook", lambda: False)
+    progress = FitProgress()
+    search = GridSearchCV(
+        RandomForestClassifier(n_estimators=3, random_state=0),
+        {"max_depth": [2, 4]},
+        cv=2,
+    )
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        progress.fit(search, X, y)
+
+    assert not [w for w in caught if "does not support callbacks" in str(w.message)]
+
+
 def test_script_mode_fits_without_the_widget(monkeypatch):
     monkeypatch.setattr(fit_progress, "_in_notebook", lambda: False)
     progress = FitProgress()

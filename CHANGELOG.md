@@ -14,9 +14,10 @@ All notable changes to this project will be documented in this file.
   as soon as it is computed (also with `n_jobs`), and each row shows its mean.
   Fits that hit `max_iter` are flagged, the best row is highlighted, and the
   refit shows the chosen parameters. Pipelines show their steps, and
-  estimators without callback support still get a cell per fit. Hover a cell
-  for details. `color` sets the accent color. Outside a notebook, `fit` uses
-  scikit-learn's terminal `ProgressBar`. Install with
+  estimators without callback support (e.g. a random forest) still get a cell
+  per fit, without scikit-learn warning about the dropped callback at every
+  fit. Hover a cell for details. `color` sets the accent color. Outside a
+  notebook, `fit` uses scikit-learn's terminal `ProgressBar`. Install with
   `pip install wigglystuff[sklearn]`.
 - New demo `demos/state_viewer_emeans.py`: k-means vs e-means (FAIR, 2026).
   Both update rules side by side, `StateViewer` steps through each algorithm
@@ -24,6 +25,12 @@ All notable changes to this project will be documented in this file.
   sizes by passes and by training time, and two `EsmWidget` centroid grids show
   each algorithm's clusters with sample images on hover. Ships with a slides
   layout.
+
+### Fixed
+
+- `demos/envconfig.py` imported `wigglystuff` without depending on it, so
+  `uv run demos/envconfig.py` failed; it now pins `wigglystuff==0.5.40`, and
+  `demos/progressbar.py` pins its previously unpinned `wigglystuff` entry.
 
 ## [0.5.40] - 2026-11-11
 

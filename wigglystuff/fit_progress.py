@@ -3,6 +3,8 @@
 import os
 import threading
 import time
+import warnings
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -40,6 +42,38 @@ def _search_param_names(estimator: Any) -> list[str]:
 # does not support callbacks (e.g. a random forest), in which case they are
 # leaves with no progress of their own.
 _SEARCH_FIT_TASKS = {"candidate-split-evaluation", "refit-with-best-params"}
+
+
+def _propagation_depth(estimator: Any, requested: int | None) -> int | None:
+    """The propagation depth to use for a fit of ``estimator``.
+
+    ``0`` (propagate to no sub-estimator) when the sub-estimator reachable as
+    ``estimator.estimator`` cannot receive callbacks, e.g. the random forest of
+    a search: propagating to it would only make sklearn warn, once per fit,
+    that it dropped the callback — and such an estimator reports no progress of
+    its own below the outer estimator's tasks anyway, so nothing is lost.
+    """
+    inner = getattr(estimator, "estimator", None)
+    if inner is not None and not hasattr(inner, "set_callbacks"):
+        return 0
+    return requested
+
+
+@contextmanager
+def _no_callback_support_warnings():
+    """Mute sklearn's per-fit "does not support callbacks" warning.
+
+    An estimator without callback support nested in one that has it (a random
+    forest as a search's estimator or as a pipeline step) makes sklearn warn
+    for every fit that it dropped the propagated callbacks. The widget draws
+    those fits as striped bars regardless, so the warnings are noise here.
+    Only this exact message is muted; every other warning still shows.
+    """
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore", message=r"The estimator \w+ does not support callbacks\."
+        )
+        yield
 
 
 class _FitProgressCallback:
@@ -228,7 +262,8 @@ class FitProgress(anywidget.AnyWidget):
         self.status = "running"
         self.started_ms = time.time() * 1000
         handle = open_listener(self._on_message)
-        callback = _FitProgressCallback(handle, param_names, self.max_propagation_depth)
+        depth = _propagation_depth(estimator, self.max_propagation_depth)
+        callback = _FitProgressCallback(handle, param_names, depth)
         original = list(getattr(estimator, "_skl_callbacks", []))
         estimator.set_callbacks(*original, callback)
         # Single-metric searches report their fold scores live (multi-metric
@@ -241,7 +276,8 @@ class FitProgress(anywidget.AnyWidget):
             reporter = _ScoreReporter(check_scoring(estimator.estimator, scoring), handle)
             estimator.scoring = reporter
         try:
-            estimator.fit(X, y, **fit_params)
+            with _no_callback_support_warnings():
+                estimator.fit(X, y, **fit_params)
         except BaseException:
             self._finish("error")
             raise
@@ -278,9 +314,11 @@ class FitProgress(anywidget.AnyWidget):
         from sklearn.callback import ProgressBar
 
         original = list(getattr(estimator, "_skl_callbacks", []))
-        estimator.set_callbacks(*original, ProgressBar(max_propagation_depth=self.max_propagation_depth))
+        depth = _propagation_depth(estimator, self.max_propagation_depth)
+        estimator.set_callbacks(*original, ProgressBar(max_propagation_depth=depth))
         try:
-            return estimator.fit(X, y, **fit_params)
+            with _no_callback_support_warnings():
+                return estimator.fit(X, y, **fit_params)
         finally:
             estimator.set_callbacks(*original)
 
