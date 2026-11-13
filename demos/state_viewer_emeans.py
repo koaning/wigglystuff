@@ -6,7 +6,6 @@
 #     "numpy",
 #     "pillow",
 #     "scikit-learn",
-#     "scipy",
 #     "wigglystuff==0.5.40",
 # ]
 # ///
@@ -406,9 +405,10 @@ def _():
     mo.md(r"""
     ## Does it hold up at scale?
 
-    60,000 Fashion-MNIST images (784 pixels each), $k = 256$, the same algorithm in
-    numpy. e-means uses the paper's step $\alpha_0 = 0.4$, at three batch sizes.
-    It takes about a minute and a half; the first run also downloads about 30 MB.
+    60,000 Fashion-MNIST images (784 pixels each), $k = 100$, the same algorithm in
+    numpy. e-means uses the paper's step $\alpha_0 = 0.4$, at three batch sizes. We
+    track the loss against passes over the data *and* against training time.
+    It takes about 20 seconds; the first run also downloads about 30 MB.
     """)
     return
 
@@ -499,15 +499,18 @@ def _():
 def _(run_benchmark):
     mo.stop(not run_benchmark.value, mo.md("*Press the button above to run the benchmark.*"))
     import sys
+    import time
 
     import numpy as np
     from sklearn.datasets import fetch_openml
 
     with mo.status.spinner(title="Loading Fashion-MNIST"):
         pixels, _ = fetch_openml("Fashion-MNIST", version=1, return_X_y=True, as_frame=False, parser="liac-arff")
-    images = (pixels[:60_000] / 255.0).astype(np.float32)
+    # fetch_openml hands back a column-major array; rows must be contiguous, or every
+    # batch lookup crawls through memory and dominates the timings.
+    images = np.ascontiguousarray(pixels[:60_000] / 255.0, dtype=np.float32)
 
-    K, ALPHA0 = 256, 0.4
+    K, ALPHA0 = 100, 0.4
     BATCHES = [512, 2048, 8192]
     BUDGETS = [1, 2, 3, 5]
     SEEDS = [0, 1]
@@ -518,13 +521,19 @@ def _(run_benchmark):
     # Python call, so switch it off while benchmarking and put it back afterwards.
     previous_trace = sys.gettrace()
     sys.settrace(None)
+    nearest_np(images[:2000], images[:K])  # warm up numpy before timing anything
     with mo.status.progress_bar(total=len(SEEDS) * (1 + len(BATCHES) * len(BUDGETS)), title="Benchmarking", remove_on_exit=True) as bar:
         for bench_seed in SEEDS:
             init = images[np.random.default_rng(bench_seed).choice(len(images), K, replace=False)]
             bar.update(increment=0, subtitle=f"seed {bench_seed}: k-means, 25 epochs")
 
-            def record(epoch, C, bench_seed=bench_seed):
-                bench_rows.append({"run": "k-means", "epochs": epoch, "seed": bench_seed, "MSE": mse_np(images, C)})
+            # Training time only: the clock pauses while we measure the loss after each epoch.
+            clock = {"train": 0.0, "since": time.perf_counter()}
+
+            def record(epoch, C, bench_seed=bench_seed, clock=clock):
+                clock["train"] += time.perf_counter() - clock["since"]
+                bench_rows.append({"run": "k-means", "epochs": epoch, "seed": bench_seed, "seconds": clock["train"], "MSE": mse_np(images, C)})
+                clock["since"] = time.perf_counter()
 
             fitted = e_means_np(images, init, 25, len(images), 1.0, floor=1.0, revive_every=0, on_epoch=record)
             if bench_seed == 0:
@@ -534,9 +543,11 @@ def _(run_benchmark):
             for batch_size in BATCHES:
                 for budget in BUDGETS:
                     bar.update(increment=0, subtitle=f"seed {bench_seed}: e-means, B = {batch_size}, {budget} epochs")
+                    started = time.perf_counter()
                     fitted = e_means_np(images, init, budget, batch_size, ALPHA0, seed=bench_seed)
-                    bench_rows.append({"run": f"e-means, B = {batch_size}", "epochs": budget, "seed": bench_seed, "MSE": mse_np(images, fitted)})
-                    if bench_seed == 0 and batch_size == 2048 and budget == 2:
+                    seconds = time.perf_counter() - started
+                    bench_rows.append({"run": f"e-means, B = {batch_size}", "epochs": budget, "seed": bench_seed, "seconds": seconds, "MSE": mse_np(images, fitted)})
+                    if bench_seed == 0 and batch_size == 512 and budget == 2:
                         viewer_centroids["e-means, 2 passes"] = fitted
                     bar.update()
     sys.settrace(previous_trace)
@@ -548,24 +559,39 @@ def _(bench_rows):
     # Average over seeds, then divide by k-means after 25 epochs (the paper's yardstick).
     grouped = {}
     for row in bench_rows:
-        grouped.setdefault((row["run"], row["epochs"]), []).append(row["MSE"])
-    averaged = [{"run": run, "epochs": epochs, "MSE": sum(v) / len(v)} for (run, epochs), v in grouped.items()]
+        grouped.setdefault((row["run"], row["epochs"]), []).append(row)
+    averaged = [
+        {
+            "run": run,
+            "epochs": epochs,
+            "seconds": round(sum(r["seconds"] for r in rows) / len(rows), 3),
+            "MSE": sum(r["MSE"] for r in rows) / len(rows),
+        }
+        for (run, epochs), rows in grouped.items()
+    ]
     kmeans_25 = next(r["MSE"] for r in averaged if r["run"] == "k-means" and r["epochs"] == 25)
     for r in averaged:
         r["MSE / k-means@25"] = r["MSE"] / kmeans_25
 
-    lines = alt.Chart(alt.Data(values=averaged)).mark_line(point=True).encode(
-        x=alt.X("epochs:Q", title="passes over the data", scale=alt.Scale(type="log", domain=[1, 25]), axis=alt.Axis(values=[1, 2, 3, 5, 10, 25])),
-        y=alt.Y("MSE / k-means@25:Q", scale=alt.Scale(zero=False), title="MSE / k-means after 25 passes"),
-        color=alt.Color("run:N", title=None, scale=alt.Scale(
-                domain=["k-means", "e-means, B = 512", "e-means, B = 2048", "e-means, B = 8192"],
-                range=["#ea580c", "#93c5fd", "#2563eb", "#1e3a8a"],
-            ),),
-        tooltip=["run:N", "epochs:Q", alt.Tooltip("MSE / k-means@25:Q", format=".4f")],
-    )
+    colors = alt.Color("run:N", title=None, scale=alt.Scale(
+        domain=["k-means", "e-means, B = 512", "e-means, B = 2048", "e-means, B = 8192"],
+        range=["#ea580c", "#93c5fd", "#2563eb", "#1e3a8a"],
+    ))
     rule = alt.Chart(alt.Data(values=[{"y": 1.0}])).mark_rule(strokeDash=[4, 4], color="#64748b").encode(y="y:Q")
+
+    def bench_panel(x):
+        lines = alt.Chart(alt.Data(values=averaged)).mark_line(point=True).encode(
+            x=x,
+            y=alt.Y("MSE / k-means@25:Q", scale=alt.Scale(zero=False), title="MSE / k-means after 25 passes"),
+            color=colors,
+            tooltip=["run:N", "epochs:Q", alt.Tooltip("seconds:Q", format=".2f"), alt.Tooltip("MSE / k-means@25:Q", format=".4f")],
+        )
+        return (lines + rule).properties(width=300, height=260)
+
+    by_pass = bench_panel(alt.X("epochs:Q", title="passes over the data", scale=alt.Scale(type="log", domain=[1, 25]), axis=alt.Axis(values=[1, 2, 3, 5, 10, 25])))
+    by_time = bench_panel(alt.X("seconds:Q", title="training time (seconds)", scale=alt.Scale(type="log", nice=False)))
     mo.vstack([
-        (lines + rule).properties(width=520, height=280),
+        alt.hconcat(by_pass, by_time),
         mo.accordion({"All numbers (averaged over 2 seeds)": mo.ui.table(averaged, selection=None, page_size=10)}),
     ])
     return
@@ -576,9 +602,9 @@ def _():
     mo.md(r"""
     ## Do the clusters look different?
 
-    The 256 k-means centroids, biggest cluster first; a red outline means fewer than
-    10 images. Hover one to see a sample of its images next to its closest e-means
-    cluster (e-means after 2 passes, $B = 2048$).
+    Each grid holds one algorithm's 100 centroids, biggest cluster first. Hover a
+    centroid to see some of its images. k-means ran 25 passes, e-means 2 passes with
+    $B = 512$.
     """)
     return
 
@@ -601,81 +627,64 @@ def png_strip(rows, side=28):
 @app.cell(hide_code=True)
 def _(images, viewer_centroids):
     import numpy as _np
-    from scipy.optimize import linear_sum_assignment
-
-    C_k, C_e = viewer_centroids["k-means, 25 passes"], viewer_centroids["e-means, 2 passes"]
-    labels_k = _np.concatenate([nearest_np(images[i : i + 10_000], C_k) for i in range(0, len(images), 10_000)])
-    labels_e = _np.concatenate([nearest_np(images[i : i + 10_000], C_e) for i in range(0, len(images), 10_000)])
-    sizes_k = _np.bincount(labels_k, minlength=len(C_k))
-    sizes_e = _np.bincount(labels_e, minlength=len(C_e))
-    # Pair every k-means cluster with one e-means cluster, so the centroid distances are smallest overall.
-    centroid_dist = (C_k**2).sum(1)[:, None] - 2 * C_k @ C_e.T + (C_e**2).sum(1)[None, :]
-    _, match = linear_sum_assignment(centroid_dist)
 
     sample_rng = _np.random.default_rng(0)
 
-    def sample(labels, j, n=8):
-        members = _np.flatnonzero(labels == j)
-        picked = sample_rng.choice(members, min(n, len(members)), replace=False)
-        return png_strip(images[picked]) if len(picked) else ""
+    def grid_data(title, C):
+        # One entry per cluster, biggest first: centroid thumbnail, size, and up to 8 member images.
+        labels = _np.concatenate([nearest_np(images[i : i + 10_000], C) for i in range(0, len(images), 10_000)])
+        sizes = _np.bincount(labels, minlength=len(C))
+        cells = []
+        for j in _np.argsort(-sizes):
+            members = _np.flatnonzero(labels == j)
+            picked = sample_rng.choice(members, min(8, len(members)), replace=False)
+            cells.append({
+                "thumb": png_strip(C[j : j + 1]),
+                "id": int(j),
+                "size": int(sizes[j]),
+                "sample": png_strip(images[picked]) if len(picked) else "",
+            })
+        return {"title": title, "cells": cells}
 
-    cells = []
-    for j in _np.argsort(-sizes_k):
-        m = match[j]
-        cells.append({
-            "thumb": png_strip(C_k[j : j + 1]),
-            "k_id": int(j), "k_size": int(sizes_k[j]), "k_sample": sample(labels_k, j),
-            "e_id": int(m), "e_size": int(sizes_e[m]), "e_sample": sample(labels_e, m),
-        })
-
-    cluster_viewer = EsmWidget(
-        """
-        export default {
-          render({ model, el }) {
-            const { cells } = model.get("data");
-            el.innerHTML = `<div class="cv"><div class="cv-grid"></div><div class="cv-panel"></div></div>`;
-            const grid = el.querySelector(".cv-grid");
-            const panel = el.querySelector(".cv-panel");
-            const row = (name, id, size, src) => `
-              <div class="cv-row">
-                <div class="cv-label"><b>${name}</b> cluster ${id} · ${size} images</div>
-                ${src ? `<img class="cv-strip" src="${src}">` : `<div class="cv-empty">no images</div>`}
-              </div>`;
-            const show = (c) => {
-              panel.innerHTML = row("k-means", c.k_id, c.k_size, c.k_sample) + row("e-means", c.e_id, c.e_size, c.e_sample);
-            };
-            panel.innerHTML = `<div class="cv-hint">Hover a centroid.</div>`;
-            for (const c of cells) {
-              const img = document.createElement("img");
-              img.src = c.thumb;
-              img.className = "cv-thumb" + (c.k_size < 10 ? " cv-tiny" : "");
-              img.title = `k-means cluster ${c.k_id}: ${c.k_size} images`;
-              img.addEventListener("mouseenter", () => {
-                grid.querySelectorAll(".cv-active").forEach((n) => n.classList.remove("cv-active"));
-                img.classList.add("cv-active");
-                show(c);
-              });
-              grid.appendChild(img);
-            }
-          },
-        };
-        """,
-        data={"cells": cells},
-        css="""
-        .cv { display: flex; gap: 24px; align-items: flex-start; color-scheme: light dark; font-size: 13px; }
-        .cv-grid { display: grid; grid-template-columns: repeat(16, 28px); gap: 2px; flex: none; }
-        .cv-thumb { width: 28px; height: 28px; image-rendering: pixelated; border-radius: 3px; outline: 1px solid rgba(100, 116, 139, 0.25); cursor: crosshair; }
-        .cv-tiny { outline: 2px solid #dc2626; }
-        .cv-active { outline: 2px solid #2563eb; }
-        .cv-panel { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-        .cv-row { display: flex; flex-direction: column; gap: 6px; }
-        .cv-strip { height: 56px; image-rendering: pixelated; border-radius: 4px; align-self: flex-start; }
-        .cv-hint, .cv-empty { opacity: 0.6; }
-        """,
-        width=0,
-        height=480,
+    grid_js = """
+    export default {
+      render({ model, el }) {
+        const { title, cells } = model.get("data");
+        el.innerHTML = `<div class="cv"><div class="cv-title">${title}</div><div class="cv-grid"></div><div class="cv-panel">Hover a centroid.</div></div>`;
+        const grid = el.querySelector(".cv-grid");
+        const panel = el.querySelector(".cv-panel");
+        for (const c of cells) {
+          const img = document.createElement("img");
+          img.src = c.thumb;
+          img.className = "cv-thumb";
+          img.addEventListener("mouseenter", () => {
+            grid.querySelectorAll(".cv-active").forEach((n) => n.classList.remove("cv-active"));
+            img.classList.add("cv-active");
+            panel.innerHTML = `<div>cluster ${c.id} · ${c.size} images</div>` +
+              (c.sample ? `<img class="cv-strip" src="${c.sample}">` : "");
+          });
+          grid.appendChild(img);
+        }
+      },
+    };
+    """
+    grid_css = """
+    .cv { display: flex; flex-direction: column; gap: 8px; color-scheme: light dark; font-size: 13px; }
+    .cv-title { font-weight: 600; }
+    .cv-grid { display: grid; grid-template-columns: repeat(10, 28px); gap: 2px; }
+    .cv-thumb { width: 28px; height: 28px; image-rendering: pixelated; border-radius: 3px; outline: 1px solid rgba(100, 116, 139, 0.25); cursor: crosshair; }
+    .cv-active { outline: 2px solid #2563eb; }
+    .cv-panel { display: flex; flex-direction: column; gap: 6px; min-height: 64px; opacity: 0.9; }
+    .cv-strip { height: 40px; image-rendering: pixelated; border-radius: 4px; align-self: flex-start; }
+    """
+    mo.hstack(
+        [
+            EsmWidget(grid_js, css=grid_css, data=grid_data("k-means, 25 passes", viewer_centroids["k-means, 25 passes"]), width=0, height=420),
+            EsmWidget(grid_js, css=grid_css, data=grid_data("e-means, 2 passes", viewer_centroids["e-means, 2 passes"]), width=0, height=420),
+        ],
+        widths="equal",
+        gap=2,
     )
-    cluster_viewer
     return
 
 
@@ -684,11 +693,13 @@ def _():
     mo.md(r"""
     ## Takeaway
 
-    - **2 passes of e-means beat 25 passes of k-means** on Fashion-MNIST, with $B = 2048$.
-      At every batch size, e-means is ahead of k-means after the same number of passes.
-    - **Why:** a pass costs both the same, but k-means moves the centroids once per
-      pass, and e-means moves them 29 times. The batch size still matters: $B = 512$
-      needs 3 passes to catch k-means, and $B = 8192$ (7 moves per pass) is still behind after 5.
+    - **2 passes of e-means beat 25 passes of k-means** on Fashion-MNIST, with $B = 512$:
+      about a tenth of the training time. At every batch size, e-means is ahead of
+      k-means after the same number of passes.
+    - **Why:** a pass costs both about the same, but k-means moves the centroids once
+      per pass, and e-means with $B = 512$ moves them 117 times. The batch size still
+      matters: $B = 2048$ needs 3 passes to catch k-means, and $B = 8192$ (7 moves per
+      pass) is still behind after 5.
     - **k-means *is* e-means** with $B$ = all points and $\alpha = 1$. That is how the
       k-means viewer above runs it.
     """)
