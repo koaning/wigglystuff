@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `FitProgress` widget: live progress for scikit-learn 1.9+ fits, built on
+  scikit-learn's callback API. `progress.fit(estimator, X, y)` fits through the
+  widget and returns the fitted estimator. `GridSearchCV` and
+  `RandomizedSearchCV` show as a candidates × folds grid. Running cells fill
+  with the inner estimator's iterations, finished cells show their test score
+  as soon as it is computed (also with `n_jobs`), and each row shows its mean.
+  Fits that hit `max_iter` are flagged, the best row is highlighted, and the
+  refit shows the chosen parameters. Pipelines show their steps, and
+  estimators without callback support still get a cell per fit. Hover a cell
+  for details. `color` sets the accent color. Outside a notebook, `fit` uses
+  scikit-learn's terminal `ProgressBar`. Install with
+  `pip install wigglystuff[sklearn]`.
+
 ## [0.5.40] - 2026-11-11
 
 ### Added

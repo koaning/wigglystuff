@@ -75,6 +75,7 @@ nav = [
         { StateViewer = "reference/state-viewer.md" },
         { AsyncFlow = "reference/async-flow.md" },
         { TraceView = "reference/trace-view.md" },
+        { FitProgress = "reference/fit-progress.md" },
         { WidgetDAG = "reference/widget-dag.md" },
         { Hint = "reference/hint.md" },
         { Utils = "reference/utils.md" },

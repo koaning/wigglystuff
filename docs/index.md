@@ -318,6 +318,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/asyncflow.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/async-flow/">API</a><a href="reference/async-flow.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title"><a href="reference/fit-progress/">FitProgress</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fit_progress.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/fitprogress.webp" alt="FitProgress widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fit_progress.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/fit-progress/">API</a><a href="reference/fit-progress.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title"><a href="reference/trace-view/">TraceView</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/traceview.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/traceview.webp" alt="TraceView widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/traceview.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/trace-view/">API</a><a href="reference/trace-view.md">MD</a></div>

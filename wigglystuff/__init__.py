@@ -24,6 +24,7 @@ from .env_config import EnvConfig
 from .esm_widget import EsmWidget
 from .excalidraw import Excalidraw
 from .fader import Fader
+from .fit_progress import FitProgress
 from .floating_panel import FloatingPanel
 from .formula_animation import FormulaAnimation
 from .formula_dag import FormulaDAG
@@ -97,6 +98,7 @@ __all__ = [
     "EsmWidget",
     "Excalidraw",
     "Fader",
+    "FitProgress",
     "FloatingPanel",
     "FormulaAnimation",
     "FormulaDAG",

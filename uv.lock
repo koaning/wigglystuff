@@ -4510,6 +4510,9 @@ pillow = [
 pytest = [
     { name = "pytest" },
 ]
+sklearn = [
+    { name = "scikit-learn" },
+]
 test = [
     { name = "marimo" },
     { name = "matplotlib" },
@@ -4567,12 +4570,13 @@ requires-dist = [
     { name = "pytest-check-links", marker = "extra == 'test'", specifier = ">=0.10.0" },
     { name = "pytest-playwright", marker = "extra == 'test-browser'", specifier = ">=0.6.2" },
     { name = "rich", marker = "extra == 'test'", specifier = ">=13.0" },
+    { name = "scikit-learn", marker = "extra == 'sklearn'", specifier = ">=1.9" },
     { name = "scikit-learn", marker = "extra == 'test'", specifier = ">=1.0" },
     { name = "torch", marker = "extra == 'torch'", specifier = ">=2.10.0" },
     { name = "weave", marker = "extra == 'test'", specifier = ">=0.53.12" },
     { name = "weave", marker = "extra == 'weave'", specifier = ">=0.53.12" },
 ]
-provides-extras = ["numpy", "pillow", "all", "torch", "neo4j", "otel", "weave", "pytest", "test", "test-browser", "docs"]
+provides-extras = ["numpy", "pillow", "all", "sklearn", "torch", "neo4j", "otel", "weave", "pytest", "test", "test-browser", "docs"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "zensical", specifier = ">=0.0.38" }]

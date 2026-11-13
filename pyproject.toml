@@ -29,6 +29,9 @@ all = [
     "numpy",
     "pillow",
 ]
+sklearn = [
+    "scikit-learn>=1.9",
+]
 torch = [
     "torch>=2.10.0",
 ]
