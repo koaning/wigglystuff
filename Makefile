@@ -94,6 +94,10 @@ js-parallel-coords:
 	cp js/parallel-coords/styles.css wigglystuff/static/parallel-coords.css
 	./node_modules/.bin/esbuild js/parallel-coords/widget.jsx --bundle --format=esm --outfile=wigglystuff/static/parallel-coords.js --minify --loader:.jsx=jsx
 
+js-pair-plot:
+	cp js/pair-plot/styles.css wigglystuff/static/pair-plot.css
+	./node_modules/.bin/esbuild js/pair-plot/widget.js --bundle --format=esm --outfile=wigglystuff/static/pair-plot.js --minify
+
 clean:
 	rm -rf .ipynb_checkpoints build dist drawdata.egg-info
 

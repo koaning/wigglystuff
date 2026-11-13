@@ -49,11 +49,13 @@ from .neo4j_widget import Neo4jWidget
 from .nested_table import NestedTable
 from .observable_plot import ObservablePlot
 from .paint import Paint
+from .pair_plot import PairPlot
 from .parallel_coords import ParallelCoordinates
 from .pip import Pip
 from .play_slider import PlaySlider
 from .ridgeline_chart import RidgelineChart
 from .scatter_log import ScatterLog
+from .shape_display import shape_display
 from drawdata import ScatterWidget
 from .slider2d import Slider2D
 from .spline_draw import SplineDraw
@@ -120,12 +122,14 @@ __all__ = [
     "NestedTable",
     "ObservablePlot",
     "Paint",
+    "PairPlot",
     "ParallelCoordinates",
     "Pip",
     "PlaySlider",
     "RidgelineChart",
     "ScatterLog",
     "ScatterWidget",
+    "shape_display",
     "Slider2D",
     "SplineDraw",
     "StateViewer",

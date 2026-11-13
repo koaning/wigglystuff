@@ -1,0 +1,157 @@
+/* The theme is resolved in JS (resolveDark) because marimo renders widgets in
+   a shadow root, where ancestor selectors like `.dark .pair-plot-root` never
+   match and prefers-color-scheme can disagree with the notebook theme. The
+   canvas reads these variables on every render. */
+.pair-plot-root {
+  --pp-ink: #0b0b0b;
+  --pp-ink-2: #52514e;
+  --pp-muted: #85847e;
+  --pp-hair: rgba(11, 11, 11, 0.14);
+  --pp-panel: #f4f4f2;
+  --pp-context: #c4c3bc;
+  --pp-lasso: #0b0b0b;
+  --pp-lasso-fill: rgba(11, 11, 11, 0.05);
+  --pp-control: #ffffff;
+  --pp-control-on: #0b0b0b;
+  --pp-control-on-ink: #ffffff;
+  color-scheme: light;
+  display: block;
+  color: var(--pp-ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12px;
+}
+
+.pair-plot-root.pair-plot--dark {
+  --pp-ink: #f0efec;
+  --pp-ink-2: #c3c2b7;
+  --pp-muted: #8f8e86;
+  --pp-hair: rgba(240, 239, 236, 0.16);
+  --pp-panel: #232322;
+  --pp-context: #4f4e4a;
+  --pp-lasso: #f0efec;
+  --pp-lasso-fill: rgba(240, 239, 236, 0.06);
+  --pp-control: transparent;
+  --pp-control-on: #f0efec;
+  --pp-control-on-ink: #1a1a19;
+  color-scheme: dark;
+}
+
+.pp-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* One row above the matrix: legend on the left, readout and controls right. */
+.pp-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 20px;
+  padding-left: 40px;
+}
+
+.pp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  color: var(--pp-ink-2);
+}
+.pp-legend:empty { display: none; }
+
+.pp-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.pp-key i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.pp-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Fixed width so changing readouts never reflow the toolbar (and shift the
+   matrix under the pointer). */
+.pp-status {
+  width: 25em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  color: var(--pp-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pp-status strong {
+  color: var(--pp-ink);
+  font-weight: 600;
+}
+
+/* Segmented toggles (tool, layout) and the action group share one look: a
+   hairline container with borderless buttons inside. */
+.pp-segmented,
+.pp-group {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--pp-hair);
+  border-radius: 7px;
+  background: var(--pp-control);
+}
+
+.pp-controls button {
+  border: 0;
+  border-radius: 5px;
+  padding: 3px 9px;
+  background: transparent;
+  color: var(--pp-ink-2);
+  font: inherit;
+  cursor: pointer;
+}
+.pp-controls button:hover:not(:disabled) { color: var(--pp-ink); }
+.pp-controls button:focus-visible { outline: 2px solid var(--pp-ink); outline-offset: 1px; }
+.pp-controls button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.pp-segmented button[aria-pressed="true"] {
+  background: var(--pp-control-on);
+  color: var(--pp-control-on-ink);
+}
+
+.pp-controls .pp-button {
+  border: 1px solid var(--pp-hair);
+  border-radius: 7px;
+  padding: 4px 10px;
+  background: var(--pp-control);
+}
+
+.pp-scroll { overflow-x: auto; }
+.pp-stage { position: relative; }
+.pp-gl,
+.pp-overlay {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.pp-overlay {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.pp-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: rgba(212, 72, 72, 0.1);
+  color: #c03a3a;
+  white-space: pre-wrap;
+  font-size: 11px;
+}

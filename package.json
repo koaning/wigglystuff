@@ -12,6 +12,8 @@
     "dev-treemap": "./node_modules/.bin/esbuild js/treemap/widget.js --bundle --outfile=wigglystuff/static/treemap.js --format=esm --watch --minify",
     "build-nested-table": "./node_modules/.bin/esbuild js/nested-table/widget.js --bundle --outfile=wigglystuff/static/nested-table.js --format=esm --minify",
     "dev-nested-table": "./node_modules/.bin/esbuild js/nested-table/widget.js --bundle --outfile=wigglystuff/static/nested-table.js --format=esm --watch --minify",
+    "build-pair-plot": "./node_modules/.bin/esbuild js/pair-plot/widget.js --bundle --outfile=wigglystuff/static/pair-plot.js --format=esm --minify",
+    "dev-pair-plot": "./node_modules/.bin/esbuild js/pair-plot/widget.js --bundle --outfile=wigglystuff/static/pair-plot.js --format=esm --watch --minify",
     "build-excalidraw": "./node_modules/.bin/esbuild js/excalidraw/widget.js --outfile=wigglystuff/static/excalidraw.js --format=esm --minify"
   },
   "dependencies": {
@@ -32,6 +34,7 @@
     "esbuild": "^0.25.1",
     "hiplot": "^0.1.34-rc.200",
     "react": "^19.0.0",
+    "regl": "^2.1.1",
     "three": "^0.170.0"
   },
   "devDependencies": {
