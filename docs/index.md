@@ -504,4 +504,12 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_hull.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/state_viewer_hull.py">Source</a></div>
 </div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_emeans.py/wasm?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/state-viewer-emeans.webp" alt="k-means vs e-means"></a>
+<div class="example-content">
+<div class="example-title">k-means vs e-means</div>
+<div class="example-desc">Watch k-means jump and e-means nudge its centroids, batch by batch, with StateViewer, then benchmark both on Fashion-MNIST by passes and training time and browse each algorithm's clusters.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/state_viewer_emeans.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/state_viewer_emeans.py">Source</a></div>
+</div>
 </div>
