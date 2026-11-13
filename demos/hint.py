@@ -25,9 +25,9 @@ def _():
     if (repo_root / "wigglystuff").exists():
         sys.path.insert(0, str(repo_root))
 
-    from wigglystuff import CircularSlider, Hint, Matrix, WidgetDAG
+    from wigglystuff import CircularSlider, Hint, Matrix, WidgetFlow
 
-    return Hint, WidgetDAG, mo
+    return Hint, WidgetFlow, mo
 
 
 @app.cell(hide_code=True)
@@ -116,14 +116,12 @@ def _(mo):
 
 
 @app.cell
-def _(Hint, WidgetDAG, mo, temp, tokens):
-    wd = WidgetDAG(
-        {
-            "temp": temp,
-            "tokens": tokens,
-            "cost": mo.md(f"~${temp.value * tokens.value / 5000:.2f}"),
-        },
-        [("temp", "cost"), ("tokens", "cost")],
+def _(Hint, WidgetFlow, mo, temp, tokens):
+    cost = mo.md(f"~${temp.value * tokens.value / 5000:.2f}")
+    wd = WidgetFlow(
+        [temp, tokens, cost],
+        [(temp, cost), (tokens, cost)],
+        labels=[(cost, "cost")],
     )
 
     Hint(wd, "you can change these sliders!", side="top")

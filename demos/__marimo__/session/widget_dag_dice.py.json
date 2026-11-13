@@ -1,0 +1,224 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.25.2",
+    "script_metadata_hash": "8848d2fb5ba532b3d2a83d51dd84e08f"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d2634f61ebb21aae3367c4706f67922",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "No module named 'dicekit'",
+          "traceback": null
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">\"/var/folders/yd/mbxgnfd13qgdzmc7b97h6bfm0000gn/T/marimo_90031/__marimo__cell_Hbol_.py\"</span>, line <span class=\"m\">12</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"kn\">from</span><span class=\"w\"> </span><span class=\"nn\">dicekit</span><span class=\"w\"> </span><span class=\"kn\">import</span> <span class=\"n\">Dice</span><span class=\"p\">,</span> <span class=\"n\">ordered</span><span class=\"p\">,</span> <span class=\"n\">p</span>\n<span class=\"gr\">ModuleNotFoundError</span>: <span class=\"n\">No module named 'dicekit'</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "77e3ee8d34e763ddce6aa71e18f786f0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">This notebook is inspired by the <a href=\"https://thefiddler.substack.com/p/can-you-win-the-world-cup\" rel=\"noopener noreferrer\" target=\"_blank\">Fiddler on the Proof</a> mailing list. Check it out if you haven't already!</span>\n<h2 id=\"the-riddle\">The Riddle</h2>\n<span class=\"paragraph\">Here's the riddle we want to tackle.</span>\n<blockquote>\n<span class=\"paragraph\">Congratulations to Fiddler Nation for making it to the semifinals of the World Cup! All four teams that made it this far are equally matched in that they each possess the same total amount of \u201cenergy.\u201d In advance of each semifinal game, teams must independently decide how much of their energy to allocate to the match; all remaining energy goes toward the finals. The team that spends more energy in any given game will win. The semifinals and finals occur so close in time that teams can\u2019t recuperate any of their energy in between.</span>\n<span class=\"paragraph\">You\u2019ve heard that the managers for the other three teams are abysmal and have no idea how to allocate their teams\u2019 energy. Each of the other managers will independently pick a random percentage between 0 and 100 and allocate that portion of their team\u2019s energy to the semifinal game; the rest of that team\u2019s energy will go toward the final.</span>\n<span class=\"paragraph\">Since you\u2019re the cleverest manager of the bunch, you can choose an optimal strategy that will maximize Fiddler Nation\u2019s probability of winning the World Cup. What is this optimal probability?</span>\n</blockquote>\n<span class=\"paragraph\">So let's model this. I will assume that we represent player 3.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "94c19a56af46a019aeb043285781aca3",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "1b20d9e9c85d3ba0e7fbb52adfee4ef1",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "84f5453a83ca0e1e509efbf2ff88e74b",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "ca3c099b487691adbece55e3ae96b771",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "19b9298d0d33c3671be4dba56be04de6",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "a72e16cf28cf5e6a901105e5c7edf755",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "ce5026c762d8b70938248a420ac43d72",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "6ed5b971c32ccfdb6da517a999d21893",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "4c5e9952c56c6cfc60dfb376a8bfe211",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "ef4b510d60c4574d9313c9e4cb059f08",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "56c93c783cfbbaef20676e150427136d",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "dc1d71bbb5c4d2a5e936db79ef10c19f",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "bceef82979af70ca96f9fb0229063846",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "7a3a652996d3062b5f9f5026d916f5d1",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "An ancestor raised an exception (ModuleNotFoundError): ",
+          "traceback": null
+        }
+      ],
+      "console": []
+    }
+  ]
+}

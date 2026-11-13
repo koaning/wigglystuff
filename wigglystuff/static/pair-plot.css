@@ -50,6 +50,9 @@
   justify-content: space-between;
   gap: 8px 20px;
   padding-left: 40px;
+  /* The matrix sets the widget's width, never the toolbar: as an inline-size
+     container the bar adds nothing to the shell's width and wraps inside it. */
+  container-type: inline-size;
 }
 
 .pp-legend {
@@ -74,6 +77,8 @@
 
 .pp-controls {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
   gap: 8px;
   margin-left: auto;
@@ -90,6 +95,19 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+/* Too narrow for the readout and the buttons on one line (a small cell_size):
+   the readout takes a line of its own above the buttons. */
+@container (max-width: 640px) {
+  .pp-controls {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+  .pp-status {
+    width: 100%;
+    text-align: left;
+  }
+}
+
 .pp-status strong {
   color: var(--pp-ink);
   font-weight: 600;
@@ -125,6 +143,9 @@
   background: var(--pp-control-on);
   color: var(--pp-control-on-ink);
 }
+
+/* Toolbar groups hidden from Python (the groups' own display would win). */
+.pp-controls [hidden] { display: none; }
 
 .pp-controls .pp-button {
   border: 1px solid var(--pp-hair);

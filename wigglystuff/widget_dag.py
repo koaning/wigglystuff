@@ -2,30 +2,21 @@
 
 from __future__ import annotations
 
-from html import escape
-from itertools import permutations
+import warnings
 from pathlib import Path
 
 import anywidget
 import traitlets
 
-# Prefix for dummy "waypoint" node ids inserted for edges that span more than
-# one column. It starts with "!" so it can never equal a real node id (those
-# are Python identifiers), while staying a valid HTML attribute value.
-_WP = "!wdag_wp"
-_FLOAT_PRECISION = 4
-
-
-def _format_float_html(value):
-    """Return compact HTML for a bare float, or ``None`` for other nodes."""
-    if not isinstance(value, float):
-        return None
-    exact = repr(value)
-    compact = format(value, f".{_FLOAT_PRECISION}g")
-    return (
-        f'<span title="Exact value: {escape(exact)}">'
-        f"{escape(compact)}</span>"
-    )
+from ._dag_layout import (  # noqa: F401  (re-exported for back-compat)
+    _WP,
+    _format_float_html,
+    _infer_edges,
+    _order_and_route,
+    _reduce_edges,
+    _require_marimo_notebook,
+    layered_layout,
+)
 
 
 class _Arrows(anywidget.AnyWidget):
@@ -42,166 +33,18 @@ class _Arrows(anywidget.AnyWidget):
     routes = traitlets.List().tag(sync=True)
 
 
-def _require_marimo_notebook():
-    """Raise unless we are displaying inside a running marimo notebook.
-
-    ``WidgetDAG`` renders by reaching into marimo's rendered DOM, so it is a
-    no-op anywhere else. Mirrors the ``mo.running_in_notebook()`` check in
-    ``wigglystuff/_marimo_notice.py``.
-    """
-    try:
-        import marimo as mo
-
-        if mo.running_in_notebook():
-            return
-    except ImportError:
-        pass
-    raise RuntimeError(
-        "WidgetDAG is a marimo-only display helper: it renders by reaching "
-        "into marimo's rendered DOM and does not work outside a running "
-        "marimo notebook."
-    )
-
-
-def layered_layout(nodes, edges):
-    """Assign each node a column (0 = leftmost).
-
-    Longest-path layering, then pull every node rightward to sit just before
-    its earliest child. That keeps edges between adjacent columns for
-    pipeline/tree shapes, so arcs stay inside the empty column gaps and never
-    cross a widget. (True long edges would still skip -- that needs dummy
-    waypoint nodes; a job for a future layout strategy.)
-
-    A layout is just ``(nodes, edges) -> {id: column}``; pass your own to
-    ``WidgetDAG(..., layout=...)`` to swap in a different algorithm.
-    """
-    parents = {k: [] for k in nodes}
-    children = {k: [] for k in nodes}
-    for src, dst in edges:
-        parents[dst].append(src)
-        children[src].append(dst)
-    col = {}
-
-    def longest(k):
-        if k not in col:
-            col[k] = 0 if not parents[k] else 1 + max(longest(p) for p in parents[k])
-        return col[k]
-
-    for k in nodes:
-        longest(k)
-    changed = True
-    while changed:  # pull right: latest column still left of every child
-        changed = False
-        for k in nodes:
-            if children[k]:
-                latest = min(col[c] for c in children[k]) - 1
-                if latest > col[k]:
-                    col[k] = latest
-                    changed = True
-    return col
-
-
-def _reduce_edges(order, name_to_cell, ancestors):
-    """Derive DAG edges between nodes from their cells' ancestry.
-
-    ``order`` is the list of node names (input order), ``name_to_cell`` maps each
-    name to its defining cell id, and ``ancestors`` maps a cell id to the set of
-    its transitive ancestor cell ids. Returns ``[[u, v], ...]``.
-
-    An edge ``u -> v`` exists when ``u``'s cell is an ancestor of ``v``'s cell,
-    then transitively reduced: ``u -> v`` is dropped if some other node ``w``
-    sits on the path (``u`` ancestor of ``w`` and ``w`` ancestor of ``v``). Nodes
-    that share a cell are neither each other's ancestor, so they get no edge and
-    land in the same column -- correct for independent inputs.
-    """
-
-    def is_anc(a, b):  # cell(a) is an ancestor of cell(b)
-        return name_to_cell[a] in ancestors.get(name_to_cell[b], set())
-
-    edges = []
-    for v in order:
-        for u in order:
-            if u == v or not is_anc(u, v):
-                continue
-            if any(w not in (u, v) and is_anc(u, w) and is_anc(w, v) for w in order):
-                continue
-            edges.append([u, v])
-    return edges
-
-
-def _order_and_route(order, columns, edges, sweeps=8, brute_cap=6):
-    """Order the nodes within each column to reduce edge crossings, and split
-    every edge that spans more than one column with dummy waypoint nodes.
-
-    ``order`` seeds each column (ties broken by input order), ``columns`` maps a
-    node to its column (from the layout), and ``edges`` is ``[[u, v], ...]`` with
-    ``columns[u] < columns[v]``. Returns ``(layers, routes, dummies)``:
-
-    - ``layers`` -- ``{column: [id, ...]}`` in top-to-bottom order (ids are real
-      node names or ``_WP``-prefixed waypoints).
-    - ``routes`` -- one chain ``[u, *waypoints, v]`` per edge, so a long edge is
-      drawn through the reserved (empty) waypoint lanes instead of over a widget.
-    - ``dummies`` -- the set of waypoint ids.
-
-    Ordering is the standard layer-by-layer crossing minimization: split long
-    edges into single-column segments, then repeatedly pick, for each column, the
-    within-column order that minimizes crossings with the neighbouring column.
-    Graphs that admit a crossing-free order under the assigned layering can
-    reach zero; the rest are minimized, not guaranteed (that is NP-hard).
-    Columns wider than ``brute_cap`` keep their seeded order rather than
-    brute-forcing.
-    """
-    max_col = max(columns.values(), default=0)
-    layers = {c: [] for c in range(max_col + 1)}
-    for n in order:
-        layers[columns[n]].append(n)
-
-    seg_children = {}  # node -> nodes one column to its right (after splitting)
-    routes = []
-    dummies = set()
-    for u, v in edges:
-        prev, chain = u, [u]
-        for c in range(columns[u] + 1, columns[v]):
-            d = f"{_WP}{len(dummies)}"
-            dummies.add(d)
-            layers[c].append(d)
-            seg_children.setdefault(prev, []).append(d)
-            prev, _ = d, chain.append(d)
-        seg_children.setdefault(prev, []).append(v)
-        chain.append(v)
-        routes.append(chain)
-
-    def crossings(upper, lower):
-        pos_l = {n: i for i, n in enumerate(lower)}
-        seg = [
-            (i, pos_l[c])
-            for i, n in enumerate(upper)
-            for c in seg_children.get(n, [])
-            if c in pos_l
-        ]
-        return sum(
-            1
-            for a in range(len(seg))
-            for b in range(a + 1, len(seg))
-            if (seg[a][0] - seg[b][0]) * (seg[a][1] - seg[b][1]) < 0
-        )
-
-    def best(layer, score):
-        return min((list(p) for p in permutations(layer)), key=score)
-
-    for _ in range(sweeps):
-        for c in range(1, max_col + 1):
-            if len(layers[c]) <= brute_cap:
-                layers[c] = best(layers[c], lambda p, c=c: crossings(layers[c - 1], p))
-        for c in range(max_col - 1, -1, -1):
-            if len(layers[c]) <= brute_cap:
-                layers[c] = best(layers[c], lambda p, c=c: crossings(p, layers[c + 1]))
-    return layers, routes, dummies
-
-
 class WidgetDAG:
     """Lay widgets out as a DAG and draw the arrows -- like ``mo.hstack``, but
     columns come from edge depth and the connections are drawn for you.
+
+    .. deprecated::
+        ``WidgetDAG`` is deprecated in favour of ``WidgetFlow``, which draws
+        FormulaDAG-style arrows and adds notes, edge labels, ports, captions and
+        a ``direction`` switch. ``WidgetDAG.from_widgets([...])`` becomes
+        ``WidgetFlow.from_widgets([...], direction="right")``; for
+        ``WidgetDAG(nodes, edges)`` pass the widget objects as a list and the
+        edges as pairs of objects. Constructing a ``WidgetDAG`` emits a
+        ``FutureWarning``.
 
     ``nodes`` maps an id to any renderable (an input widget, an image, a chart
     -- anything marimo can show). ``edges`` is a list of ``(src_id, dst_id)``.
@@ -229,6 +72,12 @@ class WidgetDAG:
     """
 
     def __init__(self, nodes, edges, layout=layered_layout):
+        warnings.warn(
+            "WidgetDAG is deprecated; use WidgetFlow instead "
+            "(WidgetFlow.from_widgets for edges inferred from marimo).",
+            FutureWarning,
+            stacklevel=2,
+        )
         self.nodes = dict(nodes)
         self.edges = [list(e) for e in edges]
         self.layout = layout
@@ -252,44 +101,18 @@ class WidgetDAG:
         all. For those cases use ``WidgetDAG(nodes, edges)`` directly. Requires a
         running marimo kernel.
         """
-        try:
-            from marimo._runtime.context.types import get_context
-
-            ctx = get_context()
-            graph = ctx.graph
-            glb = ctx.globals
-        except Exception as e:  # not in a marimo kernel
-            raise RuntimeError(
-                "WidgetDAG.from_widgets needs a running marimo kernel; "
-                "use WidgetDAG(nodes, edges) directly outside marimo."
-            ) from e
-
-        # object identity -> variable name (first match wins), preserving order
-        name_of = {}
-        for w in widgets:
-            hit = next((n for n, val in glb.items() if val is w), None)
-            if hit is None:
-                raise ValueError(
-                    "Every widget passed to from_widgets must be a top-level "
-                    "variable; one object was not found in the notebook globals. "
-                    "Assign it to a variable or use WidgetDAG(nodes, edges)."
-                )
-            name_of[id(w)] = hit
-
-        order = [name_of[id(w)] for w in widgets]
-        nodes = {name_of[id(w)]: w for w in widgets}
-        name_to_cell = {n: next(iter(graph.definitions[n])) for n in order}
-        ancestors = {c: graph.ancestors(c) for c in name_to_cell.values()}
-        edges = _reduce_edges(order, name_to_cell, ancestors)
+        edges, names = _infer_edges(widgets, caller="WidgetDAG.from_widgets")
+        nodes = {names[id(w)]: w for w in widgets}
+        edges = [[names[id(u)], names[id(v)]] for u, v in edges]
         return cls(nodes, edges, layout=layout)
 
     def _repr_mimebundle_(self, **kwargs):
         # marimo prefers ``_display_``, so this only fires in Jupyter/IPython,
         # where it turns a silent plain-text repr into a clear error.
-        _require_marimo_notebook()
+        _require_marimo_notebook("WidgetDAG")
 
     def _display_(self):
-        _require_marimo_notebook()
+        _require_marimo_notebook("WidgetDAG")
         import marimo as mo
 
         depth = self.layout(self.nodes, self.edges)

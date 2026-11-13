@@ -22,15 +22,15 @@ def _():
 
     import marimo as mo
 
-    # Prefer the local checkout so this demo tracks the in-repo WidgetDAG even
+    # Prefer the local checkout so this demo tracks the in-repo WidgetFlow even
     # before it lands in a published wigglystuff release.
     repo_root = Path(__file__).resolve().parents[1]
     if (repo_root / "wigglystuff").exists():
         sys.path.insert(0, str(repo_root))
 
-    from wigglystuff import Paint, WidgetDAG
+    from wigglystuff import Paint, WidgetFlow
 
-    return Paint, WidgetDAG, mo
+    return Paint, WidgetFlow, mo
 
 
 @app.cell(hide_code=True)
@@ -45,7 +45,7 @@ def _(mo):
     marimo UI element works as a node -- and dragging it re-rotates the digit
     before it is convolved.
 
-    Each node lives in its own cell, so `WidgetDAG.from_widgets([...])` reads
+    Each node lives in its own cell, so `WidgetFlow.from_widgets([...])` reads
     marimo's dataflow graph to place the nodes by edge-depth and draw the arrows
     for you -- no `edges=` list to spell out by hand.
     """)
@@ -53,8 +53,10 @@ def _(mo):
 
 
 @app.cell
-def _(WidgetDAG, angle, conv, conv2, kernel, kernel2, paint):
-    WidgetDAG.from_widgets([paint, angle, kernel, conv, kernel2, conv2])
+def _(WidgetFlow, angle, conv, conv2, kernel, kernel2, paint):
+    WidgetFlow.from_widgets(
+        [paint, angle, kernel, conv, kernel2, conv2], direction="right"
+    )
     return
 
 

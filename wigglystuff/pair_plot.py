@@ -50,6 +50,14 @@ class PairPlot(anywidget.AnyWidget):
             all visible off-diagonal cells.
         point_size: Point diameter in CSS pixels. ``None`` (the default)
             picks a size and opacity from how many points share a cell.
+        show_filters: Show the **Keep**, **Exclude**, **Clear** and **Reset**
+            buttons. Turn it off when the plot is only for looking: clicking
+            empty space still clears the selection, and :meth:`keep`,
+            :meth:`exclude` and :meth:`reset` still work from Python.
+        show_mode_toggle: Show the **Box** / **Lasso** toggle. Without it the
+            tool stays whatever ``mode`` says.
+        show_layout_toggle: Show the **Full** / **Lower** toggle. Without it
+            the matrix stays whatever ``layout`` says.
 
     The selection is synced as a compact data-coordinate description (box
     corners or lasso vertices). Use :meth:`get_mask`, :meth:`get_indices`, or
@@ -75,6 +83,9 @@ class PairPlot(anywidget.AnyWidget):
     cell_size = traitlets.Int(None, allow_none=True, min=40).tag(sync=True)
     max_marks = traitlets.Int(2_000_000, min=10_000).tag(sync=True)
     point_size = traitlets.Float(None, allow_none=True, min=0.25).tag(sync=True)
+    show_filters = traitlets.Bool(True).tag(sync=True)
+    show_mode_toggle = traitlets.Bool(True).tag(sync=True)
+    show_layout_toggle = traitlets.Bool(True).tag(sync=True)
 
     selection = traitlets.Dict(default_value={}).tag(sync=True)
     filters = traitlets.List(traitlets.Dict(), default_value=[]).tag(sync=True)
@@ -95,6 +106,9 @@ class PairPlot(anywidget.AnyWidget):
         cell_size: int | None = None,
         max_marks: int = 2_000_000,
         point_size: float | None = None,
+        show_filters: bool = True,
+        show_mode_toggle: bool = True,
+        show_layout_toggle: bool = True,
         **kwargs: Any,
     ) -> None:
         matrix, names, color_values, source_kind = _normalize_input(
@@ -118,6 +132,9 @@ class PairPlot(anywidget.AnyWidget):
             cell_size=cell_size,
             max_marks=max_marks,
             point_size=point_size,
+            show_filters=show_filters,
+            show_mode_toggle=show_mode_toggle,
+            show_layout_toggle=show_layout_toggle,
             **kwargs,
         )
         self.on_msg(self._handle_frontend_message)
