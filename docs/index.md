@@ -323,9 +323,9 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fit_progress.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/fit-progress/">API</a><a href="reference/fit-progress.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title"><a href="reference/array-display/">array_display</a></div>
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/array_display.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/array-display.webp" alt="array_display showing shape-only matrix and tensor glyphs"></a>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/array_display.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/array-display/">API</a><a href="reference/array-display.md">MD</a></div>
+<div class="gallery-title"><a href="reference/shape-display/">shape_display</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/shape_display.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/shape-display.webp" alt="shape_display showing shape-only matrix and tensor glyphs"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/shape_display.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/shape-display/">API</a><a href="reference/shape-display.md">MD</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title"><a href="reference/trace-view/">TraceView</a></div>
@@ -363,7 +363,7 @@ Each widget links to a live demo on [molab](https://molab.marimo.io?utm_source=w
 
 ## marimo-only widgets
 
-These are **marimo-only** display helpers — they render through marimo's mime protocol and reach into marimo's rendered DOM, so unlike the other widgets they don't run in plain Jupyter. They also appear in the gallery above.
+These are **marimo-only** display helpers — they render through marimo's display protocol and lean on marimo's frontend (its rendered DOM, or its built-in KaTeX), so unlike the other widgets they don't run in plain Jupyter. They also appear in the gallery above.
 
 <div class="widget-gallery">
 <div class="gallery-item">
@@ -380,6 +380,11 @@ These are **marimo-only** display helpers — they render through marimo's mime 
 <div class="gallery-title"><a href="reference/hint/">Hint</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/hint.webp" alt="Hint widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/hint/">API</a><a href="reference/hint.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title"><a href="reference/shape-display/">shape_display</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/shape_display.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/shape-display.webp" alt="shape_display showing shape-only matrix and tensor glyphs"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/shape_display.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/shape-display/">API</a><a href="reference/shape-display.md">MD</a></div>
 </div>
 </div>
 

@@ -26,9 +26,9 @@ def _():
     if (repo_root / "wigglystuff").exists():
         sys.path.insert(0, str(repo_root))
 
-    from wigglystuff import array_display
+    from wigglystuff import shape_display
 
-    return array_display, mo, np
+    return mo, np, shape_display
 
 
 @app.cell(hide_code=True)
@@ -36,7 +36,7 @@ def _(mo):
     mo.md(r"""
     # Shape-only NumPy arrays
 
-    `array_display` keeps the behavior of a NumPy array while replacing its
+    `shape_display` keeps the behavior of a NumPy array while replacing its
     marimo output with an abstract shape. Use a string for a dimension whose
     size does not matter to the story and `None` for a dimension that should
     show its current size.
@@ -44,25 +44,24 @@ def _(mo):
     Pass `name=` to put a label above the shape: plain strings render in
     serif — a lone letter as an italic math variable, longer text upright —
     and TeX-flavored names (`$\mathbf{X}$`, `$W^{(1)}$`, `$\hat{\theta}$`,
-    `$\mathcal{L}$`) render through a small LaTeX subset using Unicode — no
-    renderer or dependency needed.
+    `$\mathcal{L}$`) render with the KaTeX that ships with marimo.
     """)
     return
 
 
 @app.cell
-def _(array_display, np):
-    matrix = array_display(
+def _(np, shape_display):
+    matrix = shape_display(
         np.arange(256).reshape(128, 2),
-        display_shape=("n", None),
+        labels=("n", "d"),
         name=r"$\mathbf{X}$",
     )
-    tensor = array_display(
+    tensor = shape_display(
         np.zeros((32, 8, 3)),
-        display_shape=("batch", "n", None),
+        labels=("batch", "n", None),
         name=r"$\mathbf{A}_{batch}$",
     )
-    plain = array_display(np.zeros((64, 3)), name="logits")
+    plain = shape_display(np.zeros((64, 3)), name="logits")
     return matrix, plain, tensor
 
 
@@ -78,26 +77,32 @@ def _(mo):
     ## Operations preserve the display
 
     The result is still an ndarray subclass. Arithmetic and NumPy functions
-    return arrays with the same shape-only presentation, and the name rides
-    along with views and elementwise results. Arrays rebuilt from several
-    inputs — like the `np.concatenate` below — drop it.
+    return arrays with the same shape-only presentation. An axis keeps its
+    label only while it keeps its size, so the caption never lies: after
+    `X @ W` the `d` axis is gone and the new one shows its live size.
+
+    Names are inferred for `@` and transposes: `X @ W` is named **XW** and
+    `X.T` is **X**ᵀ. Slices keep the name, other computed results drop it, and
+    `.set_name(...)` gives any result a name without touching the original.
     """)
     return
 
 
 @app.cell
-def _(matrix, mo, np):
-    shifted = matrix + 10
-    joined = np.concatenate([matrix, shifted], axis=1)
-    mo.hstack([shifted, joined], justify="center", gap=3)
+def _(matrix, mo, np, shape_display):
+    weights = shape_display(np.ones((2, 5)), labels=("d", None), name=r"$\mathbf{W}$")
+    projected = (matrix @ weights)
+    joined = np.concatenate([matrix, matrix + 10], axis=1)
+
+    mo.hstack([weights, matrix, projected, matrix.T, joined, matrix.T @ matrix], justify="center", gap=3)
     return
 
 
 @app.cell(hide_code=True)
 def _(matrix, mo):
     mo.md(f"""
-    `matrix.value` is a plain **{type(matrix.value).__name__}** with "
-        f"shape `{matrix.value.shape}`.
+    `matrix.value` is a plain **{type(matrix.value).__name__}** with
+    shape `{matrix.value.shape}`.
     """)
     return
 
