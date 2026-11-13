@@ -163,6 +163,15 @@ def _(
         CircularSlider(value=0, start=0, stop=360, step=1, size=120, label="θ (degrees)")
     )
     # A placeholder row each until the cells below send the real data.
+    noisy_chart = PairPlot(
+        np.zeros((1, 2)),
+        columns=["x", "y"],
+        cell_size=80,
+        layout="lower",
+        show_filters=False,
+        show_layout_toggle=False,
+        show_mode_toggle=False,
+    )
     plot_before = PairPlot(
         np.zeros((1, 4)),
         columns=["z1", "z2", "z3", "z4"],
@@ -219,11 +228,12 @@ def _(
     )
 
     flow = WidgetFlow(
-        [drawing, X_shape, noise, X_noisy_shape, weights, Z_shape, noise_4d, Z_noisy_shape, new_planes, angle, Y_shape, plots],
+        [drawing, X_shape, noise, X_noisy_shape, noisy_chart, weights, Z_shape, noise_4d, Z_noisy_shape, new_planes, angle, Y_shape, plots],
         edges=[
             (drawing, X_shape),
             (X_shape, X_noisy_shape),
             (noise, X_noisy_shape),
+            (X_noisy_shape, noisy_chart),
             (X_noisy_shape, Z_shape),
             (weights, Z_shape),
             (Z_shape, Z_noisy_shape),
@@ -242,6 +252,7 @@ def _(
             (X_shape, "X"),
             (noise, "noise"),
             (X_noisy_shape, "X_noisy"),
+            (noisy_chart, "X_noisy, plotted"),
             (weights, "weights"),
             (Z_shape, "Z"),
             (noise_4d, "noise_4d"),
@@ -251,7 +262,9 @@ def _(
             (Y_shape, "Y"),
         ],
         beside=[
-            (noise, X_noisy_shape),
+            # the slider feeds X_noisy from the left, its plot sits on the right
+            (noise, X_noisy_shape, "before"),
+            (noisy_chart, X_noisy_shape),
             (weights, Z_shape),
             (noise_4d, Z_noisy_shape),
             (angle, Y_shape),
@@ -287,6 +300,7 @@ def _(
         new_planes,
         noise,
         noise_4d,
+        noisy_chart,
         plot_after,
         plot_before,
         plot_pca,
@@ -313,6 +327,18 @@ def _(X, noise, np):
     _epsilon = np.random.default_rng(0).normal(size=X.shape)
     X_noisy = (X + noise.value * _epsilon).set_name(r"$\tilde{\mathbf{X}}$")
     return (X_noisy,)
+
+
+@app.cell
+def _(X_noisy, label_colors, labels, noisy_chart):
+    if len(X_noisy) > 0:
+        noisy_chart.set_data(
+            X_noisy.value,
+            columns=["x", "y"],
+            color=labels if len(label_colors) > 1 else None,
+            color_map=label_colors,
+        )
+    return
 
 
 @app.cell

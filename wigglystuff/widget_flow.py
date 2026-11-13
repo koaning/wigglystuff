@@ -28,7 +28,8 @@ _DEFAULT_SIDES = {"down": ("bottom", "top"), "right": ("right", "left")}
 # Which way each layer's widgets may be pushed, in screen terms per direction.
 ALIGNS = {"down": ("left", "center", "right"), "right": ("top", "center", "bottom")}
 # A ``beside`` widget sits after its anchor across the flow: (the widget's side
-# that faces the anchor, the anchor's side that faces the widget).
+# that faces the anchor, the anchor's side that faces the widget). One placed
+# "before" its anchor swaps the two.
 _FACING = {"down": ("left", "right"), "right": ("top", "bottom")}
 
 
@@ -113,9 +114,12 @@ class WidgetFlow:
             ``n`` (0 is the first); whatever depends on it moves with it.
         beside: ``(widget, anchor)`` pairs put ``widget`` in ``anchor``'s
             layer, right after it across the flow (to its right going down,
-            below it going right). An arrow between the two connects their
-            facing sides unless its ``exit``/``enter`` say otherwise. Several
-            widgets beside one anchor follow in the order given.
+            below it going right). A third item ``"before"`` puts it right
+            before the anchor instead (to its left going down, above it going
+            right); ``"after"`` is the default. An arrow between the two
+            connects their facing sides unless its ``exit``/``enter`` say
+            otherwise. Several widgets on one side of an anchor follow in the
+            order given.
         align: where each layer's widgets sit. ``"center"`` (default) centres
             every layer on its own. ``"left"`` or ``"right"`` going down
             (``"top"`` or ``"bottom"`` going right) put all layers on one grid
@@ -205,17 +209,27 @@ class WidgetFlow:
             list(self._key.values()), self._edges, describe=lambda k: f"nodes[{k[1:]}]"
         )
 
-        # beside: {widget key: anchor key}, in the order given
+        # beside: {widget key: anchor key}, in the order given, and the
+        # widgets that go before their anchor rather than after it
         self.beside = {}
-        for pair in beside or []:
-            if len(pair) != 2:
-                raise ValueError("each beside entry must be a (widget, anchor) pair.")
-            w, a = self._key_of(pair[0], "beside"), self._key_of(pair[1], "beside")
+        self._before = set()
+        for entry in beside or []:
+            if len(entry) not in (2, 3):
+                raise ValueError(
+                    "each beside entry must be a (widget, anchor) pair or a "
+                    '(widget, anchor, "before"/"after") triple.'
+                )
+            w, a = self._key_of(entry[0], "beside"), self._key_of(entry[1], "beside")
+            side = entry[2] if len(entry) == 3 else "after"
+            if side not in ("before", "after"):
+                raise ValueError(f'beside side must be "before" or "after", got {side!r}.')
             if w == a:
                 raise ValueError(f"nodes[{w[1:]}] can't be placed beside itself.")
             if w in self.beside:
                 raise ValueError(f"nodes[{w[1:]}] appears in beside more than once.")
             self.beside[w] = a
+            if side == "before":
+                self._before.add(w)
         for w, a in self.beside.items():
             if a in self.beside:
                 raise ValueError(
@@ -265,14 +279,15 @@ class WidgetFlow:
         # an arrow between a beside widget and its anchor runs within one
         # layer, so it always takes the freely routed path, between the
         # sides that face each other unless its opts named others
-        near, far = _FACING[direction]
         for s, d in self._edges:
             if self.beside.get(s) == d:
-                sides = (near, far)
+                w, sides = s, _FACING[direction]
             elif self.beside.get(d) == s:
-                sides = (far, near)
+                w, sides = d, _FACING[direction][::-1]
             else:
                 continue
+            if w in self._before:
+                sides = sides[::-1]
             key = f"{s}->{d}"
             given = {k: v for k, v in opts.get(key, {}).items() if k in ("exit", "enter")}
             self.ports[key] = {
@@ -424,14 +439,18 @@ class WidgetFlow:
         layers, routes, dummies = _order_and_route(
             keys, depth, [list(e) for e in self._edges], direct=ported
         )
-        # move each beside widget to just after its anchor (after the ones
-        # already placed there, so several keep the order they were given in)
+        # move each beside widget next to its anchor: just before it, or just
+        # after the ones already placed after it, so several on one side keep
+        # the order they were given in
         last = {}
         for w, a in self.beside.items():
             row = layers[depth[a]]
             row.remove(w)
-            row.insert(row.index(last.get(a, a)) + 1, w)
-            last[a] = w
+            if w in self._before:
+                row.insert(row.index(a), w)
+            else:
+                row.insert(row.index(last.get(a, a)) + 1, w)
+                last[a] = w
         objs = dict(zip(keys, self.nodes))
 
         def item_html(k):
@@ -453,7 +472,8 @@ class WidgetFlow:
         # off-centre alignment lays every layer on one shared grid. A beside
         # widget doesn't take a grid cell of its own there (that would park it
         # past the widest widget of the previous column): it shares its
-        # anchor's cell, right after it, with the anchor kept on the centre line
+        # anchor's cell, before or after it, with the anchor kept on the centre
+        # line
         grid = self.align != "center"
         cells = {}
         for lvl in sorted(layers):
@@ -462,11 +482,13 @@ class WidgetFlow:
                 if grid and k in self.beside:
                     continue
                 html = f'<div class="wf-lane" data-wf-node="{k}"></div>' if k in dummies else item_html(k)
-                after = [w for w in layers[lvl] if self.beside.get(w) == k] if grid else []
-                if after:
+                mine = [w for w in layers[lvl] if self.beside.get(w) == k] if grid else []
+                before = "".join(item_html(w) for w in mine if w in self._before)
+                after = "".join(item_html(w) for w in mine if w not in self._before)
+                if mine:
                     html = (
-                        f'<div class="wf-group"><div></div>{html}'
-                        f'<div class="wf-beside">{"".join(item_html(w) for w in after)}</div></div>'
+                        f'<div class="wf-group"><div class="wf-beside wf-before">{before}</div>'
+                        f'{html}<div class="wf-beside">{after}</div></div>'
                     )
                 cells[lvl].append(html)
 

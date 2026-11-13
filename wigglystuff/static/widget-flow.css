@@ -95,7 +95,7 @@
 
 /* on the shared grid a beside widget shares its anchor's cell: equal tracks
    either side keep the anchor on the column's centre line, and the beside
-   widgets hug it in the trailing track */
+   widgets hug it in the trailing track (the leading one for "before") */
 .wf-group {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -107,6 +107,12 @@
   gap: var(--wf-node-gap);
   padding-left: var(--wf-node-gap);
 }
+.wf-beside.wf-before {
+  justify-content: flex-end;
+  padding-left: 0;
+  padding-right: var(--wf-node-gap);
+}
+.wf-beside:empty { padding: 0; }
 .wf[data-direction="right"] > .wf-board > .wf-layer > .wf-group {
   grid-template-columns: none;
   grid-template-rows: 1fr auto 1fr;
@@ -117,6 +123,11 @@
   padding-left: 0;
   padding-top: var(--wf-node-gap);
 }
+.wf[data-direction="right"] > .wf-board > .wf-layer > .wf-group > .wf-beside.wf-before {
+  padding-top: 0;
+  padding-bottom: var(--wf-node-gap);
+}
+.wf[data-direction="right"] > .wf-board > .wf-layer > .wf-group > .wf-beside:empty { padding: 0; }
 
 .wf-note {
   max-width: 190px;
