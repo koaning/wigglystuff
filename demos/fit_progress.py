@@ -5,7 +5,7 @@
 #     "marimo",
 #     "scikit-learn>=1.9",
 #     "scipy",
-#     "wigglystuff==0.5.40",
+#     "wigglystuff==0.6.0",
 # ]
 # ///
 

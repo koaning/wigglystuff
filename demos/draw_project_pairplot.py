@@ -3,7 +3,7 @@
 # dependencies = [
 #     "marimo",
 #     "numpy",
-#     "wigglystuff==0.5.41",
+#     "wigglystuff==0.6.0",
 # ]
 # ///
 
