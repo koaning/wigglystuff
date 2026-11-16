@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- `FloatingPanel` now animates collapse and expand: the body slides shut and
+  open with an interruptible ease-out transition (a second click mid-way
+  reverses smoothly), and the header toggle morphs between `+` and `−`. It
+  applies instantly on first render and when the OS asks for reduced motion.
+
 ## [0.6.0] - 2026-11-16
 
 ### Added
