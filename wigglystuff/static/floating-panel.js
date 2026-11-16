@@ -24,6 +24,27 @@ const GRIP_ICON = `<svg viewBox="0 0 24 24" width="14" height="14" fill="current
 </svg>`;
 
 /**
+ * The minimize toggle: a plus whose vertical bar scales away to leave a minus,
+ * so the icon morphs instead of swapping glyphs.
+ */
+const TOGGLE_ICON = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+  stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+  <line x1="5" y1="12" x2="19" y2="12"/>
+  <line data-fp-bar x1="12" y1="5" x2="12" y2="19"
+    style="transform-box: fill-box; transform-origin: center"/>
+</svg>`;
+
+/**
+ * Collapse/expand motion: a strong ease-out so the panel responds instantly
+ * and settles softly. Closing is a touch faster than opening -- getting out of
+ * the way should feel snappier than arriving.
+ */
+const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
+const EXPAND_MS = 240;
+const COLLAPSE_MS = 180;
+const BODY_PADDING = 10;
+
+/**
  * Colors track the notebook's theme without hard-coding a palette: the opaque
  * surface is the ``Canvas`` system color, which follows the ``color-scheme`` an
  * ancestor sets (light or dark) -- so ``color-scheme`` is left to inherit, not
@@ -122,6 +143,8 @@ function render({ model, el }) {
   toggleBtn.type = "button";
   toggleBtn.setAttribute("data-fp-toggle", "");
   Object.assign(toggleBtn.style, BTN_STYLE);
+  toggleBtn.innerHTML = TOGGLE_ICON;
+  const bar = toggleBtn.querySelector("[data-fp-bar]");
 
   header.append(left, toggleBtn);
   root.prepend(header);
@@ -135,7 +158,12 @@ function render({ model, el }) {
   Object.assign(root.style, PANEL_STYLE);
   applyWidth();
   const body = root.querySelector("[data-fp-body]");
-  if (body) Object.assign(body.style, { padding: "10px", overflow: "auto" });
+  if (body) {
+    Object.assign(body.style, {
+      padding: `${BODY_PADDING}px`,
+      overflow: "auto",
+    });
+  }
 
   // Escape the cell's stacking context by portaling the panel to
   // ``document.body``: inside a cell, ``z-index`` only competes within that
@@ -164,22 +192,99 @@ function render({ model, el }) {
     titleEl.textContent = model.get("title") || "";
   }
 
-  /** Collapses the panel to just its header, or expands it again. */
+  /** True when the user asked the OS to cut down on motion. */
+  function reducedMotion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  /** Sets the body's transition, or clears it with ``ms`` of 0. */
+  function setBodyTransition(ms) {
+    body.style.transition = ms
+      ? `height ${ms}ms ${EASE_OUT}, padding ${ms}ms ${EASE_OUT}, ` +
+        `opacity ${ms}ms ${EASE_OUT}`
+      : "none";
+  }
+
+  /** Expanded resting state: natural height, so content can grow and scroll. */
+  function finishExpand() {
+    setBodyTransition(0);
+    body.style.height = "";
+    body.style.overflow = "auto";
+    applyWidth(); // restore the shrink-wrap (or fixed) width
+  }
+
+  // The height transition only ends on its own when it runs to completion; an
+  // interrupted run (a second click mid-way) simply retargets from wherever it
+  // got to, so a stale end never lands. Checking ``isCollapsed`` covers the
+  // case where the last completed transition was a collapse.
+  let isCollapsed = null; // unknown until the first paint
+  if (body) {
+    body.addEventListener("transitionend", (e) => {
+      if (e.target !== body || e.propertyName !== "height") return;
+      if (!isCollapsed) finishExpand();
+    });
+  }
+
+  /**
+   * Collapses the panel to just its header, or expands it again. The body's
+   * height slides between its content height and 0 with a CSS transition
+   * rather than keyframes, so a click mid-animation reverses from the current
+   * height instead of jumping. The first paint applies instantly.
+   */
   function applyCollapsed() {
     const collapsed = model.get("collapsed");
+    const firstPaint = isCollapsed === null;
+    toggleBtn.title = collapsed ? "Expand" : "Minimize";
+    toggleBtn.setAttribute("aria-label", toggleBtn.title);
+    bar.style.transition = firstPaint ? "none" : `transform ${EXPAND_MS}ms ${EASE_OUT}`;
+    bar.style.transform = collapsed ? "scaleY(1)" : "scaleY(0)";
+    // The click handler and ``change:collapsed`` can both call in; only act
+    // on a real change of state.
+    if (collapsed === isCollapsed) return;
+    isCollapsed = collapsed;
+    if (!body) return;
+    const ms = firstPaint || reducedMotion() ? 0 : collapsed ? COLLAPSE_MS : EXPAND_MS;
+
     if (collapsed) {
-      // Freeze the current width before hiding the body so the collapsed
+      // Freeze the current width before closing the body so the collapsed
       // header keeps the panel's expanded width instead of shrinking to fit
       // just the grip and toggle. A fixed ``width`` already holds itself.
       if (!model.get("width")) root.style.width = `${root.offsetWidth}px`;
-      if (body) body.style.display = "none";
-    } else {
-      if (body) body.style.display = "";
-      applyWidth(); // restore the shrink-wrap (or fixed) width
+      // Pin the current height in px (transitions cannot start from ``auto``),
+      // force a layout, then slide to 0.
+      setBodyTransition(0);
+      body.style.height = `${body.offsetHeight}px`;
+      body.style.overflow = "hidden";
+      void body.offsetHeight;
+      setBodyTransition(ms);
+      body.style.height = "0px";
+      body.style.paddingTop = "0px";
+      body.style.paddingBottom = "0px";
+      body.style.opacity = "0";
+      body.inert = true; // hidden controls must not take focus
+      return;
     }
-    toggleBtn.textContent = collapsed ? "+" : "−"; // + / minus
-    toggleBtn.title = collapsed ? "Expand" : "Minimize";
-    toggleBtn.setAttribute("aria-label", toggleBtn.title);
+
+    body.inert = false;
+    // Target height: the content plus its padding, capped at what the panel's
+    // 80vh limit leaves below the header (past that the body scrolls).
+    const cs = getComputedStyle(body);
+    const padNow = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+    const content = body.scrollHeight - padNow;
+    const room = window.innerHeight * 0.8 - header.offsetHeight - 2; // 2px border
+    const target = Math.max(0, Math.min(content + 2 * BODY_PADDING, room));
+    setBodyTransition(0);
+    body.style.height = `${body.offsetHeight}px`;
+    body.style.overflow = "hidden";
+    void body.offsetHeight;
+    setBodyTransition(ms);
+    body.style.height = `${target}px`;
+    body.style.paddingTop = `${BODY_PADDING}px`;
+    body.style.paddingBottom = `${BODY_PADDING}px`;
+    body.style.opacity = "";
+    // No transition runs (and so none ends) when it is instant or the height
+    // is already there; settle straight away.
+    if (!ms || Math.abs(body.offsetHeight - target) < 1) finishExpand();
   }
 
   /** Places the panel from ``x``/``y``, or from ``corner`` when they are unset. */
