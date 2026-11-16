@@ -129,6 +129,109 @@
 }
 .wf[data-direction="right"] > .wf-board > .wf-layer > .wf-group > .wf-beside:empty { padding: 0; }
 
+/* collapsible nodes: a small round button in the top-right corner (shown on
+   hover) folds the node to a dashed pill holding just its caption and the
+   button. Child combinators keep an outer fold from styling a nested flow. */
+.wf-node[data-wf-collapsible] { position: relative; }
+.wf-node > .wf-fold {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid var(--wf-rule);
+  border-radius: 999px;
+  background: var(--wf-bg);
+  color: var(--wf-note);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.wf-node:hover > .wf-fold,
+.wf-node > .wf-fold:focus-visible { opacity: 1; }
+.wf-node > .wf-fold:hover { color: var(--wf-ink); border-color: var(--wf-edge); }
+.wf-node > .wf-fold svg {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 120ms ease;
+}
+.wf-node > .wf-fold-label { display: none; }
+
+.wf-node.wf-node--collapsed {
+  flex-direction: row;
+  gap: 6px;
+  padding: 3px 4px 3px 10px;
+  border: 1px dashed color-mix(in srgb, var(--wf-ink) 28%, transparent);
+  border-radius: 999px;
+  background: var(--wf-bg);
+}
+.wf-node--collapsed > .wf-body { display: none; }
+.wf-node--collapsed > .wf-fold-label { display: block; }
+.wf-node--collapsed > .wf-fold {
+  position: static;
+  opacity: 1;
+  border-color: transparent;
+}
+.wf-node--collapsed > .wf-fold svg { transform: rotate(-90deg); }
+
+/* groups ("clusters" here: .wf-group already means a beside cell). Folded,
+   the group's cells are .wf-away and its pill shows in their place; open, it
+   gets a faint dashed frame and a tab that folds it. */
+.wf .wf-away { display: none !important; }
+.wf .wf-beside.wf-bare { padding: 0; }
+.wf-node.wf-cluster-pill {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--wf-ink) 22%, transparent);
+}
+.wf-node.wf-cluster-pill > .wf-caption { color: var(--wf-ink); }
+.wf-cluster-frame {
+  fill: none;
+  stroke: color-mix(in srgb, var(--wf-ink) 20%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+.wf-cluster-tabs {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.wf-cluster-tab {
+  position: absolute;
+  transform: translate(-100%, -50%);
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px 1px 5px;
+  border: 1px solid var(--wf-rule);
+  border-radius: 999px;
+  background: var(--wf-bg);
+  color: var(--wf-note);
+  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.wf-cluster-tab:hover { color: var(--wf-ink); border-color: var(--wf-edge); }
+.wf-cluster-tab svg {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .wf-note {
   max-width: 190px;
   color: var(--wf-note);

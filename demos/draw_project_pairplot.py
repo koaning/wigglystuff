@@ -72,7 +72,9 @@ def _(mo):
     noise after $\mathbf{W}$ shakes them off it. Drag the numbers in
     $\mathbf{W}$ to mix the columns differently, the sliders to set the
     standard deviation of either noise (in canvas pixels), and the dial to
-    rotate.
+    rotate. Hover the canvas or a plot for a button in its corner that folds
+    it away, and click it again to bring it back; the tab on the dashed frame
+    folds the whole stretch from $\mathbf{Z}$ to $\mathbf{Y}$ into one pill.
 
     In four dimensions a rotation turns two planes at once. The button picks
     a new random pair of planes, and the dial turns both of them by
@@ -260,6 +262,7 @@ def _(
             (new_planes, "planes"),
             (angle, "angle"),
             (Y_shape, "Y"),
+            (plots, "pair plots"),
         ],
         beside=[
             # the slider feeds X_noisy from the left, its plot sits on the right
@@ -271,6 +274,12 @@ def _(
             (new_planes, Y_shape),
         ],
         align="left",
+        # hover one of these for the button that folds it away (and back)
+        collapsible=[drawing, noisy_chart, plots],
+        # the tab on this group's frame folds the whole Z -> Y stretch into one pill
+        groups=[
+            ("Z → Y", [weights, Z_shape, noise_4d, Z_noisy_shape, new_planes, angle, Y_shape]),
+        ],
     )
 
     # The same controls again in a panel that floats over the page, so they
