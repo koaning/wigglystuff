@@ -348,6 +348,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_dag.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/widget-dag/">API</a><a href="reference/widget-dag.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title"><a href="reference/widget-flow/">WidgetFlow</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_flow.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/widget-flow.webp" alt="WidgetFlow widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_flow.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/widget-flow/">API</a><a href="reference/widget-flow.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title"><a href="reference/hint/">Hint</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/hint.webp" alt="Hint widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hint.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/hint/">API</a><a href="reference/hint.md">MD</a></div>
@@ -380,6 +385,11 @@ These are **marimo-only** display helpers — they render through marimo's displ
 <div class="gallery-title"><a href="reference/widget-dag/">WidgetDAG</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_dag.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/widget-dag.webp" alt="WidgetDAG widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_dag.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/widget-dag/">API</a><a href="reference/widget-dag.md">MD</a></div>
+</div>
+<div class="gallery-item">
+<div class="gallery-title"><a href="reference/widget-flow/">WidgetFlow</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_flow.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/widget-flow.webp" alt="WidgetFlow widget"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_flow.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/widget-flow/">API</a><a href="reference/widget-flow.md">MD</a></div>
 </div>
 <div class="gallery-item">
 <div class="gallery-title"><a href="reference/hint/">Hint</a></div>

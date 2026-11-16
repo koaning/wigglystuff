@@ -2,10 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.6.0] - 2026-11-16
 
 ### Added
 
+- `WidgetFlow` display helper (marimo-only): live widgets, charts and images
+  laid out as a layered DAG in the style of `FormulaDAG`. Pass the widgets
+  and `(src, dst)` edges between the objects themselves, or let
+  `WidgetFlow.from_widgets([...])` read the edges off marimo's dataflow graph
+  and caption each widget with its variable name. Layers run `"down"` or
+  `"right"`; edges take a label or an options dict (`label`, `exit`/`enter`
+  sides with an optional position, `color`, `dashed`), and ported arrows route
+  around the other widgets. `notes` hang a markdown/LaTeX note with an arrow
+  beside a widget, `layers` pins a widget to a later layer, `beside` puts a
+  widget next to the one it feeds (before or after it), and `align` packs
+  every layer onto one shared grid so a chain down a column gets straight
+  arrows. Parts of the flow can be hidden and brought back: widgets in
+  `collapsible` get a hover button that folds them to a pill, and `groups`
+  draw a dashed frame whose tab folds a whole stretch into one pill with the
+  arrows in and out re-aimed at it. Nothing is laid out again — the rest of
+  the flow glides into place (instantly under reduced motion) and the
+  widgets keep their state. `upstream()`/`downstream()` walk the graph.
+- New demo `demos/draw_project_pairplot.py`: paint a shape, add noise, project
+  it to four dimensions, rotate it and run PCA, laid out as a `WidgetFlow`
+  with `shape_display` stand-ins for each matrix and `PairPlot`s at the end.
 - `PairPlot` widget: a scatterplot matrix built for large data. Pass a 2D
   NumPy array or a pandas/polars DataFrame (tested up to a million rows); the
   numbers go to the browser as binary float32, stay in a Web Worker, and are
@@ -18,7 +38,8 @@ All notable changes to this project will be documented in this file.
   selection and Exclude drops it, the axes animate to the rows that remain,
   and Reset brings everything back. In Python, `get_mask()`,
   `selected_data`, `active_data`, and `keep()`/`exclude()`/`reset()` mirror
-  the buttons.
+  the buttons; `show_filters`, `show_mode_toggle` and `show_layout_toggle`
+  hide them when a plot is only for looking.
 - `shape_display` helper: wrap a 2D/3D NumPy array in an `ndarray` subclass so
   marimo shows only its shape — empty matrix brackets (stacked like sheets of
   paper for 3D, no blending between planes) with a caption such as `n × 2` —
@@ -60,7 +81,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - `demos/envconfig.py` imported `wigglystuff` without depending on it, so
-  `uv run demos/envconfig.py` failed; it now pins `wigglystuff==0.5.40`, and
+  `uv run demos/envconfig.py` failed; it now pins `wigglystuff`, and
   `demos/progressbar.py` pins its previously unpinned `wigglystuff` entry.
 
 ## [0.5.40] - 2026-11-11

@@ -207,7 +207,7 @@ function render({ model, el }) {
   const root = host.closest("[data-wf-root]");
   if (!root) return;
   const board = root.querySelector(":scope > .wf-board");
-  board.querySelectorAll(":scope > .wf-svg, :scope > .wf-labels").forEach((n) => n.remove());
+  board.querySelectorAll(":scope > .wf-svg, :scope > .wf-labels, :scope > .wf-cluster-tabs").forEach((n) => n.remove());
 
   const routes = model.get("routes");
   const edgeLabels = model.get("edge_labels") || {};
@@ -238,14 +238,130 @@ function render({ model, el }) {
   board.querySelectorAll("[data-wf-note]").forEach((n) => {
     if (n.closest("[data-wf-root]") === root) notes[n.dataset.wfNote] = n;
   });
-  const layerEls = [...board.children].filter((n) => n.classList.contains("wf-layer"));
-  const rowOf = {};
-  layerEls.forEach((layer, i) => {
-    // (a flow nested inside a node has its own n0, n1, ...: leave those be)
-    layer.querySelectorAll("[data-wf-node]").forEach((n) => {
-      if (n.closest("[data-wf-root]") === root) rowOf[n.dataset.wfNode] = i;
-    });
+
+  // ---- folding ---------------------------------------------------------------
+  // A collapsible node's button folds it to a pill (CSS hides its body) and
+  // back. Nothing is laid out again: the node's box just shrinks, and the
+  // ResizeObserver below redraws the arrows onto the pill. The folded keys
+  // live on the model, so a re-rendered view comes back folded the same way.
+  //
+  // A group (key "g0", "g1", ...) folds the other way: its widgets' cells get
+  // .wf-away (display: none), and a pill that was waiting in the layout shows
+  // in their place. Layers, beside cells and groups left with nothing showing
+  // go away too, and draw() re-aims the arrows in and out of the group at the
+  // pill. While open, a group gets a dashed frame with a tab to fold it.
+  const groupDefs = model.get("groups") || {};
+  const mine = (n) => n.closest("[data-wf-root]") === root;
+  const folds = {};
+  board.querySelectorAll("[data-wf-fold]").forEach((b) => {
+    if (mine(b)) folds[b.dataset.wfFold] = b;
   });
+  const pills = {};
+  board.querySelectorAll("[data-wf-pill]").forEach((p) => {
+    if (mine(p)) pills[p.dataset.wfPill] = p;
+  });
+  const tabBar = document.createElement("div");
+  tabBar.className = "wf-cluster-tabs";
+  board.append(tabBar);
+  const tabs = {};
+  for (const [g, def] of Object.entries(groupDefs)) {
+    const tab = document.createElement("button");
+    tab.type = "button";
+    tab.className = "wf-cluster-tab";
+    tab.title = "hide";
+    tab.innerHTML = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2.5 3.75 L5 6.25 L7.5 3.75"/></svg>';
+    tab.append(document.createTextNode(def.label));
+    tabBar.append(tab);
+    tabs[g] = tab;
+  }
+
+  const folded = new Set(model.get("collapsed") || []);
+  function applyFolds() {
+    for (const id in folds) {
+      if (id in groupDefs) continue;
+      nodes[id].classList.toggle("wf-node--collapsed", folded.has(id));
+      folds[id].setAttribute("aria-expanded", folded.has(id) ? "false" : "true");
+    }
+    for (const [g, def] of Object.entries(groupDefs)) {
+      const away = folded.has(g);
+      pills[g].classList.toggle("wf-away", !away);
+      for (const id of def.members) nodes[id].closest(".wf-item").classList.toggle("wf-away", away);
+    }
+    // then whatever that leaves with nothing showing, innermost first: a
+    // beside track loses its padding (it stays, so the anchor keeps its
+    // centre track), a beside cell goes once all its widgets have, and a
+    // layer once all its cells have
+    const away = (n) => n.classList.contains("wf-away");
+    board.querySelectorAll(".wf-beside").forEach((n) => {
+      if (mine(n)) n.classList.toggle("wf-bare", n.children.length > 0 && [...n.children].every(away));
+    });
+    board.querySelectorAll(".wf-group").forEach((n) => {
+      if (mine(n)) n.classList.toggle("wf-away", [...n.querySelectorAll(":scope > .wf-item, :scope > .wf-beside > .wf-item")].every(away));
+    });
+    board.querySelectorAll(":scope > .wf-layer").forEach((n) => {
+      n.classList.toggle("wf-away", n.children.length > 0 && [...n.children].every(away));
+    });
+  }
+  // Folding animates in two beats: what is leaving fades out (the arrows
+  // with it), then the folds apply and every widget that stays glides from
+  // where it was to where it lands (FLIP: measure, apply, play the
+  // difference back as a transform), while what appears fades and grows in.
+  // The arrows are redrawn and fade back once everything has landed.
+  const reduceMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  let busy = false;
+  async function toggle(id) {
+    if (busy) return;
+    busy = true;
+    const fold = !folded.has(id);
+    // what goes away: a node's own cell (it comes back as a pill, or out of
+    // one), a folding group's widgets, or an opening group's pill
+    const itemOf = (k) => nodes[k].closest(".wf-item");
+    const leaving = !(id in groupDefs) ? [itemOf(id)] : fold ? groupDefs[id].members.map(itemOf) : [pills[id]];
+    const animate = !reduceMotion() && root.isConnected;
+    const items = [...board.querySelectorAll(".wf-item")].filter((n) => mine(n) && n.getClientRects().length);
+    const before = new Map(items.map((n) => [n, n.getBoundingClientRect()]));
+    if (animate) {
+      root.classList.add("wf-moving");
+      const fades = leaving.filter((n) => before.has(n)).map((n) =>
+        n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 90, easing: "ease-in", fill: "forwards" }));
+      await Promise.all(fades.map((a) => a.finished.catch(() => {})));
+      fades.forEach((a) => a.cancel());
+    }
+
+    if (fold) folded.add(id); else folded.delete(id);
+    applyFolds();
+    model.set("collapsed", [...folded].sort());
+    model.save_changes();
+
+    if (animate) {
+      const moves = [];
+      for (const n of board.querySelectorAll(".wf-item")) {
+        if (!mine(n) || !n.getClientRects().length) continue;
+        const was = before.get(n);
+        if (was && !leaving.includes(n)) {
+          const now = n.getBoundingClientRect();
+          const [dx, dy] = [was.left - now.left, was.top - now.top];
+          if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) continue;
+          moves.push(n.animate(
+            [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }],
+            { duration: 200, easing: "cubic-bezier(.2, .7, .2, 1)" }));
+        } else {
+          moves.push(n.animate(
+            [{ opacity: 0, transform: "scale(0.96)" }, { opacity: 1, transform: "none" }],
+            { duration: 160, delay: 50, easing: "ease-out", fill: "backwards" }));
+        }
+      }
+      await Promise.all(moves.map((a) => a.finished.catch(() => {})));
+      root.classList.remove("wf-moving");
+    }
+    draw();
+    busy = false;
+    // widgets that measured themselves while hidden get a chance to redo it
+    if (!fold) requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+  }
+  applyFolds();
+  for (const [id, b] of Object.entries(folds)) on(b, "click", (ev) => { ev.stopPropagation(); toggle(id); });
+  for (const [g, t] of Object.entries(tabs)) on(t, "click", (ev) => { ev.stopPropagation(); toggle(g); });
 
   // ---- theme ---------------------------------------------------------------
   const theme = model.get("theme");
@@ -274,10 +390,20 @@ function render({ model, el }) {
       const [x, y, h, v] = T ? [o.y, o.x, o.v, o.h] : [o.x, o.y, o.h, o.v];
       Object.assign(lab.style, { left: `${x}px`, top: `${y}px`, transform: `translate(${SHIFT[h]}, ${SHIFT[v]})` });
     };
+    // only what is showing: folded-away widgets, notes and layers have no box
+    const shown = (n) => n.getClientRects().length > 0;
     const boxOf = {};
-    for (const id in nodes) boxOf[id] = rel(nodes[id]);
+    for (const id in nodes) if (shown(nodes[id])) boxOf[id] = rel(nodes[id]);
     const noteBox = {};
-    for (const id in notes) noteBox[id] = rel(notes[id]);
+    for (const id in notes) if (shown(notes[id])) noteBox[id] = rel(notes[id]);
+    const layerEls = [...board.children].filter((n) => n.classList.contains("wf-layer") && shown(n));
+    const rowOf = {};
+    layerEls.forEach((layer, i) => {
+      // (a flow nested inside a node has its own n0, n1, ...: leave those be)
+      layer.querySelectorAll("[data-wf-node]").forEach((n) => {
+        if (mine(n)) rowOf[n.dataset.wfNode] = i;
+      });
+    });
     const layerBox = layerEls.map(rel);
     const mid = (b) => (b.left + b.right) / 2;
     const segs = [];
@@ -288,7 +414,7 @@ function render({ model, el }) {
     // one there's a clear gap under it. Arrows from one source share a group,
     // so the stem they share doesn't get notched where they branch apart.
     const groups = {};
-    const drawEdge = (src, dst, d, head) => {
+    const drawEdge = (src, dst, d, head, key = `${src}->${dst}`) => {
       if (!groups[src]) {
         const g = svgEl("g", {});
         groups[src] = { halos: svgEl("g", {}), lines: svgEl("g", {}) };
@@ -297,7 +423,7 @@ function render({ model, el }) {
       }
       const line = svgEl("path", { class: "wf-edge", d });
       const tip = svgEl("path", { class: "wf-head", d: head });
-      const style = edgeStyles[`${src}->${dst}`];
+      const style = edgeStyles[key];
       if (style?.color) {
         line.style.stroke = style.color;
         Object.assign(tip.style, { fill: style.color, stroke: style.color });
@@ -309,6 +435,29 @@ function render({ model, el }) {
 
     // 1. default arrows: each one's x positions -- the stem, any lanes, and a
     //    landing slot spread across the target's top edge
+    // an arrow into or out of a folded group is re-aimed at its pill and
+    // routed freely (the pill sits wherever the group's first widget was);
+    // arrows inside the group go. Two that now join the same pair of nodes
+    // stay two when they land in different spots (Z and Y each feeding their
+    // own plot), and are drawn once when they'd lie on top of each other
+    const pillOf = {};
+    for (const [g, def] of Object.entries(groupDefs)) if (folded.has(g)) def.members.forEach((id) => { pillOf[id] = g; });
+    const regrouped = [];
+    const joined = new Set();
+    for (const r of routes) {
+      const [s, d] = [r[0], r.at(-1)];
+      const [ps, pd] = [pillOf[s] || s, pillOf[d] || d];
+      if (ps === s && pd === d) continue;
+      if (ps === pd || !(ps in boxOf && pd in boxOf)) continue;
+      // keep the port at whichever end is still the original widget
+      const p = ports[keyOf(r)] || {};
+      const end = (k, keep, fallback) => ({ side: (keep && p[k]?.side) || fallback, at: keep ? p[k]?.at ?? null : null });
+      const e = { key: keyOf(r), src: ps, dst: pd, exit: end("exit", ps === s, "bottom"), enter: end("enter", pd === d, "top") };
+      const sig = JSON.stringify([ps, pd, e.exit, e.enter]);
+      if (joined.has(sig)) continue;
+      joined.add(sig);
+      regrouped.push(e);
+    }
     const all = routes.filter((r) => r.every((id) => id in boxOf && id in rowOf));
     const live = all.filter((r) => !ports[keyOf(r)]);
     const arrows = live.map((route) => ({
@@ -321,7 +470,7 @@ function render({ model, el }) {
       const p = ports[keyOf(r)];
       const end = (k, fallback) => ({ side: p[k]?.side || fallback, at: p[k]?.at ?? null });
       return { key: keyOf(r), src: r[0], dst: r.at(-1), exit: end("exit", "bottom"), enter: end("enter", "top") };
-    });
+    }).concat(regrouped);
     // every arrow that lands on a target's top edge -- default ones and ported
     // ones without a position -- gets its own slot, ordered by where it comes from
     const incoming = {};
@@ -465,14 +614,14 @@ function render({ model, el }) {
       const a = portPoint(boxOf[e.src], e.exit.side, e.exit.at, 0);
       const b = portPoint(boxOf[e.dst], e.enter.side, e.enter.at, GAP);
       const obstacles = [
-        ...Object.keys(nodes).filter((id) => id !== e.src && id !== e.dst && !id.startsWith("!")).map((id) => box(boxOf[id], 4)),
+        ...Object.keys(boxOf).filter((id) => id !== e.src && id !== e.dst && !id.startsWith("!")).map((id) => box(boxOf[id], 4)),
         ...Object.values(noteBox).map((n) => box(n, 4)),
       ];
       const pts = orthoRoute(a, b, obstacles, segs);
       segs.push(pts);
       const d1 = [-b.nx, -b.ny];
       const stop = { x: b.x - d1[0] * HEAD_LEN * 0.8, y: b.y - d1[1] * HEAD_LEN * 0.8 };
-      drawEdge(e.src, e.dst, roundedPath([...pts.slice(0, -1), stop]), headPath(b, d1));
+      drawEdge(e.src, e.dst, roundedPath([...pts.slice(0, -1), stop]), headPath(b, d1), e.key);
       const text = edgeLabels[e.key];
       if (text) pending.push({ text, options: along(pts) });
     }
@@ -498,7 +647,27 @@ function render({ model, el }) {
       blockers.push(rel(lab));
     }
 
-    // 6. notes: a short straight arrow from the note onto its widget's edge
+    // 6. open groups: a faint dashed frame around their widgets (under the
+    //    arrows), with the tab that folds them sat on its top-right corner
+    for (const [g, def] of Object.entries(groupDefs)) {
+      const boxes = def.members.flatMap((id) => [boxOf[id], noteBox[id]]).filter(Boolean);
+      tabs[g].classList.toggle("wf-away", folded.has(g) || !boxes.length);
+      if (folded.has(g) || !boxes.length) continue;
+      const f = box({
+        left: Math.min(...boxes.map((b) => b.left)),
+        right: Math.max(...boxes.map((b) => b.right)),
+        top: Math.min(...boxes.map((b) => b.top)),
+        bottom: Math.max(...boxes.map((b) => b.bottom)),
+      }, 12);
+      canvas.prepend(svgEl("rect", {
+        class: "wf-cluster-frame", x: f.left, y: f.top, width: f.right - f.left, height: f.bottom - f.top, rx: 12,
+      }));
+      // the frame's top-right corner on the real board
+      const [x, y] = T ? [f.bottom, f.left] : [f.right, f.top];
+      Object.assign(tabs[g].style, { left: `${x - 14}px`, top: `${y}px` });
+    }
+
+    // 7. notes: a short straight arrow from the note onto its widget's edge
     //    (the note sits after the widget across the flow: right of it going
     //    down, below it going right -- both "right" in the frame)
     for (const [id, n] of Object.entries(noteBox)) {

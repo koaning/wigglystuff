@@ -44,6 +44,11 @@ class _FlowOverlay(anywidget.AnyWidget):
     ports = traitlets.Dict().tag(sync=True)
     direction = traitlets.Unicode("down").tag(sync=True)
     theme = traitlets.Unicode("auto").tag(sync=True)
+    # keys of the nodes folded to a pill right now; the browser keeps it
+    # current so a re-rendered view comes back folded the same way
+    collapsed = traitlets.List().tag(sync=True)
+    # {"g0": {"label": ..., "members": [node keys]}}: the foldable groups
+    groups = traitlets.Dict().tag(sync=True)
 
 
 def _port(value, what):
@@ -126,6 +131,18 @@ class WidgetFlow:
             packed to that side: the first widget of every layer shares a
             column (the last one, packing right), centred in it, so a chain of
             widgets down that column gets straight arrows.
+        collapsible: Widgets that get a small button (top-right, on hover)
+            that folds them to a pill showing just their caption, and back.
+            Arrows keep landing on the pill and nothing else moves. Fold a
+            nested ``WidgetFlow`` to hide a whole group at once.
+        collapsed: Widgets that start folded (they're collapsible too).
+            Folding happens in the browser; this only sets where it starts.
+        groups: ``(label, widgets)`` pairs, or ``(label, widgets,
+            "collapsed")`` to start folded. A group gets a faint dashed frame
+            with a tab carrying its label; the tab folds the whole group into
+            one pill, and the arrows in and out of it land on the pill. A
+            widget is in at most one group, and a group must hold every
+            widget on a path between two of its own.
         theme: ``"auto"`` (follow the notebook), ``"light"`` or ``"dark"``.
 
     Widgets are referred to by the objects themselves, so options that name a
@@ -158,6 +175,17 @@ class WidgetFlow:
             beside=[(degree, fit_chart)],
         )
         ```
+
+        Let the data chart fold away, and fold the fitting step as a whole,
+        starting folded:
+
+        ```python
+        WidgetFlow.from_widgets(
+            [n_points, noise, data_chart, degree, fit_chart],
+            collapsible=[data_chart],
+            groups=[("fit", [degree, fit_chart], "collapsed")],
+        )
+        ```
     """
 
     def __init__(
@@ -172,6 +200,9 @@ class WidgetFlow:
         layers=None,
         beside=None,
         align="center",
+        collapsible=None,
+        collapsed=None,
+        groups=None,
         theme="auto",
     ):
         if direction not in DIRECTIONS:
@@ -322,6 +353,61 @@ class WidgetFlow:
                 )
             self.layers[k] = n
 
+        self.collapsed = {self._key_of(o, "collapsed") for o in collapsed or []}
+        self.collapsible = {self._key_of(o, "collapsible") for o in collapsible or []}
+        self.collapsible |= self.collapsed
+
+        # groups: {"g0": {"label": ..., "members": [keys in node order]}}; a
+        # folded group starts out in self.collapsed under its own key
+        self.groups = {}
+        grouped = {}
+        for i, entry in enumerate(groups or []):
+            if len(entry) not in (2, 3) or (len(entry) == 3 and entry[2] != "collapsed"):
+                raise ValueError(
+                    'each group must be a (label, widgets) pair or a '
+                    '(label, widgets, "collapsed") triple.'
+                )
+            label, members = str(entry[0]), {self._key_of(o, "group") for o in entry[1]}
+            if not members:
+                raise ValueError(f"group {label!r} has no widgets.")
+            for k in members:
+                if k in grouped:
+                    raise ValueError(
+                        f"nodes[{k[1:]}] is in both group {grouped[k]!r} and group {label!r}."
+                    )
+                grouped[k] = label
+            # folding swaps the group for one pill, which only works if no
+            # outside widget sits on a path between two of its widgets
+            between = (self._reach(members, up=False) & self._reach(members, up=True)) - members
+            if between:
+                k = min(between, key=lambda k: int(k[1:]))
+                raise ValueError(
+                    f"group {label!r} must include nodes[{k[1:]}]: it sits on a path "
+                    "between two of the group's widgets."
+                )
+            g = f"g{i}"
+            self.groups[g] = {
+                "label": label,
+                "members": sorted(members, key=lambda k: int(k[1:])),
+            }
+            if len(entry) == 3:
+                self.collapsed.add(g)
+
+    def _reach(self, keys, up):
+        """Every key reachable from ``keys`` along the edges (or against them
+        when ``up``), not counting ``keys`` themselves unless on a loop back."""
+        step = {}
+        for s, d in self._edges:
+            a, b = (d, s) if up else (s, d)
+            step.setdefault(a, []).append(b)
+        seen, todo = set(), list(keys)
+        while todo:
+            for nxt in step.get(todo.pop(), []):
+                if nxt not in seen:
+                    seen.add(nxt)
+                    todo.append(nxt)
+        return seen
+
     def _layer_edges(self):
         """The edges with each beside widget merged into its anchor (and the
         arrows between the two dropped), for layering."""
@@ -366,17 +452,7 @@ class WidgetFlow:
         return self._lineage(widget, up=False)
 
     def _lineage(self, widget, up):
-        start = self._key_of(widget)
-        step = {}
-        for s, d in self._edges:
-            a, b = (d, s) if up else (s, d)
-            step.setdefault(a, []).append(b)
-        seen, todo = set(), [start]
-        while todo:
-            for nxt in step.get(todo.pop(), []):
-                if nxt not in seen:
-                    seen.add(nxt)
-                    todo.append(nxt)
+        seen = self._reach([self._key_of(widget)], up)
         return [o for o in self.nodes if self._key[id(o)] in seen]
 
     def _key_of(self, obj, what="node"):
@@ -463,10 +539,26 @@ class WidgetFlow:
                 text = self.notes[k]
                 html = mo.md(text) if isinstance(text, str) else mo.as_html(text)
                 note = f'<div class="wf-note" data-wf-note="{k}">{html.text}</div>'
+            attrs, fold = 'class="wf-node"', ""
+            if k in self.collapsible:
+                folded = k in self.collapsed
+                attrs = (
+                    f'class="wf-node{" wf-node--collapsed" if folded else ""}" '
+                    "data-wf-collapsible"
+                )
+                if not caption:
+                    # a folded pill needs some text to show
+                    caption = '<div class="wf-caption wf-fold-label">hidden</div>'
+                fold = (
+                    f'<button type="button" class="wf-fold" data-wf-fold="{k}" '
+                    f'aria-expanded="{"false" if folded else "true"}" title="hide / show">'
+                    '<svg viewBox="0 0 10 10" aria-hidden="true">'
+                    '<path d="M2.5 3.75 L5 6.25 L7.5 3.75"/></svg></button>'
+                )
             return (
                 f'<div class="wf-item">'
-                f'<div class="wf-node" data-wf-node="{k}">'
-                f'<div class="wf-body">{body}</div>{caption}</div>{note}</div>'
+                f'<div {attrs} data-wf-node="{k}">'
+                f'<div class="wf-body">{body}</div>{caption}{fold}</div>{note}</div>'
             )
 
         # off-centre alignment lays every layer on one shared grid. A beside
@@ -475,10 +567,33 @@ class WidgetFlow:
         # anchor's cell, before or after it, with the anchor kept on the centre
         # line
         grid = self.align != "center"
+
+        # a folded group is one pill, in the layer of its earliest widget,
+        # just before the first of them there. The pill is always in the page
+        # (the browser shows it, and hides the group's widgets, on folding).
+        # (CSS calls a group a "cluster": .wf-group already means a beside cell.)
+        pill_at = {}
+        for g, grp in self.groups.items():
+            lvl = min(depth[k] for k in grp["members"])
+            pill_at[next(k for k in layers[lvl] if k in grp["members"])] = g
+
+        def pill_html(g):
+            return (
+                f'<div class="wf-item wf-away" data-wf-pill="{g}">'
+                f'<div class="wf-node wf-node--collapsed wf-cluster-pill" data-wf-node="{g}">'
+                f'<div class="wf-caption">{escape(self.groups[g]["label"])}</div>'
+                f'<button type="button" class="wf-fold" data-wf-fold="{g}" '
+                'aria-expanded="false" title="show">'
+                '<svg viewBox="0 0 10 10" aria-hidden="true">'
+                '<path d="M2.5 3.75 L5 6.25 L7.5 3.75"/></svg></button></div></div>'
+            )
+
         cells = {}
         for lvl in sorted(layers):
             cells[lvl] = []
             for k in layers[lvl]:
+                if k in pill_at:
+                    cells[lvl].append(pill_html(pill_at[k]))
                 if grid and k in self.beside:
                     continue
                 html = f'<div class="wf-lane" data-wf-node="{k}"></div>' if k in dummies else item_html(k)
@@ -495,12 +610,15 @@ class WidgetFlow:
         # the k-th cell of each layer sits in column k (counted from the far
         # end for "right"/"bottom"), so widgets stacked in a column share a
         # centre line
-        n_cols = max((len(row) for row in cells.values()), default=1)
+        # (a pill only shows in place of its group's widgets, so it doesn't
+        # count towards a layer's width)
+        n_pills = {lvl: sum(depth[k] == lvl for k in pill_at) for lvl in cells}
+        n_cols = max((len(row) - n_pills[lvl] for lvl, row in cells.items()), default=1)
         span = "grid-row" if self.direction == "right" else "grid-column"
         rows = []
         for lvl in sorted(cells):
             items = cells[lvl]
-            skip = n_cols - len(items)
+            skip = n_cols - len(items) + n_pills[lvl]
             if self.align in ("right", "bottom") and skip:
                 items.insert(0, f'<div style="{span}: span {skip}"></div>')
             rows.append(f'<div class="wf-layer">{"".join(items)}</div>')
@@ -513,6 +631,8 @@ class WidgetFlow:
                 ports=self.ports,
                 direction=self.direction,
                 theme=self.theme,
+                collapsed=sorted(self.collapsed),
+                groups=self.groups,
             )
         )
         css = _CSS_PATH.read_text(encoding="utf-8")

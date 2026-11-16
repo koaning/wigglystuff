@@ -4,7 +4,7 @@
 #     "hastyplot==0.4.1",
 #     "marimo",
 #     "pandas==3.0.3",
-#     "wigglystuff==0.5.21",
+#     "wigglystuff==0.6.0",
 # ]
 # requires-python = ">=3.12"
 # ///
