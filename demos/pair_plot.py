@@ -42,6 +42,8 @@ def _(mo):
     - **Drag the selection** to move it (box or lasso); every cell and
       histogram follows live. Python only hears about it when you let go.
     - Switch to **Lasso** for a freehand outline instead.
+    - **Drag across a diagonal histogram** to select a range of that one
+      column; it moves and filters like a box.
     - **Keep** narrows the plot to the selected rows and **Exclude** drops
       them; the axes rescale to what is left and filters stack. **Reset**
       brings every row back.
@@ -109,9 +111,13 @@ def _(labels, mo, np, pair_plot, plot):
         idx = pair_plot.get_indices()
         per_cluster = np.bincount(labels[idx], minlength=labels.max() + 1)
         x_name = pair_plot.columns[selection["x_index"]]
-        y_name = pair_plot.columns[selection["y_index"]]
+        if selection["type"] == "range":
+            where = f"a range on `{x_name}`"
+        else:
+            y_name = pair_plot.columns[selection["y_index"]]
+            where = f"a {selection['type']} in `{x_name}` × `{y_name}`"
         lines = [
-            f"**{len(idx):,}** of {remaining:,} rows selected with a {selection['type']} in `{x_name}` × `{y_name}`.",
+            f"**{len(idx):,}** of {remaining:,} rows selected with {where}.",
             "",
             "| cluster | selected rows |",
             "| --- | ---: |",

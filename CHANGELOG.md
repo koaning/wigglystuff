@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `PairPlot` diagonal histograms are now interactive: click and drag across
+  one to select a range of that column, in either Box or Lasso mode. The range
+  links to every cell, can be slid sideways once drawn, and works with
+  Keep/Exclude. It syncs as `{"type": "range", "x_index": i, "x_min": ...,
+  "x_max": ...}`, and `get_mask()`/`selected_data`/`filters` handle it exactly
+  in Python.
+
 ### Changed
 
 - `FloatingPanel` now animates collapse and expand: the body slides shut and
