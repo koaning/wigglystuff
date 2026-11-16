@@ -188,6 +188,10 @@
    gets a faint dashed frame and a tab that folds it. */
 .wf .wf-away { display: none !important; }
 .wf .wf-beside.wf-bare { padding: 0; }
+/* while a fold animates, this flow's arrows, labels and group tabs fade out
+   (the widgets glide underneath) and fade back once they are redrawn */
+.wf > .wf-board > :is(.wf-svg, .wf-labels, .wf-cluster-tabs) { transition: opacity 110ms ease; }
+.wf.wf-moving > .wf-board > :is(.wf-svg, .wf-labels, .wf-cluster-tabs) { opacity: 0; }
 .wf-node.wf-cluster-pill {
   border-style: solid;
   border-color: color-mix(in srgb, var(--wf-ink) 22%, transparent);

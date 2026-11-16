@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- `WidgetFlow` can hide parts of the graph and bring them back. Widgets in
+  `collapsible=[...]` get a hover button that folds them to a pill showing
+  their caption; `groups=[(label, widgets)]` draws a dashed frame with a tab
+  that folds a whole stretch of the flow into one pill, with the arrows in
+  and out re-aimed at it. Nothing is laid out again: the rest of the flow
+  glides into place (instantly under reduced motion), and
+  `collapsed=[...]` / `(label, widgets, "collapsed")` set the starting state.
 - `PairPlot` widget: a scatterplot matrix built for large data. Pass a 2D
   NumPy array or a pandas/polars DataFrame (tested up to a million rows); the
   numbers go to the browser as binary float32, stay in a Web Worker, and are

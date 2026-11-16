@@ -302,13 +302,60 @@ function render({ model, el }) {
       n.classList.toggle("wf-away", n.children.length > 0 && [...n.children].every(away));
     });
   }
-  function toggle(id) {
+  // Folding animates in two beats: what is leaving fades out (the arrows
+  // with it), then the folds apply and every widget that stays glides from
+  // where it was to where it lands (FLIP: measure, apply, play the
+  // difference back as a transform), while what appears fades and grows in.
+  // The arrows are redrawn and fade back once everything has landed.
+  const reduceMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  let busy = false;
+  async function toggle(id) {
+    if (busy) return;
+    busy = true;
     const fold = !folded.has(id);
+    // what goes away: a node's own cell (it comes back as a pill, or out of
+    // one), a folding group's widgets, or an opening group's pill
+    const itemOf = (k) => nodes[k].closest(".wf-item");
+    const leaving = !(id in groupDefs) ? [itemOf(id)] : fold ? groupDefs[id].members.map(itemOf) : [pills[id]];
+    const animate = !reduceMotion() && root.isConnected;
+    const items = [...board.querySelectorAll(".wf-item")].filter((n) => mine(n) && n.getClientRects().length);
+    const before = new Map(items.map((n) => [n, n.getBoundingClientRect()]));
+    if (animate) {
+      root.classList.add("wf-moving");
+      const fades = leaving.filter((n) => before.has(n)).map((n) =>
+        n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 90, easing: "ease-in", fill: "forwards" }));
+      await Promise.all(fades.map((a) => a.finished.catch(() => {})));
+      fades.forEach((a) => a.cancel());
+    }
+
     if (fold) folded.add(id); else folded.delete(id);
     applyFolds();
     model.set("collapsed", [...folded].sort());
     model.save_changes();
-    requestAnimationFrame(draw);
+
+    if (animate) {
+      const moves = [];
+      for (const n of board.querySelectorAll(".wf-item")) {
+        if (!mine(n) || !n.getClientRects().length) continue;
+        const was = before.get(n);
+        if (was && !leaving.includes(n)) {
+          const now = n.getBoundingClientRect();
+          const [dx, dy] = [was.left - now.left, was.top - now.top];
+          if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) continue;
+          moves.push(n.animate(
+            [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }],
+            { duration: 200, easing: "cubic-bezier(.2, .7, .2, 1)" }));
+        } else {
+          moves.push(n.animate(
+            [{ opacity: 0, transform: "scale(0.96)" }, { opacity: 1, transform: "none" }],
+            { duration: 160, delay: 50, easing: "ease-out", fill: "backwards" }));
+        }
+      }
+      await Promise.all(moves.map((a) => a.finished.catch(() => {})));
+      root.classList.remove("wf-moving");
+    }
+    draw();
+    busy = false;
     // widgets that measured themselves while hidden get a chance to redo it
     if (!fold) requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
   }
