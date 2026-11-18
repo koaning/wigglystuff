@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- `shape_display` now accepts arrays from other libraries — torch tensors,
+  TensorFlow and JAX arrays, anything with a `.shape`. They get a display-only
+  wrapper that draws the same glyph; `.value` returns the original object and
+  operations aren't supported on the wrapper itself (wrap the result again).
+  Unknown sizes (`None`) render as `?`. NumPy arrays keep the full ndarray
+  subclass. CPU torch tensors used to be silently converted to NumPy; they now
+  stay tensors.
+
 ### Changed
 
 - `FloatingPanel` now animates collapse and expand: the body slides shut and

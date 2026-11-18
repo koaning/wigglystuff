@@ -138,3 +138,31 @@ def test_name_validation_and_setter():
     named = shape_display(np.zeros((4, 4)), name="X")
     named.name = "Y"
     assert named.name == "Y"
+
+
+class FakeTensor:
+    """Stands in for a torch/TF/JAX array: it only has a ``.shape``."""
+
+    def __init__(self, *shape):
+        self.shape = shape
+
+
+def test_other_arrays_get_a_display_only_wrapper():
+    tensor = FakeTensor(128, 2)
+    wrapped = shape_display(tensor, labels=("n", None), name="X")
+    assert wrapped.value is tensor
+    assert (wrapped.shape, wrapped.ndim, wrapped.labels, wrapped.name) == ((128, 2), 2, ("n", None), "X")
+    wrapped.labels = ("rows", None)
+    renamed = wrapped.set_name("Y")
+    assert (renamed.value, renamed.labels, renamed.name, wrapped.name) == (tensor, ("rows", None), "Y", "X")
+    assert shape_display(wrapped).value is tensor  # re-wrapping unwraps
+    assert type(shape_display([[1, 2], [3, 4]])) is type(shape_display(np.zeros((2, 2))))
+    with pytest.raises(ValueError, match="2D and 3D"):
+        shape_display(FakeTensor(4))
+
+
+def test_other_arrays_render_unknown_sizes_as_question_marks():
+    html = shape_display(FakeTensor(None, 4), name="H")._display_().text
+    assert "Array H with shape unknown by 4" in html
+    assert '<span class="ws-shape-display-size">?</span>' in html
+    assert "ws-shape-display-plane-back" in shape_display(FakeTensor(8, 2, 3))._display_().text
