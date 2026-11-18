@@ -50,6 +50,14 @@ def _(mo):
     (darker is better), and a row's mean appears once all its folds are in.
     Cells outlined in amber used every iteration (`max_iter`), so they may not
     have converged. Hover any cell for the details.
+
+    /// admonition | Runs locally and on a molab server, not in WASM
+        type: note
+    `FitProgress` needs scikit-learn 1.9+. The in-browser WASM runtime
+    (Pyodide) ships scikit-learn 1.8, and scikit-learn has no WASM wheels
+    on PyPI to upgrade it, so run this notebook locally
+    (`uv run marimo edit demos/fit_progress.py`) or on a molab **server**.
+    ///
     """)
     return
 
