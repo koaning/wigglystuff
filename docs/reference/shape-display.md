@@ -101,7 +101,25 @@ marimo's `_display_` hook and TeX names use marimo's built-in KaTeX, so plain
 Jupyter shows the ordinary NumPy repr instead. The array itself still works
 there; nothing raises.
 
-Requires NumPy when used (`pip install wigglystuff[numpy]`); the rest of
-wigglystuff imports fine without it.
+## Other array libraries
+
+Anything else with a `.shape` — a torch tensor, a TensorFlow or JAX array,
+CuPy — gets the same glyph through a display-only wrapper:
+
+```python
+import torch
+
+H = shape_display(torch.zeros(32, 4), labels=("batch", None), name="H")
+H.value  # the original torch.Tensor, untouched
+```
+
+Unlike the NumPy subclass, the wrapper is not an array: `H @ W` or
+`torch.relu(H)` don't work on it. Do the maths on `.value` and wrap the
+result again. `labels`, `name`, and `set_name` work as above, and sizes that
+are unknown (`None`, as TensorFlow can report) render as `?`.
+
+Requires NumPy when used with NumPy arrays (`pip install wigglystuff[numpy]`);
+the rest of wigglystuff, and the wrapper for other libraries, import fine
+without it.
 
 ::: wigglystuff.shape_display.shape_display

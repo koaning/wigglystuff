@@ -1,7 +1,8 @@
-"""Shape-only displays for NumPy arrays in marimo notebooks."""
+"""Shape-only displays for NumPy (and other) arrays in marimo notebooks."""
 
 from __future__ import annotations
 
+import sys
 from html import escape
 from typing import Any
 from uuid import uuid4
@@ -31,6 +32,8 @@ def _caption_html(array) -> str:
     parts = []
     for label, size in zip(array.labels, array.shape):
         if label is None:
+            # Unknown sizes (e.g. TensorFlow's None dims) render as "?".
+            size = "?" if size is None else size
             parts.append(f'<span class="ws-shape-display-size">{size}</span>')
         else:
             parts.append(f"<var>{escape(label)}</var>")
@@ -156,7 +159,7 @@ def _render_shape_display(array):
         return array.value
 
     plain_label = " by ".join(
-        str(size) if label is None else label
+        label if label is not None else ("unknown" if size is None else str(size))
         for label, size in zip(array.labels, array.shape)
     )
     if array.name:
@@ -404,24 +407,95 @@ def _shape_display_type():
     return _SHAPE_DISPLAY_TYPE
 
 
+class ShapeOnlyDisplay:
+    """Display-only shape glyph for non-NumPy arrays (torch, TensorFlow, JAX, ...).
+
+    Unlike the NumPy subclass this is not an array: operations on it are not
+    supported. ``.value`` returns the original object, untouched.
+    """
+
+    def __init__(self, value, *, labels=None, name=None):
+        shape = tuple(None if size is None else int(size) for size in value.shape)
+        if len(shape) not in (2, 3):
+            raise ValueError(
+                "shape_display only supports 2D and 3D arrays; "
+                f"got a {len(shape)}D array"
+            )
+        self.value = value
+        self.shape = shape
+        self._labels = _normalize_labels(labels, len(shape))
+        self._name = _normalize_name(name)
+
+    @property
+    def ndim(self):
+        return len(self.shape)
+
+    @property
+    def labels(self):
+        """Axis labels; a string is shown literally, ``None`` shows the size."""
+        return self._labels
+
+    @labels.setter
+    def labels(self, value):
+        self._labels = _normalize_labels(value, self.ndim)
+
+    @property
+    def name(self):
+        """Name shown above the glyph; a string or ``None``."""
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = _normalize_name(value)
+
+    def set_name(self, name):
+        """Return a new display of the same value with a new name."""
+        return ShapeOnlyDisplay(self.value, labels=self._labels, name=name)
+
+    def _display_(self):
+        return _render_shape_display(self)
+
+    def __repr__(self):
+        return (
+            f"ShapeOnlyDisplay(shape={self.shape}, labels={self._labels}, "
+            f"name={self._name!r}, value={type(self.value).__name__})"
+        )
+
+
+def _wants_ndarray(value) -> bool:
+    """NumPy arrays and plain Python data take the full ndarray-subclass path."""
+    if not hasattr(value, "shape"):
+        return True  # lists, tuples, scalars go through numpy.asarray
+    # No import needed: if numpy was never imported, value can't be an ndarray.
+    numpy = sys.modules.get("numpy")
+    return numpy is not None and isinstance(value, numpy.ndarray)
+
+
 def shape_display(
     value: Any,
     *,
     labels: tuple[str | None, ...] | None = None,
     name: str | None = None,
 ):
-    r"""Wrap a 2D or 3D NumPy array with a shape-only marimo display.
+    r"""Wrap a 2D or 3D array with a shape-only marimo display.
 
-    The returned value is an ``numpy.ndarray`` subclass, so indexing, methods,
-    arithmetic, and NumPy operations continue to work. Array-valued results
-    keep the display behavior. Use ``.value`` to get a plain ``numpy.ndarray``
-    view over the same data.
+    For NumPy arrays (and lists/tuples) the returned value is an
+    ``numpy.ndarray`` subclass, so indexing, methods, arithmetic, and NumPy
+    operations continue to work. Array-valued results keep the display
+    behavior. Use ``.value`` to get a plain ``numpy.ndarray`` view over the
+    same data.
+
+    Any other object with a ``.shape`` (torch, TensorFlow, JAX, CuPy, ...)
+    gets a display-only wrapper: it draws the same glyph, but operations on
+    it are not supported. ``.value`` returns the original object; wrap a
+    result again to display it. Unknown sizes (``None``) render as ``?``.
 
     ``labels`` has one entry per axis. A string is shown as a symbolic
     dimension and ``None`` is replaced by that axis's live size.
 
     Args:
-        value: Any value accepted by ``numpy.asarray`` with two or three axes.
+        value: A NumPy array, anything accepted by ``numpy.asarray``, or any
+            array-like with a ``.shape`` of two or three axes.
         labels: Optional tuple of strings and ``None`` values. Defaults
             to showing every concrete dimension.
         name: Optional title rendered above the glyph. Plain strings render
@@ -442,9 +516,17 @@ def shape_display(
         X        # renders "X" over empty matrix brackets with "n × 2" underneath
         X.T      # named X with a superscript T, caption "2 × n"
         X.value  # plain ndarray view
+
+        import torch
+        T = shape_display(torch.zeros(32, 4), labels=("batch", None))
+        T.value  # the original torch.Tensor; T itself supports no operations
         ```
     """
-    return _shape_display_type()(value, labels=labels, name=name)
+    if isinstance(value, ShapeOnlyDisplay):
+        value = value.value
+    if _wants_ndarray(value):
+        return _shape_display_type()(value, labels=labels, name=name)
+    return ShapeOnlyDisplay(value, labels=labels, name=name)
 
 
 __all__ = ["shape_display"]
