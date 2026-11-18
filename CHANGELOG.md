@@ -21,6 +21,12 @@ All notable changes to this project will be documented in this file.
   reverses smoothly), and the header toggle morphs between `+` and `−`. It
   applies instantly on first render and when the OS asks for reduced motion.
 
+### Fixed
+
+- The FitProgress molab demo links now open on a molab server instead of the
+  in-browser WASM runtime: Pyodide ships scikit-learn 1.8, and FitProgress
+  needs the 1.9 callback API. The demo notebook now says so (#387).
+
 ## [0.6.0] - 2026-11-16
 
 ### Added
