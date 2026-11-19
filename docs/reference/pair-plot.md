@@ -115,6 +115,8 @@ links the pair plot's selection to a 3D view of three columns you pick. Further
 down, every three columns get a rotatable cube of their own next to a second
 pair plot, so you can see the 3D shadows as well.
 
+![A pair plot of points on two nested spheres in four dimensions, the inner sphere orange and the outer blue, next to a 3D view of three picked columns](../assets/gallery/hypersphere-pairplot.webp)
+
 ::: wigglystuff.pair_plot.PairPlot
 
 ## Synced traitlets
