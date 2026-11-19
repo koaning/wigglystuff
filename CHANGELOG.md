@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
   Keep/Exclude. It syncs as `{"type": "range", "x_index": i, "x_min": ...,
   "x_max": ...}`, and `get_mask()`/`selected_data`/`filters` handle it exactly
   in Python.
+- `demos/hypersphere_pairplot.py`: points on a sphere in 3, 4 or 5 dimensions
+  in a `WidgetFlow`, with a rotation dial, a pair plot linked to a 3D view of
+  three picked columns, and a section with a rotatable cube for every three
+  columns, linked to a second pair plot. Linked from the PairPlot docs.
 
 ### Changed
 
@@ -19,6 +23,8 @@ All notable changes to this project will be documented in this file.
   open with an interruptible ease-out transition (a second click mid-way
   reverses smoothly), and the header toggle morphs between `+` and `−`. It
   applies instantly on first render and when the OS asks for reduced motion.
+- `TangleSelect` now follows changes to `choices` on a live widget: Python can
+  swap the options without re-creating it, and the select rebuilds them.
 
 ## [0.6.0] - 2026-11-16
 

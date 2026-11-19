@@ -68,7 +68,7 @@ def _(mo):
 
 @app.cell
 def _(n_rows, np):
-    def make_clusters(n, n_dims=8, n_clusters=5, seed=0):
+    def make_clusters(n, n_dims=4, n_clusters=5, seed=0):
         rng = np.random.default_rng(seed)
         centers = rng.normal(scale=4.0, size=(n_clusters, n_dims))
         scales = rng.uniform(0.6, 1.6, size=(n_clusters, n_dims))

@@ -1,8 +1,4 @@
 function render({model, el}) {
-    const choices = model.get("choices");
-    let currentIndex = choices.indexOf(model.get("choice"));
-    if (currentIndex === -1) currentIndex = 0;
-
     const container = document.createElement('div');
     container.classList.add("tangle-container");
     el.style.display = "inline-flex";
@@ -12,32 +8,32 @@ function render({model, el}) {
     // Create a basic select element - keep it simple
     const select = document.createElement('select');
     select.style.color = '#0066cc';
-    
-    // Add options to the select element
-    choices.forEach((choice, index) => {
-        const option = document.createElement('option');
-        option.value = choice;
-        option.textContent = choice;
-        option.selected = index === currentIndex;
-        select.appendChild(option);
-    });
-    
+
+    // (Re)build the options from the model, so Python can swap the choices
+    // on a live widget.
+    function renderOptions() {
+        const choices = model.get("choices");
+        select.replaceChildren();
+        choices.forEach((choice) => {
+            const option = document.createElement('option');
+            option.value = choice;
+            option.textContent = choice;
+            select.appendChild(option);
+        });
+        const index = choices.indexOf(model.get("choice"));
+        select.selectedIndex = index === -1 ? 0 : index;
+    }
+    renderOptions();
+
     // Add event listener for selection change
     select.addEventListener('change', function() {
-        currentIndex = this.selectedIndex;
-        model.set("choice", choices[currentIndex]);
+        model.set("choice", model.get("choices")[this.selectedIndex]);
         model.save_changes();
     });
-    
-    // Listen for external changes to choice
-    model.on("change:choice", () => {
-        const newChoice = model.get("choice");
-        const newIndex = choices.indexOf(newChoice);
-        if (newIndex !== -1) {
-            currentIndex = newIndex;
-            select.selectedIndex = newIndex;
-        }
-    });
+
+    // Listen for external changes to choice and choices
+    model.on("change:choice", renderOptions);
+    model.on("change:choices", renderOptions);
 
     container.appendChild(select);
 
