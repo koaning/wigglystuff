@@ -132,6 +132,7 @@ uv pip install wigglystuff
 </tr>
 <tr>
 <td align="center"><b>WidgetFlow</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_flow.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/widget-flow.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/widget_flow.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/widget-flow/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/widget-flow.md">MD</a></td>
+<td align="center"><b>Hypersphere</b><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py/wasm?utm_source=wigglystuff"><img src="./docs/assets/gallery/hypersphere-pairplot.webp" width="260"></a><br><a href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py/wasm?utm_source=wigglystuff">molab</a> · <a href="https://koaning.github.io/wigglystuff/reference/pair-plot/">API</a> · <a href="https://koaning.github.io/wigglystuff/reference/pair-plot.md">MD</a></td>
 </tr>
 </table>
 

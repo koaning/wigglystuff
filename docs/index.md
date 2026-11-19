@@ -323,6 +323,11 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pair_plot.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/pair-plot/">API</a><a href="reference/pair-plot.md">MD</a></div>
 </div>
 <div class="gallery-item">
+<div class="gallery-title"><a href="reference/pair-plot/#example-a-sphere-in-four-dimensions">Hypersphere</a></div>
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/hypersphere-pairplot.webp" alt="PairPlot of points on two nested spheres in four dimensions, next to a 3D view of three picked columns"></a>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/pair-plot/">API</a><a href="reference/pair-plot.md">MD</a></div>
+</div>
+<div class="gallery-item">
 <div class="gallery-title"><a href="reference/fit-progress/">FitProgress</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fit_progress.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/fitprogress.webp" alt="FitProgress widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fit_progress.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/fit-progress/">API</a><a href="reference/fit-progress.md">MD</a></div>
