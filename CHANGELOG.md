@@ -2,10 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.6.1] - 2026-11-20
 
 ### Added
 
+- `PairPlot` diagonal histograms are now interactive: click and drag across
+  one to select a range of that column, in either Box or Lasso mode. The range
+  links to every cell, can be slid sideways once drawn, and works with
+  Keep/Exclude. It syncs as `{"type": "range", "x_index": i, "x_min": ...,
+  "x_max": ...}`, and `get_mask()`/`selected_data`/`filters` handle it exactly
+  in Python.
+- `demos/hypersphere_pairplot.py`: points on a sphere in 3, 4 or 5 dimensions
+  in a `WidgetFlow`, with a rotation dial, a pair plot linked to a 3D view of
+  three picked columns, and a section with a rotatable cube for every three
+  columns, linked to a second pair plot. Linked from the PairPlot docs.
 - `shape_display` now accepts arrays from other libraries — torch tensors,
   TensorFlow and JAX arrays, anything with a `.shape`. They get a display-only
   wrapper that draws the same glyph; `.value` returns the original object and
@@ -20,6 +30,8 @@ All notable changes to this project will be documented in this file.
   open with an interruptible ease-out transition (a second click mid-way
   reverses smoothly), and the header toggle morphs between `+` and `−`. It
   applies instantly on first render and when the OS asks for reduced motion.
+- `TangleSelect` now follows changes to `choices` on a live widget: Python can
+  swap the options without re-creating it, and the select rebuilds them.
 
 ### Fixed
 

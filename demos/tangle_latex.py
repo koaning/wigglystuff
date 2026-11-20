@@ -2,14 +2,14 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "marimo>=0.23.3",
-#     "wigglystuff==0.5.40",
+#     "wigglystuff==0.6.1",
 # ]
 # ///
 
 import marimo
 
 __generated_with = "0.25.2"
-app = marimo.App(width="medium")
+app = marimo.App()
 
 
 @app.cell

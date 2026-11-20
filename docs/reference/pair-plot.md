@@ -45,6 +45,9 @@ PairPlot(df, columns=["bill_length", "bill_depth", "body_mass"], color="species"
   the toolbar (or pass `mode="lasso"`) for a freehand outline.
 - **Drag a selection** to move it. Every cell and histogram updates while you
   drag; Python receives the new `selection` when you let go.
+- **Drag across a diagonal histogram** to select a range of that one column.
+  It links, moves and filters like a box, and syncs as
+  `{"type": "range", "x_index": i, "x_min": ..., "x_max": ...}`.
 - Selected rows keep their category color; everything else turns gray. The
   diagonal shows the selection stacked on top of the full histogram.
 - **Click** outside the selection, double-click, or press **Clear** to clear it.
@@ -101,6 +104,18 @@ adapt to how crowded a cell is unless you set `point_size`.
 Non-finite values are skipped in the axes, histograms and selections. Up to
 eight categories get distinct colors by default; pass `color_map` to choose
 your own.
+
+## Example: a sphere in four dimensions
+
+You can't look at a sphere in four dimensions, but a pair plot shows all of
+its shadows on a plane. The
+[hypersphere demo](https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py/wasm?utm_source=wigglystuff)
+puts points on a sphere in 3, 4 or 5 dimensions, turns them with a dial, and
+links the pair plot's selection to a 3D view of three columns you pick. Further
+down, every three columns get a rotatable cube of their own next to a second
+pair plot, so you can see the 3D shadows as well.
+
+![A pair plot of points on two nested spheres in four dimensions, the inner sphere orange and the outer blue, next to a 3D view of three picked columns](../assets/gallery/hypersphere-pairplot.webp)
 
 ::: wigglystuff.pair_plot.PairPlot
 

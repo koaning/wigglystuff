@@ -59,8 +59,12 @@ class PairPlot(anywidget.AnyWidget):
         show_layout_toggle: Show the **Full** / **Lower** toggle. Without it
             the matrix stays whatever ``layout`` says.
 
+    Dragging across a histogram on the diagonal selects a range of that one
+    column instead, synced as ``{"type": "range", "x_index": i, "x_min": ...,
+    "x_max": ...}``; it links, moves and filters just like a box.
+
     The selection is synced as a compact data-coordinate description (box
-    corners or lasso vertices). Use :meth:`get_mask`, :meth:`get_indices`, or
+    corners, lasso vertices, or range bounds). Use :meth:`get_mask`, :meth:`get_indices`, or
     :attr:`selected_data` to obtain exact Python-side results without syncing
     a potentially huge index list.
 
@@ -187,9 +191,15 @@ class PairPlot(anywidget.AnyWidget):
         n_rows, n_dims = self._matrix.shape
         mask = np.zeros(n_rows, dtype=bool)
         kind = selection.get("type")
-        if kind not in ("box", "lasso"):
+        if kind not in ("box", "lasso", "range"):
             return mask
         x_index = int(selection.get("x_index", -1))
+        if kind == "range":
+            # A range dragged across one diagonal histogram.
+            if not 0 <= x_index < n_dims:
+                return mask
+            x = self._matrix[:, x_index].astype(np.float64)
+            return (x >= selection["x_min"]) & (x <= selection["x_max"])
         y_index = int(selection.get("y_index", -1))
         if not (0 <= x_index < n_dims and 0 <= y_index < n_dims):
             return mask
@@ -240,7 +250,7 @@ class PairPlot(anywidget.AnyWidget):
         self.clear_selection()
 
     def _add_filter(self, action: str) -> None:
-        if self.selection.get("type") not in ("box", "lasso"):
+        if self.selection.get("type") not in ("box", "lasso", "range"):
             return
         self.filters = [*self.filters, {"action": action, "selection": dict(self.selection)}]
         self.clear_selection()
