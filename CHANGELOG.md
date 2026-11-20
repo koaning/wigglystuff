@@ -16,6 +16,13 @@ All notable changes to this project will be documented in this file.
   in a `WidgetFlow`, with a rotation dial, a pair plot linked to a 3D view of
   three picked columns, and a section with a rotatable cube for every three
   columns, linked to a second pair plot. Linked from the PairPlot docs.
+- `shape_display` now accepts arrays from other libraries — torch tensors,
+  TensorFlow and JAX arrays, anything with a `.shape`. They get a display-only
+  wrapper that draws the same glyph; `.value` returns the original object and
+  operations aren't supported on the wrapper itself (wrap the result again).
+  Unknown sizes (`None`) render as `?`. NumPy arrays keep the full ndarray
+  subclass. CPU torch tensors used to be silently converted to NumPy; they now
+  stay tensors.
 
 ### Changed
 
@@ -25,6 +32,12 @@ All notable changes to this project will be documented in this file.
   applies instantly on first render and when the OS asks for reduced motion.
 - `TangleSelect` now follows changes to `choices` on a live widget: Python can
   swap the options without re-creating it, and the select rebuilds them.
+
+### Fixed
+
+- The FitProgress molab demo links now open on a molab server instead of the
+  in-browser WASM runtime: Pyodide ships scikit-learn 1.8, and FitProgress
+  needs the 1.9 callback API. The demo notebook now says so (#387).
 
 ## [0.6.0] - 2026-11-16
 

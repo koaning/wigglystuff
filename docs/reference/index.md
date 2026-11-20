@@ -60,7 +60,6 @@ the link at the top of any page. [`llms.txt`](../llms.txt) lists them all.
 
 - [GraphWidget](graph-widget.md) — programmatic force-directed graph
 - [EdgeDraw](edge-draw.md) — sketch node/link diagrams and query adjacency
-- [WidgetDAG](widget-dag.md) — arrange live widgets as a DAG and draw the arrows
 - [Neo4jWidget](neo4j-widget.md) — Neo4j graph explorer with a Cypher query box
 
 ## Drawing surfaces
@@ -91,11 +90,20 @@ the link at the top of any page. [`llms.txt`](../llms.txt) lists them all.
 - [AsyncFlow](async-flow.md) — swimlane timeline of one async run (Python 3.12+)
 - [LiveEdit](live-edit.md) — source-linked loop trace for one function run
 - [CellTour](cell-tour.md) — cell-based guided tours for marimo
-- [Hint](hint.md) — curve an arrow from a note to the widget it explains
 
 ## Images
 
 - [HoverZoom](hover-zoom.md) — image hover zoom with a magnified side panel
+
+## marimo-only display helpers
+
+These render through marimo's display protocol and don't run in plain Jupyter.
+
+- [FloatingPanel](floating-panel.md) — pin any content in a draggable panel that stays visible while scrolling
+- [WidgetDAG](widget-dag.md) — arrange live widgets as a DAG and draw the arrows
+- [WidgetFlow](widget-flow.md) — live widgets as a layered, FormulaDAG-style DAG with foldable parts
+- [Hint](hint.md) — curve an arrow from a note to the widget it explains
+- [shape_display](shape-display.md) — show a NumPy array as a shape glyph instead of its numbers
 
 ## Escape hatches and utilities
 
