@@ -4,7 +4,7 @@
 #     "marimo",
 #     "anywidget",
 #     "numpy",
-#     "wigglystuff==0.6.0",
+#     "wigglystuff==0.6.1",
 # ]
 # ///
 
