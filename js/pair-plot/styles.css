@@ -96,9 +96,13 @@
   white-space: nowrap;
 }
 /* Too narrow for the readout and the buttons on one line (a small cell_size):
-   the readout takes a line of its own above the buttons. */
+   the readout takes a line of its own above the buttons. The controls always
+   take a full row under the legend, so a readout that grows or shrinks (on
+   hover, say) can never pull them up onto the legend's line and shift the
+   matrix. */
 @container (max-width: 640px) {
   .pp-controls {
+    flex-basis: 100%;
     justify-content: flex-start;
     margin-left: 0;
   }

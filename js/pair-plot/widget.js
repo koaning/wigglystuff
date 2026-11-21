@@ -42,10 +42,15 @@ function pointInPolygon(x, y, vertices) {
 // Non-finite values fail the bounds check and are never selected.
 function selectionTest(selection) {
   const xColumn = selection.x_index;
-  const yColumn = selection.y_index;
+  let yColumn = selection.y_index;
   let xMin, xMax, yMin, yMax;
   let vertices = null;
-  if (selection.type === "box") {
+  if (selection.type === "range") {
+    // A range on one histogram: the same column on both axes, same bounds.
+    yColumn = xColumn;
+    xMin = selection.x_min; xMax = selection.x_max;
+    yMin = xMin; yMax = xMax;
+  } else if (selection.type === "box") {
     xMin = selection.x_min; xMax = selection.x_max;
     yMin = selection.y_min; yMax = selection.y_max;
   } else {
@@ -473,7 +478,7 @@ function render({ model, el }) {
 
   function hasSelection() {
     const type = currentSelection().type;
-    return type === "box" || type === "lasso";
+    return type === "box" || type === "lasso" || type === "range";
   }
 
   // True once the worker has answered for some selection; until then the
@@ -853,7 +858,22 @@ function render({ model, el }) {
 
   // Data coordinates -> overlay pixels for the cell a selection lives in.
   function selectionToPixels(selection, g) {
-    if (!state.extents || (selection.type !== "box" && selection.type !== "lasso")) return null;
+    if (!state.extents) return null;
+    if (selection.type === "range") {
+      // A band over the full height of the histogram cell.
+      const box = cellBox(g, selection.x_index, selection.x_index);
+      const low = state.extents[selection.x_index * 2];
+      const high = state.extents[selection.x_index * 2 + 1];
+      const left = box.x + ((selection.x_min - low) / (high - low)) * box.size;
+      const right = box.x + ((selection.x_max - low) / (high - low)) * box.size;
+      return [
+        { x: left, y: box.y },
+        { x: right, y: box.y },
+        { x: right, y: box.y + box.size },
+        { x: left, y: box.y + box.size },
+      ];
+    }
+    if (selection.type !== "box" && selection.type !== "lasso") return null;
     const box = cellBox(g, selection.y_index, selection.x_index);
     const xLow = state.extents[selection.x_index * 2];
     const xHigh = state.extents[selection.x_index * 2 + 1];
@@ -954,6 +974,8 @@ function render({ model, el }) {
     } else if (filters.length) {
       const steps = filters.length === 1 ? "1 filter" : `${filters.length} filters`;
       statusEl.textContent = `${shown} of ${state.rows.toLocaleString()} rows · ${steps}`;
+    } else if (state.hover && state.hover.row === state.hover.column) {
+      statusEl.textContent = `${names[state.hover.column]} · drag a range`;
     } else if (state.hover) {
       const verb = model.get("mode") === "box" ? "drag a box" : "drag to lasso";
       statusEl.textContent = `${names[state.hover.column]} × ${names[state.hover.row]} · ${verb}`;
@@ -1079,7 +1101,7 @@ function render({ model, el }) {
     const column = Math.floor((point.x - g.left) / (g.cell + GAP));
     const row = Math.floor((point.y - g.top) / (g.cell + GAP));
     if (row < 0 || column < 0 || row >= state.columns || column >= state.columns) return null;
-    if (row === column || !isVisible(row, column)) return null;
+    if (!isVisible(row, column)) return null;
     const box = cellBox(g, row, column);
     if (point.x > box.x + box.size || point.y > box.y + box.size) return null;
     return { row, column, box };
@@ -1124,6 +1146,9 @@ function render({ model, el }) {
   }
 
   function selectionBounds(selection) {
+    if (selection.type === "range") {
+      return { xMin: selection.x_min, xMax: selection.x_max, yMin: selection.x_min, yMax: selection.x_max };
+    }
     if (selection.type === "box") {
       return { xMin: selection.x_min, xMax: selection.x_max, yMin: selection.y_min, yMax: selection.y_max };
     }
@@ -1138,6 +1163,10 @@ function render({ model, el }) {
     const bounds = selectionBounds(origin);
     const shiftX = clamp((dx / cell.box.size) * (xHigh - xLow), xLow - bounds.xMin, xHigh - bounds.xMax);
     const shiftY = clamp((-dy / cell.box.size) * (yHigh - yLow), yLow - bounds.yMin, yHigh - bounds.yMax);
+    if (origin.type === "range") {
+      // A range only slides sideways.
+      return { ...origin, x_min: origin.x_min + shiftX, x_max: origin.x_max + shiftX };
+    }
     if (origin.type === "box") {
       return {
         ...origin,
@@ -1152,13 +1181,21 @@ function render({ model, el }) {
 
   function isInsideSelection(point, cell) {
     const selection = currentSelection();
-    if (!hasSelection() || selection.x_index !== cell.column || selection.y_index !== cell.row) return false;
+    const row = selection.type === "range" ? selection.x_index : selection.y_index;
+    if (!hasSelection() || selection.x_index !== cell.column || row !== cell.row) return false;
     return insidePath(point, selectionToPixels(selection, geometry()));
   }
 
   function lassoFromPixels(points, cell) {
     const vertices = simplify(points).map((point) => pixelToData(point, cell));
     return { type: "lasso", x_index: cell.column, y_index: cell.row, vertices };
+  }
+
+  // A drag across a diagonal histogram: only the horizontal extent counts.
+  function rangeFromPixels(a, b, cell) {
+    const x1 = pixelToData(a, cell)[0];
+    const x2 = pixelToData(b, cell)[0];
+    return { type: "range", x_index: cell.column, x_min: Math.min(x1, x2), x_max: Math.max(x1, x2) };
   }
 
   overlay.addEventListener("pointerdown", (event) => {
@@ -1171,6 +1208,9 @@ function render({ model, el }) {
     // Grabbing an existing box or lasso moves it, whichever tool is active.
     if (isInsideSelection(point, cell)) {
       state.drag = { kind: "move", cell, start: point, origin: currentSelection(), moved: false };
+    } else if (cell.row === cell.column) {
+      // Histograms take a range, whichever tool is active.
+      state.drag = { kind: "range", cell, start, moved: false };
     } else if (model.get("mode") === "lasso") {
       state.drag = { kind: "lasso", cell, points: [start], moved: false };
     } else {
@@ -1209,6 +1249,7 @@ function render({ model, el }) {
     if (!drag.moved && dx * dx + dy * dy < 9) return;
     drag.moved = true;
     if (drag.kind === "box") previewSelection(boxFromPixels(drag.start, clampToCell(point, drag.cell), drag.cell));
+    else if (drag.kind === "range") previewSelection(rangeFromPixels(drag.start, clampToCell(point, drag.cell), drag.cell));
     else previewSelection(movedSelection(drag.origin, dx, dy, drag.cell));
   });
 
