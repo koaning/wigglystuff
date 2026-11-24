@@ -323,11 +323,6 @@ The documentation for wigglystuff is designed for humans (via hosted marimo note
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/pair_plot.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/pair-plot/">API</a><a href="reference/pair-plot.md">MD</a></div>
 </div>
 <div class="gallery-item">
-<div class="gallery-title"><a href="reference/pair-plot/#example-a-sphere-in-four-dimensions">Hypersphere</a></div>
-<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py/wasm?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/hypersphere-pairplot.webp" alt="PairPlot of points on two nested spheres in four dimensions, next to a 3D view of three picked columns"></a>
-<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/pair-plot/">API</a><a href="reference/pair-plot.md">MD</a></div>
-</div>
-<div class="gallery-item">
 <div class="gallery-title"><a href="reference/fit-progress/">FitProgress</a></div>
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fit_progress.py?utm_source=wigglystuff" class="gallery-img"><img src="assets/gallery/fitprogress.webp" alt="FitProgress widget"></a>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/fit_progress.py?utm_source=wigglystuff">molab</a><a href="reference/fit-progress/">API</a><a href="reference/fit-progress.md">MD</a></div>
@@ -465,6 +460,14 @@ These notebooks show how to combine multiple widgets for more complex workflows.
 <div class="example-desc">Generate the n-dimensional hypercubeprogrammatically and watch GraphWidget's force layout unfurl it.</div>
 </div>
 <div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypercube.py/wasm?utm_source=wigglystuff">molab</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/hypercube.py/wasm">Source</a></div>
+</div>
+<div class="example-item">
+<a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py/wasm?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/hypersphere-pairplot.webp" alt="PairPlot of points on two nested spheres in four dimensions, next to a 3D view of three picked columns"></a>
+<div class="example-content">
+<div class="example-title">Hypersphere</div>
+<div class="example-desc">Points on a sphere in 3, 4 or 5 dimensions, explored with a rotation dial, linked PairPlots and rotatable 3D views of picked columns.</div>
+</div>
+<div class="gallery-links"><a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py/wasm?utm_source=wigglystuff">molab</a><a href="reference/pair-plot/#example-a-sphere-in-four-dimensions">API</a><a target="_blank" href="https://github.com/koaning/wigglystuff/blob/main/demos/hypersphere_pairplot.py">Source</a></div>
 </div>
 <div class="example-item">
 <a target="_blank" href="https://molab.marimo.io/github/koaning/wigglystuff/blob/main/demos/mcnugget_graph.py/wasm?utm_source=wigglystuff" class="example-img"><img src="assets/gallery/mcnugget.webp" alt="McNugget Graph"></a>
