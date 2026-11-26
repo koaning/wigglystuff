@@ -11,7 +11,8 @@
   --fa-btn-hover: #f0ece3;
   --fa-focus: rgba(240, 161, 58, 0.5);
 
-  display: inline-flex;
+  display: flex;
+  margin-inline: auto;
   flex-direction: column;
   gap: 10px;
   width: min(100%, 680px);
