@@ -79,6 +79,22 @@ def _(TangleLatex, mo):
 
 
 @app.cell
+def _(TangleLatex, mo):
+    noted = mo.ui.anywidget(
+        TangleLatex(
+            latex=r"h(x) = \tangle{a}x^2 + \tangle{b}x + \note{shift}{\beta}",
+            parameters={
+                "a": {"value": 2.5, "display": "number", "step": 0.1},
+                "b": {"value": 1, "display": "number", "step": 0.5},
+            },
+            notes={"shift": "moves the curve up and down"},
+        )
+    )
+    noted
+    return
+
+
+@app.cell
 def _(mo, numeric, reveal_all, selected_only):
     mo.md(f"""
     numeric={numeric.values}; selected={selected_only.values}; all={reveal_all.values}

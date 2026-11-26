@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2026-11-26
+
+### Fixed
+
+- `TangleLatex` and `FormulaDAG` note tints, note arrows, DAG arrows and the
+  click-to-edit box now line up with their symbols inside a scaled container,
+  such as marimo's slides layout. They used to drift toward the left, landing
+  on the wrong symbol (#391).
+- `TangleLatex` and `FormulaAnimation` now center in the cell output at any
+  notebook width. Before, the card stuck to the left once the output area was
+  wider than 680px (e.g. `App(width="medium")`).
+
 ## [0.6.1] - 2026-11-20
 
 ### Added
@@ -218,12 +230,6 @@ All notable changes to this project will be documented in this file.
   with σ = 1.7 no longer reads as "21.7²".
 - `TangleLatex` no longer clips tall delimiters and their superscripts (e.g.
   the `²` in `\left( ... \right)^2`) at the edge of the formula box.
-
-### Fixed
-
-- `TangleLatex` and `FormulaAnimation` now center in the cell output at any
-  notebook width. Before, the card stuck to the left once the output area was
-  wider than 680px (e.g. `App(width="medium")`).
 
 ## [0.5.36] - 2026-10-19
 

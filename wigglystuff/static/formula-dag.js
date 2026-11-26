@@ -95,7 +95,10 @@ function glyphLeaves(root) {
 // the actual ink. For text, measure the glyphs on a canvas and trim the box
 // to the ink so arrows land on the symbol rather than on empty space.
 const measureCtx = document.createElement("canvas").getContext("2d");
-function inkRect(el) {
+//
+// `scale` is the screen-to-layout ratio of a transformed ancestor (marimo
+// slides scale the whole slide): canvas metrics are unscaled, the rect isn't.
+function inkRect(el, scale = 1) {
   const r = el.getBoundingClientRect();
   const text = el.textContent;
   if (el instanceof SVGElement || !text || !text.trim()) return r;
@@ -103,12 +106,12 @@ function inkRect(el) {
   measureCtx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
   const m = measureCtx.measureText(text);
   if (!m.fontBoundingBoxAscent) return r;
-  const baseline = r.top + m.fontBoundingBoxAscent;
+  const baseline = r.top + m.fontBoundingBoxAscent * scale;
   return {
     left: r.left,
     right: r.right,
-    top: baseline - m.actualBoundingBoxAscent,
-    bottom: baseline + m.actualBoundingBoxDescent,
+    top: baseline - m.actualBoundingBoxAscent * scale,
+    bottom: baseline + m.actualBoundingBoxDescent * scale,
   };
 }
 
@@ -701,19 +704,30 @@ async function render({ model, el }) {
     stage.style.padding = "";
     if (!names.length) return;
 
-    const base = () => stage.getBoundingClientRect();
-    const rel = (r, b = base()) => ({
-      left: r.left - b.left,
-      right: r.right - b.left,
-      top: r.top - b.top,
-      bottom: r.bottom - b.top,
-      cx: r.left - b.left + (r.right - r.left) / 2,
-      cy: r.top - b.top + (r.bottom - r.top) / 2,
-    });
+    // Screen rects are scaled by any transformed ancestor (marimo slides);
+    // labels and the SVG overlay use the stage's own pixels, so divide it out.
+    // Padding changes below move the stage but never its scale.
+    const scale = stage.offsetWidth ? stage.getBoundingClientRect().width / stage.offsetWidth : 1;
+    const rel = (r) => {
+      const b = stage.getBoundingClientRect();
+      const left = (r.left - b.left) / scale;
+      const top = (r.top - b.top) / scale;
+      const width = (r.right - r.left) / scale;
+      const height = (r.bottom - r.top) / scale;
+      return {
+        left,
+        right: left + width,
+        top,
+        bottom: top + height,
+        cx: left + width / 2,
+        cy: top + height / 2,
+      };
+    };
+    const ink = (el) => inkRect(el, scale);
     const termOf = (name) => tex.querySelector(`.katex-html [data-note="${name}"]`);
     const termBox = (term) => {
       const html = tex.querySelector(".katex-html");
-      const own = html ? glyphLeaves(term).map(inkRect) : [];
+      const own = html ? glyphLeaves(term).map(ink) : [];
       return rel(union(own) || term.getBoundingClientRect());
     };
 
@@ -724,8 +738,8 @@ async function render({ model, el }) {
     // wide caption can widen; measuring that would under-reserve room for
     // labels once left padding shifts the formula over.
     const html = tex.querySelector(".katex-html");
-    const ink = html && union(glyphLeaves(html).map(inkRect));
-    const formulaW = ink ? rel(ink).right - texBox.left : texBox.right - texBox.left;
+    const formulaInk = html && union(glyphLeaves(html).map(ink));
+    const formulaW = formulaInk ? rel(formulaInk).right - texBox.left : texBox.right - texBox.left;
     const items = [];
     //    A note on the output symbol (\note{why}{d_1} = ...) goes to the
     //    left instead: above it arrows come in, below it the stem leaves.
@@ -930,11 +944,13 @@ async function render({ model, el }) {
     svg.replaceChildren();
     edgeEls = [];
     const base = board.getBoundingClientRect();
+    // Undo any ancestor scale (marimo slides): the SVG uses board pixels.
+    const scale = board.offsetWidth ? base.width / board.offsetWidth : 1;
     const rel = (r) => ({
-      left: r.left - base.left,
-      right: r.right - base.left,
-      top: r.top - base.top,
-      bottom: r.bottom - base.top,
+      left: (r.left - base.left) / scale,
+      right: (r.right - base.left) / scale,
+      top: (r.top - base.top) / scale,
+      bottom: (r.bottom - base.top) / scale,
     });
     const box = (node) => rel(node.getBoundingClientRect());
     const byName = formulasByName();
@@ -948,7 +964,7 @@ async function render({ model, el }) {
     const texLeft = {};
     for (const id of Object.keys(cards)) {
       const html = texHtml(id);
-      glyphs[id] = html ? glyphLeaves(html).map((g) => ({ el: g, ...rel(inkRect(g)) })) : [];
+      glyphs[id] = html ? glyphLeaves(html).map((g) => ({ el: g, ...rel(inkRect(g, scale)) })) : [];
       formulaInk[id] = union(glyphs[id]) || box(cards[id]);
       texLeft[id] = box(parts[id].tex).left;
     }
@@ -1358,8 +1374,10 @@ async function render({ model, el }) {
     setColorVars(input, spec.color);
     const t = target.getBoundingClientRect();
     const b = root.getBoundingClientRect();
-    input.style.left = `${t.left + t.width / 2 - b.left}px`;
-    input.style.top = `${t.bottom - b.top + 8}px`;
+    // Undo any ancestor scale (marimo slides) so the editor lands on the number.
+    const scale = root.offsetWidth ? b.width / root.offsetWidth : 1;
+    input.style.left = `${(t.left + t.width / 2 - b.left) / scale}px`;
+    input.style.top = `${(t.bottom - b.top) / scale + 8}px`;
     root.appendChild(input);
     editor = { input, name, spec };
     input.addEventListener("keydown", (event) => {
