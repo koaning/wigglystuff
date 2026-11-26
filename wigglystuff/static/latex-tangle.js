@@ -352,15 +352,23 @@ async function render({ model, el }) {
       return;
     }
     const stageWidth = stage.clientWidth;
+    // Screen rects come back scaled when an ancestor is transformed (marimo
+    // slides scale the whole slide), but labels and the SVG overlay live in
+    // the stage's own unscaled pixels. Divide the scale out here.
     const relative = (rect) => {
       const base = stage.getBoundingClientRect();
+      const scale = stage.offsetWidth ? base.width / stage.offsetWidth : 1;
+      const left = (rect.left - base.left) / scale;
+      const top = (rect.top - base.top) / scale;
+      const width = (rect.right - rect.left) / scale;
+      const height = (rect.bottom - rect.top) / scale;
       return {
-        left: rect.left - base.left,
-        right: rect.right - base.left,
-        top: rect.top - base.top,
-        bottom: rect.bottom - base.top,
-        cx: rect.left - base.left + rect.width / 2,
-        cy: rect.top - base.top + rect.height / 2,
+        left,
+        right: left + width,
+        top,
+        bottom: top + height,
+        cx: left + width / 2,
+        cy: top + height / 2,
       };
     };
 
@@ -626,15 +634,21 @@ async function render({ model, el }) {
 
     const targetRect = target.getBoundingClientRect();
     const stageRect = stage.getBoundingClientRect();
+    // Undo any ancestor scale (marimo slides) so the editor lands on the number.
+    const scale = stage.offsetWidth ? stageRect.width / stage.offsetWidth : 1;
+    const targetLeft = (targetRect.left - stageRect.left) / scale;
+    const targetTop = (targetRect.top - stageRect.top) / scale;
+    const targetWidth = targetRect.width / scale;
+    const targetHeight = targetRect.height / scale;
     if (editorStyle === "popover") {
-      input.style.left = `${targetRect.left + targetRect.width / 2 - stageRect.left}px`;
-      input.style.top = `${targetRect.bottom - stageRect.top + 10}px`;
+      input.style.left = `${targetLeft + targetWidth / 2}px`;
+      input.style.top = `${targetTop + targetHeight + 10}px`;
     } else {
       target.style.visibility = "hidden";
-      input.style.left = `${targetRect.left + targetRect.width / 2 - stageRect.left}px`;
-      input.style.top = `${targetRect.top + targetRect.height / 2 - stageRect.top}px`;
-      input.style.width = `${Math.max(targetRect.width + 16, 54)}px`;
-      input.style.height = `${Math.max(targetRect.height + 8, 34)}px`;
+      input.style.left = `${targetLeft + targetWidth / 2}px`;
+      input.style.top = `${targetTop + targetHeight / 2}px`;
+      input.style.width = `${Math.max(targetWidth + 16, 54)}px`;
+      input.style.height = `${Math.max(targetHeight + 8, 34)}px`;
       input.style.fontSize = getComputedStyle(target).fontSize;
       input.style.transform = "translate(-50%, -50%)";
     }

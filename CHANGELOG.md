@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2026-11-26
+
+### Fixed
+
+- `TangleLatex` and `FormulaDAG` note tints, note arrows, DAG arrows and the
+  click-to-edit box now line up with their symbols inside a scaled container,
+  such as marimo's slides layout. They used to drift toward the left, landing
+  on the wrong symbol (#391).
+
 ## [0.6.1] - 2026-11-20
 
 ### Added

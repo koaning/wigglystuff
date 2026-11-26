@@ -39,7 +39,7 @@ def test_tangle_latex_multi_parameter_interactions(start_marimo, page: Page):
     page.wait_for_selector(".latex-tangle", timeout=TIMEOUT)
 
     widgets = page.locator(".latex-tangle")
-    expect(widgets).to_have_count(3)
+    expect(widgets).to_have_count(4)
     numeric = widgets.nth(0)
     selected_only = widgets.nth(1)
     reveal_all = widgets.nth(2)
@@ -105,3 +105,34 @@ def test_tangle_latex_multi_parameter_interactions(start_marimo, page: Page):
     )
 
     assert not errors, errors
+
+
+@pytest.mark.e2e
+def test_tangle_latex_note_tint_follows_scaled_ancestor(start_marimo, page: Page):
+    """marimo slides scale the slide with a CSS transform; tints must stay on their term."""
+    url = start_marimo(NOTEBOOK)
+    page.goto(url, wait_until="networkidle")
+    page.wait_for_selector(".latex-tangle", timeout=TIMEOUT)
+
+    noted = page.locator(".latex-tangle").nth(3)
+    tint = noted.locator('.latex-tangle__tint[data-annotation="shift"]')
+    expect(tint).to_have_count(1)
+    noted.scroll_into_view_if_needed()
+
+    # Scale the widget like a slide, then nudge the stage width so the
+    # ResizeObserver lays the notes out again under the transform.
+    noted.evaluate(
+        """el => {
+            el.style.transformOrigin = "0 0";
+            el.style.transform = "scale(0.6)";
+            const stage = el.querySelector(".latex-tangle__stage");
+            stage.style.width = `${stage.offsetWidth - 2}px`;
+        }"""
+    )
+    page.wait_for_timeout(300)
+
+    term = noted.locator('.katex-html [data-note="shift"]').bounding_box()
+    box = tint.bounding_box()
+    term_cx = term["x"] + term["width"] / 2
+    tint_cx = box["x"] + box["width"] / 2
+    assert abs(term_cx - tint_cx) < 3, (term, box)
